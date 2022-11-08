@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: alwaysmeticulous/action-meticulous-run@9e9cf1353af4503b45062a054ccf8442e652d46c
+        uses: alwaysmeticulous/action-meticulous-run@2aac627d262847fa32b26fc6445352fd7b20831b
         with:
           who-to-greet: "Mona the Octocat"
       # Use the output from the `hello` step
