@@ -1,3 +1,3 @@
-export const hello = (): void => {
-  console.log("Hello, World!");
-};
+import { greetAction } from "./action";
+
+greetAction();
