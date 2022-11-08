@@ -14,9 +14,9 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: alwaysmeticulous/action-meticulous-run@main
+        uses: alwaysmeticulous/action-meticulous-run@basic-cli-setup
         with:
-          who-to-greet: "Mona the Octocat"
+          api_token: "${{ secrets.METICULOUS_API_TOKEN }}"
       # Use the output from the `hello` step
       - name: Get the output time
         run: echo "The time was ${{ steps.hello.outputs.time }}"

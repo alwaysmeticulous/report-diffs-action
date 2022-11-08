@@ -1,3 +1,3 @@
-import { greetAction } from "./action";
+import { runMeticulousTestsAction } from "./action";
 
-greetAction();
+runMeticulousTestsAction();
