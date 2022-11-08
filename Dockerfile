@@ -3,7 +3,7 @@ FROM node:lts-slim
 WORKDIR /app
 
 RUN apt-get update \
-  && apt-get upgrade -y
+ && apt-get upgrade -y
 
 COPY package.json yarn.lock ./
 
