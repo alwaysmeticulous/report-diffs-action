@@ -1,14 +1,10 @@
 name: "Meticulous Run"
 description: "Run automated Meticulous tests"
 inputs:
-  who_to_greet: # id of input
-    description: "Who to greet"
+  api_token:
+    description: "Meticulous API token"
     required: true
-    default: "World"
-  foobar: # id of input
-    description: "foobar"
-    required: true
-    default: "foobar"
+    default: ""
 outputs:
   time: # id of output
     description: "The time we greeted you"
