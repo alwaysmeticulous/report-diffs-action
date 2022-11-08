@@ -4,9 +4,9 @@
   "description": "Run Meticulous tests",
   "license": "Unliscensed",
   "private": true,
+  "type": "module",
   "source": "src/index.ts",
-  "main": "dist/index.js",
-  "module": "dist/module.mjs",
+  "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
