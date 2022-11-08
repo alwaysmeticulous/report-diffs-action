@@ -1,0 +1,49 @@
+{
+  "name": "action-meticulous-run",
+  "version": "1.0.0",
+  "description": "Run Meticulous tests",
+  "license": "Unliscensed",
+  "private": true,
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "module": "dist/module.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "dev": "parcel watch",
+    "build": "parcel build",
+    "format": "prettier --write src",
+    "lint": "eslint src --ext=ts,tsx,js --cache",
+    "lint:commit": "eslint --cache $(git diff --relative --name-only --diff-filter=ACMRTUXB master | grep  -E \"(.js$|.ts$|.tsx$)\")",
+    "lint:fix": "eslint src --ext=ts,tsx,js --cache --fix"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@parcel/packager-ts": "^2.7.0",
+    "@parcel/transformer-typescript-types": "^2.7.0",
+    "parcel": "^2.7.0",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.8.4"
+  },
+  "engines": {
+    "node": ">= 16"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alwaysmeticulous/action-meticulous-run.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "The Meticulous Team",
+    "email": "eng@meticulous.ai",
+    "url": "https://meticulous.ai"
+  },
+  "bugs": {
+    "url": "https://github.com/alwaysmeticulous/action-meticulous-run/issues"
+  },
+  "homepage": "https://github.com/alwaysmeticulous/action-meticulous-run"
+}
