@@ -15,13 +15,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
     const apiToken = getInput("api_token");
     const child = spawn(
-      "yarn",
-      [
-        "meticulous",
-        "show-project",
-        "--logLevel=trace",
-        `--apiToken=${apiToken}`,
-      ],
+      "/app/node_modules/@alwaysmeticulous/cli/bin/meticulous",
+      ["show-project", "--logLevel=trace", `--apiToken=${apiToken}`],
       { stdio: "inherit" }
     );
     await new Promise<void>((resolve) => {
