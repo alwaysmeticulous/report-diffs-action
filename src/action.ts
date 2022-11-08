@@ -3,8 +3,8 @@ import { context } from "@actions/github";
 
 export const greetAction = (): void => {
   try {
-    // `who-to-greet` input defined in action metadata file
-    const nameToGreet = getInput("who-to-greet");
+    // `who_to_greet` input defined in action metadata file
+    const nameToGreet = getInput("who_to_greet");
     console.log(`Hello ${nameToGreet}!`);
     const time = new Date().toTimeString();
     setOutput("time", time);

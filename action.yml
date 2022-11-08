@@ -1,7 +1,7 @@
 name: "Meticulous Run"
 description: "Run automated Meticulous tests"
 inputs:
-  who-to-greet: # id of input
+  who_to_greet: # id of input
     description: "Who to greet"
     required: true
     default: "World"
