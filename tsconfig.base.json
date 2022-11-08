@@ -9,6 +9,7 @@
     /* Modules */
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "types": ["node"],
     /* Emit */
     "declaration": true,
     "newLine": "lf",
