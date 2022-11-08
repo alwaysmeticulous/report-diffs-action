@@ -12,11 +12,8 @@ jobs:
     name: Testing the Meticulous action
 
     steps:
-      - name: Hello world action step
-        id: hello
-        uses: alwaysmeticulous/action-meticulous-run@basic-cli-setup
+      - name: Run CLI command show-project
+        id: show-project
+        uses: alwaysmeticulous/action-meticulous-run@main
         with:
           api_token: "${{ secrets.METICULOUS_API_TOKEN }}"
-      # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
