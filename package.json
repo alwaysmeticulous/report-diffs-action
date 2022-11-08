@@ -4,9 +4,9 @@
   "description": "Run Meticulous tests",
   "license": "Unliscensed",
   "private": true,
+  "type": "module",
   "source": "src/index.ts",
-  "main": "dist/index.js",
-  "module": "dist/module.mjs",
+  "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -27,6 +27,7 @@
   "devDependencies": {
     "@parcel/packager-ts": "^2.7.0",
     "@parcel/transformer-typescript-types": "^2.7.0",
+    "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
     "eslint": "^8.27.0",

@@ -1,13 +1,17 @@
 name: "Meticulous Run"
 description: "Run automated Meticulous tests"
 inputs:
-  who-to-greet: # id of input
+  who_to_greet: # id of input
     description: "Who to greet"
     required: true
     default: "World"
+  foobar: # id of input
+    description: "foobar"
+    required: true
+    default: "foobar"
 outputs:
   time: # id of output
     description: "The time we greeted you"
 runs:
-  using: "node16"
-  main: "dist/index.js"
+  using: "docker"
+  image: "Dockerfile"

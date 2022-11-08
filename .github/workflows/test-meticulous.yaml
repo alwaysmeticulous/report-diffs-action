@@ -1,0 +1,22 @@
+# Workflow for automated Meticulous tests
+
+on:
+  pull_request: {}
+
+permissions:
+  contents: read
+
+jobs:
+  hello_world_job:
+    runs-on: ubuntu-latest
+    name: Testing the Meticulous action
+
+    steps:
+      - name: Hello world action step
+        id: hello
+        uses: alwaysmeticulous/action-meticulous-run@main
+        with:
+          who-to-greet: "Mona the Octocat"
+      # Use the output from the `hello` step
+      - name: Get the output time
+        run: echo "The time was ${{ steps.hello.outputs.time }}"

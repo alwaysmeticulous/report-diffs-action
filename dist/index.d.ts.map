@@ -1,1 +1,0 @@
-{"mappings":"AAGA,OAAO,MAAM,mBAAkB,IAc9B,CAAC","sources":["src/src/action.ts","src/src/index.ts","src/index.ts"],"sourcesContent":[null,null,"export { greetAction } from \"./action\";\n\ngreetAction();\n"],"names":[],"version":3,"file":"index.d.ts.map","sourceRoot":"../"}
