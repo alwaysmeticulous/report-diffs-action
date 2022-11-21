@@ -1,26 +1,20 @@
-import { getOctokit } from "@actions/github";
 import { CodeChangePayload } from "../types";
 
-export const getBaseAndHeadCommitShas = async ({
-  owner,
-  repo,
-  payload,
-  octokit,
-}: {
-  owner: string;
-  repo: string;
-  payload: CodeChangePayload;
-  octokit: ReturnType<typeof getOctokit>;
-}): Promise<string> => {
+interface BaseAndHeadCommitShas {
+  base: string;
+  head: string;
+}
+
+export const getBaseAndHeadCommitShas = (
+  payload: CodeChangePayload
+): BaseAndHeadCommitShas => {
   if (payload.action === "pull_request") {
-    const pullRequest = await octokit.rest.pulls.get({
-      owner,
-      repo,
-      pull_number: payload.pull_request.number,
-    });
-    return pullRequest.data.base.sha;
+    return {
+      base: payload.pull_request.base.sha,
+      head: payload.pull_request.head.sha,
+    };
   } else if (payload.action === "push") {
-    return payload.before;
+    return { base: payload.before, head: payload.after };
   } else {
     return assertNever(payload);
   }
