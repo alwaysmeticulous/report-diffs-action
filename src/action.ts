@@ -1,4 +1,5 @@
 import { spawn } from "child_process";
+import { readFile } from "fs/promises";
 import { getInput, setFailed } from "@actions/core";
 import { context } from "@actions/github";
 
@@ -11,6 +12,9 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     const apiToken = getInput("api_token");
     const cliArguments = getInput("arguments").split("\n");
     console.log(["run-all-tests", `--apiToken=${apiToken}`, ...cliArguments]);
+
+    console.log(await readFile("tests.json"));
+
     const child = spawn(
       "/app/node_modules/@alwaysmeticulous/cli/bin/meticulous",
       ["run-all-tests", `--apiToken=${apiToken}`, ...cliArguments],
