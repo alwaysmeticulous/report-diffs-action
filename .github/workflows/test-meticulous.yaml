@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  hello_world_job:
+  test:
     runs-on: ubuntu-latest
     name: Testing the Meticulous action
 
@@ -22,7 +22,7 @@ jobs:
 
       - name: Run Meticulous tests
         id: test
-        uses: alwaysmeticulous/action-meticulous-run@run-tests
+        uses: ./
         with:
           api_token: "${{ secrets.METICULOUS_API_TOKEN }}"
           arguments: |
