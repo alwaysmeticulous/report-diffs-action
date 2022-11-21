@@ -1,4 +1,4 @@
-import { CodeChangePayload } from "../types";
+import { CodeChangeEvent } from "../types";
 
 interface BaseAndHeadCommitShas {
   base: string;
@@ -6,20 +6,20 @@ interface BaseAndHeadCommitShas {
 }
 
 export const getBaseAndHeadCommitShas = (
-  payload: CodeChangePayload
+  event: CodeChangeEvent
 ): BaseAndHeadCommitShas => {
-  if (payload.action === "pull_request") {
+  if (event.type === "pull_request") {
     return {
-      base: payload.pull_request.base.sha,
-      head: payload.pull_request.head.sha,
+      base: event.payload.pull_request.base.sha,
+      head: event.payload.pull_request.head.sha,
     };
-  } else if (payload.action === "push") {
-    return { base: payload.before, head: payload.after };
+  } else if (event.type === "push") {
+    return { base: event.payload.before, head: event.payload.after };
   } else {
-    return assertNever(payload);
+    return assertNever(event);
   }
 };
 
-const assertNever = (payload: never): never => {
-  throw new Error("Unexpected payload: " + JSON.stringify(payload));
+const assertNever = (event: never): never => {
+  throw new Error("Unexpected event: " + JSON.stringify(event));
 };

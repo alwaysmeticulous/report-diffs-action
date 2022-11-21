@@ -1,9 +1,9 @@
-export type CodeChangePayload = PushPayload | PullRequestPayload;
+export type CodeChangeEvent =
+  | { type: "push"; payload: PushPayload }
+  | { type: "pull_request"; payload: PullRequestPayload };
 
 // https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#push
 export interface PushPayload {
-  action: "push";
-
   /**
    * The SHA of the most recent commit on ref before the push.
    */
@@ -17,7 +17,6 @@ export interface PushPayload {
 
 // https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request
 export interface PullRequestPayload {
-  action: "pull_request";
   pull_request: {
     number: number;
     head: {
