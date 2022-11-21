@@ -17,6 +17,6 @@ jobs:
     steps:
       - name: Run CLI command show-project
         id: show-project
-        uses: alwaysmeticulous/action-meticulous-run@main
+        uses: ./
         with:
           api_token: "${{ secrets.METICULOUS_API_TOKEN }}"
