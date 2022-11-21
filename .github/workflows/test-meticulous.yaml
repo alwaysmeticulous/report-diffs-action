@@ -20,4 +20,4 @@ jobs:
         id: show-project
         uses: ./
         with:
-          api_token: "${{ secrets.METICULOUS_API_TOKEN }}"
+          api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
