@@ -22,4 +22,4 @@ COPY src src
 
 RUN yarn build
 
-CMD ["/app/dist/index.cjs"]
+CMD ["/app/dist/index.mjs"]
