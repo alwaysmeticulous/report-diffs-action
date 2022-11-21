@@ -25,4 +25,12 @@ jobs:
         uses: alwaysmeticulous/action-meticulous-run@run-tests
         with:
           api_token: "${{ secrets.METICULOUS_API_TOKEN }}"
-          arguments: '--diffThreshold="0" --skipPauses --testsFile="tests.json" --parallelize --parallelTasks=8 --useAssetsSnapshottedInBaseSimulation --storyboard --headless'
+          arguments: |
+            --diffThreshold="0"
+            --skipPauses
+            --testsFile="tests.json"
+            --parallelize
+            --parallelTasks=8
+            --useAssetsSnapshottedInBaseSimulation
+            --storyboard
+            --headless

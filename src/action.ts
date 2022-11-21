@@ -9,16 +9,18 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     console.log(`The event payload: ${payload}`);
 
     const apiToken = getInput("api_token");
-    const cliArguments = getInput("arguments");
-    console.log(["run-all-tests", `--apiToken=${apiToken}`, cliArguments]);
+    const cliArguments = getInput("arguments").split("\n");
+    console.log(["run-all-tests", `--apiToken=${apiToken}`, ...cliArguments]);
     const child = spawn(
       "/app/node_modules/@alwaysmeticulous/cli/bin/meticulous",
-      ["run-all-tests", `--apiToken=${apiToken}`, cliArguments],
+      ["run-all-tests", `--apiToken=${apiToken}`, ...cliArguments],
       { stdio: "inherit" }
     );
     await new Promise<void>((resolve) => {
       child.on("close", (code) => {
-        console.log(`Exit code: ${code}`);
+        if (code != 0) {
+          setFailed(`Command exited with code: ${code}`);
+        }
         resolve();
       });
     });
