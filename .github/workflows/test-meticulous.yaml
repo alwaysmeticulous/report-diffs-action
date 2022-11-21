@@ -10,11 +10,12 @@ permissions:
   contents: read
 
 jobs:
-  hello_world_job:
+  test:
     runs-on: ubuntu-latest
     name: Testing the Meticulous action
 
     steps:
+      - uses: actions/checkout@v3
       - name: Run CLI command show-project
         id: show-project
         uses: ./
