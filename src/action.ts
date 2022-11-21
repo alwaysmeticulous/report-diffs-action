@@ -13,8 +13,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     const cliArguments = getInput("arguments").split("\n");
     console.log(["run-all-tests", `--apiToken=${apiToken}`, ...cliArguments]);
 
-    console.log(await readFile("tests.json", "utf-8"));
-
     const child = spawn(
       "/app/node_modules/@alwaysmeticulous/cli/bin/meticulous",
       ["run-all-tests", `--apiToken=${apiToken}`, ...cliArguments],
