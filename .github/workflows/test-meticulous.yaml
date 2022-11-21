@@ -15,6 +15,9 @@ jobs:
     name: Testing the Meticulous action
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Write tests.json
         id: tests_json
         run: |
