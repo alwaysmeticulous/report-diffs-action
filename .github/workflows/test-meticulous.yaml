@@ -37,4 +37,4 @@ jobs:
             --useAssetsSnapshottedInBaseSimulation
             --storyboard
             --headless
-            --dataDir="/app"
+            --no-sandbox

@@ -22,6 +22,4 @@ COPY src src
 
 RUN yarn build
 
-COPY replayer.js node_modules/@alwaysmeticulous/replayer/dist/replayer.js
-
 CMD ["/app/dist/index.cjs"]
