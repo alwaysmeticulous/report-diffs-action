@@ -2,15 +2,15 @@ import { spawn } from "child_process";
 import { getInput, setFailed, setOutput } from "@actions/core";
 import { context } from "@actions/github";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
-import { shouldRunForPayload } from "./utils/should_run_for_payload";
+import { shouldRunForEvent } from "./utils/should_run_for_event";
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
   try {
     const { payload } = context;
 
-    if (!shouldRunForPayload(payload)) {
+    if (!shouldRunForEvent(context.eventName, payload)) {
       console.warn(
-        `Running report-diffs-action is only supported for 'push' and 'pull_request' events, but was triggered on a '${context.payload.action}' (${context.eventName}) event. Skipping execution.`
+        `Running report-diffs-action is only supported for 'push' and 'pull_request' events, but was triggered on a '${context.eventName}' event. Skipping execution.`
       );
       return;
     }
