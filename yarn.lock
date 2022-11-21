@@ -27,12 +27,12 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/cli@^2.6.2":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.6.2.tgz#8ed35b62cd9170cb2925f8a7ad5d39c73327c0fa"
-  integrity sha512-Nd2Pq2Ll3oaeIuOUrsO3Mrrl4UjVI5ZRoJBVylnB+ka3vzz8AmJJkIGYWvcC6WP+GTYTtyF46TMpjyOyzzqwRA==
+"@alwaysmeticulous/cli@^2.14.0":
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.14.0.tgz#35b5e1b171882f55003f89c7140e754033287837"
+  integrity sha512-cEE8tlvHxG4/FS8Xz7aUyTeO5GYVMDYl6PhZrZyzNyB7tEu58JakjROu0BOt0hkjD0PKZMLKZFjyCWKeXb5L/g==
   dependencies:
-    "@alwaysmeticulous/common" "^2.6.2"
+    "@alwaysmeticulous/common" "^2.14.0"
     "@sentry/node" "^7.2.0"
     adm-zip "^0.5.9"
     archiver "^5.3.1"
@@ -47,30 +47,24 @@
     pngjs "^6.0.0"
     yargs "^17.5.1"
 
-"@alwaysmeticulous/common@^2.6.2":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.6.2.tgz#0dc442a0d6ebde54f48206e37bdf5523cc7eeb32"
-  integrity sha512-Wk6tfZD1Czwvh4sRZZ+u6lkUHJBObiOZcBxjwt/Na5J5eEoB4qoCySlecJIFNH4v4F/MeUmalQmLqdvlIDpZ7g==
+"@alwaysmeticulous/common@^2.14.0":
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.14.0.tgz#33b2f86fee3cd05871a32a071242ee2e8419bf69"
+  integrity sha512-sOoSaejhisUtk80OYkDXvPTlHRPe6xDM2VPK9OpevFdEL6gFE06stySotZzZ6eSdeMs6wUNiShQ9TtWHwFHeFQ==
   dependencies:
     loglevel "^1.8.0"
     luxon "^2.4.0"
 
-"@alwaysmeticulous/replayer@^2.6.2":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.6.2.tgz#b0a5f3ceaaa04caa543133271a87eaa6cd2dfa40"
-  integrity sha512-B3aMIu5Y/zxsoYrAUOWtR2tdqGuXpZxaJE5F9O12LWvGIcfgV06pT3+zWSbGcOxNXvdhI6n6MFunScNJ3OQakw==
+"@alwaysmeticulous/replayer@^2.14.0":
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.14.0.tgz#2b7dbf499f8b4d43172831c024774e22ed186fd8"
+  integrity sha512-9mF9NeTIFRFkbdQp4UrL77OHL0a5hPZ7m6o71FCK3T/Sj2Jzu+PWhCv+6WE5qJNDsQiXOo1rpQVOxsfDN/MQxg==
   dependencies:
-    "@alwaysmeticulous/common" "^2.6.2"
-    "@alwaysmeticulous/sdk-bundles-api" "^2.6.2"
+    "@alwaysmeticulous/common" "^2.14.0"
     loglevel "^1.8.0"
     luxon "^2.4.0"
     puppeteer "^14.4.1"
     rrweb "^1.1.3"
-
-"@alwaysmeticulous/sdk-bundles-api@^2.6.2":
-  version "2.6.2"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.6.2.tgz#195e635b928cb53ef7838ecc98949393ade829e9"
-  integrity sha512-QQ5yQh1NgkOyv9xauLgdDKXv6Kv//YgAn/k450iFl3ynHxzlZkHjISXbuX9QgESsj0p0uBWdQhRwt/uVLVjfDg==
 
 "@babel/code-frame@^7.0.0":
   version "7.18.6"
