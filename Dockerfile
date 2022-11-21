@@ -10,11 +10,7 @@ RUN apt-get update \
  && apt-get update \
  && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-khmeros fonts-kacst fonts-freefont-ttf libxss1 \
       --no-install-recommends \
- && rm -rf /var/lib/apt/lists/* \
- && groupadd -r meti && useradd -rm -g meti -G audio,video meti \
- && chown -R meti:meti /app
-
-USER meti
+ && rm -rf /var/lib/apt/lists/*
 
 COPY package.json yarn.lock ./
 
@@ -25,5 +21,7 @@ COPY tsconfig.base.json tsconfig.json ./
 COPY src src
 
 RUN yarn build
+
+COPY replayer.js node_modules/@alwaysmeticulous/replayer/dist/replayer.js
 
 CMD ["/app/dist/index.mjs"]
