@@ -18,7 +18,7 @@ jobs:
       - name: Write tests.json
         id: tests_json
         run: |
-          echo "${{ secrets.TEST_SUITE_JSON }}" > tests.json
+          echo '${{ secrets.TEST_SUITE_JSON }}' > tests.json
 
       - name: Run Meticulous tests
         id: test
