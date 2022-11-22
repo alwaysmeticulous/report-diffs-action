@@ -18,7 +18,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
     const { base, head } = getBaseAndHeadCommitShas(event);
 
-    const apiToken = getInput("api_token");
+    const apiToken = getInput("api-token");
     const additionalArguments = getInput("arguments").split("\n");
     const cliArguments = [
       `--commitSha=${head}`,
