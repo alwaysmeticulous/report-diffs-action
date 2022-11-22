@@ -15,9 +15,26 @@ jobs:
     name: Testing the Meticulous action
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Run CLI command show-project
-        id: show-project
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Write tests.json
+        id: tests_json
+        run: |
+          echo '${{ secrets.TEST_SUITE_JSON }}' > tests.json
+
+      - name: Run Meticulous tests
+        id: test
         uses: ./
         with:
           api_token: "${{ secrets.METICULOUS_API_TOKEN }}"
+          arguments: |
+            --diffThreshold="0"
+            --skipPauses
+            --testsFile="tests.json"
+            --parallelize
+            --parallelTasks=8
+            --useAssetsSnapshottedInBaseSimulation
+            --storyboard
+            --headless
+            --noSandbox
