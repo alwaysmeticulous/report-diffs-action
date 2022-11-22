@@ -19,8 +19,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     }
 
     const { base, head } = await getBaseAndHeadCommitShas(event);
-    console.log("Base Commit SHA", base);
-    console.log("Head Commit SHA", head);
 
     // Get the JSON webhook payload for the event that triggered the workflow
     console.log(`The event payload: ${JSON.stringify(payload, undefined, 2)}`);
