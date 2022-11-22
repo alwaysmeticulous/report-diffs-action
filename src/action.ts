@@ -25,8 +25,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       `--baseCommitSha=${base}`,
       ...additionalArguments,
     ];
+    console.log("::group::CLI Arguments");
     console.log(cliArguments);
+    console.log("::endgroup::");
 
+    console.log("::group::Details");
     const child = spawn(
       "/app/node_modules/@alwaysmeticulous/cli/bin/meticulous",
       ["run-all-tests", `--apiToken=${apiToken}`, ...cliArguments],
@@ -40,6 +43,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         resolve();
       });
     });
+    console.log("::endgroup::");
   } catch (error) {
     const message = error instanceof Error ? error.message : `${error}`;
     setFailed(message);
