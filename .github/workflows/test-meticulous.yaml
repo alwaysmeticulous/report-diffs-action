@@ -9,9 +9,17 @@ on:
 permissions: write-all
 
 jobs:
+  test-custom-summary:
+      runs-on: ubuntu-latest
+      name: Testing making a custom summary
+
+      steps:
+        - name: Custom summary
+          run: echo "### Hello world! :rocket:" >> $GITHUB_STEP_SUMMARY
+
   test:
     runs-on: ubuntu-latest
-    name: Testing the Meticulous action
+    name: Build
 
     steps:
       - name: Checkout repository
@@ -45,6 +53,7 @@ jobs:
       - name: Run Meticulous tests
         id: test
         uses: ./
+        continue-on-error: true
         with:
           api_token: "${{ secrets.METICULOUS_API_TOKEN }}"
           arguments: |
