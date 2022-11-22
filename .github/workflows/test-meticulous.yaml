@@ -8,7 +8,7 @@ on:
 
 permissions:
   contents: read
-  checks: write
+  statuses: write
 
 jobs:
   test-custom-summary:
