@@ -32,10 +32,10 @@ jobs:
         id: neutral_check
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: Neutral check
+          name: Differences found for 3 of 37 sessions, click details to view
           conclusion: neutral
           output: |
-            {"summary":"Test"}
+            {"summary":"### [Differences found for 3 of 37 user sessions - click to view](https://meticulous.ai)"}
           action_url: https://meticulous.ai/action
           details_url: https://meticulous.ai/details
 
