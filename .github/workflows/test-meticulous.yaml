@@ -37,7 +37,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Differences found for 3 of 37 user sessions
-          conclusion: ${{ job.status }}
+          conclusion: neutral
           output: |
             {"summary":"Differences found for [3 of 37 user sessions](https://meticulous.ai)"}
           action_url: https://meticulous.ai/action
