@@ -2,6 +2,9 @@ FROM node:lts-slim
 
 WORKDIR /app
 
+# Install required dependencies,
+# see Puppeteer container image: https://github.com/puppeteer/puppeteer/blob/0107ad8f08fc17d30492bd767c0bda62a870ae65/docker/Dockerfile
+
 RUN apt-get update \
   && apt-get upgrade -y \
   && apt-get install -y wget gnupg \
