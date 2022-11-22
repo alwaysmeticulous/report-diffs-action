@@ -27,12 +27,12 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/cli@^2.15.0":
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.15.0.tgz#6ac85a20e4cc13b8ee66bb6d1f3817a0597c0959"
-  integrity sha512-1BH3b8KR8FIJVVLkfUREifhKEgHAEvUrHH8DfOzla6i+aOTxcPPxY8Ge3fiTiqxKsA9IqCCY1eWBa74iNZEEAA==
+"@alwaysmeticulous/cli@^2.16.0":
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.16.0.tgz#9d32ec09dd3bb411cbf2297142ad089fb4fac528"
+  integrity sha512-Ihvl4KlfWxPUCN26HffHSndgP2m8XVD8+nfFJ+Q6UKRaObF4V62jNtUvratNf9jo4wOhns43pTU7oqruMWlgRA==
   dependencies:
-    "@alwaysmeticulous/common" "^2.14.0"
+    "@alwaysmeticulous/common" "^2.16.0"
     "@sentry/node" "^7.2.0"
     adm-zip "^0.5.9"
     archiver "^5.3.1"
@@ -47,20 +47,20 @@
     pngjs "^6.0.0"
     yargs "^17.5.1"
 
-"@alwaysmeticulous/common@^2.14.0":
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.14.0.tgz#33b2f86fee3cd05871a32a071242ee2e8419bf69"
-  integrity sha512-sOoSaejhisUtk80OYkDXvPTlHRPe6xDM2VPK9OpevFdEL6gFE06stySotZzZ6eSdeMs6wUNiShQ9TtWHwFHeFQ==
+"@alwaysmeticulous/common@^2.16.0":
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.16.0.tgz#37ab8df644534aa6b5b946cf3acd53a75aaef06d"
+  integrity sha512-CyYZRg1YZ0qvJTQ9p6A/ngh7oBTqk5qyoCZUeTZL+v8yx4wMk9yPBrXIB2ROpURzkjINPXDeXNXUBC49Svh20A==
   dependencies:
     loglevel "^1.8.0"
     luxon "^2.4.0"
 
-"@alwaysmeticulous/replayer@2.14.0":
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.14.0.tgz#2b7dbf499f8b4d43172831c024774e22ed186fd8"
-  integrity sha512-9mF9NeTIFRFkbdQp4UrL77OHL0a5hPZ7m6o71FCK3T/Sj2Jzu+PWhCv+6WE5qJNDsQiXOo1rpQVOxsfDN/MQxg==
+"@alwaysmeticulous/replayer@^2.16.0":
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.16.0.tgz#47a459b4ac1897f672c6db3303051d0b0a470e2a"
+  integrity sha512-onA8TNXjGCyOQc0y3EWeGgGL5kCvjr6zCquFE366ex6TrZ+1LhcvII7r3vsxxb56A/TCtZ5bDlxBIIQtYw9NFA==
   dependencies:
-    "@alwaysmeticulous/common" "^2.14.0"
+    "@alwaysmeticulous/common" "^2.16.0"
     loglevel "^1.8.0"
     luxon "^2.4.0"
     puppeteer "^14.4.1"

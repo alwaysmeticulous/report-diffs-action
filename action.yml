@@ -5,9 +5,11 @@ inputs:
     description: "Meticulous API token"
     required: true
     default: ""
-outputs:
-  time: # id of output
-    description: "The time we greeted you"
+  arguments:
+    description: "CLI arguments"
+    required: true
+    default: ""
+outputs: {}
 runs:
   using: "docker"
   image: "Dockerfile"
