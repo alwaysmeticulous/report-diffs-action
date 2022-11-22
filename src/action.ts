@@ -28,6 +28,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     const cliArguments = [`--commitSha=${head}`, `--baseCommitSha=${base}`, ...additionalArguments];
     console.log(cliArguments);
     console.log("API token length: " + apiToken != null ? apiToken.length : "null");
+    console.log("API-token length: " + getInput("api-token") != null ? getInput("api-token").length : "null");
 
     const child = spawn(
       "/app/node_modules/@alwaysmeticulous/cli/bin/meticulous",
