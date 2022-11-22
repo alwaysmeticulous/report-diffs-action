@@ -1,10 +1,14 @@
-name: "Meticulous Run"
+name: "Meticulous - Report Diffs"
 description: "Run automated Meticulous tests"
 inputs:
   api-token:
     description: "Meticulous API token"
     required: true
     default: ""
+  github-token:
+    description: "GITHUB_TOKEN or a repo scoped PAT."
+    required: true
+    default: ${{ github.token }}
   arguments:
     description: "CLI arguments"
     required: true
@@ -15,3 +19,7 @@ runs:
   image: "Dockerfile"
   env:
     API_TOKEN: ${{ inputs.api-token }}
+    GITHUB_TOKEN: ${{ inputs.github-token }}
+branding:
+  color: purple
+  icon: camera
