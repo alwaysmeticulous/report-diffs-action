@@ -16,10 +16,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       return;
     }
 
-    const { base, head } = await getBaseAndHeadCommitShas(event);
-
-    // Get the JSON webhook payload for the event that triggered the workflow
-    console.log(`The event payload: ${JSON.stringify(payload, undefined, 2)}`);
+    const { base, head } = getBaseAndHeadCommitShas(event);
 
     const apiToken = getInput("api_token");
     const additionalArguments = getInput("arguments").split("\n");
