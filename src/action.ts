@@ -145,7 +145,7 @@ const postOrUpdateComment = async ({
   }
 
   // Check for existing comments
-  const comments = octokit.rest.issues.listComments({
+  const comments = await octokit.rest.issues.listComments({
     owner,
     repo,
     issue_number: event.payload.pull_request.number,
