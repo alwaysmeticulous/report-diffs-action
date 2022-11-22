@@ -21,9 +21,9 @@ jobs:
         uses: Sibz/github-status-action@v1
         with:
           authToken: ${{secrets.GITHUB_TOKEN}}
-          context: "Differences found for 3 of 37 sessions"
-          description: "Passed (differences found for 3 of 37 sessions)"
-          state: "success"
+          context: "Meticulous"
+          description: "Testing against 37 user sessions..."
+          state: "pending"
           sha: ${{github.event.pull_request.head.sha || github.sha}}
           target_url: https://meticulous.ai
 
@@ -31,6 +31,16 @@ jobs:
         id: tests_json
         run: |
           echo '${{ secrets.TEST_SUITE_JSON }}' > tests.json
+          
+      - name: Run the action # You would run your tests before this using the output to set state/desc
+        uses: Sibz/github-status-action@v1
+        with:
+          authToken: ${{secrets.GITHUB_TOKEN}}
+          context: "Meticulous"
+          description: "Differences found for 3 of 37 sessions"
+          state: "success"
+          sha: ${{github.event.pull_request.head.sha || github.sha}}
+          target_url: https://meticulous.ai
 
       - name: Run Meticulous tests
         id: test
