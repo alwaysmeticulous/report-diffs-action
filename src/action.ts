@@ -1,5 +1,4 @@
 import { spawn } from "child_process";
-import { readFile } from "fs/promises";
 import { getInput, setFailed } from "@actions/core";
 import { context } from "@actions/github";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
@@ -7,7 +6,6 @@ import { getCodeChangeEvent } from "./utils/get-code-change-event";
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
   try {
-
     const { payload } = context;
     const event = getCodeChangeEvent(context.eventName, payload);
 
@@ -25,10 +23,12 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
     const apiToken = getInput("apiToken");
     const additionalArguments = getInput("arguments").split("\n");
-    const cliArguments = [`--commitSha=${head}`, `--baseCommitSha=${base}`, ...additionalArguments];
+    const cliArguments = [
+      `--commitSha=${head}`,
+      `--baseCommitSha=${base}`,
+      ...additionalArguments,
+    ];
     console.log(cliArguments);
-    console.log("API token length: " + apiToken != null ? apiToken.length : "null");
-    console.log("API-token length: " + getInput("api-token") != null ? getInput("api-token").length : "null");
 
     const child = spawn(
       "/app/node_modules/@alwaysmeticulous/cli/bin/meticulous",

@@ -27,7 +27,7 @@ jobs:
         id: test
         uses: ./
         with:
-          api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
+          api_token: "${{ secrets.METICULOUS_API_TOKEN }}"
           arguments: |
             --diffThreshold="0"
             --skipPauses
