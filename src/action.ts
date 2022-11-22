@@ -6,6 +6,7 @@ import { getCodeChangeEvent } from "./utils/get-code-change-event";
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
   try {
+    const [apiToken] = process.argv.slice(2);
     const { payload } = context;
     const event = getCodeChangeEvent(context.eventName, payload);
 
@@ -21,7 +22,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     // Get the JSON webhook payload for the event that triggered the workflow
     console.log(`The event payload: ${JSON.stringify(payload, undefined, 2)}`);
 
-    const apiToken = getInput("api_token");
     const additionalArguments = getInput("arguments").split("\n");
     const cliArguments = [
       `--commitSha=${head}`,
