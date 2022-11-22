@@ -18,6 +18,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
     const { base, head } = getBaseAndHeadCommitShas(event);
 
+    console.log(Object.keys(process.env).join(" "));
+
     const apiToken = getInput("api-token");
     const additionalArguments = getInput("arguments").split("\n");
     const cliArguments = [
