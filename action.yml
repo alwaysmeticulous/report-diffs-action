@@ -13,5 +13,5 @@ outputs: {}
 runs:
   using: "docker"
   image: "Dockerfile"
-  args:
-    - ${{ inputs.api-token }}
+  env:
+    API_TOKEN: ${{ inputs.api-token }}

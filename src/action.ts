@@ -6,7 +6,7 @@ import { getCodeChangeEvent } from "./utils/get-code-change-event";
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
   try {
-    const [apiToken] = process.argv.slice(2);
+    const apiToken = process.env.API_TOKEN;
     const { payload } = context;
     const event = getCodeChangeEvent(context.eventName, payload);
 
