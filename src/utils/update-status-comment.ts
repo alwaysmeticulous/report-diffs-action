@@ -27,8 +27,6 @@ export const updateStatusComment = async ({
     issue_number: event.payload.pull_request.number,
     per_page: 1000,
   });
-  console.log(`Existing comments: ${JSON.stringify(comments)}`);
-
   const existingComment = comments.data.find(
     (comment) =>
       (comment.body ?? "").indexOf(METICULOUS_COMMENT_IDENTIFIER) > -1
