@@ -1,6 +1,7 @@
 import { spawn } from "child_process";
 import { getInput, setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
+import { CodeChangeEvent } from "./types";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 
@@ -31,6 +32,16 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       state: "pending",
       sha: head,
       target_url: "https://app.meticulous.ai/???",
+    });
+    postOrUpdateComment({
+      octokit,
+      owner,
+      repo,
+      event,
+      body: `🤖 Executing ? user sessions covering ? screens to check for differences... ([details](https://app.meticulous.ai), commit: ${head.substring(
+        0,
+        8
+      )})`,
     });
 
     const additionalArguments = getInput("arguments").split("\n");
@@ -64,6 +75,16 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         sha: head,
         target_url: "https://app.meticulous.ai/???",
       });
+      postOrUpdateComment({
+        octokit,
+        owner,
+        repo,
+        event,
+        body: `✅ Spotted zero visual differences across ? sessions: [view ? screens tested](https://app.meticulous.ai) (commit: ${head.substring(
+          0,
+          8
+        )}).`,
+      });
     } catch (err) {
       await octokit.rest.repos.createCommitStatus({
         owner,
@@ -73,6 +94,16 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         state: "success",
         sha: head,
         target_url: "https://app.meticulous.ai/???",
+      });
+      postOrUpdateComment({
+        octokit,
+        owner,
+        repo,
+        event,
+        body: `🤖 Spotted ? visual differences out of ? screens rendered: [view differences detected](https://app.meticulous.ai) (commit: ${head.substring(
+          0,
+          8
+        )}).`,
       });
     }
   } catch (error) {
@@ -94,4 +125,38 @@ const getOctokitOrThrow = (githubToken: string | null) => {
       "Error connecting to Github. Did you specify a valid 'github-token'?"
     );
   }
+};
+
+const postOrUpdateComment = async ({
+  octokit,
+  event,
+  owner,
+  repo,
+  body,
+}: {
+  octokit: ReturnType<typeof getOctokit>;
+  event: CodeChangeEvent;
+  owner: string;
+  repo: string;
+  body: string;
+}) => {
+  if (event.type !== "pull_request") {
+    return;
+  }
+
+  // Check for existing comments
+  const comments = octokit.rest.issues.listComments({
+    owner,
+    repo,
+    issue_number: event.payload.pull_request.number,
+    per_page: 1000,
+  });
+  console.log(`Existing comments: ${JSON.stringify(comments)}`);
+
+  await octokit.rest.issues.createComment({
+    owner,
+    repo,
+    issue_number: event.payload.pull_request.number,
+    body,
+  });
 };
