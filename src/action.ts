@@ -26,12 +26,13 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     console.log(`The event payload: ${JSON.stringify(payload, undefined, 2)}`);
 
     const apiToken = getInput("apiToken");
-    const cliArguments = getInput("arguments").split("\n");
-    console.log(["run-all-tests", `--apiToken=${apiToken}`, ...cliArguments]);
+    const additionalArguments = getInput("arguments").split("\n");
+    const arguments = ["run-all-tests", `--commitSha=${head}`, `--baseCommitSha=${base}`, ...additionalArguments];
+    console.log(arguments);
 
     const child = spawn(
       "/app/node_modules/@alwaysmeticulous/cli/bin/meticulous",
-      ["run-all-tests", `--apiToken=${apiToken}`, `--commitSha=${head}`, `--baseCommitSha=${base}`, ...cliArguments],
+      [...arguments, `--apiToken=${apiToken}`],
       { stdio: "inherit" }
     );
     await new Promise<void>((resolve) => {
