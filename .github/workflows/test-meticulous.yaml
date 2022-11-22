@@ -21,7 +21,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Testing change against 37 user sessions...
-          conclusion: ${{ job.status }}
           status: in_progress
           output: |
             {"summary":"Test"}
