@@ -48,7 +48,7 @@ jobs:
           authToken: ${{secrets.GITHUB_TOKEN}}
           context: "Meticulous"
           description: "Differences found for 3 of 37 sessions, click details to view"
-          state: "failure"
+          state: "success"
           sha: ${{github.event.pull_request.head.sha || github.sha}}
           target_url: https://meticulous.ai
 
