@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v3
 
       - uses: LouisBrunner/checks-action@v1.1.1
+        id: initial_check
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Testing change against 37 user sessions...
@@ -41,6 +42,7 @@ jobs:
             {"summary":"Differences found for [3 of 37 user sessions](https://meticulous.ai)"}
           action_url: https://meticulous.ai/action
           details_url: https://meticulous.ai/details
+          check_id: ${{ steps.initial_check.outputs.check_id }}
 
       - name: Run Meticulous tests
         id: test
