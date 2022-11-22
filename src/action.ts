@@ -39,7 +39,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       owner,
       repo,
       event,
-      body: `🤖 [Meticulous](https://meticulous.ai) is checking for differences across ? screens... ([details](https://app.meticulous.ai), commit: ${head.substring(
+      body: `🤖 [Meticulously](https://meticulous.ai) checking ? screens for differences... ([details](https://app.meticulous.ai), commit: ${head.substring(
         0,
         8
       )})`,
@@ -75,7 +75,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
             owner,
             repo,
             event,
-            body: `✅ [Meticulous](https://meticulous.ai) spotted zero visual differences across ? sessions: [view ? screens tested](https://app.meticulous.ai) (commit: ${shortHeadSha}).`,
+            body: `✅ [Meticulous](https://meticulous.ai) spotted zero visual differences: [view ? screens tested](https://app.meticulous.ai) (commit: ${shortHeadSha}).`,
           });
         } else {
           await octokit.rest.repos.createCommitStatus({
