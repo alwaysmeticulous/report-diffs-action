@@ -34,7 +34,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       sha: head,
       target_url: "https://app.meticulous.ai/???",
     });
-    updateStatusComment({
+    await updateStatusComment({
       octokit,
       owner,
       repo,
@@ -58,49 +58,47 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       ["run-all-tests", `--apiToken=${apiToken}`, ...cliArguments],
       { stdio: "inherit" }
     );
-    try {
-      await new Promise<void>((resolve) => {
-        child.on("close", (code) => {
-          if (code != 0) {
-            setFailed(`Command exited with code: ${code}`);
-          }
-          resolve();
-        });
+    await new Promise<void>((resolve) => {
+      child.on("close", async (code) => {
+        if (code != 0) {
+          await octokit.rest.repos.createCommitStatus({
+            owner,
+            repo,
+            context: "Meticulous",
+            description: "Zero differences spotted in ? screens tested",
+            state: "success",
+            sha: head,
+            target_url: "https://app.meticulous.ai/???",
+          });
+          await updateStatusComment({
+            octokit,
+            owner,
+            repo,
+            event,
+            body: `✅ Spotted zero visual differences across ? sessions: [view ? screens tested](https://app.meticulous.ai) (commit: ${shortHeadSha}).`,
+          });
+        } else {
+          await octokit.rest.repos.createCommitStatus({
+            owner,
+            repo,
+            context: "Meticulous",
+            description:
+              "Differences in ? out of ? screens, click details to view",
+            state: "success",
+            sha: head,
+            target_url: "https://app.meticulous.ai/???",
+          });
+          await updateStatusComment({
+            octokit,
+            owner,
+            repo,
+            event,
+            body: `🤖 Spotted ? visual differences out of ? screens rendered: [view differences detected](https://app.meticulous.ai) (commit: ${shortHeadSha}).`,
+          });
+        }
+        resolve();
       });
-      await octokit.rest.repos.createCommitStatus({
-        owner,
-        repo,
-        context: "Meticulous",
-        description: "Zero differences spotted in ? screens tested",
-        state: "success",
-        sha: head,
-        target_url: "https://app.meticulous.ai/???",
-      });
-      updateStatusComment({
-        octokit,
-        owner,
-        repo,
-        event,
-        body: `✅ Spotted zero visual differences across ? sessions: [view ? screens tested](https://app.meticulous.ai) (commit: ${shortHeadSha}).`,
-      });
-    } catch (err) {
-      await octokit.rest.repos.createCommitStatus({
-        owner,
-        repo,
-        context: "Meticulous",
-        description: "Differences in ? out of ? screens, click details to view",
-        state: "success",
-        sha: head,
-        target_url: "https://app.meticulous.ai/???",
-      });
-      updateStatusComment({
-        octokit,
-        owner,
-        repo,
-        event,
-        body: `🤖 Spotted ? visual differences out of ? screens rendered: [view differences detected](https://app.meticulous.ai) (commit: ${shortHeadSha}).`,
-      });
-    }
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : `${error}`;
     setFailed(message);
