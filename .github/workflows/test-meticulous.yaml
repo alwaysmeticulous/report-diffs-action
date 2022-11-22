@@ -27,6 +27,17 @@ jobs:
             {"summary":"Test"}
           action_url: https://meticulous.ai/action
           details_url: https://meticulous.ai/details
+          
+      - uses: LouisBrunner/checks-action@v1.1.1
+        id: neutral_check
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Neutral check
+          conclusion: neutral
+          output: |
+            {"summary":"Test"}
+          action_url: https://meticulous.ai/action
+          details_url: https://meticulous.ai/details
 
       - name: Write tests.json
         id: tests_json
@@ -36,8 +47,7 @@ jobs:
       - uses: LouisBrunner/checks-action@v1.1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: Differences found for 3 of 37 user sessions
-          conclusion: neutral
+          conclusion: action_required
           output: |
             {"summary":"Differences found for [3 of 37 user sessions](https://meticulous.ai)"}
           action_url: https://meticulous.ai/action
