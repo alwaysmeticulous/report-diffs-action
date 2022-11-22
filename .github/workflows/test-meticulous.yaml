@@ -22,6 +22,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Testing change against 37 user sessions...
           conclusion: ${{ job.status }}
+          status: in_progress
           output: |
             {"summary":"Test"}
           action_url: https://meticulous.ai/action
@@ -31,6 +32,16 @@ jobs:
         id: tests_json
         run: |
           echo '${{ secrets.TEST_SUITE_JSON }}' > tests.json
+
+      - uses: LouisBrunner/checks-action@v1.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Differences found for 3 of 37 user sessions
+          conclusion: ${{ job.status }}
+          output: |
+            {"summary":"Differences found for [3 of 37 user sessions](https://meticulous.ai)"}
+          action_url: https://meticulous.ai/action
+          details_url: https://meticulous.ai/details
 
       - name: Run Meticulous tests
         id: test
@@ -47,13 +58,3 @@ jobs:
             --storyboard
             --headless
             --noSandbox
-
-      - uses: LouisBrunner/checks-action@v1.1.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          name: Differences found for 3 of 37 user sessions
-          conclusion: ${{ job.status }}
-          output: |
-            {"summary":"Differences found for [3 of 37 user sessions](https://meticulous.ai)"}
-          action_url: https://meticulous.ai/action
-          details_url: https://meticulous.ai/details
