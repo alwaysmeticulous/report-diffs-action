@@ -1,9 +1,9 @@
 import { spawn } from "child_process";
 import { getInput, setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import { CodeChangeEvent } from "./types";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
+import { updateStatusComment } from "./utils/update-status-comment";
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
   try {
@@ -22,6 +22,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     }
 
     const { base, head } = getBaseAndHeadCommitShas(event);
+    const shortHeadSha = head.substring(0, 8);
 
     const { owner, repo } = context.repo;
     await octokit.rest.repos.createCommitStatus({
@@ -33,7 +34,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       sha: head,
       target_url: "https://app.meticulous.ai/???",
     });
-    postOrUpdateComment({
+    updateStatusComment({
       octokit,
       owner,
       repo,
@@ -75,15 +76,12 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         sha: head,
         target_url: "https://app.meticulous.ai/???",
       });
-      postOrUpdateComment({
+      updateStatusComment({
         octokit,
         owner,
         repo,
         event,
-        body: `✅ Spotted zero visual differences across ? sessions: [view ? screens tested](https://app.meticulous.ai) (commit: ${head.substring(
-          0,
-          8
-        )}).`,
+        body: `✅ Spotted zero visual differences across ? sessions: [view ? screens tested](https://app.meticulous.ai) (commit: ${shortHeadSha}).`,
       });
     } catch (err) {
       await octokit.rest.repos.createCommitStatus({
@@ -95,15 +93,12 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         sha: head,
         target_url: "https://app.meticulous.ai/???",
       });
-      postOrUpdateComment({
+      updateStatusComment({
         octokit,
         owner,
         repo,
         event,
-        body: `🤖 Spotted ? visual differences out of ? screens rendered: [view differences detected](https://app.meticulous.ai) (commit: ${head.substring(
-          0,
-          8
-        )}).`,
+        body: `🤖 Spotted ? visual differences out of ? screens rendered: [view differences detected](https://app.meticulous.ai) (commit: ${shortHeadSha}).`,
       });
     }
   } catch (error) {
@@ -125,38 +120,4 @@ const getOctokitOrThrow = (githubToken: string | null) => {
       "Error connecting to Github. Did you specify a valid 'github-token'?"
     );
   }
-};
-
-const postOrUpdateComment = async ({
-  octokit,
-  event,
-  owner,
-  repo,
-  body,
-}: {
-  octokit: ReturnType<typeof getOctokit>;
-  event: CodeChangeEvent;
-  owner: string;
-  repo: string;
-  body: string;
-}) => {
-  if (event.type !== "pull_request") {
-    return;
-  }
-
-  // Check for existing comments
-  const comments = await octokit.rest.issues.listComments({
-    owner,
-    repo,
-    issue_number: event.payload.pull_request.number,
-    per_page: 1000,
-  });
-  console.log(`Existing comments: ${JSON.stringify(comments)}`);
-
-  await octokit.rest.issues.createComment({
-    owner,
-    repo,
-    issue_number: event.payload.pull_request.number,
-    body,
-  });
 };
