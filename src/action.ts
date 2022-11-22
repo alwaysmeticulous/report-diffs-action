@@ -6,6 +6,7 @@ import { getCodeChangeEvent } from "./utils/get-code-change-event";
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
   try {
+    const apiToken = process.env.API_TOKEN;
     const { payload } = context;
     const event = getCodeChangeEvent(context.eventName, payload);
 
@@ -18,7 +19,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
     const { base, head } = getBaseAndHeadCommitShas(event);
 
-    const apiToken = getInput("api_token");
     const additionalArguments = getInput("arguments").split("\n");
     const cliArguments = [
       `--commitSha=${head}`,

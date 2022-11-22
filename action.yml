@@ -1,7 +1,7 @@
 name: "Meticulous Run"
 description: "Run automated Meticulous tests"
 inputs:
-  api_token:
+  api-token:
     description: "Meticulous API token"
     required: true
     default: ""
@@ -13,3 +13,5 @@ outputs: {}
 runs:
   using: "docker"
   image: "Dockerfile"
+  env:
+    API_TOKEN: ${{ inputs.api-token }}
