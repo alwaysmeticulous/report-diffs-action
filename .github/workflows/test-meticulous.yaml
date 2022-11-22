@@ -18,6 +18,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - uses: LouisBrunner/checks-action@v1.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Test XYZ
+          conclusion: ${{ job.status }}
+          output: |
+            {"summary":"Test"}
+
       - name: Write tests.json
         id: tests_json
         run: |
