@@ -18,7 +18,7 @@
 		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"eject": "react-scripts eject",
-		"serve": "serve -s build",
+		"serve": "./node_modules/.bin/serve -s build",
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d build"
 	},
