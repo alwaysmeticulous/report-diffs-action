@@ -1,5 +1,7 @@
 # Workflow for automated Meticulous tests
 
+name: Meticulous
+
 on:
   push:
     branches:
@@ -8,11 +10,12 @@ on:
 
 permissions:
   contents: read
+  packages: read
 
 jobs:
   test:
+    name: Report diffs
     runs-on: ubuntu-latest
-    name: Testing the Meticulous action
 
     steps:
       - name: Checkout repository
