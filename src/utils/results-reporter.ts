@@ -3,7 +3,7 @@ import { TestRun } from "@alwaysmeticulous/cli";
 import { CodeChangeEvent } from "../types";
 import { updateStatusComment } from "./update-status-comment";
 
-const METICULOUS_MARKDOWN_LINK = "[Meticulous](${METICULOUS_URL})";
+const METICULOUS_MARKDOWN_LINK = "[Meticulous](https://meticulous.ai/)";
 
 /**
  * Posts/updates Github comments and Github commit statuses to keep the user updated on progress/results.
