@@ -1,107 +1,82 @@
-import { spawn } from "child_process";
-import { getInput, setFailed } from "@actions/core";
+import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
+import { runAllTests } from "@alwaysmeticulous/cli";
+import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
-import { updateStatusComment } from "./utils/update-status-comment";
+import { getInputs } from "./utils/get-inputs";
+import { ResultsReporter } from "./utils/results-reporter";
+
+const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
+  headless: true,
+  devTools: false,
+  bypassCSP: false,
+  padTime: true,
+  shiftTime: true,
+  networkStubbing: true,
+  skipPauses: true,
+  moveBeforeClick: false,
+  disableRemoteFonts: false,
+  noSandbox: true,
+  maxDurationMs: null,
+  maxEventCount: null,
+};
+
+const DEFAULT_SCREENSHOTTING_OPTIONS = {
+  enabled: true,
+  screenshotSelector: null,
+  storyboardOptions: { enabled: true },
+  diffOptions: {
+    diffThreshold: 0.00001, // ~20 pixels on a 1920 x 1080 px screenshot
+    diffPixelThreshold: 0.01,
+  },
+} as const;
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
-  try {
-    const apiToken = process.env.API_TOKEN ?? null;
-    const githubToken = process.env.GITHUB_TOKEN ?? null;
-    const octokit = getOctokitOrThrow(githubToken);
+  const { apiToken, githubToken, appUrl, testsFile } = getInputs();
+  const { payload } = context;
+  const event = getCodeChangeEvent(context.eventName, payload);
+  const { owner, repo } = context.repo;
+  const octokit = getOctokitOrThrow(githubToken);
 
-    const { payload } = context;
-    const event = getCodeChangeEvent(context.eventName, payload);
-
-    if (event == null) {
-      console.warn(
-        `Running report-diffs-action is only supported for 'push' and 'pull_request' events, but was triggered on a '${context.eventName}' event. Skipping execution.`
-      );
-      return;
-    }
-
-    const { base, head } = getBaseAndHeadCommitShas(event);
-    const shortHeadSha = head.substring(0, 8);
-
-    const { owner, repo } = context.repo;
-    await octokit.rest.repos.createCommitStatus({
-      owner,
-      repo,
-      context: "Meticulous",
-      description: "Testing against ? screens across ? user sessions",
-      state: "pending",
-      sha: head,
-      target_url: "https://app.meticulous.ai/???",
-    });
-    await updateStatusComment({
-      octokit,
-      owner,
-      repo,
-      event,
-      body: `🤖 [Meticulously](https://meticulous.ai) checking ? screens for differences... ([details](https://app.meticulous.ai), commit: ${head.substring(
-        0,
-        8
-      )})`,
-    });
-
-    const additionalArguments = getInput("arguments").split("\n");
-    const cliArguments = [
-      `--commitSha=${head}`,
-      `--baseCommitSha=${base}`,
-      ...additionalArguments,
-    ];
-    console.log(cliArguments);
-
-    const child = spawn(
-      "/app/node_modules/@alwaysmeticulous/cli/bin/meticulous",
-      ["run-all-tests", `--apiToken=${apiToken}`, ...cliArguments],
-      { stdio: "inherit" }
+  if (event == null) {
+    console.warn(
+      `Running report-diffs-action is only supported for 'push' and 'pull_request' events, but was triggered on a '${context.eventName}' event. Skipping execution.`
     );
-    await new Promise<void>((resolve) => {
-      child.on("close", async (code) => {
-        if (code != 0) {
-          await octokit.rest.repos.createCommitStatus({
-            owner,
-            repo,
-            context: "Meticulous",
-            description:
-              "Differences in ? out of ? screens, click details to view",
-            state: "success",
-            sha: head,
-            target_url: "https://app.meticulous.ai/???",
-          });
-          await updateStatusComment({
-            octokit,
-            owner,
-            repo,
-            event,
-            body: `🤖 [Meticulous](https://meticulous.ai) spotted ? visual differences out of ? screens rendered: [view differences detected](https://app.meticulous.ai) (commit: ${shortHeadSha}).`,
-          });
-        } else {
-          await octokit.rest.repos.createCommitStatus({
-            owner,
-            repo,
-            context: "Meticulous",
-            description: "Zero differences spotted in ? screens tested",
-            state: "success",
-            sha: head,
-            target_url: "https://app.meticulous.ai/???",
-          });
-          await updateStatusComment({
-            octokit,
-            owner,
-            repo,
-            event,
-            body: `✅ [Meticulous](https://meticulous.ai) spotted zero visual differences: [view ? screens tested](https://app.meticulous.ai) (commit: ${shortHeadSha}).`,
-          });
-        }
-        resolve();
-      });
+    return;
+  }
+
+  const { base, head } = getBaseAndHeadCommitShas(event);
+  const resultsReporter = new ResultsReporter({
+    octokit,
+    event,
+    owner,
+    repo,
+    headSha: head,
+  });
+
+  try {
+    const results = await runAllTests({
+      testsFile,
+      apiToken,
+      commitSha: head,
+      baseCommitSha: base,
+      appUrl,
+      executionOptions: DEFAULT_EXECUTION_OPTIONS,
+      screenshottingOptions: DEFAULT_SCREENSHOTTING_OPTIONS,
+      useAssetsSnapshottedInBaseSimulation: false,
+      parallelTasks: 8,
+      deflake: false,
+      useCache: false,
+      githubSummary: true,
+      onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
+      onTestFinished: (testRun) => resultsReporter.testFinished(testRun),
     });
+    await resultsReporter.testRunFinished(results.testRun);
   } catch (error) {
     const message = error instanceof Error ? error.message : `${error}`;
     setFailed(message);
+    resultsReporter.errorRunningTests();
   }
 };
 

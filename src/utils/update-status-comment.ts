@@ -9,12 +9,14 @@ export const updateStatusComment = async ({
   owner,
   repo,
   body,
+  createIfDoesNotExist,
 }: {
   octokit: ReturnType<typeof getOctokit>;
   event: CodeChangeEvent;
   owner: string;
   repo: string;
   body: string;
+  createIfDoesNotExist?: boolean;
 }) => {
   if (event.type !== "pull_request") {
     return;
@@ -32,7 +34,7 @@ export const updateStatusComment = async ({
       (comment.body ?? "").indexOf(METICULOUS_COMMENT_IDENTIFIER) > -1
   );
 
-  if (existingComment == null) {
+  if (existingComment == null && createIfDoesNotExist) {
     await octokit.rest.issues.createComment({
       owner,
       repo,
