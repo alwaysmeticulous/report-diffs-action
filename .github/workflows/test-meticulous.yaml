@@ -29,6 +29,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: test
+        run: |
+          docker pull ghcr.io/alwaysmeticulous/report-diffs-action:push-to-registry
+
       - name: Write tests.json
         id: tests_json
         run: |
