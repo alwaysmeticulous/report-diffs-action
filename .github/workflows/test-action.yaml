@@ -55,7 +55,7 @@ jobs:
 
       - name: Run Meticulous tests
         id: test
-        uses: alwaysmeticulous/report-diffs-action@main
+        uses: ./
         with:
           api-token: ${{ secrets.METICULOUS_API_TOKEN }}
           arguments: |
