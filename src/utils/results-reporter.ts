@@ -107,6 +107,9 @@ export class ResultsReporter {
       description: "Failed to execute, see logs for details",
       state: "error",
     });
+    await this.setStatusComment({
+      body: `🤖 ${METICULOUS_MARKDOWN_LINK} failed to execute, see GitHub job logs for details (commit: ${this.shortHeadSha})`,
+    });
   }
 
   private setCommitStatus({
