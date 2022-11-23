@@ -34,11 +34,6 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
 
-      - name: Check
-        run: |
-          echo ${{ steps.metadata.outputs.tags }}
-          echo ${{ steps.metadata.outputs.labels }}
-
       - name: Configure GHCR credentials
         uses: docker/login-action@v2
         with:
