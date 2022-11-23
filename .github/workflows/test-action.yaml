@@ -57,7 +57,7 @@ jobs:
         id: test
         uses: alwaysmeticulous/report-diffs-action@main
         with:
-          api_token: ${{ secrets.METICULOUS_API_TOKEN }}
+          api-token: ${{ secrets.METICULOUS_API_TOKEN }}
           arguments: |
             --appUrl="http://172.17.0.1:3000/"
             --diffThreshold="0"
