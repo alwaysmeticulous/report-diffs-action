@@ -6,8 +6,8 @@ on:
   push:
     branches:
       - main
-      - push-to-registry
-  pull_request:
+      # - push-to-registry
+  pull_request: {}
 
 permissions:
   contents: read
@@ -45,8 +45,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-        # with:
-        #   install: true
 
       - name: Docker build
         uses: docker/build-push-action@v3
