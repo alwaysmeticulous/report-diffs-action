@@ -46,23 +46,28 @@ export class ResultsReporter {
       testRun.progress.passedTestCases + testRun.progress.failedTestCases;
     const totalTestCases =
       executedTestCases + testRun.progress.runningTestCases;
+
+    if (executedTestCases === totalTestCases) {
+      return; // Don't post a confusing 100% comment, wait for the actual test run to complete
+    }
+
     const percentComplete = Math.round(
       (executedTestCases / totalTestCases) * 100
     );
     await this.setCommitStatus({
       state: "pending",
-      description: `Testing ${testRun.progress.runningTestCases} sessions (${percentComplete}% complete)...`,
+      description: `Testing ${totalTestCases} sessions (${percentComplete}% complete)...`,
       ...(testRun.progress.failedTestCases > 0
         ? { targetUrl: testRun.url }
         : {}),
     });
     if (testRun.progress.failedTestCases > 0) {
       await this.setStatusComment({
-        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${testRun.progress.runningTestCases} sessions to check for differences. No differences detected so far. (${percentComplete}% complete, commit: ${this.shortHeadSha})`,
+        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${totalTestCases} sessions to check for differences. No differences detected so far. (${percentComplete}% complete, commit: ${this.shortHeadSha})`,
       });
     } else {
       await this.setStatusComment({
-        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${testRun.progress.runningTestCases} sessions to check for differences: [view differences detected so far](${testRun.url}) (${percentComplete}% complete, commit: ${this.shortHeadSha})`,
+        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${totalTestCases} sessions to check for differences: [view differences detected so far](${testRun.url}) (${percentComplete}% complete, commit: ${this.shortHeadSha})`,
       });
     }
   }
