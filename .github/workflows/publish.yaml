@@ -10,8 +10,8 @@ on:
   pull_request:
 
 permissions:
-  id-token: write
   contents: read
+  packages: write
 
 jobs:
   publish:
@@ -55,5 +55,3 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
-        permissions:
-          packages: write
