@@ -34,20 +34,19 @@ export const updateStatusComment = async ({
       (comment.body ?? "").indexOf(METICULOUS_COMMENT_IDENTIFIER) > -1
   );
 
-  if (existingComment == null && createIfDoesNotExist) {
+  if (existingComment != null) {
+    await octokit.rest.issues.updateComment({
+      owner,
+      repo,
+      comment_id: existingComment.id,
+      body: `${body}${METICULOUS_COMMENT_IDENTIFIER}`,
+    });
+  } else if (createIfDoesNotExist) {
     await octokit.rest.issues.createComment({
       owner,
       repo,
       issue_number: event.payload.pull_request.number,
       body: `${body}${METICULOUS_COMMENT_IDENTIFIER}`,
     });
-    return;
   }
-
-  await octokit.rest.issues.updateComment({
-    owner,
-    repo,
-    comment_id: existingComment.id,
-    body: `${body}${METICULOUS_COMMENT_IDENTIFIER}`,
-  });
 };

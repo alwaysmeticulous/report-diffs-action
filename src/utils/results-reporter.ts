@@ -1,5 +1,5 @@
 import { getOctokit } from "@actions/github";
-import { TestRun } from "@alwaysmeticulous/cli/dist/parallel-tests/run-all-tests";
+import { TestRun } from "@alwaysmeticulous/cli";
 import { CodeChangeEvent } from "../types";
 import { updateStatusComment } from "./update-status-comment";
 
