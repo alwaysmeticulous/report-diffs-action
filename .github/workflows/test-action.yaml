@@ -1,0 +1,70 @@
+# Workflow for automated Meticulous tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Run report-diffs-action on react-bmi-calculator
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js LTS
+        id: nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: yarn
+
+      - name: Cache node_modules
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: tests/react-bmi-calculator/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}
+
+      - name: Install dependencies
+        id: dependencies
+        run: |
+          cd tests/react-bmi-calculator &
+          yarn install --frozen-lockfile --non-interactive
+
+      - name: Build project
+        id: build
+        run: |
+          cd tests/react-bmi-calculator &
+          yarn build
+
+      - name: Serve project
+        id: serve
+        run: |
+          cd tests/react-bmi-calculator &
+          yarn serve &
+          sleep 5
+
+      - name: Run Meticulous tests
+        id: test
+        uses: alwaysmeticulous/report-diffs-action@main
+        with:
+          api_token: ${{ secrets.METICULOUS_API_TOKEN }}
+          arguments: |
+            --appUrl="http://172.17.0.1:3000/"
+            --diffThreshold="0"
+            --skipPauses
+            --testsFile="tests/react-bmi-calculator/meticulous.json"
+            --parallelize
+            --parallelTasks=8
+            --storyboard
+            --headless
+            --noSandbox
