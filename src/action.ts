@@ -92,7 +92,7 @@ const getOctokitOrThrow = (githubToken: string | null) => {
   } catch (err) {
     console.error(err);
     throw new Error(
-      "Error connecting to Github. Did you specify a valid 'github-token'?"
+      "Error connecting to GitHub. Did you specify a valid 'github-token'?"
     );
   }
 };
