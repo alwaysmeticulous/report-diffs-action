@@ -23,6 +23,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Cache node_modules
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}
+
+      - name: Install dependencies
+        id: dependencies
+        run: |
+          yarn install --frozen-lockfile --non-interactive
+
+      - name: Build project
+        id: build
+        run: |
+          yarn build
+
       - name: Docker metadata
         id: metadata
         uses: docker/metadata-action@v4
