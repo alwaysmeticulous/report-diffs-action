@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Use local dockerfile
-        run: node ./scripts/use-local-docker-file.js
+        run: node ./scripts/use-local-dockerfile.js
 
       - name: Write tests.json
         id: tests_json
