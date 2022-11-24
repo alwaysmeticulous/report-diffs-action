@@ -32,7 +32,7 @@ jobs:
       # Needed while image is private
       - name: Pull action image
         run: |
-          docker pull ghcr.io/alwaysmeticulous/report-diffs-action:push-to-registry
+          docker pull ghcr.io/alwaysmeticulous/report-diffs-action:main
 
       - name: Write tests.json
         id: tests_json
