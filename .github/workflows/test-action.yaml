@@ -1,5 +1,7 @@
 # Workflow for automated Meticulous tests
 
+name: Tests - react-bmi-calculator
+
 on:
   push:
     branches:
@@ -12,7 +14,7 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Run report-diffs-action on react-bmi-calculator
+    name: Run report-diffs-action
 
     steps:
       - name: Checkout repository
@@ -51,7 +53,7 @@ jobs:
           yarn serve &
           sleep 5
 
-      - name: Run Meticulous tests
+      - name: Run report-diffs-action
         id: test
         uses: ./
         with:
