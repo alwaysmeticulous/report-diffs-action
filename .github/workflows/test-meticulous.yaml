@@ -23,8 +23,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Use Node.js LTS
+        id: nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: yarn
+
       - name: Use local dockerfile
         run: node ./scripts/use-local-dockerfile.js
+
+      - name: Install dependencies
+        id: dependencies
+        run: yarn install --frozen-lockfile --non-interactive
 
       - name: Write tests.json
         id: tests_json
