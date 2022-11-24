@@ -23,18 +23,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Needed while image is private
-      - name: Configure GHCR credentials
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # Needed while image is private
-      - name: Pull action image
-        run: |
-          docker pull ghcr.io/alwaysmeticulous/report-diffs-action:main
+      - name: Use local dockerfile
+        run: node ./scripts/use-local-docker-file.js
 
       - name: Write tests.json
         id: tests_json
