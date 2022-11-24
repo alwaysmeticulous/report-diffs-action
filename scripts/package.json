@@ -4,7 +4,11 @@
   "description": "Build scripts for report-diffs-action",
   "license": "Unliscensed",
   "private": true,
+  "type": "module",
   "devDependencies": {
     "yaml": "^2.1.3"
+  },
+  "engines": {
+    "node": ">= 16"
   }
 }
