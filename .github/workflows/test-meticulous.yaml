@@ -1,6 +1,6 @@
 # Workflow for automated Meticulous tests
 
-name: Meticulous
+name: Tests - react-bmi-calculator
 
 on:
   push:
@@ -33,26 +33,37 @@ jobs:
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
-          path: node_modules
+          path: |
+            node_modules
+            tests/react-bmi-calculator/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             node-modules-${{ runner.os }}
 
-      - name: Install dependencies
+      - name: Install react-bmi-calculator dependencies
+        working-directory: ./tests/react-bmi-calculator
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Build react-bmi-calculator
+        working-directory: ./tests/react-bmi-calculator
+        run: yarn build
+
+      - name: Serve react-bmi-calculator
+        working-directory: ./tests/react-bmi-calculator
+        run: |
+          yarn serve &
+          sleep 4
+
+      - name: Install report-diffs-action dependencies
         run: yarn install --frozen-lockfile --non-interactive
 
       - name: Use local dockerfile
         run: node ./scripts/use-local-dockerfile.js
-
-      - name: Write tests.json
-        id: tests_json
-        run: |
-          echo '${{ secrets.TEST_SUITE_JSON }}' > tests.json
 
       - name: Run report-diffs-action
         id: test
         uses: ./
         with:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
-          app-url: https://localhost:3000
-          tests-file: tests.json
+          app-url: http://172.17.0.1:3000
+          tests-file: tests/react-bmi-calculator/meticulous.json
