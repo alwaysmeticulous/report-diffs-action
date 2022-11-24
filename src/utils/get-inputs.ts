@@ -12,7 +12,7 @@ export const getInputs = () => {
     required: true,
     type: "string",
   });
-  const appUrl = getInputFromEnv({
+  const appUrl_ = getInputFromEnv({
     name: "app-url",
     required: true,
     type: "string",
@@ -22,5 +22,23 @@ export const getInputs = () => {
     required: false,
     type: "string",
   });
+
+  const appUrl = handleLocalhostUrl(appUrl_);
+
   return { apiToken, githubToken, appUrl, testsFile };
+};
+
+const DOCKER_BRIDGE_NETWORK_GATEWAY = "172.17.0.1";
+
+// Swaps "localhost" with the IP address of the Docker host
+const handleLocalhostUrl = (appUrl: string): string => {
+  try {
+    const url = new URL(appUrl);
+    if (url.hostname === "localhost") {
+      url.hostname = DOCKER_BRIDGE_NETWORK_GATEWAY;
+    }
+    return url.toString();
+  } catch (error) {
+    return appUrl;
+  }
 };
