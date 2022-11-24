@@ -15,8 +15,14 @@ RUN apt-get update \
   --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
-COPY node_modules node_modules
+COPY package.json yarn.lock ./
 
-COPY dist dist
+RUN yarn --frozen-lockfile
+
+COPY tsconfig.base.json tsconfig.json ./
+
+COPY src src
+
+RUN yarn build
 
 CMD ["/app/dist/index.mjs"]
