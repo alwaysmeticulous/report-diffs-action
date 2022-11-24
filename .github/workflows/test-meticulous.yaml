@@ -41,9 +41,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile --non-interactive
 
-      - name: Build project
-        run: yarn build
-
       - name: Use local dockerfile
         run: node ./scripts/use-local-dockerfile.js
 
