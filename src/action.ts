@@ -37,7 +37,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
-  const octokit = getOctokitOrThrow(githubToken);
+  const octokit = getOctokitOrFail(githubToken);
 
   if (event == null) {
     console.warn(
@@ -82,7 +82,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   }
 };
 
-const getOctokitOrThrow = (githubToken: string | null) => {
+const getOctokitOrFail = (githubToken: string | null) => {
   if (githubToken == null) {
     throw new Error("github-token is required");
   }

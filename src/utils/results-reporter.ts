@@ -3,6 +3,7 @@ import { TestRun } from "@alwaysmeticulous/cli";
 import { CodeChangeEvent } from "../types";
 import { updateStatusComment } from "./update-status-comment";
 
+const SHORT_SHA_LENGTH = 7;
 const METICULOUS_MARKDOWN_LINK = "[Meticulous](https://meticulous.ai/)";
 
 /**
@@ -20,7 +21,7 @@ export class ResultsReporter {
       headSha: string;
     }
   ) {
-    this.shortHeadSha = this.options.headSha.substring(0, 8);
+    this.shortHeadSha = this.options.headSha.substring(0, SHORT_SHA_LENGTH);
   }
 
   async testRunStarted(
