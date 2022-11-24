@@ -38,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile --non-interactive
 
-      - name: Lint
+      - name: Format
         run: yarn format:check
 
       - name: Lint

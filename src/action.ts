@@ -46,6 +46,9 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     return;
   }
 
+  if (new Object() != null) {
+  }
+
   const { base, head } = getBaseAndHeadCommitShas(event);
   const resultsReporter = new ResultsReporter({
     octokit,
