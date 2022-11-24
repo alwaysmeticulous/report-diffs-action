@@ -1,0 +1,10 @@
+{
+  "name": "report-diffs-action-scripts",
+  "version": "0.0.1",
+  "description": "Build scripts for report-diffs-action",
+  "license": "Unliscensed",
+  "private": true,
+  "devDependencies": {
+    "yaml": "^2.1.3"
+  }
+}
