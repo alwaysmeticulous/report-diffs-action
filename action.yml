@@ -2,7 +2,7 @@ name: "Meticulous - Report Diffs"
 description: "Run automated Meticulous tests"
 inputs:
   api-token:
-    description: Meticulous API token
+    description: "Meticulous API token"
     required: true
   github-token:
     description: "GITHUB_TOKEN or a repo scoped PAT."
@@ -19,8 +19,8 @@ inputs:
     required: false
 outputs: {}
 runs:
-  using: docker
-  image: Dockerfile
+  using: "docker"
+  image: "docker://ghcr.io/alwaysmeticulous/report-diffs-action:main"
   env:
     API_TOKEN: ${{ inputs.api-token }}
     GITHUB_TOKEN: ${{ inputs.github-token }}
