@@ -10,6 +10,8 @@ on:
 
 permissions:
   contents: read
+  statuses: write
+  pull-requests: write
   packages: read
 
 jobs:
@@ -44,13 +46,5 @@ jobs:
         uses: ./
         with:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
-          arguments: |
-            --diffThreshold="0"
-            --skipPauses
-            --testsFile="tests.json"
-            --parallelize
-            --parallelTasks=8
-            --useAssetsSnapshottedInBaseSimulation
-            --storyboard
-            --headless
-            --noSandbox
+          app-url: https://localhost:3000
+          tests-file: tests.json
