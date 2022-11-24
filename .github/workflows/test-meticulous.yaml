@@ -10,11 +10,14 @@ on:
 
 permissions:
   contents: read
+  statuses: write
+  pull-requests: write
+  packages: read
 
 jobs:
   test:
+    name: Report diffs
     runs-on: ubuntu-latest
-    name: Run report-diffs-action
 
     steps:
       - name: Checkout repository
@@ -28,43 +31,39 @@ jobs:
           cache: yarn
 
       - name: Cache node_modules
-        id: cache
         uses: actions/cache@v3
         with:
-          path: tests/react-bmi-calculator/node_modules
+          path: |
+            node_modules
+            tests/react-bmi-calculator/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             node-modules-${{ runner.os }}
 
-      - name: Install dependencies
-        id: dependencies
+      - name: Install react-bmi-calculator dependencies
         working-directory: ./tests/react-bmi-calculator
         run: yarn install --frozen-lockfile --non-interactive
 
-      - name: Build project
-        id: build
+      - name: Build react-bmi-calculator
         working-directory: ./tests/react-bmi-calculator
         run: yarn build
 
-      - name: Serve project
-        id: serve
+      - name: Serve react-bmi-calculator
         working-directory: ./tests/react-bmi-calculator
         run: |
           yarn serve &
-          sleep 5
+          sleep 4
+
+      - name: Install report-diffs-action dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Use local dockerfile
+        run: node ./scripts/use-local-dockerfile.js
 
       - name: Run report-diffs-action
         id: test
         uses: ./
         with:
-          api-token: ${{ secrets.METICULOUS_API_TOKEN }}
-          arguments: |
-            --appUrl="http://172.17.0.1:3000/"
-            --diffThreshold="0"
-            --skipPauses
-            --testsFile="tests/react-bmi-calculator/meticulous.json"
-            --parallelize
-            --parallelTasks=8
-            --storyboard
-            --headless
-            --noSandbox
+          api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
+          app-url: http://172.17.0.1:3000
+          tests-file: tests/react-bmi-calculator/meticulous.json
