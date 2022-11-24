@@ -88,6 +88,7 @@ export class ResultsReporter {
       await this.setCommitStatus({
         description: `Zero differences across ${totalScreens} screens tested`,
         state: "success",
+        targetUrl: testRun.url,
       });
       await this.setStatusComment({
         createIfDoesNotExist: true,
