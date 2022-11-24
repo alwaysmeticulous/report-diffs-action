@@ -16,6 +16,7 @@
     "dev": "parcel watch",
     "build": "parcel build",
     "format": "prettier --write src",
+    "format:check": "prettier --check src",
     "lint": "eslint src --ext=ts,tsx,js --cache",
     "lint:commit": "eslint --cache $(git diff --relative --name-only --diff-filter=ACMRTUXB master | grep  -E \"(.js$|.ts$|.tsx$)\")",
     "lint:fix": "eslint src --ext=ts,tsx,js --cache --fix"

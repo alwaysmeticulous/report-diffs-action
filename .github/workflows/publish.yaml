@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - main
-      # - push-to-registry
   pull_request: {}
 
 permissions:
@@ -14,6 +13,37 @@ permissions:
   packages: write
 
 jobs:
+  lint:
+    name: Lint and format
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js LTS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Lint
+        run: yarn format:check
+
+      - name: Lint
+        run: yarn lint
+
   publish:
     name: Publish
     runs-on: ubuntu-latest
