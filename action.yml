@@ -12,6 +12,6 @@ inputs:
 outputs: {}
 runs:
   using: "docker"
-  image: "ghcr.io/alwaysmeticulous/report-diffs-action:push-to-registry"
+  image: "ghcr.io/alwaysmeticulous/report-diffs-action:main"
   env:
     API_TOKEN: ${{ inputs.api-token }}
