@@ -72,7 +72,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
       onTestFinished: (testRun) => resultsReporter.testFinished(testRun),
     });
-    await resultsReporter.testRunFinished(results.testRun);
+    await resultsReporter.testRunFinished(results);
     process.exit(0);
   } catch (error) {
     const message = error instanceof Error ? error.message : `${error}`;
