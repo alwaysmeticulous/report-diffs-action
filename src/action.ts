@@ -55,6 +55,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     runNumber: context.runNumber,
     runId: context.runId,
   });
+  console.log(Object.keys(process.env));
+  console.log(`RUNNER_DEBUG=${process.env["RUNNER_DEBUG"]}`);
 
   if (event == null) {
     console.warn(
