@@ -8,6 +8,8 @@ import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
 import { ResultsReporter } from "./utils/results-reporter";
 
+const ONE_MINUTE_IN_MS = 60 * 1_000;
+
 const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   headless: true,
   devTools: false,
@@ -19,7 +21,7 @@ const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   moveBeforeClick: false,
   disableRemoteFonts: false,
   noSandbox: true,
-  maxDurationMs: null,
+  maxDurationMs: 5 * ONE_MINUTE_IN_MS,
   maxEventCount: null,
 };
 
