@@ -47,6 +47,15 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const { owner, repo } = context.repo;
   const octokit = getOctokitOrFail(githubToken);
 
+  console.log({
+    workflow: context.workflow,
+    action: context.action,
+    actor: context.actor,
+    job: context.job,
+    runNumber: context.runNumber,
+    runId: context.runId,
+  });
+
   if (event == null) {
     console.warn(
       `Running report-diffs-action is only supported for 'push' and 'pull_request' events, but was triggered on a '${context.eventName}' event. Skipping execution.`
