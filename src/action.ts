@@ -1,12 +1,8 @@
 import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import { runAllTests } from "@alwaysmeticulous/cli";
+import { initLogger, runAllTests, setLogLevel } from "@alwaysmeticulous/cli";
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
-import {
-  METICULOUS_LOGGER_NAME,
-  setMeticulousLocalDataDir,
-} from "@alwaysmeticulous/common";
-import log from "loglevel";
+import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
@@ -38,25 +34,16 @@ const DEFAULT_SCREENSHOTTING_OPTIONS = {
 } as const;
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
-  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
-  logger.setLevel(log.levels.TRACE);
+  initLogger();
+  if (+(process.env["RUNNER_DEBUG"] ?? "0")) {
+    setLogLevel("trace");
+  }
 
   const { apiToken, githubToken, appUrl, testsFile } = getInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
   const octokit = getOctokitOrFail(githubToken);
-
-  console.log({
-    workflow: context.workflow,
-    action: context.action,
-    actor: context.actor,
-    job: context.job,
-    runNumber: context.runNumber,
-    runId: context.runId,
-  });
-  console.log(Object.keys(process.env));
-  console.log(`RUNNER_DEBUG=${process.env["RUNNER_DEBUG"]}`);
 
   if (event == null) {
     console.warn(
