@@ -68,7 +68,7 @@ export class ResultsReporter {
       });
     } else {
       await this.setStatusComment({
-        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${totalTestCases} sessions to check for differences: [view differences detected so far](${testRun.url}) (${percentComplete}% complete, commit: ${this.shortHeadSha})`,
+        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${totalTestCases} sessions to check for differences (${percentComplete}% complete, commit: ${this.shortHeadSha}).`,
       });
     }
   }
