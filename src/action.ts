@@ -2,7 +2,11 @@ import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
 import { runAllTests } from "@alwaysmeticulous/cli";
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
-import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
+import {
+  METICULOUS_LOGGER_NAME,
+  setMeticulousLocalDataDir,
+} from "@alwaysmeticulous/common";
+import log from "loglevel";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
@@ -34,6 +38,9 @@ const DEFAULT_SCREENSHOTTING_OPTIONS = {
 } as const;
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+  logger.setLevel(log.levels.TRACE);
+
   const { apiToken, githubToken, appUrl, testsFile } = getInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
