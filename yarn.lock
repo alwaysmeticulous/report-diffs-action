@@ -27,10 +27,10 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/cli@^2.17.0":
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.17.0.tgz#96d41944e775db308e069e21509ac3c0117a626a"
-  integrity sha512-YkTeleL1M7uSB9VK4YOmZEikX2hUiXZFi216HHd2TZaWxBSo+6+2BZgYnbsIrzZ+9eUmLV3SPkdp86Gf896jog==
+"@alwaysmeticulous/cli@^2.18.0":
+  version "2.18.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.18.0.tgz#2eeda0a5bc9d388ba87311122521d89de585a372"
+  integrity sha512-IGwV+to/VjKtU6OGvXMyN25GydxAIWwz9ZXL/zrnpvUiCcgEF2G7rYC+4M9IuYGBMdwbqBlu1qhcooNDkDlHcw==
   dependencies:
     "@alwaysmeticulous/common" "^2.16.0"
     "@sentry/node" "^7.2.0"
