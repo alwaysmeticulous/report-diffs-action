@@ -74,12 +74,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       useAssetsSnapshottedInBaseSimulation: false,
       parallelTasks: 8,
       deflake: false,
-      useCache: false,
       githubSummary: true,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
       onTestFinished: (testRun) => resultsReporter.testFinished(testRun),
     });
-    await resultsReporter.testRunFinished(results.testRun);
+    await resultsReporter.testRunFinished(results);
     process.exit(0);
   } catch (error) {
     const message = error instanceof Error ? error.message : `${error}`;
