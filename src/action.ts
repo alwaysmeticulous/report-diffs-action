@@ -48,6 +48,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   }
 
   console.log(Object.keys(process.env).join(" | "));
+  console.log(`CI = ${process.env["CI"]}`);
   console.log(JSON.stringify(event, null, 2));
 
   const { base, head } = getBaseAndHeadCommitShas(event);
