@@ -53,15 +53,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     return;
   }
 
-  // console.log(Object.keys(process.env).join(" | "));
-  // console.log(`CI = ${process.env["CI"]}`);
-  // console.log(JSON.stringify(event, null, 2));
-
-  // if (event.type === 'pull_request') {
-  //   event.payload.pull_request.
-  // }
-
   const { base, head } = getBaseAndHeadCommitShas(event);
+  const environment = getEnvironment({ event });
   const resultsReporter = new ResultsReporter({
     octokit,
     event,
@@ -69,9 +62,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     repo,
     headSha: head,
   });
-
-  const environment = getEnvironment({ event });
-  console.log(JSON.stringify(environment));
 
   try {
     setMeticulousLocalDataDir();
