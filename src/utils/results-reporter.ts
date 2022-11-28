@@ -1,5 +1,5 @@
 import { getOctokit } from "@actions/github";
-import { TestRun } from "@alwaysmeticulous/cli";
+import { RunAllTestsResult, TestRun } from "@alwaysmeticulous/cli";
 import { CodeChangeEvent } from "../types";
 import { updateStatusComment } from "./update-status-comment";
 
@@ -68,37 +68,41 @@ export class ResultsReporter {
       });
     } else {
       await this.setStatusComment({
-        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${totalTestCases} sessions to check for differences: [view differences detected so far](${testRun.url}) (${percentComplete}% complete, commit: ${this.shortHeadSha})`,
+        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${totalTestCases} sessions to check for differences (${percentComplete}% complete, commit: ${this.shortHeadSha}).`,
       });
     }
   }
 
-  async testRunFinished(
-    testRun: TestRun & {
-      status: "Success" | "Failure";
-    }
-  ) {
-    const { passedTestCases, failedTestCases } = testRun.progress;
-    const totalTestCases = passedTestCases + failedTestCases;
+  async testRunFinished(results: RunAllTestsResult) {
+    const { testRun, testCaseResults } = results;
+    const screenshotDiffResults = testCaseResults.flatMap(
+      (testCase) => testCase.screenshotDiffResults
+    );
+    const screensWithDifferences = screenshotDiffResults.filter(
+      (result) =>
+        result.outcome === "diff" || result.outcome === "different-size"
+    ).length;
+    const totalScreens = screenshotDiffResults.length;
 
-    if (testRun.status === "Success") {
+    if (screensWithDifferences === 0) {
       await this.setCommitStatus({
-        description: `Zero differences across ${passedTestCases} sessions tested`,
-        state: "success",
-      });
-      await this.setStatusComment({
-        createIfDoesNotExist: true,
-        body: `✅ ${METICULOUS_MARKDOWN_LINK} spotted zero visual differences across ${passedTestCases} sessions tested.`,
-      });
-    } else {
-      await this.setCommitStatus({
-        description: `Differences in ${failedTestCases} of ${totalTestCases} sessions tested, click details to view`,
+        description: `Zero differences across ${totalScreens} screens tested`,
         state: "success",
         targetUrl: testRun.url,
       });
       await this.setStatusComment({
         createIfDoesNotExist: true,
-        body: `🤖 ${METICULOUS_MARKDOWN_LINK} spotted visual differences in ${failedTestCases} of ${totalTestCases} sessions tested: [view differences detected](${testRun.url}) (commit: ${this.shortHeadSha}).`,
+        body: `✅ ${METICULOUS_MARKDOWN_LINK} spotted zero visual differences across ${totalScreens} screens tested.`,
+      });
+    } else {
+      await this.setCommitStatus({
+        description: `Differences in ${screensWithDifferences} of ${totalScreens} screens, click details to view`,
+        state: "success",
+        targetUrl: testRun.url,
+      });
+      await this.setStatusComment({
+        createIfDoesNotExist: true,
+        body: `🤖 ${METICULOUS_MARKDOWN_LINK} spotted visual differences in ${screensWithDifferences} of ${totalScreens} screens tested: [view differences detected](${testRun.url}) (commit: ${this.shortHeadSha}).`,
       });
     }
   }

@@ -1,7 +1,8 @@
 import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import { runAllTests } from "@alwaysmeticulous/cli";
+import { initLogger, runAllTests, setLogLevel } from "@alwaysmeticulous/cli";
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
+import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
@@ -33,6 +34,11 @@ const DEFAULT_SCREENSHOTTING_OPTIONS = {
 } as const;
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
+  initLogger();
+  if (+(process.env["RUNNER_DEBUG"] ?? "0")) {
+    setLogLevel("trace");
+  }
+
   const { apiToken, githubToken, appUrl, testsFile } = getInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -56,6 +62,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   });
 
   try {
+    setMeticulousLocalDataDir();
     const results = await runAllTests({
       testsFile,
       apiToken,
@@ -67,12 +74,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       useAssetsSnapshottedInBaseSimulation: false,
       parallelTasks: 8,
       deflake: false,
-      useCache: false,
       githubSummary: true,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
       onTestFinished: (testRun) => resultsReporter.testFinished(testRun),
     });
-    await resultsReporter.testRunFinished(results.testRun);
+    await resultsReporter.testRunFinished(results);
     process.exit(0);
   } catch (error) {
     const message = error instanceof Error ? error.message : `${error}`;
