@@ -47,6 +47,9 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     return;
   }
 
+  console.log(Object.keys(process.env).join(" | "));
+  console.log(JSON.stringify(event, null, 2));
+
   const { base, head } = getBaseAndHeadCommitShas(event);
   const resultsReporter = new ResultsReporter({
     octokit,
@@ -69,7 +72,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       useAssetsSnapshottedInBaseSimulation: false,
       parallelTasks: 8,
       deflake: false,
-      // useCache: false,
       githubSummary: true,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
       onTestFinished: (testRun) => resultsReporter.testFinished(testRun),
