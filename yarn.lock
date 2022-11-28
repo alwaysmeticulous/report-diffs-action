@@ -27,17 +27,17 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/api@^2.19.0":
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.19.0.tgz#c49903ca7c1f85202f7195ac3c2a37ccc94ada8b"
-  integrity sha512-kAt5KTzBNINnQ/xLF7PeZLmNY6CvXu3MYAW3gJpneQlcl2VKVj4mxAynxc98IIKj8yEF5jjJgV+DgL5MWMv6GQ==
+"@alwaysmeticulous/api@^2.19.1":
+  version "2.19.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.19.1.tgz#ff45365962e34a8275ac2eceeeafa9f2089c20fc"
+  integrity sha512-DqH9Ej8eQuDdm+aDiZyZxFUfbUmNiIrDvyQIyD9q+cBDryBCqREEAS/871bfBLIf46/KvQuVIzwvQhV582hrjA==
 
-"@alwaysmeticulous/cli@^2.19.0":
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.19.0.tgz#eff1de1f6f0fcdec3c2c3b01a974e77525166bbd"
-  integrity sha512-lYXrhdfSVazDEEipwSIJ644EYxjiqjrXJIO67GCeHmZdZQYP7gMmBOLbemivsJQO6fkE5ilCM2pjD34D/P8l4w==
+"@alwaysmeticulous/cli@^2.19.1":
+  version "2.19.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.19.1.tgz#d9294731f4b10ebf05ccfcaa06513e85a5b7530f"
+  integrity sha512-ao8bLj0GbGOdGnp+MfTt2/mhLPZjX1X6D6J6/t9AgqsMiJ1q2ZqjSMDnDMdqIPL3bjdOjRrqzv04MebHTyUcKg==
   dependencies:
-    "@alwaysmeticulous/common" "^2.19.0"
+    "@alwaysmeticulous/common" "^2.19.1"
     "@sentry/node" "^7.21.1"
     "@sentry/tracing" "^7.21.1"
     adm-zip "^0.5.9"
@@ -53,20 +53,20 @@
     pngjs "^6.0.0"
     yargs "^17.5.1"
 
-"@alwaysmeticulous/common@^2.19.0":
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.19.0.tgz#770fe63defd35ca205f6e912428106df5f920a90"
-  integrity sha512-jiWphepSgqnagmvFKxysX6+5aGPjcGqUo4NgFP2dVH35/FgJyz1jXmkAI1+/AFKGq3wmXwiVOzMJFpyZl6L5NQ==
+"@alwaysmeticulous/common@^2.19.1":
+  version "2.19.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.19.1.tgz#7bdbb96619ed3124a60115bdc6b7f826dff7ec13"
+  integrity sha512-uC2JtjBfF4jPcGyZZSQa5HGcAyFBzBkVzbv67M95UhdhhPXQ/WPLEQLpVd0JRsjCaTE1+HIn/1I5SX/73pBH6Q==
   dependencies:
     loglevel "^1.8.0"
     luxon "^2.4.0"
 
-"@alwaysmeticulous/replayer@^2.19.0":
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.19.0.tgz#79873d5ec90e8d6a997c2853fc0979d49e1f7ff9"
-  integrity sha512-+K3k9yq1KyuPrmtMAgyF9PomILrYeTEjOMistch8uEor6zDY75AfydCYtGi0bwCkQnQ6S1O32YyjmnckPkMI6w==
+"@alwaysmeticulous/replayer@^2.19.1":
+  version "2.19.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.19.1.tgz#9fc4d43698947ae6b67374b259621f486727cdc5"
+  integrity sha512-8v9tkA/0BRC+HIw9+2Q37ZLxULmGHzkyKRpYS92Ee6HvkBQoQSriIcW7NrFWqBYbNji3psiuACRgcGnhZ3wViQ==
   dependencies:
-    "@alwaysmeticulous/common" "^2.19.0"
+    "@alwaysmeticulous/common" "^2.19.1"
     loglevel "^1.8.0"
     luxon "^2.4.0"
     puppeteer "^14.4.1"
