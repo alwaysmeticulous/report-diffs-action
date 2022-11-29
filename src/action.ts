@@ -3,6 +3,7 @@ import { context, getOctokit } from "@actions/github";
 import { initLogger, runAllTests, setLogLevel } from "@alwaysmeticulous/cli";
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
+import { getEnvironment } from "./utils/environment.utils";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
@@ -53,6 +54,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   }
 
   const { base, head } = getBaseAndHeadCommitShas(event);
+  const environment = getEnvironment({ event });
   const resultsReporter = new ResultsReporter({
     octokit,
     event,
@@ -75,6 +77,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       parallelTasks: 8,
       deflake: false,
       githubSummary: true,
+      environment,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
       onTestFinished: (testRun) => resultsReporter.testFinished(testRun),
     });
