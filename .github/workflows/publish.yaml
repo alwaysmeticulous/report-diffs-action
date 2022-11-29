@@ -6,7 +6,11 @@ on:
   push:
     branches:
       - main
+      - releases/*
   pull_request: {}
+  release:
+    types:
+      - published
 
 permissions:
   contents: read
