@@ -1,6 +1,10 @@
 name: "Meticulous - Report Diffs"
 description: "Run automated Meticulous tests"
 inputs:
+  command:
+    description: "The command to run"
+    required: true
+    default: "run-tests"
   api-token:
     description: "Meticulous API token"
     required: true
@@ -17,11 +21,14 @@ inputs:
 
       If not set a search will be performed to find a meticulous.json file in the current directory or the nearest parent directory.
     required: false
-outputs: {}
+outputs:
+  base-test-run:
+    description: "Id of the test run for the base commit if any (check-base-commit command)"
 runs:
   using: "docker"
   image: "docker://ghcr.io/alwaysmeticulous/report-diffs-action:main"
   env:
+    COMMAND: ${{ inputs.command }}
     API_TOKEN: ${{ inputs.api-token }}
     GITHUB_TOKEN: ${{ inputs.github-token }}
     APP_URL: ${{ inputs.app-url }}

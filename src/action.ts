@@ -1,5 +1,5 @@
 import { setFailed } from "@actions/core";
-import { context, getOctokit } from "@actions/github";
+import { context } from "@actions/github";
 import {
   getLatestTestRunResults,
   initLogger,
@@ -13,6 +13,7 @@ import { getEnvironment } from "./utils/environment.utils";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
+import { getOctokitOrFail } from "./utils/get-octokit";
 import { ResultsReporter } from "./utils/results-reporter";
 
 const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
@@ -102,20 +103,5 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     setFailed(message);
     resultsReporter.errorRunningTests();
     process.exit(1);
-  }
-};
-
-const getOctokitOrFail = (githubToken: string | null) => {
-  if (githubToken == null) {
-    throw new Error("github-token is required");
-  }
-
-  try {
-    return getOctokit(githubToken);
-  } catch (err) {
-    console.error(err);
-    throw new Error(
-      "Error connecting to GitHub. Did you specify a valid 'github-token'?"
-    );
   }
 };

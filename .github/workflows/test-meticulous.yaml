@@ -61,6 +61,19 @@ jobs:
       - name: Use local dockerfile
         run: node ./scripts/use-local-dockerfile.js
 
+      - name: Check base commit
+        id: check-base-commit
+        uses: ./
+        with:
+          command: check-base-commit
+          api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
+          app-url: http://localhost:3000
+          tests-file: tests/react-bmi-calculator/meticulous.json
+
+      - name: Print output of previous step
+        run: |
+          echo "Got ${{ steps.check-base-commit.outputs.base-test-run }}"
+
       - name: Run report-diffs-action
         id: test
         uses: ./
