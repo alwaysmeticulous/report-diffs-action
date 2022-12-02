@@ -60,6 +60,7 @@ jobs:
       - name: Checkout base commit
         # if: steps.check-base-commit.outputs.base-test-run == ''
         run: |
+          git fetch
           git checkout ${{ steps.check-base-commit.outputs.base-commit }}
 
       - name: Install react-bmi-calculator dependencies
