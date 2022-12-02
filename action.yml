@@ -30,7 +30,8 @@ outputs:
     description: "SHA1 of the head commit (check-base-commit command)"
 runs:
   using: "docker"
-  image: "docker://ghcr.io/alwaysmeticulous/report-diffs-action:main"
+  # image: "docker://ghcr.io/alwaysmeticulous/report-diffs-action:main"
+  image: "Dockerfile"
   env:
     COMMAND: ${{ inputs.command }}
     API_TOKEN: ${{ inputs.api-token }}
