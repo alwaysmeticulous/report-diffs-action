@@ -33,6 +33,8 @@ export const runCheckBaseCommitAction = async (): Promise<void> => {
     commitSha: base,
   });
 
+  setOutput("base-commit", base);
+
   if (testRun == null) {
     console.log(`No test run found for base commit ${base}`);
     setOutput("base-test-run", "");

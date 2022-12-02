@@ -24,6 +24,10 @@ inputs:
 outputs:
   base-test-run:
     description: "Id of the test run for the base commit if any (check-base-commit command)"
+  base-commit:
+    description: "SHA1 of the base commit (check-base-commit command)"
+  head-commit:
+    description: "SHA1 of the head commit (check-base-commit command)"
 runs:
   using: "docker"
   image: "docker://ghcr.io/alwaysmeticulous/report-diffs-action:main"
