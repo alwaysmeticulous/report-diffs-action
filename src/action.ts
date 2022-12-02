@@ -72,7 +72,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       testsFile,
       apiToken,
       commitSha: runOnBase ? base : head,
-      baseCommitSha: runOnBase ? null : base,
+      baseCommitSha: base,
       appUrl,
       executionOptions: DEFAULT_EXECUTION_OPTIONS,
       screenshottingOptions: DEFAULT_SCREENSHOTTING_OPTIONS,
