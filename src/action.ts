@@ -1,12 +1,6 @@
 import { setFailed } from "@actions/core";
 import { context } from "@actions/github";
-import {
-  getLatestTestRunResults,
-  initLogger,
-  runAllTests,
-  setLogLevel,
-} from "@alwaysmeticulous/cli";
-import { createClient } from "@alwaysmeticulous/cli/dist/api/client.js";
+import { initLogger, runAllTests, setLogLevel } from "@alwaysmeticulous/cli";
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
 import { getEnvironment } from "./utils/environment.utils";
@@ -47,7 +41,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     setLogLevel("trace");
   }
 
-  const { apiToken, githubToken, appUrl, testsFile } = getInputs();
+  const { command, apiToken, githubToken, appUrl, testsFile } = getInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
@@ -62,13 +56,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   const { base, head } = getBaseAndHeadCommitShas(event);
   const environment = getEnvironment({ event });
-
-  const testRun = await getLatestTestRunResults({
-    client: createClient({ apiToken }),
-    commitSha: base,
-  });
-  console.log(`testRun = ${testRun}`);
-
   const resultsReporter = new ResultsReporter({
     octokit,
     event,
@@ -77,13 +64,15 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     headSha: head,
   });
 
+  const runOnBase = command === "run-on-base";
+
   try {
     setMeticulousLocalDataDir();
     const results = await runAllTests({
       testsFile,
       apiToken,
-      commitSha: head,
-      baseCommitSha: base,
+      commitSha: runOnBase ? base : head,
+      baseCommitSha: runOnBase ? null : base,
       appUrl,
       executionOptions: DEFAULT_EXECUTION_OPTIONS,
       screenshottingOptions: DEFAULT_SCREENSHOTTING_OPTIONS,

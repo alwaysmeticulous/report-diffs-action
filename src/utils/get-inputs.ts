@@ -2,6 +2,11 @@ import { getInputFromEnv } from "./get-input-from-env";
 
 export const getInputs = () => {
   // The names, required value, and types should match that in action.yml
+  const command = getInputFromEnv({
+    name: "command",
+    required: true,
+    type: "string",
+  });
   const apiToken = getInputFromEnv({
     name: "api-token",
     required: true,
@@ -25,7 +30,7 @@ export const getInputs = () => {
 
   const appUrl = handleLocalhostUrl(appUrl_);
 
-  return { apiToken, githubToken, appUrl, testsFile };
+  return { command, apiToken, githubToken, appUrl, testsFile };
 };
 
 const DOCKER_BRIDGE_NETWORK_GATEWAY = "172.17.0.1";
