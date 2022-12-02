@@ -6,7 +6,7 @@ import {
   runAllTests,
   setLogLevel,
 } from "@alwaysmeticulous/cli";
-import { createClient } from "@alwaysmeticulous/cli/dist/api/client";
+import { createClient } from "@alwaysmeticulous/cli/dist/api/client.js";
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
 import { getEnvironment } from "./utils/environment.utils";
