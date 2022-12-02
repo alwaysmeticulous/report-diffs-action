@@ -27,17 +27,17 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/api@^2.19.1":
-  version "2.19.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.19.1.tgz#ff45365962e34a8275ac2eceeeafa9f2089c20fc"
-  integrity sha512-DqH9Ej8eQuDdm+aDiZyZxFUfbUmNiIrDvyQIyD9q+cBDryBCqREEAS/871bfBLIf46/KvQuVIzwvQhV582hrjA==
+"@alwaysmeticulous/api@^2.20.1":
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.20.1.tgz#0753ffaaa44a6243e0a5110c192709e3349fcaba"
+  integrity sha512-h52jBxcztSv78f5Wt39rleiq3HipoItzT+dt287ls8UUHhJFbHAHmkrlLT9Nal5sgQAwy6mJlIXw8/oBeXfCrw==
 
-"@alwaysmeticulous/cli@^2.19.3":
-  version "2.19.3"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.19.3.tgz#ab7f84b8ebe978f047d031e6a1a0e9d2ff7478dd"
-  integrity sha512-L+2GUTlklmZygKOKW6QL8lQjK470vo5XxwlpvfHCBxeqMiq1HpElJhzf1US04j3vxta9euhYtcj4m7pdcqWHpQ==
+"@alwaysmeticulous/cli@^2.20.2":
+  version "2.20.2"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.20.2.tgz#dad181869d9766692bc74e12e74a7ca74db44b2f"
+  integrity sha512-NHik4E6/vd6EGM4WosTbQq2BpcOhIQqq/aqUYWftQm6v6CJpaY34WLaeiEuuDJl8Z2zn7U4+WmtosNTzT2OUOA==
   dependencies:
-    "@alwaysmeticulous/common" "^2.19.1"
+    "@alwaysmeticulous/common" "^2.20.1"
     "@sentry/node" "^7.21.1"
     "@sentry/tracing" "^7.21.1"
     adm-zip "^0.5.9"
@@ -51,22 +51,23 @@
     luxon "^2.4.0"
     pixelmatch "^5.3.0"
     pngjs "^6.0.0"
+    proper-lockfile "^4.1.2"
     yargs "^17.5.1"
 
-"@alwaysmeticulous/common@^2.19.1":
-  version "2.19.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.19.1.tgz#7bdbb96619ed3124a60115bdc6b7f826dff7ec13"
-  integrity sha512-uC2JtjBfF4jPcGyZZSQa5HGcAyFBzBkVzbv67M95UhdhhPXQ/WPLEQLpVd0JRsjCaTE1+HIn/1I5SX/73pBH6Q==
+"@alwaysmeticulous/common@^2.20.1":
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.20.1.tgz#c70150773e1b4cd80c85810435973ce5c6ad96bb"
+  integrity sha512-iVv+RH3OPCx3S4jcEx8WhfhzF46ZDyLfaAH0ztyGuvSCpnkH1kenQtl3NFei2fI+pPVpduTfcqXG71cv/j7aCQ==
   dependencies:
     loglevel "^1.8.0"
     luxon "^2.4.0"
 
-"@alwaysmeticulous/replayer@^2.19.1":
-  version "2.19.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.19.1.tgz#9fc4d43698947ae6b67374b259621f486727cdc5"
-  integrity sha512-8v9tkA/0BRC+HIw9+2Q37ZLxULmGHzkyKRpYS92Ee6HvkBQoQSriIcW7NrFWqBYbNji3psiuACRgcGnhZ3wViQ==
+"@alwaysmeticulous/replayer@^2.20.1":
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.20.1.tgz#34fbf2f041cdb9b3060e0055da9444bec18b0e0e"
+  integrity sha512-OiyZ/Lp1bzHuxu2Q2t0hYF5TMGX7c5u0meocUQg2wjLHncOLtcS0eWRjPMIttliTrGSizEhIh1FIT0oOj/1dUQ==
   dependencies:
-    "@alwaysmeticulous/common" "^2.19.1"
+    "@alwaysmeticulous/common" "^2.20.1"
     loglevel "^1.8.0"
     luxon "^2.4.0"
     puppeteer "^14.4.1"
@@ -3423,6 +3424,15 @@ progress@2.0.3:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
+proper-lockfile@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/proper-lockfile/-/proper-lockfile-4.1.2.tgz#c8b9de2af6b2f1601067f98e01ac66baa223141f"
+  integrity sha512-TjNPblN4BwAWMXU8s9AEz4JmQxnD1NNL7bNOY/AKUzyamc379FWASUhc/K1pL2noVb+XmZKLL68cjzLsiOAMaA==
+  dependencies:
+    graceful-fs "^4.2.4"
+    retry "^0.12.0"
+    signal-exit "^3.0.2"
+
 proxy-addr@~2.0.7:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.7.tgz#f19fe69ceab311eeb94b42e70e8c2070f9ba1025"
@@ -3578,6 +3588,11 @@ restore-cursor@^3.1.0:
   dependencies:
     onetime "^5.1.0"
     signal-exit "^3.0.2"
+
+retry@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/retry/-/retry-0.12.0.tgz#1b42a6266a21f07421d1b0b54b7dc167b01c013b"
+  integrity sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==
 
 reusify@^1.0.4:
   version "1.0.4"

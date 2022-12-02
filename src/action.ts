@@ -1,6 +1,12 @@
 import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import { initLogger, runAllTests, setLogLevel } from "@alwaysmeticulous/cli";
+import {
+  getLatestTestRunResults,
+  initLogger,
+  runAllTests,
+  setLogLevel,
+} from "@alwaysmeticulous/cli";
+import { createClient } from "@alwaysmeticulous/cli/dist/api/client";
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
 import { getEnvironment } from "./utils/environment.utils";
@@ -55,6 +61,13 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   const { base, head } = getBaseAndHeadCommitShas(event);
   const environment = getEnvironment({ event });
+
+  const testRun = await getLatestTestRunResults({
+    client: createClient({ apiToken }),
+    commitSha: base,
+  });
+  console.log(`testRun = ${testRun}`);
+
   const resultsReporter = new ResultsReporter({
     octokit,
     event,
@@ -78,6 +91,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       deflake: false,
       githubSummary: true,
       environment,
+      maxRetriesOnFailure: 0,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
       onTestFinished: (testRun) => resultsReporter.testFinished(testRun),
     });
