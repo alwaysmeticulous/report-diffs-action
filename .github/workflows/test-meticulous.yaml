@@ -53,23 +53,19 @@ jobs:
           app-url: http://localhost:3000
           tests-file: tests/react-bmi-calculator/meticulous.json
 
-      - name: Print output of previous step
-        run: |
-          echo "Got ${{ steps.check-base-commit.outputs.base-test-run }}"
-
       - name: Checkout base commit
-        # if: steps.check-base-commit.outputs.base-test-run == ''
+        if: steps.check-base-commit.outputs.base-test-run == ''
         run: |
           git fetch
           git checkout -- .
           git checkout ${{ steps.check-base-commit.outputs.base-commit }}
 
       - name: Use local dockerfile
-        # if: steps.check-base-commit.outputs.base-test-run == ''
+        if: steps.check-base-commit.outputs.base-test-run == ''
         run: node ./scripts/use-local-dockerfile.js
 
       - name: Install react-bmi-calculator dependencies
-        # if: steps.check-base-commit.outputs.base-test-run == ''
+        if: steps.check-base-commit.outputs.base-test-run == ''
         working-directory: ./tests/react-bmi-calculator
         run: yarn install --frozen-lockfile --non-interactive
 
@@ -79,7 +75,7 @@ jobs:
         run: yarn build
 
       - name: Serve react-bmi-calculator
-        # if: steps.check-base-commit.outputs.base-test-run == ''
+        if: steps.check-base-commit.outputs.base-test-run == ''
         id: serve-base
         working-directory: ./tests/react-bmi-calculator
         run: |
@@ -88,8 +84,8 @@ jobs:
           echo "pid=${pid}" >> $GITHUB_OUTPUT
           sleep 4
 
-      - name: Run report-diffs-action
-        # if: steps.check-base-commit.outputs.base-test-run == ''
+      - name: Run report-diffs-action on base
+        if: steps.check-base-commit.outputs.base-test-run == ''
         uses: ./
         with:
           command: "run-on-base"
@@ -98,18 +94,18 @@ jobs:
           tests-file: tests/react-bmi-calculator/meticulous.json
 
       - name: Shut down server
-        # if: steps.check-base-commit.outputs.base-test-run == ''
+        if: steps.check-base-commit.outputs.base-test-run == ''
         run: |
           kill "${{ steps.serve-base.outputs.pid }}"
 
       - name: Checkout head commit
-        # if: steps.check-base-commit.outputs.base-test-run == ''
+        if: steps.check-base-commit.outputs.base-test-run == ''
         run: |
           git checkout -- .
           git checkout ${{ steps.check-base-commit.outputs.head-commit }}
 
       - name: Use local dockerfile
-        # if: steps.check-base-commit.outputs.base-test-run == ''
+        if: steps.check-base-commit.outputs.base-test-run == ''
         run: node ./scripts/use-local-dockerfile.js
 
       - name: Install react-bmi-calculator dependencies
