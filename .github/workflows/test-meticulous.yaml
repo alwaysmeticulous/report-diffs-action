@@ -61,7 +61,11 @@ jobs:
         # if: steps.check-base-commit.outputs.base-test-run == ''
         run: |
           git fetch
+          git checkout -- .
           git checkout ${{ steps.check-base-commit.outputs.base-commit }}
+
+      - name: Use local dockerfile
+        run: node ./scripts/use-local-dockerfile.js
 
       - name: Install react-bmi-calculator dependencies
         working-directory: ./tests/react-bmi-calculator
@@ -95,7 +99,11 @@ jobs:
       - name: Checkout head commit
         # if: steps.check-base-commit.outputs.base-test-run == ''
         run: |
+          git checkout -- .
           git checkout ${{ steps.check-base-commit.outputs.head-commit }}
+
+       - name: Use local dockerfile
+        run: node ./scripts/use-local-dockerfile.js
 
       - name: Install react-bmi-calculator dependencies
         working-directory: ./tests/react-bmi-calculator

@@ -27,13 +27,14 @@ export const runCheckBaseCommitAction = async (): Promise<void> => {
     return;
   }
 
-  const { base } = getBaseAndHeadCommitShas(event);
+  const { base, head } = getBaseAndHeadCommitShas(event);
   const testRun = await getLatestTestRunResults({
     client: createClient({ apiToken }),
     commitSha: base,
   });
 
   setOutput("base-commit", base);
+  setOutput("head-commit", head);
 
   if (testRun == null) {
     console.log(`No test run found for base commit ${base}`);
