@@ -102,7 +102,7 @@ jobs:
           git checkout -- .
           git checkout ${{ steps.check-base-commit.outputs.head-commit }}
 
-       - name: Use local dockerfile
+      - name: Use local dockerfile
         run: node ./scripts/use-local-dockerfile.js
 
       - name: Install react-bmi-calculator dependencies
