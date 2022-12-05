@@ -58,7 +58,12 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     return;
   }
 
-  const { base, head } = getBaseAndHeadCommitShas(event);
+  const { base, head } = await getBaseAndHeadCommitShas(event);
+
+  console.log("=== Git Commit SHAs ===");
+  console.log(JSON.stringify({ base, head }, null, 2));
+  console.log("=======================");
+
   const environment = getEnvironment({ event });
   const resultsReporter = new ResultsReporter({
     octokit,
