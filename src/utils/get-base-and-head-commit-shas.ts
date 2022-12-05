@@ -21,7 +21,7 @@ export const getBaseAndHeadCommitShas = async (
     const headRef = getWorkflowInput(event.payload.inputs["head-commit-sha"]);
     const head = await execGitRevParse(headRef ?? "HEAD");
     const baseRef = getWorkflowInput(event.payload.inputs["base-commit-sha"]);
-    const base = await execGitRevParse(baseRef ?? `${baseRef}~1`);
+    const base = await execGitRevParse(baseRef ?? `${head}~1`);
     return {
       base,
       head,
