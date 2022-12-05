@@ -40,7 +40,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     setLogLevel("trace");
   }
 
-  const { apiToken, githubToken, appUrl, testsFile } = getInputs();
+  const { apiToken, githubToken, appUrl, testsFile, maxRetriesOnFailure } =
+    getInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
@@ -76,6 +77,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       useAssetsSnapshottedInBaseSimulation: false,
       parallelTasks: 8,
       deflake: false,
+      maxRetriesOnFailure,
       githubSummary: true,
       environment,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),

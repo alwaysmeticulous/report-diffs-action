@@ -22,10 +22,15 @@ export const getInputs = () => {
     required: false,
     type: "string",
   });
+  const maxRetriesOnFailure = getInputFromEnv({
+    name: "max-retries-on-failure",
+    required: true,
+    type: "number",
+  });
 
   const appUrl = handleLocalhostUrl(appUrl_);
 
-  return { apiToken, githubToken, appUrl, testsFile };
+  return { apiToken, githubToken, appUrl, testsFile, maxRetriesOnFailure };
 };
 
 const DOCKER_BRIDGE_NETWORK_GATEWAY = "172.17.0.1";
