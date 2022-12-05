@@ -17,6 +17,14 @@ inputs:
 
       If not set a search will be performed to find a meticulous.json file in the current directory or the nearest parent directory.
     required: false
+  max-retries-on-failure:
+    description: |
+      The number of times to re-run any replays that give a screenshot diff. If any of the retryed replays differs from that in the first replay
+      then the original diff will be marked as a flake, and ignored.
+
+      Setting to 0 disables this feature.
+    required: true
+    default: 5
 outputs: {}
 runs:
   using: "docker"
