@@ -76,6 +76,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       useAssetsSnapshottedInBaseSimulation: false,
       parallelTasks: 8,
       deflake: false,
+      maxRetriesOnFailure: 0,
       githubSummary: true,
       environment,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
