@@ -42,6 +42,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   const { apiToken, githubToken, appUrl, testsFile } = getInputs();
   const { payload } = context;
+
+  console.log("=== Payload ===");
+  console.log(JSON.stringify(payload, null, 2));
+  console.log("===============");
+
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
   const octokit = getOctokitOrFail(githubToken);
