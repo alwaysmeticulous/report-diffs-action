@@ -16,8 +16,4 @@ Follow the instructions at https://app.meticulous.ai/docs to set this up on your
    2. Set `releases/v1` as the target
    3. Write release notes
 
-4. Pull `releases/v1` locally and update the `v1` tag:
-
-   1. `git tag --delete v1`
-   2. `git tag v1`
-   3. `git push --tag --force`
+4. Run `./scripts/move-v1-tag-to-latest-release.sh`

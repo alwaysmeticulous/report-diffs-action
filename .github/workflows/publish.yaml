@@ -89,3 +89,11 @@ jobs:
           labels: ${{ steps.metadata.outputs.labels }}
           cache-from: type=registry,ref=ghcr.io/alwaysmeticulous/report-diffs-action:cache
           cache-to: type=registry,ref=ghcr.io/alwaysmeticulous/report-diffs-action:cache,mode=max
+
+      - name: Bump V1 tag
+        if: github.ref == 'refs/heads/releases/v1'
+        run: |
+          git fetch origin releases/v1
+          git tag --delete v1
+          git tag v1 origin/releases/v1
+          git push --tag --force
