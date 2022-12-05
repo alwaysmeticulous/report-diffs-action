@@ -35,7 +35,8 @@ const parseValue = (
   }
   if (type === "string") {
     return value;
-  } else if (type === "number") {
+  }
+  if (type === "number") {
     const parsed = Number.parseInt(value);
     if (isNaN(parsed)) {
       return null;
