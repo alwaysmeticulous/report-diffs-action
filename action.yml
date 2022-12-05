@@ -34,6 +34,7 @@ runs:
     GITHUB_TOKEN: ${{ inputs.github-token }}
     APP_URL: ${{ inputs.app-url }}
     TESTS_FILE: ${{ inputs.tests-file }}
+    MAX_RETRIES_ON_FAILURE: ${{ inputs.max-retries-on-failure }}
 branding:
   color: purple
   icon: camera
