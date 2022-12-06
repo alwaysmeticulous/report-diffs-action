@@ -43,8 +43,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const { apiToken, githubToken, appUrl, testsFile } = getInputs();
   const { payload } = context;
 
-  console.log("=== Payload ===");
-  console.log(JSON.stringify(payload, null, 2));
+  // console.log("=== Payload ===");
+  // console.log(JSON.stringify(payload, null, 2));
+  // console.log("===============");
+  console.log("=== Context ===");
+  console.log(JSON.stringify(context, null, 2));
   console.log("===============");
 
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -52,11 +55,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const octokit = getOctokitOrFail(githubToken);
 
   if (+(process.env["TEST_DISPATCH"] ?? "0")) {
-    console.log(`workflow_id = ${context.action}`);
+    console.log(`workflow_id = ${context.workflow}`);
     const result01 = await octokit.rest.actions.getWorkflow({
       owner,
       repo,
-      workflow_id: context.action,
+      workflow_id: context.workflow,
     });
     console.log(JSON.stringify(result01, null, 2));
 
