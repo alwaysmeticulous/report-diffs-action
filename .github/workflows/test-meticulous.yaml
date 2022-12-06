@@ -3,12 +3,11 @@
 name: Tests - react-bmi-calculator
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  #     - releases/*
-  # pull_request: {}
-  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+      - releases/*
+  pull_request: {}
 
 permissions:
   contents: read
