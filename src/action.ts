@@ -54,29 +54,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const { owner, repo } = context.repo;
   const octokit = getOctokitOrFail(githubToken);
 
-  if (+(process.env["TEST_DISPATCH"] ?? "0")) {
-    console.log(`workflow_id = ${payload.workflow}`);
-    const result01 = await octokit.rest.actions.getWorkflow({
-      owner,
-      repo,
-      workflow_id: payload.workflow,
-    });
-    // console.log(JSON.stringify(result01, null, 2));
-    const workflowId = result01.data.id;
-    const result02 = await octokit.rest.actions.listWorkflowRuns({
-      owner,
-      repo,
-      workflow_id: workflowId,
-    });
-    console.log(JSON.stringify(result02, null, 2));
-
-    // const result01 = await octokit.rest.actions.listWorkflowRuns({
-    //   owner,
-    //   repo,
-    // });
-    throw new Error("TEST_DISPATCH!");
-  }
-
   if (event == null) {
     console.warn(
       `Running report-diffs-action is only supported for 'push', \
@@ -91,6 +68,30 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   console.log("=== Git Commit SHAs ===");
   console.log(JSON.stringify({ base, head }, null, 2));
   console.log("=======================");
+
+  if (+(process.env["TEST_DISPATCH"] ?? "0")) {
+    console.log(`workflow_id = ${payload.workflow}`);
+    const result01 = await octokit.rest.actions.getWorkflow({
+      owner,
+      repo,
+      workflow_id: payload.workflow,
+    });
+    // console.log(JSON.stringify(result01, null, 2));
+    const workflowId = result01.data.id;
+    const result02 = await octokit.rest.actions.listWorkflowRuns({
+      owner,
+      repo,
+      workflow_id: workflowId,
+      head_sha: base,
+    });
+    console.log(JSON.stringify(result02, null, 2));
+
+    // const result01 = await octokit.rest.actions.listWorkflowRuns({
+    //   owner,
+    //   repo,
+    // });
+    throw new Error("TEST_DISPATCH!");
+  }
 
   const environment = getEnvironment({ event });
   const resultsReporter = new ResultsReporter({
