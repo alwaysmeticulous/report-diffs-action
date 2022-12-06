@@ -93,7 +93,7 @@ jobs:
       - name: Bump V1 tag
         if: github.ref == 'refs/heads/releases/v1'
         run: |
-          git fetch origin releases/v1
+          git fetch origin releases/v1 --tags
           git tag --delete v1
           git tag v1 origin/releases/v1
           git push --tag --force
