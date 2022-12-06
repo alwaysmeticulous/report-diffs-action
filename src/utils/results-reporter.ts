@@ -90,10 +90,12 @@ export class ResultsReporter {
         state: "success",
         targetUrl: testRun.url,
       });
-      await this.setStatusComment({
-        createIfDoesNotExist: true,
-        body: `✅ ${METICULOUS_MARKDOWN_LINK} spotted zero visual differences across ${totalScreens} screens tested.`,
-      });
+      if (totalScreens > 0) {
+        await this.setStatusComment({
+          createIfDoesNotExist: true,
+          body: `✅ ${METICULOUS_MARKDOWN_LINK} spotted zero visual differences across ${totalScreens} screens tested.`,
+        });
+      }
     } else {
       await this.setCommitStatus({
         description: `Differences in ${screensWithDifferences} of ${totalScreens} screens, click details to view`,
