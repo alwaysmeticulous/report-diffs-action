@@ -1,6 +1,7 @@
 export type CodeChangeEvent =
   | { type: "push"; payload: PushPayload }
-  | { type: "pull_request"; payload: PullRequestPayload };
+  | { type: "pull_request"; payload: PullRequestPayload }
+  | { type: "workflow_dispatch"; payload: WorkflowDispatchPayload };
 
 // https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#push
 export interface PushPayload {
@@ -32,5 +33,13 @@ export interface PullRequestPayload {
     };
     title: string;
     html_url: string;
+  };
+}
+
+// https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#workflow_dispatch
+export interface WorkflowDispatchPayload {
+  ref: string;
+  inputs: {
+    [key: string]: unknown;
   };
 }
