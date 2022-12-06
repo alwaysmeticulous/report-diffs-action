@@ -1,6 +1,8 @@
 interface GetInputFromEnvFn {
+  (options: { name: string; required?: false; type: "number" }): number | null;
   (options: { name: string; required?: false; type: "string" }): string | null;
   (options: { name: string; required: true; type: "string" }): string;
+  (options: { name: string; required: true; type: "number" }): number;
 }
 
 export const getInputFromEnv: GetInputFromEnvFn = ({
@@ -8,11 +10,8 @@ export const getInputFromEnv: GetInputFromEnvFn = ({
   required,
   type,
 }) => {
-  if (type !== "string") {
-    throw new Error("Only string inputs currently supported");
-  }
   const environmentVariableName = name.toUpperCase().replaceAll("-", "_");
-  const value = process.env[environmentVariableName];
+  const value = parseValue(process.env[environmentVariableName], type);
   if (required && isEmpty(value)) {
     throw new Error(`Input ${name} is required`);
   }
@@ -22,10 +21,35 @@ export const getInputFromEnv: GetInputFromEnvFn = ({
     );
   }
 
-  // Typescript can't infer that value would never be null when required is true,
-  // so we have to use a non-null assertion
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return (value ?? null)!;
+  // Typescript can't infer that if type === number value is a number etc., so
+  // so we need to force cast here
+  return value as any;
+};
+
+const parseValue = (
+  value: string | undefined,
+  type: "string" | "number"
+): string | number | null => {
+  if (value == null) {
+    return null;
+  }
+  if (type === "string") {
+    return value;
+  }
+  if (type === "number") {
+    const parsed = Number.parseInt(value);
+    if (isNaN(parsed)) {
+      return null;
+    }
+    return parsed;
+  }
+  return unknownType(type);
+};
+
+const unknownType = (type: never) => {
+  throw new Error(
+    `Only string or number inputs currently supported, but got ${type}`
+  );
 };
 
 const isEmpty = (value: unknown) => {
