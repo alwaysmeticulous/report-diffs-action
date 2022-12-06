@@ -52,6 +52,18 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const octokit = getOctokitOrFail(githubToken);
 
   if (+(process.env["TEST_DISPATCH"] ?? "0")) {
+    console.log(`workflow_id = ${context.action}`);
+    const result01 = await octokit.rest.actions.getWorkflow({
+      owner,
+      repo,
+      workflow_id: context.action,
+    });
+    console.log(JSON.stringify(result01, null, 2));
+
+    // const result01 = await octokit.rest.actions.listWorkflowRuns({
+    //   owner,
+    //   repo,
+    // });
     throw new Error("TEST_DISPATCH!");
   }
 
