@@ -57,7 +57,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   }
 
   const { base, head } = await getBaseAndHeadCommitShas(event);
-  const environment = getEnvironment({ event });
+  const environment = getEnvironment({ event, base, head });
   const resultsReporter = new ResultsReporter({
     octokit,
     event,

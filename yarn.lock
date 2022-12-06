@@ -27,17 +27,17 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/api@^2.20.1":
-  version "2.20.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.20.1.tgz#0753ffaaa44a6243e0a5110c192709e3349fcaba"
-  integrity sha512-h52jBxcztSv78f5Wt39rleiq3HipoItzT+dt287ls8UUHhJFbHAHmkrlLT9Nal5sgQAwy6mJlIXw8/oBeXfCrw==
+"@alwaysmeticulous/api@^2.21.1":
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.21.1.tgz#ab38043edda6c561474c2cec84b2e3884e97a394"
+  integrity sha512-AAbNJfvI9FH6eO3uD3PyGG1//Ak5zrJcreYVtKFoc1//VMWYjqFuXZQlbVdqXoIhAo+k7pn98R8ylgoj2/rT1w==
 
-"@alwaysmeticulous/cli@^2.20.3":
-  version "2.20.3"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.20.3.tgz#f42724707d1dc896eaa0aff0e3cd153ec07c78bc"
-  integrity sha512-Et4asTyCBA0P1pgA0+UtSzBJDHbq5zHXl7QzRNVEP5V5B+ubdOEabtT10Mo5tBc5XNpKvXEoZ+Og1bnld9K9tQ==
+"@alwaysmeticulous/cli@^2.21.1":
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.21.1.tgz#aa10b3d0030ef904f44faf2e1e8bf65351e4e061"
+  integrity sha512-plYGqkZW2TcEQbBDuGogDDQ+crcjj1nSZ41VVv6K74t1B+/nilQk9i/iibAplsKNlbmQvftAWrFhWZv/IFbUhA==
   dependencies:
-    "@alwaysmeticulous/common" "^2.20.3"
+    "@alwaysmeticulous/common" "^2.21.1"
     "@sentry/node" "^7.21.1"
     "@sentry/tracing" "^7.21.1"
     adm-zip "^0.5.9"
@@ -54,20 +54,20 @@
     proper-lockfile "^4.1.2"
     yargs "^17.5.1"
 
-"@alwaysmeticulous/common@^2.20.3":
-  version "2.20.3"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.20.3.tgz#0ab33cc4ad1654d4ee72a42a1c5b9101b3f145e7"
-  integrity sha512-a1n3S8GmupFKbdG057Fw2AlReRpaZCGqn02cl/D1Arb6BL+yVIbbi0q+WCUnT6yGT2AF/m2Zi8Ky7Mkwe5sBvw==
+"@alwaysmeticulous/common@^2.21.1":
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.21.1.tgz#9034a42fe783cd2fe016eeec122a1b6c4ef7eb3c"
+  integrity sha512-r7qHYEcQOYeA6qFMffVh5K2FOWKIKxcNEjmnDQtVsQoxrzkJrVCKx/mnrEcYZruA8tcypDAK505JvbKzfVxTAg==
   dependencies:
     loglevel "^1.8.0"
     luxon "^2.4.0"
 
-"@alwaysmeticulous/replayer@^2.20.3":
-  version "2.20.3"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.20.3.tgz#7afeaf68b6a4759f87f1e2a72cfa341ab892d3f5"
-  integrity sha512-eD8wSJUJOm4bPMNinnlwuerilPOHnoXMlE1uXnbRNCMaypUanQ2KQt1kfppLhWYxZvd1INNuamyGpStvEJ7nUQ==
+"@alwaysmeticulous/replayer@^2.21.1":
+  version "2.21.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.21.1.tgz#6541de1739d14e763d385232be610a6a8ef7c65f"
+  integrity sha512-WHjAVdNheSWy3KWyb1f7qTeSM/bamVCycHZP5io/SqosDwKQNHzz/DWKrEAGYYClST8beXPcZ+IK+LAh6527sQ==
   dependencies:
-    "@alwaysmeticulous/common" "^2.20.3"
+    "@alwaysmeticulous/common" "^2.21.1"
     loglevel "^1.8.0"
     luxon "^2.4.0"
     puppeteer "^14.4.1"
