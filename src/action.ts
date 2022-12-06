@@ -53,7 +53,9 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   if (event == null) {
     console.warn(
-      `Running report-diffs-action is only supported for 'push' and 'pull_request' events, but was triggered on a '${context.eventName}' event. Skipping execution.`
+      `Running report-diffs-action is only supported for 'push', \
+      'pull_request' and 'workflow_dispatch' events, but was triggered \
+      on a '${context.eventName}' event. Skipping execution.`
     );
     return;
   }
