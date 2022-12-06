@@ -55,11 +55,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const octokit = getOctokitOrFail(githubToken);
 
   if (+(process.env["TEST_DISPATCH"] ?? "0")) {
-    console.log(`workflow_id = ${context.workflow}`);
+    console.log(`workflow_id = ${payload.workflow}`);
     const result01 = await octokit.rest.actions.getWorkflow({
       owner,
       repo,
-      workflow_id: context.workflow,
+      workflow_id: payload.workflow,
     });
     console.log(JSON.stringify(result01, null, 2));
 
