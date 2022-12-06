@@ -24,7 +24,7 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
-    "@alwaysmeticulous/cli": "^2.21.1",
+    "@alwaysmeticulous/cli": "^2.21.2",
     "@alwaysmeticulous/common": "^2.21.1",
     "@alwaysmeticulous/replayer": "^2.21.1",
     "loglevel": "^1.8.1"
