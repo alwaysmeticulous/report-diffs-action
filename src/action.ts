@@ -51,6 +51,10 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const { owner, repo } = context.repo;
   const octokit = getOctokitOrFail(githubToken);
 
+  if (+(process.env["TEST_DISPATCH"] ?? "0")) {
+    throw new Error("TEST_DISPATCH!");
+  }
+
   if (event == null) {
     console.warn(
       `Running report-diffs-action is only supported for 'push', \
