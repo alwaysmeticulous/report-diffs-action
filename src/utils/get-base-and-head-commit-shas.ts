@@ -1,8 +1,8 @@
-import { exec } from "child_process";
+import { context } from "@actions/github";
 import { CodeChangeEvent } from "../types";
 
 interface BaseAndHeadCommitShas {
-  base: string;
+  base: string | null;
   head: string;
 }
 
@@ -19,12 +19,10 @@ export const getBaseAndHeadCommitShas = async (
     return { base: event.payload.before, head: event.payload.after };
   }
   if (event.type === "workflow_dispatch") {
-    const headRef = getWorkflowInput(event.payload.inputs["head-commit-sha"]);
-    const head = await execGitRevParse(headRef ?? "HEAD");
-    const baseRef = getWorkflowInput(event.payload.inputs["base-commit-sha"]);
-    const base = await execGitRevParse(baseRef ?? `${head}~1`);
+    const head =
+      getWorkflowInput(event.payload.inputs["head-commit-sha"]) ?? context.sha;
     return {
-      base,
+      base: null,
       head,
     };
   }
@@ -38,17 +36,17 @@ const getWorkflowInput = (value: unknown): string | null => {
   return null;
 };
 
-const execGitRevParse = async (ref: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    exec(`git rev-parse ${ref}`, { encoding: "utf-8" }, (error, output) => {
-      if (error) {
-        reject(error);
-        return;
-      }
-      resolve(output.trim());
-    });
-  });
-};
+// const execGitRevParse = async (ref: string): Promise<string> => {
+//   return new Promise((resolve, reject) => {
+//     exec(`git rev-parse ${ref}`, { encoding: "utf-8" }, (error, output) => {
+//       if (error) {
+//         reject(error);
+//         return;
+//       }
+//       resolve(output.trim());
+//     });
+//   });
+// };
 
 const assertNever = (event: never): never => {
   throw new Error("Unexpected event: " + JSON.stringify(event));

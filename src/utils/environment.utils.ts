@@ -7,7 +7,7 @@ export const getEnvironment = ({
   head,
 }: {
   event: CodeChangeEvent;
-  base: string;
+  base: string | null;
   head: string;
 }): TestRunEnvironment => {
   if (event.type === "push") {
@@ -42,7 +42,7 @@ export const getEnvironment = ({
       event: "workflow-dispatch",
       ref: event.payload.ref,
       inputs: event.payload.inputs,
-      baseSha: base,
+      baseSha: base ?? "",
       headSha: head,
     },
   };
