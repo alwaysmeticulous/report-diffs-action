@@ -19,22 +19,22 @@ export const getBaseAndHeadCommitShas = async (
     return { base: event.payload.before, head: event.payload.after };
   }
   if (event.type === "workflow_dispatch") {
-    const head =
-      getWorkflowInput(event.payload.inputs["head-commit-sha"]) ?? context.sha;
+    // const head =
+    //   getWorkflowInput(event.payload.inputs["head-commit-sha"]) ?? context.sha;
     return {
       base: null,
-      head,
+      head: context.sha,
     };
   }
   return assertNever(event);
 };
 
-const getWorkflowInput = (value: unknown): string | null => {
-  if (typeof value === "string" && value) {
-    return value;
-  }
-  return null;
-};
+// const getWorkflowInput = (value: unknown): string | null => {
+//   if (typeof value === "string" && value) {
+//     return value;
+//   }
+//   return null;
+// };
 
 // const execGitRevParse = async (ref: string): Promise<string> => {
 //   return new Promise((resolve, reject) => {
