@@ -62,6 +62,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   console.log();
 
   console.log(`workflow_id = ${payload.workflow}`);
+  const result02 = await octokit.rest.actions.listRepoWorkflows({
+    owner,
+    repo,
+  });
+  console.log(JSON.stringify(result02, null, 2));
   const result01 = await octokit.rest.actions.getWorkflow({
     owner,
     repo,
