@@ -61,27 +61,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   );
   console.log();
 
-  console.log(`workflow name = ${context.workflow}`);
-  const result01 = await octokit.rest.actions.getWorkflow({
-    owner,
-    repo,
-    workflow_id: context.workflow,
-  });
-  console.log(JSON.stringify(result01, null, 2));
-  const workflowId = result01.data.id;
-  console.log(`workflowId = ${workflowId}`);
-  const result02 = await octokit.rest.actions.listWorkflowRuns({
-    owner,
-    repo,
-    workflow_id: workflowId,
-    head_sha: base,
-  });
-  console.log(JSON.stringify(result02, null, 2));
-
-  if (workflowId) {
-    throw new Error("Hey, don't run :)");
-  }
-
   if (event == null) {
     console.warn(
       `Running report-diffs-action is only supported for 'push', \
@@ -93,6 +72,46 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   const { base, head } = await getBaseAndHeadCommitShas(event);
   const environment = getEnvironment({ event, head });
+
+  // Get workflow id
+  const workflowRunId = context.runId;
+  const result01 = await octokit.rest.actions.getWorkflowRun({
+    owner,
+    repo,
+    run_id: workflowRunId,
+  });
+  console.log(JSON.stringify(result01, null, 2));
+  const workflowId = result01.data.workflow_id;
+  console.log(`workflowId = ${workflowId}`);
+  const result02 = await octokit.rest.actions.listWorkflowRuns({
+    owner,
+    repo,
+    workflow_id: workflowId,
+    head_sha: base,
+  });
+  console.log(JSON.stringify(result02, null, 2));
+
+  // console.log(`workflow name = ${context.workflow}`);
+  // const result01 = await octokit.rest.actions.getWorkflow({
+  //   owner,
+  //   repo,
+  //   workflow_id: context.workflow,
+  // });
+  // console.log(JSON.stringify(result01, null, 2));
+  // const workflowId = result01.data.id;
+  // console.log(`workflowId = ${workflowId}`);
+  // const result02 = await octokit.rest.actions.listWorkflowRuns({
+  //   owner,
+  //   repo,
+  //   workflow_id: workflowId,
+  //   head_sha: base,
+  // });
+  // console.log(JSON.stringify(result02, null, 2));
+
+  if (workflowId) {
+    throw new Error("Hey, don't run :)");
+  }
+
   const resultsReporter = new ResultsReporter({
     octokit,
     event,
