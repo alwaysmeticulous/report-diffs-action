@@ -36,10 +36,9 @@ const DEFAULT_SCREENSHOTTING_OPTIONS = {
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
   initLogger();
-  setLogLevel("trace");
-  // if (+(process.env["RUNNER_DEBUG"] ?? "0")) {
-  //   setLogLevel("trace");
-  // }
+  if (+(process.env["RUNNER_DEBUG"] ?? "0")) {
+    setLogLevel("trace");
+  }
 
   const { apiToken, githubToken, appUrl, testsFile, maxRetriesOnFailure } =
     getInputs();
@@ -47,6 +46,14 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
   const octokit = getOctokitOrFail(githubToken);
+
+  console.log("Context:");
+  console.log(JSON.stringify(context, null, 2));
+  console.log();
+
+  console.log("Env vars:");
+  console.log(JSON.stringify(Object.keys(process.env), null, 2));
+  console.log();
 
   if (event == null) {
     console.warn(
