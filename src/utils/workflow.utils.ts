@@ -34,14 +34,13 @@ export const getOrStartNewWorkflowRun = async ({
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
 }): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
-  const listRunsResult = await octokit.rest.actions.listWorkflowRuns({
-    owner,
-    repo,
-    workflow_id: workflowId,
-    head_sha: commitSha,
-  });
-  console.log(JSON.stringify(listRunsResult, null, 2));
-
+  // const listRunsResult = await octokit.rest.actions.listWorkflowRuns({
+  //   owner,
+  //   repo,
+  //   workflow_id: workflowId,
+  //   head_sha: commitSha,
+  // });
+  // console.log(JSON.stringify(listRunsResult, null, 2));
   const alreadyPending = await getPendingWorkflowRun({
     owner,
     repo,
@@ -91,6 +90,18 @@ const getPendingWorkflowRun = async ({
     workflow_id: workflowId,
     head_sha: commitSha,
   });
+  console.log("vvvvv Workflow runs vvvvv");
+  listRunsResult.data.workflow_runs
+    .map(({ id, status, conclusion, head_sha }) => ({
+      id,
+      status,
+      conclusion,
+      head_sha,
+    }))
+    .forEach((item) => {
+      console.log(JSON.stringify(item, null, 2));
+    });
+  console.log("^^^^^ Workflow runs ^^^^^");
   const workflowRun = listRunsResult.data.workflow_runs.find((run) =>
     ["in_progress", "queued", "requested", "waiting"].some(
       (status) => run.status === status
