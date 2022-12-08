@@ -3,11 +3,9 @@ import { CodeChangeEvent } from "../types";
 
 export const getEnvironment = ({
   event,
-  base,
   head,
 }: {
   event: CodeChangeEvent;
-  base: string | null;
   head: string;
 }): TestRunEnvironment => {
   if (event.type === "push") {
@@ -42,8 +40,6 @@ export const getEnvironment = ({
       event: "workflow-dispatch",
       ref: event.payload.ref,
       inputs: event.payload.inputs,
-      // TODO: update typings to support `null` value here.
-      baseSha: base ?? "",
       headSha: head,
     },
   };
