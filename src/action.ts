@@ -36,9 +36,10 @@ const DEFAULT_SCREENSHOTTING_OPTIONS = {
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
   initLogger();
-  if (+(process.env["RUNNER_DEBUG"] ?? "0")) {
-    setLogLevel("trace");
-  }
+  setLogLevel("trace");
+  // if (+(process.env["RUNNER_DEBUG"] ?? "0")) {
+  //   setLogLevel("trace");
+  // }
 
   const { apiToken, githubToken, appUrl, testsFile, maxRetriesOnFailure } =
     getInputs();
