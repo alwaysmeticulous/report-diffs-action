@@ -61,12 +61,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   );
   console.log();
 
-  console.log(`workflow_id = ${payload.workflow}`);
-  const result02 = await octokit.rest.actions.listRepoWorkflows({
-    owner,
-    repo,
-  });
-  console.log(JSON.stringify(result02, null, 2));
+  console.log(`workflow name = ${context.workflow}`);
   const result01 = await octokit.rest.actions.getWorkflow({
     owner,
     repo,
@@ -74,13 +69,14 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   });
   console.log(JSON.stringify(result01, null, 2));
   const workflowId = result01.data.id;
-  // const result02 = await octokit.rest.actions.listWorkflowRuns({
-  //   owner,
-  //   repo,
-  //   workflow_id: workflowId,
-  //   head_sha: base,
-  // });
-  // console.log(JSON.stringify(result02, null, 2));
+  console.log(`workflowId = ${workflowId}`);
+  const result02 = await octokit.rest.actions.listWorkflowRuns({
+    owner,
+    repo,
+    workflow_id: workflowId,
+    head_sha: base,
+  });
+  console.log(JSON.stringify(result02, null, 2));
 
   if (workflowId) {
     throw new Error("Hey, don't run :)");
