@@ -27,9 +27,11 @@ export interface PullRequestPayload {
     number: number;
     head: {
       sha: string;
+      ref: string;
     };
     base: {
       sha: string;
+      ref: string;
     };
     title: string;
     html_url: string;

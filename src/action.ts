@@ -49,19 +49,19 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const { owner, repo } = context.repo;
   const octokit = getOctokitOrFail(githubToken);
 
-  console.log("Context:");
-  console.log(JSON.stringify(context, null, 2));
-  console.log();
+  // console.log("Context:");
+  // console.log(JSON.stringify(context, null, 2));
+  // console.log();
 
-  console.log("Env vars:");
-  console.log(
-    JSON.stringify(
-      Object.keys(process.env).map((key) => [key, process.env[key]]),
-      null,
-      2
-    )
-  );
-  console.log();
+  // console.log("Env vars:");
+  // console.log(
+  //   JSON.stringify(
+  //     Object.keys(process.env).map((key) => [key, process.env[key]]),
+  //     null,
+  //     2
+  //   )
+  // );
+  // console.log();
 
   if (event == null) {
     console.warn(
@@ -121,6 +121,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     event,
     apiToken,
     base,
+    context,
+    octokit,
   });
 
   const resultsReporter = new ResultsReporter({
