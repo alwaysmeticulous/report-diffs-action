@@ -20,7 +20,7 @@ const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   moveBeforeClick: false,
   disableRemoteFonts: false,
   noSandbox: true,
-  maxDurationMs: null,
+  maxDurationMs: 5 * 60 * 1_000, // 5 minutes
   maxEventCount: null,
 };
 
