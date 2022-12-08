@@ -52,8 +52,34 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   console.log();
 
   console.log("Env vars:");
-  console.log(JSON.stringify(Object.keys(process.env), null, 2));
+  console.log(
+    JSON.stringify(
+      Object.keys(process.env).map((key) => [key, process.env[key]]),
+      null,
+      2
+    )
+  );
   console.log();
+
+  console.log(`workflow_id = ${payload.workflow}`);
+  const result01 = await octokit.rest.actions.getWorkflow({
+    owner,
+    repo,
+    workflow_id: payload.workflow,
+  });
+  console.log(JSON.stringify(result01, null, 2));
+  const workflowId = result01.data.id;
+  // const result02 = await octokit.rest.actions.listWorkflowRuns({
+  //   owner,
+  //   repo,
+  //   workflow_id: workflowId,
+  //   head_sha: base,
+  // });
+  // console.log(JSON.stringify(result02, null, 2));
+
+  if (workflowId) {
+    throw new Error("Hey, don't run :)");
+  }
 
   if (event == null) {
     console.warn(
