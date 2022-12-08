@@ -58,6 +58,9 @@ export const getOrStartNewWorkflowRun = async ({
     workflow_id: workflowId,
     ref,
   });
+  // Wait before listing again
+  await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+
   const newRun = await getPendingWorkflowRun({
     owner,
     repo,
