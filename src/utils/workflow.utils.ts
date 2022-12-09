@@ -34,13 +34,6 @@ export const getOrStartNewWorkflowRun = async ({
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
 }): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
-  // const listRunsResult = await octokit.rest.actions.listWorkflowRuns({
-  //   owner,
-  //   repo,
-  //   workflow_id: workflowId,
-  //   head_sha: commitSha,
-  // });
-  // console.log(JSON.stringify(listRunsResult, null, 2));
   const alreadyPending = await getPendingWorkflowRun({
     owner,
     repo,
@@ -69,26 +62,54 @@ export const getOrStartNewWorkflowRun = async ({
     octokit,
   });
   return newRun;
+};
 
-  // if (newRun != null) {
-  //   return newRun;
-  // }
-  // console.log("Could not find the dispatched workflow run!!!");
+export const waitForWorkflowCompletion = async ({
+  owner,
+  repo,
+  workflowRunId,
+  octokit,
+}: {
+  owner: string;
+  repo: string;
+  workflowRunId: number;
+  octokit: InstanceType<typeof GitHub>;
+}): Promise<{
+  id: number;
+  status: string | null;
+  conclusion: string | null;
+  [key: string]: unknown;
+}> => {
+  let workflowRun: {
+    id: number;
+    status: string | null;
+    conclusion: string | null;
+    [key: string]: unknown;
+  } | null = null;
 
-  // // Wait before listing again
-  // await new Promise<void>((resolve) => setTimeout(resolve, 5000));
+  while (workflowRun == null || isPendingStatus(workflowRun.status)) {
+    const workflowRunResult = await octokit.rest.actions.getWorkflowRun({
+      owner,
+      repo,
+      run_id: workflowRunId,
+    });
+    workflowRun = workflowRunResult.data;
+    console.log(
+      JSON.stringify(
+        {
+          id: workflowRun.id,
+          status: workflowRun.status,
+          conclusion: workflowRun.conclusion,
+        },
+        null,
+        2
+      )
+    );
+    // Wait before listing again
+    await new Promise<void>((resolve) => setTimeout(resolve, 5_000));
+  }
 
-  // const newRun2 = await getPendingWorkflowRun({
-  //   owner,
-  //   repo,
-  //   workflowId,
-  //   commitSha,
-  //   octokit,
-  // });
-  // if (newRun2 == null) {
-  //   console.log("Could not find the dispatched workflow run!!!");
-  // }
-  // return newRun2;
+  return workflowRun;
 };
 
 const getPendingWorkflowRun = async ({
@@ -123,9 +144,7 @@ const getPendingWorkflowRun = async ({
     });
   console.log("^^^^^ Workflow runs ^^^^^");
   const workflowRun = listRunsResult.data.workflow_runs.find((run) =>
-    ["in_progress", "queued", "requested", "waiting"].some(
-      (status) => run.status === status
-    )
+    isPendingStatus(run.status)
   );
   if (workflowRun == null) {
     return undefined;
@@ -134,4 +153,10 @@ const getPendingWorkflowRun = async ({
     ...workflowRun,
     workflowRunId: workflowRun.id,
   };
+};
+
+const isPendingStatus = (status: string | null): boolean => {
+  return ["in_progress", "queued", "requested", "waiting"].some(
+    (pending) => pending === status
+  );
 };

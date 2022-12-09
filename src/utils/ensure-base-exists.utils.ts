@@ -4,6 +4,7 @@ import { CodeChangeEvent } from "../types";
 import {
   getCurrentWorkflowId,
   getOrStartNewWorkflowRun,
+  waitForWorkflowCompletion,
 } from "./workflow.utils";
 
 export const ensureBaseTestsExists = async ({
@@ -46,7 +47,19 @@ export const ensureBaseTestsExists = async ({
     commitSha: base,
     octokit,
   });
-  console.log(JSON.stringify(workflowRun, null, 2));
+  console.log(JSON.stringify({ id: workflowRun?.workflowRunId }, null, 2));
+
+  if (workflowRun == null) {
+    throw new Error(`Could not retrieve dispatched workflow run`);
+  }
+
+  console.log(`Waiting on workflow run: ${workflowRun.html_url}`);
+  await waitForWorkflowCompletion({
+    owner,
+    repo,
+    workflowRunId: workflowRun.workflowRunId,
+    octokit,
+  });
 
   throw new Error("TODO");
 };
