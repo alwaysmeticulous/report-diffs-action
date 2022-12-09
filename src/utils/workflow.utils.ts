@@ -131,18 +131,6 @@ const getPendingWorkflowRun = async ({
     workflow_id: workflowId,
     head_sha: commitSha,
   });
-  // console.log("vvvvv Workflow runs vvvvv");
-  // listRunsResult.data.workflow_runs
-  //   .map(({ id, status, conclusion, head_sha }) => ({
-  //     id,
-  //     status,
-  //     conclusion,
-  //     head_sha,
-  //   }))
-  //   .forEach((item) => {
-  //     console.log(JSON.stringify(item, null, 2));
-  //   });
-  // console.log("^^^^^ Workflow runs ^^^^^");
   const workflowRun = listRunsResult.data.workflow_runs.find((run) =>
     isPendingStatus(run.status)
   );

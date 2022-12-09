@@ -75,6 +75,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     repo,
     headSha: head,
   });
+
   try {
     setMeticulousLocalDataDir();
     const results = await runAllTests({
