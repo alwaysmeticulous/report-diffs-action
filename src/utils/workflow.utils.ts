@@ -59,7 +59,7 @@ export const getOrStartNewWorkflowRun = async ({
     ref,
   });
   // Wait before listing again
-  await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+  await new Promise<void>((resolve) => setTimeout(resolve, 10_000));
 
   const newRun = await getPendingWorkflowRun({
     owner,
@@ -68,25 +68,27 @@ export const getOrStartNewWorkflowRun = async ({
     commitSha,
     octokit,
   });
-  if (newRun != null) {
-    return newRun;
-  }
-  console.log("Could not find the dispatched workflow run!!!");
+  return newRun;
 
-  // Wait before listing again
-  await new Promise<void>((resolve) => setTimeout(resolve, 5000));
+  // if (newRun != null) {
+  //   return newRun;
+  // }
+  // console.log("Could not find the dispatched workflow run!!!");
 
-  const newRun2 = await getPendingWorkflowRun({
-    owner,
-    repo,
-    workflowId,
-    commitSha,
-    octokit,
-  });
-  if (newRun2 == null) {
-    console.log("Could not find the dispatched workflow run!!!");
-  }
-  return newRun2;
+  // // Wait before listing again
+  // await new Promise<void>((resolve) => setTimeout(resolve, 5000));
+
+  // const newRun2 = await getPendingWorkflowRun({
+  //   owner,
+  //   repo,
+  //   workflowId,
+  //   commitSha,
+  //   octokit,
+  // });
+  // if (newRun2 == null) {
+  //   console.log("Could not find the dispatched workflow run!!!");
+  // }
+  // return newRun2;
 };
 
 const getPendingWorkflowRun = async ({
