@@ -9,7 +9,6 @@ import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas"
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
 import { ResultsReporter } from "./utils/results-reporter";
-import { getCurrentWorkflowId } from "./utils/workflow.utils";
 
 const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   headless: true,
@@ -49,20 +48,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const { owner, repo } = context.repo;
   const octokit = getOctokitOrFail(githubToken);
 
-  // console.log("Context:");
-  // console.log(JSON.stringify(context, null, 2));
-  // console.log();
-
-  // console.log("Env vars:");
-  // console.log(
-  //   JSON.stringify(
-  //     Object.keys(process.env).map((key) => [key, process.env[key]]),
-  //     null,
-  //     2
-  //   )
-  // );
-  // console.log();
-
   if (event == null) {
     console.warn(
       `Running report-diffs-action is only supported for 'push', \
@@ -74,48 +59,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   const { base, head } = await getBaseAndHeadCommitShas(event);
   const environment = getEnvironment({ event, head });
-
-  // Get workflow id
-  // const workflowRunId = context.runId;
-  // const result01 = await octokit.rest.actions.getWorkflowRun({
-  //   owner,
-  //   repo,
-  //   run_id: workflowRunId,
-  // });
-  // console.log(JSON.stringify(result01, null, 2));
-  // const workflowId = result01.data.workflow_id;
-
-  // const { workflowId } = await getCurrentWorkflowId({ context, octokit });
-
-  // console.log(`workflowId = ${workflowId}`);
-  // const result02 = await octokit.rest.actions.listWorkflowRuns({
-  //   owner,
-  //   repo,
-  //   workflow_id: workflowId,
-  //   head_sha: base,
-  // });
-  // console.log(JSON.stringify(result02, null, 2));
-
-  // console.log(`workflow name = ${context.workflow}`);
-  // const result01 = await octokit.rest.actions.getWorkflow({
-  //   owner,
-  //   repo,
-  //   workflow_id: context.workflow,
-  // });
-  // console.log(JSON.stringify(result01, null, 2));
-  // const workflowId = result01.data.id;
-  // console.log(`workflowId = ${workflowId}`);
-  // const result02 = await octokit.rest.actions.listWorkflowRuns({
-  //   owner,
-  //   repo,
-  //   workflow_id: workflowId,
-  //   head_sha: base,
-  // });
-  // console.log(JSON.stringify(result02, null, 2));
-
-  // if (workflowId) {
-  //   throw new Error("Hey, don't run :)");
-  // }
 
   await ensureBaseTestsExists({
     event,
@@ -132,7 +75,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     repo,
     headSha: head,
   });
-
   try {
     setMeticulousLocalDataDir();
     const results = await runAllTests({

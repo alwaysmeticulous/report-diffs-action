@@ -9,7 +9,6 @@ import {
 
 export const ensureBaseTestsExists = async ({
   event,
-  // apiToken,
   base,
   context,
   octokit,
@@ -24,16 +23,6 @@ export const ensureBaseTestsExists = async ({
   if (event.type !== "pull_request" || !base) {
     return;
   }
-
-  // const testRun = await getLatestTestRunResults({
-  //   client: createClient({ apiToken }),
-  //   commitSha: base,
-  // });
-
-  // if (testRun != null) {
-  //   console.log(`Tests already exist for commit ${base} (${testRun.id})`);
-  //   return;
-  // }
 
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
   const { owner, repo } = context.repo;
@@ -54,12 +43,21 @@ export const ensureBaseTestsExists = async ({
   }
 
   console.log(`Waiting on workflow run: ${workflowRun.html_url}`);
-  await waitForWorkflowCompletion({
+  const finalWorkflowRun = await waitForWorkflowCompletion({
     owner,
     repo,
     workflowRunId: workflowRun.workflowRunId,
     octokit,
   });
 
-  throw new Error("TODO");
+  console.log(JSON.stringify(finalWorkflowRun, null, 2));
+
+  if (
+    finalWorkflowRun.status !== "completed" ||
+    finalWorkflowRun.conclusion !== "success"
+  ) {
+    throw new Error(
+      `Workflow run ${finalWorkflowRun.id} id not complete successfully. See: ${finalWorkflowRun.html_url}`
+    );
+  }
 };
