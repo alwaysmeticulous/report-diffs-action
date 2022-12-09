@@ -32,14 +32,9 @@ export const ensureBaseTestsExists = async ({
     commitSha: base,
   });
 
-  const x = 1;
   if (testRun != null) {
     console.log(`Tests already exist for commit ${base} (${testRun.id})`);
-    if (x * x == 0) {
-      return;
-    } else {
-      console.log("Dev: still dispatching new workflow run");
-    }
+    return;
   }
 
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
@@ -54,7 +49,6 @@ export const ensureBaseTestsExists = async ({
     commitSha: base,
     octokit,
   });
-  console.log(JSON.stringify({ id: workflowRun?.workflowRunId }, null, 2));
 
   if (workflowRun == null) {
     throw new Error(`Could not retrieve dispatched workflow run`);
@@ -67,8 +61,6 @@ export const ensureBaseTestsExists = async ({
     workflowRunId: workflowRun.workflowRunId,
     octokit,
   });
-
-  console.log(JSON.stringify(finalWorkflowRun, null, 2));
 
   if (
     finalWorkflowRun.status !== "completed" ||
