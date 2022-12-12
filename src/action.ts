@@ -3,6 +3,7 @@ import { context, getOctokit } from "@actions/github";
 import { initLogger, runAllTests, setLogLevel } from "@alwaysmeticulous/cli";
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
+import { ensureBaseTestsExists } from "./utils/ensure-base-exists.utils";
 import { getEnvironment } from "./utils/environment.utils";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
@@ -20,7 +21,7 @@ const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   moveBeforeClick: false,
   disableRemoteFonts: false,
   noSandbox: true,
-  maxDurationMs: null,
+  maxDurationMs: 5 * 60 * 1_000, // 5 minutes
   maxEventCount: null,
 };
 
@@ -58,6 +59,15 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   const { base, head } = await getBaseAndHeadCommitShas(event);
   const environment = getEnvironment({ event, head });
+
+  await ensureBaseTestsExists({
+    event,
+    apiToken,
+    base,
+    context,
+    octokit,
+  });
+
   const resultsReporter = new ResultsReporter({
     octokit,
     event,
