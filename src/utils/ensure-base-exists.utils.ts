@@ -2,6 +2,8 @@ import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
 import { getLatestTestRunResults } from "@alwaysmeticulous/cli";
 import { createClient } from "@alwaysmeticulous/cli/dist/api/client.js";
+import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
+import log from "loglevel";
 import { CodeChangeEvent } from "../types";
 import {
   getCurrentWorkflowId,
@@ -22,6 +24,8 @@ export const ensureBaseTestsExists = async ({
   context: Context;
   octokit: InstanceType<typeof GitHub>;
 }): Promise<void> => {
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+
   // Running missing tests on base is only supported for Pull Request events
   if (event.type !== "pull_request" || !base) {
     return;
@@ -41,12 +45,25 @@ export const ensureBaseTestsExists = async ({
   const { owner, repo } = context.repo;
   const baseRef = event.payload.pull_request.base.ref;
 
+  logger.debug(
+    `Debug: ${JSON.stringify({ owner, repo, base, baseRef }, null, 2)}`
+  );
+
+  const currentBaseSha = await getHeadCommitForRef({
+    owner,
+    repo,
+    ref: baseRef,
+    octokit,
+  });
+
+  logger.debug(`Debug: ${JSON.stringify({ currentBaseSha }, null, 2)}`);
+
   const workflowRun = await getOrStartNewWorkflowRun({
     owner,
     repo,
     workflowId,
     ref: baseRef,
-    commitSha: base,
+    commitSha: currentBaseSha ?? base,
     octokit,
   });
 
@@ -70,4 +87,24 @@ export const ensureBaseTestsExists = async ({
       `Comparing against screenshots taken on ${baseRef}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
     );
   }
+};
+
+const getHeadCommitForRef = async ({
+  owner,
+  repo,
+  ref,
+  octokit,
+}: {
+  owner: string;
+  repo: string;
+  ref: string;
+  octokit: InstanceType<typeof GitHub>;
+}): Promise<string | null> => {
+  const result = await octokit.rest.repos.getBranch({
+    owner,
+    repo,
+    branch: ref,
+  });
+  const commitSha = result.data.commit.sha;
+  return commitSha;
 };
