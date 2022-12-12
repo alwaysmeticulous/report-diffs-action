@@ -1,8 +1,8 @@
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
-import { DateTime, Duration } from "luxon";
-import { getLogger } from "loglevel";
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
+import { getLogger } from "loglevel";
+import { DateTime, Duration } from "luxon";
 
 // The GitHub REST API will not list a workflow run immediately after it has been dispatched
 const LISTING_AFTER_DISPATCH_DELAY = Duration.fromObject({ seconds: 10 });
