@@ -1,7 +1,7 @@
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
-import { getLogger } from "loglevel";
+import log from "loglevel";
 import { DateTime, Duration } from "luxon";
 
 // The GitHub REST API will not list a workflow run immediately after it has been dispatched
@@ -146,7 +146,7 @@ const getPendingWorkflowRun = async ({
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
 }): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
-  const logger = getLogger(METICULOUS_LOGGER_NAME);
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
   const listRunsResult = await octokit.rest.actions.listWorkflowRuns({
     owner,
     repo,
