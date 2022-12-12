@@ -1,11 +1,13 @@
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 
 // The GitHub REST API will not list a workflow run immediately after it has been dispatched
 const LISTING_AFTER_DISPATCH_DELAY = Duration.fromObject({ seconds: 10 });
 
 const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL = Duration.fromObject({ seconds: 5 });
+
+const WORKFLOW_RUN_COMPLETION_TIMEOUT = Duration.fromObject({ minutes: 30 });
 
 export const getCurrentWorkflowId = async ({
   context,
@@ -93,7 +95,12 @@ export const waitForWorkflowCompletion = async ({
     [key: string]: unknown;
   } | null = null;
 
-  while (workflowRun == null || isPendingStatus(workflowRun.status)) {
+  const start = DateTime.now();
+
+  while (
+    (workflowRun == null || isPendingStatus(workflowRun.status)) &&
+    DateTime.now().diff(start) < WORKFLOW_RUN_COMPLETION_TIMEOUT
+  ) {
     const workflowRunResult = await octokit.rest.actions.getWorkflowRun({
       owner,
       repo,
@@ -113,6 +120,12 @@ export const waitForWorkflowCompletion = async ({
     );
     // Wait before listing again
     await delay(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL);
+  }
+
+  if (workflowRun == null) {
+    throw new Error(
+      `Error timed out while waiting for worflow run [${workflowRunId}] to complete.`
+    );
   }
 
   return workflowRun;
