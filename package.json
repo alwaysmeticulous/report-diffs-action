@@ -27,12 +27,14 @@
     "@alwaysmeticulous/cli": "^2.23.1",
     "@alwaysmeticulous/common": "^2.23.1",
     "@alwaysmeticulous/replayer": "^2.23.1",
-    "loglevel": "^1.8.1"
+    "loglevel": "^1.8.1",
+    "luxon": "^3.1.1"
   },
   "devDependencies": {
     "@alwaysmeticulous/api": "^2.23.1",
     "@parcel/packager-ts": "^2.8.0",
     "@parcel/transformer-typescript-types": "^2.8.0",
+    "@types/luxon": "^3.1.0",
     "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.44.0",
