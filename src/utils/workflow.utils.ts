@@ -1,5 +1,11 @@
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
+import { Duration } from "luxon";
+
+// The GitHub REST API will not list a workflow run immediately after it has been dispatched
+const LISTING_AFTER_DISPATCH_DELAY = Duration.fromObject({ seconds: 10 });
+
+const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL = Duration.fromObject({ seconds: 5 });
 
 export const getCurrentWorkflowId = async ({
   context,
@@ -52,7 +58,7 @@ export const getOrStartNewWorkflowRun = async ({
     ref,
   });
   // Wait before listing again
-  await new Promise<void>((resolve) => setTimeout(resolve, 10_000));
+  await delay(LISTING_AFTER_DISPATCH_DELAY);
 
   const newRun = await getPendingWorkflowRun({
     owner,
@@ -106,7 +112,7 @@ export const waitForWorkflowCompletion = async ({
       )
     );
     // Wait before listing again
-    await new Promise<void>((resolve) => setTimeout(resolve, 5_000));
+    await delay(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL);
   }
 
   return workflowRun;
@@ -147,4 +153,8 @@ const isPendingStatus = (status: string | null): boolean => {
   return ["in_progress", "queued", "requested", "waiting"].some(
     (pending) => pending === status
   );
+};
+
+const delay = async (delay: Duration): Promise<void> => {
+  return new Promise<void>((resolve) => setTimeout(resolve, delay.toMillis()));
 };
