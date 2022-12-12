@@ -67,7 +67,7 @@ export const ensureBaseTestsExists = async ({
     finalWorkflowRun.conclusion !== "success"
   ) {
     throw new Error(
-      `Comparing against screenshots taken on ${baseRef}, but the workflow run on ${baseRef} (run  ${finalWorkflowRun.id}) did not complete successfully. See: ${finalWorkflowRun.html_url}`
+      `Comparing against screenshots taken on ${baseRef}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
     );
   }
 };
