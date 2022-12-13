@@ -23,31 +23,16 @@ export const ensureBaseTestsExists = async ({
   base: string | null;
   context: Context;
   octokit: InstanceType<typeof GitHub>;
-}): Promise<void> => {
+}): Promise<{ currentBaseSha: string } | null> => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
   // Running missing tests on base is only supported for Pull Request events
   if (event.type !== "pull_request" || !base) {
-    return;
+    return null;
   }
 
-  const testRun = await getLatestTestRunResults({
-    client: createClient({ apiToken }),
-    commitSha: base,
-  });
-
-  if (testRun != null) {
-    console.log(`Tests already exist for commit ${base} (${testRun.id})`);
-    return;
-  }
-
-  const { workflowId } = await getCurrentWorkflowId({ context, octokit });
   const { owner, repo } = context.repo;
   const baseRef = event.payload.pull_request.base.ref;
-
-  logger.debug(
-    `Debug: ${JSON.stringify({ owner, repo, base, baseRef }, null, 2)}`
-  );
 
   const currentBaseSha = await getHeadCommitForRef({
     owner,
@@ -56,14 +41,42 @@ export const ensureBaseTestsExists = async ({
     octokit,
   });
 
-  logger.debug(`Debug: ${JSON.stringify({ currentBaseSha }, null, 2)}`);
+  logger.debug(JSON.stringify({ base, baseRef, currentBaseSha }, null, 2));
+  if (base !== currentBaseSha) {
+    logger.warn(
+      `Pull request event received ${base} as the base commit but ${baseRef} \
+      is now pointing to ${currentBaseSha}. Will use ${currentBaseSha} for Meticulous tests.`
+    );
+  }
+
+  const testRun = await getLatestTestRunResults({
+    client: createClient({ apiToken }),
+    commitSha: currentBaseSha,
+  });
+
+  if (testRun != null) {
+    logger.log(
+      `Tests already exist for commit ${currentBaseSha} (${testRun.id})`
+    );
+    return { currentBaseSha };
+  }
+
+  const { workflowId } = await getCurrentWorkflowId({ context, octokit });
+
+  logger.debug(
+    `Debug: ${JSON.stringify(
+      { owner, repo, base, baseRef, currentBaseSha },
+      null,
+      2
+    )}`
+  );
 
   const workflowRun = await getOrStartNewWorkflowRun({
     owner,
     repo,
     workflowId,
     ref: baseRef,
-    commitSha: currentBaseSha ?? base,
+    commitSha: currentBaseSha,
     octokit,
   });
 
@@ -71,7 +84,7 @@ export const ensureBaseTestsExists = async ({
     throw new Error(`Could not retrieve dispatched workflow run`);
   }
 
-  console.log(`Waiting on workflow run: ${workflowRun.html_url}`);
+  logger.log(`Waiting on workflow run: ${workflowRun.html_url}`);
   const finalWorkflowRun = await waitForWorkflowCompletion({
     owner,
     repo,
@@ -87,6 +100,8 @@ export const ensureBaseTestsExists = async ({
       `Comparing against screenshots taken on ${baseRef}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
     );
   }
+
+  return { currentBaseSha };
 };
 
 const getHeadCommitForRef = async ({
@@ -99,7 +114,7 @@ const getHeadCommitForRef = async ({
   repo: string;
   ref: string;
   octokit: InstanceType<typeof GitHub>;
-}): Promise<string | null> => {
+}): Promise<string> => {
   const result = await octokit.rest.repos.getBranch({
     owner,
     repo,

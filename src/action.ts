@@ -60,13 +60,14 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const { base, head } = await getBaseAndHeadCommitShas(event);
   const environment = getEnvironment({ event, head });
 
-  await ensureBaseTestsExists({
-    event,
-    apiToken,
-    base,
-    context,
-    octokit,
-  });
+  const { currentBaseSha } =
+    (await ensureBaseTestsExists({
+      event,
+      apiToken,
+      base,
+      context,
+      octokit,
+    })) ?? {};
 
   const resultsReporter = new ResultsReporter({
     octokit,
@@ -82,7 +83,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       testsFile,
       apiToken,
       commitSha: head,
-      baseCommitSha: base,
+      baseCommitSha: currentBaseSha ?? base,
       appUrl,
       executionOptions: DEFAULT_EXECUTION_OPTIONS,
       screenshottingOptions: DEFAULT_SCREENSHOTTING_OPTIONS,
