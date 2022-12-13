@@ -90,6 +90,8 @@ export const waitForWorkflowCompletion = async ({
   conclusion: string | null;
   [key: string]: unknown;
 }> => {
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+
   let workflowRun: {
     id: number;
     status: string | null;
@@ -109,7 +111,7 @@ export const waitForWorkflowCompletion = async ({
       run_id: workflowRunId,
     });
     workflowRun = workflowRunResult.data;
-    console.log(
+    logger.debug(
       JSON.stringify(
         {
           id: workflowRun.id,
