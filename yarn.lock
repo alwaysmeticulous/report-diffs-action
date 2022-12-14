@@ -32,10 +32,10 @@
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.25.0.tgz#4fef231cce5328a8c83ced46843e7c2ee4a4e32c"
   integrity sha512-RlzYwWL20T4FNq4VThZuZ80Tt4KHP/erolg+D3coiiEC47dwwWymehQ3qJL+VC2L6ea1NxFFsVWB+fQIAalrnQ==
 
-"@alwaysmeticulous/cli@^2.25.0":
-  version "2.25.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.25.0.tgz#288dd5bf99b584ad95274186795a7bae5be2ef25"
-  integrity sha512-P445I0Nza3jc75UuaNEvTBRJor+fyljJWp3fn/6lIddgmHKF2/+PSKsWK8W6RCk2Tk2lPoDBKqtncOczJQlkRQ==
+"@alwaysmeticulous/cli@^2.25.1":
+  version "2.25.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.25.1.tgz#a6a0bbcb9c990b0b3880b4afc9fcb50972395f53"
+  integrity sha512-i4XFqsHcTEWAqXI1wqJpX2qCHK48DwpzYV/vPi3+iKHmH5Ab5rHu6vGeQNRredO9zQBXRvYX9LRmuhsqjNefpQ==
   dependencies:
     "@alwaysmeticulous/common" "^2.25.0"
     "@sentry/node" "^7.21.1"
