@@ -28,7 +28,7 @@ inputs:
 outputs: {}
 runs:
   using: "docker"
-  image: "Dockerfile"
+  image: "docker://ghcr.io/alwaysmeticulous/report-diffs-action:main"
   env:
     API_TOKEN: ${{ inputs.api-token }}
     GITHUB_TOKEN: ${{ inputs.github-token }}
