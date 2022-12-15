@@ -45,7 +45,7 @@ export const ensureBaseTestsExists = async ({
   if (base !== currentBaseSha) {
     logger.warn(
       `Pull request event received ${base} as the base commit but ${baseRef} \
-      is now pointing to ${currentBaseSha}. Will use ${currentBaseSha} for Meticulous tests.`
+is now pointing to ${currentBaseSha}. Will use ${currentBaseSha} for Meticulous tests.`
     );
   }
 
@@ -81,7 +81,10 @@ export const ensureBaseTestsExists = async ({
   });
 
   if (workflowRun == null) {
-    throw new Error(`Could not retrieve dispatched workflow run`);
+    logger.warn(
+      `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${currentBaseSha}.`
+    );
+    return null;
   }
 
   logger.log(`Waiting on workflow run: ${workflowRun.html_url}`);
