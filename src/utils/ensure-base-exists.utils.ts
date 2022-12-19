@@ -11,6 +11,21 @@ import {
   waitForWorkflowCompletion,
 } from "./workflow.utils";
 
+export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
+  ...params
+) => {
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+  try {
+    return await ensureBaseTestsExists(...params);
+  } catch (error) {
+    logger.error(error);
+    logger.log(
+      `Error while running tests on base ${params[0].base}. No diffs will be reported for this run.`
+    );
+    return null;
+  }
+};
+
 export const ensureBaseTestsExists = async ({
   event,
   apiToken,
