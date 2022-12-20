@@ -116,6 +116,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
       onTestFinished: reportTestFinished,
     });
+    reportTestFinished.cancel();
     await resultsReporter.testRunFinished(results);
     process.exit(0);
   } catch (error) {
