@@ -1,8 +1,14 @@
 import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import { initLogger, runAllTests, setLogLevel } from "@alwaysmeticulous/cli";
+import {
+  initLogger,
+  runAllTests,
+  setLogLevel,
+  TestRun,
+} from "@alwaysmeticulous/cli";
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
+import debounce from "lodash.debounce";
 import { safeEnsureBaseTestsExists } from "./utils/ensure-base-exists.utils";
 import { getEnvironment } from "./utils/environment.utils";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
@@ -80,6 +86,19 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   try {
     setMeticulousLocalDataDir();
+    const reportTestFinished = debounce(
+      (
+        testRun: TestRun & {
+          status: "Running";
+        }
+      ) => resultsReporter.testFinished(testRun),
+      5_000,
+      {
+        leading: false,
+        trailing: true,
+        maxWait: 15_000,
+      }
+    );
     const results = await runAllTests({
       testsFile,
       apiToken,
@@ -95,8 +114,9 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       githubSummary: true,
       environment,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
-      onTestFinished: (testRun) => resultsReporter.testFinished(testRun),
+      onTestFinished: reportTestFinished,
     });
+    reportTestFinished.cancel();
     await resultsReporter.testRunFinished(results);
     process.exit(0);
   } catch (error) {
