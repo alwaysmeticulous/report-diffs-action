@@ -8,7 +8,7 @@ import {
 } from "@alwaysmeticulous/cli";
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
-import { debounce } from "lodash-es";
+import debounce from "lodash.debounce";
 import { safeEnsureBaseTestsExists } from "./utils/ensure-base-exists.utils";
 import { getEnvironment } from "./utils/environment.utils";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
