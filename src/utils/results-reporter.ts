@@ -93,7 +93,7 @@ export class ResultsReporter {
       if (totalScreens > 0) {
         await this.setStatusComment({
           createIfDoesNotExist: true,
-          body: `✅ ${METICULOUS_MARKDOWN_LINK} spotted zero visual differences across ${totalScreens} screens tested.`,
+          body: `✅ ${METICULOUS_MARKDOWN_LINK} spotted zero visual differences across ${totalScreens} screens tested. (commit: ${this.shortHeadSha})`,
         });
       }
     } else {
