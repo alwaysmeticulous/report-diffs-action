@@ -21,7 +21,7 @@ export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
   } catch (error) {
     logger.error(error);
     const message = `Error while running tests on base ${params[0].base}. No diffs will be reported for this run.`;
-    logger.log(message);
+    logger.warn(message);
     ghWarning(message);
     return null;
   }
