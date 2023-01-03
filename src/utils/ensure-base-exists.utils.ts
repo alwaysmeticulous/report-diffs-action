@@ -42,9 +42,6 @@ export const ensureBaseTestsExists = async ({
 }): Promise<{ currentBaseSha: string } | null> => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
-  logger.warn("Test 1 2 3");
-  ghWarning("Test 1 2 3");
-
   // Running missing tests on base is only supported for Pull Request events
   if (event.type !== "pull_request" || !base) {
     return null;
