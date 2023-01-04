@@ -1,3 +1,4 @@
+import { warning as ghWarning } from "@actions/core";
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
 import { getLatestTestRunResults } from "@alwaysmeticulous/cli";
@@ -19,9 +20,9 @@ export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
     return await ensureBaseTestsExists(...params);
   } catch (error) {
     logger.error(error);
-    logger.log(
-      `Error while running tests on base ${params[0].base}. No diffs will be reported for this run.`
-    );
+    const message = `Error while running tests on base ${params[0].base}. No diffs will be reported for this run.`;
+    logger.warn(message);
+    ghWarning(message);
     return null;
   }
 };
@@ -58,10 +59,10 @@ export const ensureBaseTestsExists = async ({
 
   logger.debug(JSON.stringify({ base, baseRef, currentBaseSha }, null, 2));
   if (base !== currentBaseSha) {
-    logger.warn(
-      `Pull request event received ${base} as the base commit but ${baseRef} \
-is now pointing to ${currentBaseSha}. Will use ${currentBaseSha} for Meticulous tests.`
-    );
+    const message = `Pull request event received ${base} as the base commit but ${baseRef} \
+is now pointing to ${currentBaseSha}. Will use ${currentBaseSha} for Meticulous tests.`;
+    logger.warn(message);
+    ghWarning(message);
   }
 
   const testRun = await getLatestTestRunResults({
@@ -96,9 +97,9 @@ is now pointing to ${currentBaseSha}. Will use ${currentBaseSha} for Meticulous 
   });
 
   if (workflowRun == null) {
-    logger.warn(
-      `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${currentBaseSha}.`
-    );
+    const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${currentBaseSha}.`;
+    logger.warn(message);
+    ghWarning(message);
     return null;
   }
 
