@@ -37,7 +37,7 @@
     "@parcel/transformer-typescript-types": "^2.8.0",
     "@types/lodash.debounce": "^4.0.7",
     "@types/luxon": "^3.1.0",
-    "@types/node": "^18.11.9",
+    "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.44.0",
     "@typescript-eslint/parser": "^5.48.1",
     "eslint": "^8.28.0",
