@@ -24,7 +24,7 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
-    "@alwaysmeticulous/cli": "^2.25.2",
+    "@alwaysmeticulous/cli": "^2.25.3",
     "@alwaysmeticulous/common": "^2.25.0",
     "@alwaysmeticulous/replayer": "^2.25.0",
     "lodash.debounce": "^4.0.8",
