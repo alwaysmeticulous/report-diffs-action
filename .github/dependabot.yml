@@ -3,4 +3,7 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    ignore:
+     # Parcel deps must be bumped in sync, which Dependabot isn't good at
+     - dependency-name: "@parcel/*"
