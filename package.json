@@ -26,7 +26,7 @@
     "@actions/github": "^5.1.1",
     "@alwaysmeticulous/cli": "^2.25.3",
     "@alwaysmeticulous/common": "^2.25.0",
-    "@alwaysmeticulous/replayer": "^2.25.0",
+    "@alwaysmeticulous/replayer": "^2.26.0",
     "lodash.debounce": "^4.0.8",
     "loglevel": "^1.8.1",
     "luxon": "^3.2.1"
