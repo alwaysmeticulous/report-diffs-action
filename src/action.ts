@@ -2,6 +2,7 @@ import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
 import {
   initLogger,
+  initSentry,
   runAllTests,
   setLogLevel,
   TestRun,
@@ -45,6 +46,14 @@ const DEFAULT_SCREENSHOTTING_OPTIONS = {
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
   initLogger();
+  const sentryHub = await initSentry(1.0);
+
+  const transaction = sentryHub.startTransaction({
+    name: "report-diffs-action.runMeticulousTestsAction",
+    description: "Run Meticulous tests action",
+    op: "report-diffs-action.runMeticulousTestsAction",
+  });
+
   if (+(process.env["RUNNER_DEBUG"] ?? "0")) {
     setLogLevel("trace");
   }
@@ -127,11 +136,19 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     });
     reportTestFinished.cancel();
     await resultsReporter.testRunFinished(results);
+
+    transaction.setStatus("ok");
+    transaction.finish();
+
     process.exit(0);
   } catch (error) {
     const message = error instanceof Error ? error.message : `${error}`;
     setFailed(message);
     resultsReporter.errorRunningTests();
+
+    transaction.setStatus("unknown_error");
+    transaction.finish();
+
     process.exit(1);
   }
 };
