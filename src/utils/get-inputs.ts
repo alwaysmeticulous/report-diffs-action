@@ -27,10 +27,22 @@ export const getInputs = () => {
     required: true,
     type: "number",
   });
+  const parallelTasks = getInputFromEnv({
+    name: "parallel-tasks",
+    required: false,
+    type: "number",
+  });
 
   const appUrl = handleLocalhostUrl(appUrl_);
 
-  return { apiToken, githubToken, appUrl, testsFile, maxRetriesOnFailure };
+  return {
+    apiToken,
+    githubToken,
+    appUrl,
+    testsFile,
+    maxRetriesOnFailure,
+    parallelTasks,
+  };
 };
 
 const DOCKER_BRIDGE_NETWORK_GATEWAY = "172.17.0.1";

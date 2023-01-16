@@ -25,6 +25,9 @@ inputs:
       Setting to 0 disables this feature.
     required: true
     default: 5
+  parallel-tasks:
+    description: Number of tasks to run in parallel (defaults to the number of CPUs)
+    required: false
 outputs: {}
 runs:
   using: "docker"
@@ -35,6 +38,7 @@ runs:
     APP_URL: ${{ inputs.app-url }}
     TESTS_FILE: ${{ inputs.tests-file }}
     MAX_RETRIES_ON_FAILURE: ${{ inputs.max-retries-on-failure }}
+    PARALLEL_TASKS: ${{ inputs.parallel-tasks }}
 branding:
   color: purple
   icon: camera
