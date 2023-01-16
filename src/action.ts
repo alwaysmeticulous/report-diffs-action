@@ -140,6 +140,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     transaction.setStatus("ok");
     transaction.finish();
 
+    await sentryHub.getClient()?.close(5_000);
+
     process.exit(0);
   } catch (error) {
     const message = error instanceof Error ? error.message : `${error}`;
@@ -148,6 +150,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
     transaction.setStatus("unknown_error");
     transaction.finish();
+
+    await sentryHub.getClient()?.close(5_000);
 
     process.exit(1);
   }
