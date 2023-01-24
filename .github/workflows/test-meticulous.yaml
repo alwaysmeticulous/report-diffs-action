@@ -69,4 +69,4 @@ jobs:
           # app-url: http://localhost:3000
           app-url: http://foobar:3000
           tests-file: tests/react-bmi-calculator/meticulous.json
-          localhost-aliases: foobar
+          # localhost-aliases: foobar
