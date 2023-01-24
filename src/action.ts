@@ -9,6 +9,7 @@ import {
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
 import debounce from "lodash.debounce";
+import { addLocalhostAliases } from "./utils/add-localhost-aliases";
 import { safeEnsureBaseTestsExists } from "./utils/ensure-base-exists.utils";
 import { getEnvironment } from "./utils/environment.utils";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
@@ -55,6 +56,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     testsFile,
     maxRetriesOnFailure,
     parallelTasks,
+    localhostAliases,
   } = getInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -105,6 +107,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         maxWait: 15_000,
       }
     );
+    await addLocalhostAliases({ appUrl, localhostAliases });
     const results = await runAllTests({
       testsFile,
       apiToken,

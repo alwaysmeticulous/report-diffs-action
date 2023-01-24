@@ -28,6 +28,9 @@ inputs:
   parallel-tasks:
     description: Number of tasks to run in parallel (defaults to two per CPU)
     required: false
+  localhost-aliases:
+    description: Additional aliases for localhost, as a list of comma-separated values
+    required: false
 outputs: {}
 runs:
   using: "docker"
@@ -39,6 +42,7 @@ runs:
     TESTS_FILE: ${{ inputs.tests-file }}
     MAX_RETRIES_ON_FAILURE: ${{ inputs.max-retries-on-failure }}
     PARALLEL_TASKS: ${{ inputs.parallel-tasks }}
+    LOCALHOST_ALIASES: ${{ inputs.localhost-aliases }}
 branding:
   color: purple
   icon: camera
