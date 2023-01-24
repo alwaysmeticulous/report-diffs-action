@@ -13,12 +13,16 @@ export const addLocalhostAliases = async ({
   appUrl: string;
   localhostAliases: string | null;
 }): Promise<void> => {
-  if (!localhostAliases) {
+  const autoDetectedAlias = await autoDetectAppURlAlias({ appUrl });
+
+  if (!localhostAliases && autoDetectedAlias == null) {
     return;
   }
 
-  const aliases = localhostAliases.split(",").map((alias) => alias.trim());
-  const autoDetectedAlias = await autoDetectAppURlAlias({ appUrl });
+  const aliases = localhostAliases
+    ? localhostAliases.split(",").map((alias) => alias.trim())
+    : [];
+
   const allAliases = [
     ...aliases,
     ...(autoDetectedAlias ? [autoDetectedAlias] : []),
