@@ -66,5 +66,7 @@ jobs:
         uses: ./
         with:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
-          app-url: http://localhost:3000
+          # app-url: http://localhost:3000
+          app-url: http://app.meticulous.ai:3000
           tests-file: tests/react-bmi-calculator/meticulous.json
+          localhost-aliases: app.meticulous.ai
