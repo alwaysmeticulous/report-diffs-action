@@ -107,7 +107,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         maxWait: 15_000,
       }
     );
-    await addLocalhostAliases({ localhostAliases });
+    await addLocalhostAliases({ appUrl, localhostAliases });
     const results = await runAllTests({
       testsFile,
       apiToken,
