@@ -1,6 +1,6 @@
-import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import { resolve4 } from "dns/promises";
 import { appendFile } from "fs/promises";
+import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { DOCKER_BRIDGE_NETWORK_GATEWAY } from "./get-inputs";
 
