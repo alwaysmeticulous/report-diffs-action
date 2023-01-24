@@ -1,5 +1,7 @@
+import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import { resolve4 } from "dns/promises";
 import { appendFile } from "fs/promises";
+import log from "loglevel";
 import { DOCKER_BRIDGE_NETWORK_GATEWAY } from "./get-inputs";
 
 const HOSTS_FILE = "/etc/hosts";
@@ -46,13 +48,18 @@ const autoDetectAppURlAlias = async ({
   }
   try {
     const url = new URL(appUrl);
-    const ipAddresses = await resolve4(url.hostname).catch(() => {
+    const ipAddresses = await resolve4(url.hostname).catch<string[]>(() => {
       return [];
     });
     if (ipAddresses.every((address) => address !== "127.0.0.1")) {
       return null;
     }
-    console.log(`Auto-detected localhost alias: ${url.hostname}`);
+    // Do not alias 'localhost'
+    if (url.hostname === "localhost") {
+      return null;
+    }
+    const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+    logger.info(`Auto-detected localhost alias: ${url.hostname}`);
     return url.hostname;
   } catch (error) {
     if (error instanceof TypeError) {
