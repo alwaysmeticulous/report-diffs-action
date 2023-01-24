@@ -32,6 +32,11 @@ export const getInputs = () => {
     required: false,
     type: "number",
   });
+  const localhostAliases = getInputFromEnv({
+    name: "localhost-aliases",
+    required: false,
+    type: "string",
+  });
 
   const appUrl = handleLocalhostUrl(appUrl_);
 
@@ -42,10 +47,11 @@ export const getInputs = () => {
     testsFile,
     maxRetriesOnFailure,
     parallelTasks,
+    localhostAliases,
   };
 };
 
-const DOCKER_BRIDGE_NETWORK_GATEWAY = "172.17.0.1";
+export const DOCKER_BRIDGE_NETWORK_GATEWAY = "172.17.0.1";
 
 // Swaps "localhost" with the IP address of the Docker host
 const handleLocalhostUrl = (appUrl: string): string => {
