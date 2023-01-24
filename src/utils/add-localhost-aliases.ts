@@ -1,5 +1,5 @@
-import { DOCKER_BRIDGE_NETWORK_GATEWAY } from "./get-inputs";
 import { appendFile } from "fs/promises";
+import { DOCKER_BRIDGE_NETWORK_GATEWAY } from "./get-inputs";
 
 const HOSTS_FILE = "/etc/hosts";
 
