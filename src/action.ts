@@ -46,6 +46,10 @@ const DEFAULT_SCREENSHOTTING_OPTIONS = {
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
   initLogger();
+
+  // Init Sentry without sampling traces on the action run.
+  // Children processes, (test run executions) will use
+  // the global sample rate.
   const sentryHub = await initSentry(1.0);
 
   const transaction = sentryHub.startTransaction({
