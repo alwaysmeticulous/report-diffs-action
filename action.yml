@@ -43,6 +43,7 @@ runs:
     MAX_RETRIES_ON_FAILURE: ${{ inputs.max-retries-on-failure }}
     PARALLEL_TASKS: ${{ inputs.parallel-tasks }}
     LOCALHOST_ALIASES: ${{ inputs.localhost-aliases }}
+    METICULOUS_TELEMETRY_SAMPLE_RATE: '0.01'
 branding:
   color: purple
   icon: camera
