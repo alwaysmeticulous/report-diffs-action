@@ -32,12 +32,12 @@
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.26.0.tgz#0148541fe44323e90a45c7ff3c7711fc0a897279"
   integrity sha512-+hX+6OSeemlYRwgBpKbjhxbAPXpJtAFlZpbOXGP45x6sEbMusJqciSO4QxhBfNOHs1SmtxwJpnCimDc0pmywHw==
 
-"@alwaysmeticulous/cli@^2.29.1":
-  version "2.29.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.29.1.tgz#0d0b4685bc1f1289f4a4953ce3076e012485796e"
-  integrity sha512-h0ocNhLnWKAevkLX0vSlHWHCOe9m4l3WgDBNHgoOjcrfJjFLyN0JLcNTjJ0AtN9glsg6CNRIbbbJpnm6LCQ29Q==
+"@alwaysmeticulous/cli@^2.30.0":
+  version "2.30.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.30.0.tgz#37bed28ef562874639ad127d503a6819d53c6177"
+  integrity sha512-2rItNI4DP/MzfJz3xC1GubPZ4b44ExNox22tnK0yNEOZbMgSl+KxhC8sbi95nGEqN3He0opnb8HrRMI/1SXTlg==
   dependencies:
-    "@alwaysmeticulous/common" "^2.29.1"
+    "@alwaysmeticulous/common" "^2.30.0"
     "@sentry/node" "^7.34.0"
     "@sentry/tracing" "^7.34.0"
     adm-zip "^0.5.9"
@@ -54,10 +54,10 @@
     proper-lockfile "^4.1.2"
     yargs "^17.5.1"
 
-"@alwaysmeticulous/common@^2.29.1":
-  version "2.29.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.29.1.tgz#a4e5a5d25fe3f7131f7294edfadd1a2c8b4f1adb"
-  integrity sha512-wFQeCWjhvDlnF3v3kQg6jvHgRa+f1s2l1I2cGzpA/NQmfcsTjBd905fT6KiliHUsZB2KdwCliQcAhkNqYyEc/Q==
+"@alwaysmeticulous/common@^2.29.1", "@alwaysmeticulous/common@^2.30.0":
+  version "2.30.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.30.0.tgz#85112266219dc98aa915b9c1506dde08e5282807"
+  integrity sha512-iVrtFDMeeCcCHWJ9IkLnCZqjb4gPTVjTfsZnzpkrjH9XOw/H9CWZXmgOSZF4FEet7IgWxpr0GtvOKlI1JiM/XQ==
   dependencies:
     loglevel "^1.8.0"
     luxon "^3.2.1"
