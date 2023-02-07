@@ -1,5 +1,5 @@
 import { getOctokit } from "@actions/github";
-import { RunAllTestsResult, TestRun } from "@alwaysmeticulous/cli";
+import { RunAllTestsResult, RunAllTestsTestRun } from "@alwaysmeticulous/cli";
 import { CodeChangeEvent } from "../types";
 import { updateStatusComment } from "./update-status-comment";
 
@@ -25,21 +25,23 @@ export class ResultsReporter {
   }
 
   async testRunStarted(
-    testRun: TestRun & {
+    testRun: RunAllTestsTestRun & {
       status: "Running";
     }
   ) {
-    await this.setCommitStatus({
-      state: "pending",
-      description: `Testing ${testRun.progress.runningTestCases} sessions...`,
-    });
+    if (!testRun.project.isGitHubIntegrationActive) {
+      await this.setCommitStatus({
+        state: "pending",
+        description: `Testing ${testRun.progress.runningTestCases} sessions...`,
+      });
+    }
     await this.setStatusComment({
       body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${testRun.progress.runningTestCases} sessions to check for differences... (commit: ${this.shortHeadSha})`,
     });
   }
 
   async testFinished(
-    testRun: TestRun & {
+    testRun: RunAllTestsTestRun & {
       status: "Running";
     }
   ) {
@@ -55,13 +57,15 @@ export class ResultsReporter {
     const percentComplete = Math.round(
       (executedTestCases / totalTestCases) * 100
     );
-    await this.setCommitStatus({
-      state: "pending",
-      description: `Testing ${totalTestCases} sessions (${percentComplete}% complete)...`,
-      ...(testRun.progress.failedTestCases > 0
-        ? { targetUrl: testRun.url }
-        : {}),
-    });
+    if (!testRun.project.isGitHubIntegrationActive) {
+      await this.setCommitStatus({
+        state: "pending",
+        description: `Testing ${totalTestCases} sessions (${percentComplete}% complete)...`,
+        ...(testRun.progress.failedTestCases > 0
+          ? { targetUrl: testRun.url }
+          : {}),
+      });
+    }
     if (testRun.progress.failedTestCases > 0) {
       await this.setStatusComment({
         body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${totalTestCases} sessions to check for differences. No differences detected so far. (${percentComplete}% complete, commit: ${this.shortHeadSha})`,
@@ -85,11 +89,13 @@ export class ResultsReporter {
     const totalScreens = screenshotDiffResults.length;
 
     if (screensWithDifferences === 0) {
-      await this.setCommitStatus({
-        description: `Zero differences across ${totalScreens} screens tested`,
-        state: "success",
-        targetUrl: testRun.url,
-      });
+      if (!testRun.project.isGitHubIntegrationActive) {
+        await this.setCommitStatus({
+          description: `Zero differences across ${totalScreens} screens tested`,
+          state: "success",
+          targetUrl: testRun.url,
+        });
+      }
       if (totalScreens > 0) {
         await this.setStatusComment({
           createIfDoesNotExist: true,
@@ -97,11 +103,13 @@ export class ResultsReporter {
         });
       }
     } else {
-      await this.setCommitStatus({
-        description: `Differences in ${screensWithDifferences} of ${totalScreens} screens, click details to view`,
-        state: "success",
-        targetUrl: testRun.url,
-      });
+      if (!testRun.project.isGitHubIntegrationActive) {
+        await this.setCommitStatus({
+          description: `Differences in ${screensWithDifferences} of ${totalScreens} screens, click details to view`,
+          state: "success",
+          targetUrl: testRun.url,
+        });
+      }
       await this.setStatusComment({
         createIfDoesNotExist: true,
         body: `🤖 ${METICULOUS_MARKDOWN_LINK} spotted visual differences in ${screensWithDifferences} of ${totalScreens} screens tested: [view differences detected](${testRun.url}) (commit: ${this.shortHeadSha}).`,
@@ -110,10 +118,9 @@ export class ResultsReporter {
   }
 
   async errorRunningTests() {
-    await this.setCommitStatus({
-      description: "Failed to execute, see logs for details",
-      state: "error",
-    });
+    // We don't want to update the commit status for runs of projects which are GitHub App integrated. Within
+    // this failure mode we can't be always sure that the current repo isn't GitHub App-integrated so be defensive and
+    // only post a status comment without a Commit status.
     await this.setStatusComment({
       body: `🤖 ${METICULOUS_MARKDOWN_LINK} failed to execute, see GitHub job logs for details (commit: ${this.shortHeadSha})`,
     });
