@@ -4,8 +4,8 @@ import {
   initLogger,
   initSentry,
   runAllTests,
+  RunAllTestsTestRun,
   setLogLevel,
-  TestRun,
 } from "@alwaysmeticulous/cli";
 import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
@@ -109,7 +109,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     setMeticulousLocalDataDir();
     const reportTestFinished = debounce(
       (
-        testRun: TestRun & {
+        testRun: RunAllTestsTestRun & {
           status: "Running";
         }
       ) => resultsReporter.testFinished(testRun),
