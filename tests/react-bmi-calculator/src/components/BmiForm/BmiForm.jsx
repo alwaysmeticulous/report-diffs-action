@@ -33,7 +33,7 @@ const BmiForm = ({ change }) => {
 		<>
 			<div className="row">
 				<div className="col m6 s12">
-					<label htmlFor="weight">Weight (in kg)</label>
+					<label htmlFor="weight">Weight (in lb)</label>
 					<input
 						id="weight"
 						name="weight"
