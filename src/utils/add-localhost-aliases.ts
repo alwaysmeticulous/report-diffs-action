@@ -12,10 +12,12 @@ export const addLocalhostAliases = async ({
   appUrl,
   localhostAliases,
 }: {
-  appUrl: string;
+  appUrl: string | null;
   localhostAliases: string | null;
 }): Promise<void> => {
-  const autoDetectedAlias = await autoDetectAppURlAlias({ appUrl });
+  const autoDetectedAlias = appUrl
+    ? await autoDetectAppURlAlias({ appUrl })
+    : null;
 
   if (!localhostAliases && autoDetectedAlias == null) {
     return;
