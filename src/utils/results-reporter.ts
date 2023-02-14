@@ -83,8 +83,7 @@ export class ResultsReporter {
       (testCase) => testCase.screenshotDiffResults
     );
     const screensWithDifferences = screenshotDiffResults.filter(
-      (result) =>
-        result.outcome === "diff" || result.outcome === "different-size"
+      (result) => result.outcome === "diff"
     ).length;
     const totalScreens = screenshotDiffResults.length;
 
