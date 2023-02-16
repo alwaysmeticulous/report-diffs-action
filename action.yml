@@ -9,8 +9,11 @@ inputs:
     required: true
     default: ${{ github.token }}
   app-url:
-    description: "The URL to execute the tests against. This URL should serve the code from the current commit (e.g. a localhost URL served up by a local server)"
-    required: true
+    description: |
+      The URL to execute the tests against. This URL should serve the code from the current commit (e.g. a localhost URL served up by a local server).
+      This will almost always have to be specified. It is mostly useful to omit this if `appUrl` differs between test
+      cases within the same test run. In those cases it is expected all test cases to contain have `appUrl` set.
+    required: false
   tests-file:
     description: |
       The path to the meticulous.json file containing the list of tests you want to run.
