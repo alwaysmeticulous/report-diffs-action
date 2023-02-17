@@ -14,7 +14,7 @@ export const getInputs = () => {
   });
   const appUrl_ = getInputFromEnv({
     name: "app-url",
-    required: true,
+    required: false,
     type: "string",
   });
   const testsFile = getInputFromEnv({
@@ -38,7 +38,7 @@ export const getInputs = () => {
     type: "string",
   });
 
-  const appUrl = handleLocalhostUrl(appUrl_);
+  const appUrl = appUrl_ ? handleLocalhostUrl(appUrl_) : appUrl_;
 
   return {
     apiToken,
