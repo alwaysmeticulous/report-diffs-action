@@ -29,7 +29,7 @@ export const getCurrentWorkflowId = async ({
   return { workflowId };
 };
 
-export const getOrStartNewWorkflowRun = async ({
+export const startNewWorkflowRun = async ({
   owner,
   repo,
   workflowId,
@@ -44,17 +44,6 @@ export const getOrStartNewWorkflowRun = async ({
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
 }): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
-  const alreadyPending = await getPendingWorkflowRun({
-    owner,
-    repo,
-    workflowId,
-    commitSha,
-    octokit,
-  });
-  if (alreadyPending != null) {
-    return alreadyPending;
-  }
-
   await octokit.rest.actions.createWorkflowDispatch({
     owner,
     repo,
@@ -135,7 +124,7 @@ export const waitForWorkflowCompletion = async ({
   return workflowRun;
 };
 
-const getPendingWorkflowRun = async ({
+export const getPendingWorkflowRun = async ({
   owner,
   repo,
   workflowId,

@@ -8,7 +8,8 @@ import log from "loglevel";
 import { CodeChangeEvent } from "../types";
 import {
   getCurrentWorkflowId,
-  getOrStartNewWorkflowRun,
+  getPendingWorkflowRun,
+  startNewWorkflowRun,
   waitForWorkflowCompletion,
 } from "./workflow.utils";
 
@@ -64,6 +65,24 @@ export const ensureBaseTestsExists = async ({
 
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
 
+  const alreadyPending = await getPendingWorkflowRun({
+    owner,
+    repo,
+    workflowId,
+    commitSha: base,
+    octokit,
+  });
+  if (alreadyPending != null) {
+    await waitForWorkflowCompletionAndThrowIfFailed({
+      owner,
+      repo,
+      workflowRunId: alreadyPending.workflowRunId,
+      octokit,
+      commitSha: base,
+    });
+    return { shaToCompareAgainst: base };
+  }
+
   // We can only trigger a workflow_run against the head of the base branch
   // This will give some spurious diffs if it's different from `base`, but it's the best we can do
 
@@ -78,7 +97,7 @@ export const ensureBaseTestsExists = async ({
     JSON.stringify({ owner, repo, base, baseRef, currentBaseSha }, null, 2)
   );
   if (base !== currentBaseSha) {
-    const message = `Meticulous tests on base commit ${base} have either not completed or never ran so we have nothing to compare against.
+    const message = `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
     In addition we were not able to trigger a run on ${base} since the '${baseRef}' branch is now pointing to ${currentBaseSha}.
     Therefore no diffs will be reported for this run. Re-running the tests may fix this.`;
     logger.warn(message);
@@ -86,7 +105,7 @@ export const ensureBaseTestsExists = async ({
     return { shaToCompareAgainst: null };
   }
 
-  const workflowRun = await getOrStartNewWorkflowRun({
+  const workflowRun = await startNewWorkflowRun({
     owner,
     repo,
     workflowId,
@@ -103,23 +122,37 @@ export const ensureBaseTestsExists = async ({
   }
 
   logger.log(`Waiting on workflow run: ${workflowRun.html_url}`);
-  const finalWorkflowRun = await waitForWorkflowCompletion({
+  await waitForWorkflowCompletionAndThrowIfFailed({
     owner,
     repo,
     workflowRunId: workflowRun.workflowRunId,
     octokit,
+    commitSha: base,
   });
+
+  return { shaToCompareAgainst: base };
+};
+
+const waitForWorkflowCompletionAndThrowIfFailed = async ({
+  commitSha,
+  ...otherOpts
+}: {
+  owner: string;
+  repo: string;
+  workflowRunId: number;
+  octokit: InstanceType<typeof GitHub>;
+  commitSha: string;
+}) => {
+  const finalWorkflowRun = await waitForWorkflowCompletion(otherOpts);
 
   if (
     finalWorkflowRun.status !== "completed" ||
     finalWorkflowRun.conclusion !== "success"
   ) {
     throw new Error(
-      `Comparing against screenshots taken on ${baseRef}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
+      `Comparing against screenshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
     );
   }
-
-  return { shaToCompareAgainst: base };
 };
 
 const getHeadCommitForRef = async ({
