@@ -86,29 +86,17 @@ export const ensureBaseTestsExists = async ({
     return { shaToCompareAgainst: null };
   }
 
-  const testRunForHeadOfBaseBranch = await getLatestTestRunResults({
-    client: createClient({ apiToken }),
-    commitSha: currentBaseSha,
-  });
-
-  if (testRunForHeadOfBaseBranch != null) {
-    logger.log(
-      `Tests already exist for commit ${currentBaseSha} (${testRunForHeadOfBaseBranch.id})`
-    );
-    return { shaToCompareAgainst: currentBaseSha };
-  }
-
   const workflowRun = await getOrStartNewWorkflowRun({
     owner,
     repo,
     workflowId,
     ref: baseRef,
-    commitSha: currentBaseSha,
+    commitSha: base,
     octokit,
   });
 
   if (workflowRun == null) {
-    const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${currentBaseSha}.`;
+    const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${base}.`;
     logger.warn(message);
     ghWarning(message);
     return { shaToCompareAgainst: null };
@@ -131,7 +119,7 @@ export const ensureBaseTestsExists = async ({
     );
   }
 
-  return { shaToCompareAgainst: currentBaseSha };
+  return { shaToCompareAgainst: base };
 };
 
 const getHeadCommitForRef = async ({
