@@ -64,21 +64,49 @@ export const ensureBaseTestsExists = async ({
 
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
 
+  // We can only trigger a workflow_run against the head of the base branch
+  // This will give some spurious diffs if it's different from `base`, but it's the best we can do
+
+  const currentBaseSha = await getHeadCommitForRef({
+    owner,
+    repo,
+    ref: baseRef,
+    octokit,
+  });
+
   logger.debug(
-    `Debug: ${JSON.stringify({ owner, repo, base, baseRef }, null, 2)}`
+    JSON.stringify({ owner, repo, base, baseRef, currentBaseSha }, null, 2)
   );
+  if (base !== currentBaseSha) {
+    const message = `Pull request event received ${base} as the base commit but ${baseRef} \
+is now pointing to ${currentBaseSha}. Will use ${currentBaseSha} for Meticulous tests. Re-running the tests will likely fix this.`;
+    logger.warn(message);
+    ghWarning(message);
+  }
+
+  const testRunForHeadOfBaseBranch = await getLatestTestRunResults({
+    client: createClient({ apiToken }),
+    commitSha: currentBaseSha,
+  });
+
+  if (testRunForHeadOfBaseBranch != null) {
+    logger.log(
+      `Tests already exist for commit ${currentBaseSha} (${testRunForHeadOfBaseBranch.id})`
+    );
+    return { shaToCompareAgainst: currentBaseSha };
+  }
 
   const workflowRun = await getOrStartNewWorkflowRun({
     owner,
     repo,
     workflowId,
     ref: baseRef,
-    commitSha: base,
+    commitSha: currentBaseSha,
     octokit,
   });
 
   if (workflowRun == null) {
-    const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${base}.`;
+    const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${currentBaseSha}.`;
     logger.warn(message);
     ghWarning(message);
     return { shaToCompareAgainst: null };
@@ -101,5 +129,25 @@ export const ensureBaseTestsExists = async ({
     );
   }
 
-  return { shaToCompareAgainst: base };
+  return { shaToCompareAgainst: currentBaseSha };
+};
+
+const getHeadCommitForRef = async ({
+  owner,
+  repo,
+  ref,
+  octokit,
+}: {
+  owner: string;
+  repo: string;
+  ref: string;
+  octokit: InstanceType<typeof GitHub>;
+}): Promise<string> => {
+  const result = await octokit.rest.repos.getBranch({
+    owner,
+    repo,
+    branch: ref,
+  });
+  const commitSha = result.data.commit.sha;
+  return commitSha;
 };
