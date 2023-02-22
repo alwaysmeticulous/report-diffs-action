@@ -78,10 +78,12 @@ export const ensureBaseTestsExists = async ({
     JSON.stringify({ owner, repo, base, baseRef, currentBaseSha }, null, 2)
   );
   if (base !== currentBaseSha) {
-    const message = `Pull request event received ${base} as the base commit but ${baseRef} \
-is now pointing to ${currentBaseSha}. Will use ${currentBaseSha} for Meticulous tests. Re-running the tests will likely fix this.`;
+    const message = `Meticulous tests on base commit ${base} have either not completed or never ran so we have nothing to compare against.
+    In addition we were not able to trigger a run on ${base} since the '${baseRef}' branch is now pointing to ${currentBaseSha}.
+    Therefore no diffs will be reported for this run. Re-running the tests may fix this.`;
     logger.warn(message);
     ghWarning(message);
+    return { shaToCompareAgainst: null };
   }
 
   const testRunForHeadOfBaseBranch = await getLatestTestRunResults({
