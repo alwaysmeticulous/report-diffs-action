@@ -23,14 +23,14 @@ export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
     const message = `Error while running tests on base ${params[0].base}. No diffs will be reported for this run.`;
     logger.warn(message);
     ghWarning(message);
-    return null;
+    return { shaToCompareAgainst: null };
   }
 };
 
 export const ensureBaseTestsExists = async ({
   event,
   apiToken,
-  base,
+  base, // from the PR event
   context,
   octokit,
 }: {
@@ -39,52 +39,33 @@ export const ensureBaseTestsExists = async ({
   base: string | null;
   context: Context;
   octokit: InstanceType<typeof GitHub>;
-}): Promise<{ currentBaseSha: string } | null> => {
+}): Promise<{ shaToCompareAgainst: string | null }> => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
   // Running missing tests on base is only supported for Pull Request events
   if (event.type !== "pull_request" || !base) {
-    return null;
+    return { shaToCompareAgainst: null };
   }
 
   const { owner, repo } = context.repo;
   const baseRef = event.payload.pull_request.base.ref;
 
-  const currentBaseSha = await getHeadCommitForRef({
-    owner,
-    repo,
-    ref: baseRef,
-    octokit,
-  });
-
-  logger.debug(JSON.stringify({ base, baseRef, currentBaseSha }, null, 2));
-  if (base !== currentBaseSha) {
-    const message = `Pull request event received ${base} as the base commit but ${baseRef} \
-is now pointing to ${currentBaseSha}. Will use ${currentBaseSha} for Meticulous tests.`;
-    logger.warn(message);
-    ghWarning(message);
-  }
+  logger.debug(JSON.stringify({ base, baseRef }, null, 2));
 
   const testRun = await getLatestTestRunResults({
     client: createClient({ apiToken }),
-    commitSha: currentBaseSha,
+    commitSha: base,
   });
 
   if (testRun != null) {
-    logger.log(
-      `Tests already exist for commit ${currentBaseSha} (${testRun.id})`
-    );
-    return { currentBaseSha };
+    logger.log(`Tests already exist for commit ${base} (${testRun.id})`);
+    return { shaToCompareAgainst: base };
   }
 
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
 
   logger.debug(
-    `Debug: ${JSON.stringify(
-      { owner, repo, base, baseRef, currentBaseSha },
-      null,
-      2
-    )}`
+    `Debug: ${JSON.stringify({ owner, repo, base, baseRef }, null, 2)}`
   );
 
   const workflowRun = await getOrStartNewWorkflowRun({
@@ -92,15 +73,15 @@ is now pointing to ${currentBaseSha}. Will use ${currentBaseSha} for Meticulous 
     repo,
     workflowId,
     ref: baseRef,
-    commitSha: currentBaseSha,
+    commitSha: base,
     octokit,
   });
 
   if (workflowRun == null) {
-    const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${currentBaseSha}.`;
+    const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${base}.`;
     logger.warn(message);
     ghWarning(message);
-    return null;
+    return { shaToCompareAgainst: null };
   }
 
   logger.log(`Waiting on workflow run: ${workflowRun.html_url}`);
@@ -120,25 +101,5 @@ is now pointing to ${currentBaseSha}. Will use ${currentBaseSha} for Meticulous 
     );
   }
 
-  return { currentBaseSha };
-};
-
-const getHeadCommitForRef = async ({
-  owner,
-  repo,
-  ref,
-  octokit,
-}: {
-  owner: string;
-  repo: string;
-  ref: string;
-  octokit: InstanceType<typeof GitHub>;
-}): Promise<string> => {
-  const result = await octokit.rest.repos.getBranch({
-    owner,
-    repo,
-    branch: ref,
-  });
-  const commitSha = result.data.commit.sha;
-  return commitSha;
+  return { shaToCompareAgainst: base };
 };
