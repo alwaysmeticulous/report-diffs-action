@@ -73,6 +73,9 @@ export const ensureBaseTestsExists = async ({
     octokit,
   });
   if (alreadyPending != null) {
+    logger.log(
+      `Waiting on workflow run on base commit (${base}) to compare against: ${alreadyPending.html_url}`
+    );
     await waitForWorkflowCompletionAndThrowIfFailed({
       owner,
       repo,
