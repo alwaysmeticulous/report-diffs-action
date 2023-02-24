@@ -110,7 +110,7 @@ export class ResultsReporter {
       }
       await this.setStatusComment({
         createIfDoesNotExist: true,
-        body: `🤖 Meticulous spotted visual differences in ${screensWithDifferences} of ${totalScreens} screens tested: [view differences detected](${testRun.url}).`,
+        body: `🤖 Meticulous spotted visual differences in ${screensWithDifferences} of ${totalScreens} screens tested: [view and approve differences detected](${testRun.url}).`,
       });
     }
   }
