@@ -37,7 +37,7 @@ export const updateStatusComment = async ({
       (comment.body ?? "").indexOf(METICULOUS_COMMENT_IDENTIFIER) > -1
   );
 
-  const fullBody = `${body}[^1]\n\n[^1]:Last updated for commit ${shortHeadSha}. This comment will update as new commits are pushed.${METICULOUS_COMMENT_IDENTIFIER}}`;
+  const fullBody = `${body}[^1]\n\n[^1]:Last updated for commit ${shortHeadSha}. This comment will update as new commits are pushed.${METICULOUS_COMMENT_IDENTIFIER}`;
 
   if (existingComment != null) {
     await octokit.rest.issues.updateComment({
