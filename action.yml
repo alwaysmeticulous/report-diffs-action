@@ -34,6 +34,15 @@ inputs:
   localhost-aliases:
     description: Additional aliases for localhost, as a list of comma-separated values
     required: false
+  max-allowed-color-difference:
+    description: A number between 0 and 1. The maximum difference in color/brightness for a pixel to ignore, and treat as unchanged. A value of 1.0 would accept any difference in color, while a value of 0.0 would accept no difference in color. Uses a measure of perceived color differences, based on the paper "Measuring perceived color difference using YIQ NTSC transmission color space in mobile applications" by Y. Kotsarenko and F. Ramos.
+    required: true
+    default: 0.01
+  max-allowed-proportion-of-changed-pixels:
+    description: Maximum acceptable proportion of pixels that exceed the `max-allowed-color-difference`, as a number between 0 and 1. Differences in a smaller or equal proportional of pixels to this will be ignored. Defaults to 0.00001, or about 20 pixels in a 1920 x 1080 px screenshot.
+    required: true
+    default: 0.00001
+
 outputs: {}
 runs:
   using: "docker"
@@ -46,7 +55,9 @@ runs:
     MAX_RETRIES_ON_FAILURE: ${{ inputs.max-retries-on-failure }}
     PARALLEL_TASKS: ${{ inputs.parallel-tasks }}
     LOCALHOST_ALIASES: ${{ inputs.localhost-aliases }}
-    METICULOUS_TELEMETRY_SAMPLE_RATE: '0.01'
+    MAX_ALLOWED_COLOR_DIFFERENCE: ${{ inputs.max-allowed-color-difference }}
+    MAX_ALLOWED_PROPORTION_OF_CHANGED_PIXELS: ${{ inputs.max-allowed-proportion-of-changed-pixels }}
+    METICULOUS_TELEMETRY_SAMPLE_RATE: "0.01"
 branding:
   color: purple
   icon: camera
