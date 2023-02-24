@@ -34,16 +34,6 @@ const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   essentialFeaturesOnly: false,
 };
 
-const DEFAULT_SCREENSHOTTING_OPTIONS = {
-  enabled: true,
-  screenshotSelector: null,
-  storyboardOptions: { enabled: true },
-  diffOptions: {
-    diffThreshold: 0.00001, // ~20 pixels on a 1920 x 1080 px screenshot
-    diffPixelThreshold: 0.01,
-  },
-} as const;
-
 export const runMeticulousTestsAction = async (): Promise<void> => {
   initLogger();
 
@@ -70,6 +60,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     maxRetriesOnFailure,
     parallelTasks,
     localhostAliases,
+    maxAllowedColorDifference,
+    maxAllowedProportionOfChangedPixels,
   } = getInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -127,7 +119,15 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       baseCommitSha: shaToCompareAgainst,
       appUrl,
       executionOptions: DEFAULT_EXECUTION_OPTIONS,
-      screenshottingOptions: DEFAULT_SCREENSHOTTING_OPTIONS,
+      screenshottingOptions: {
+        enabled: true,
+        screenshotSelector: null,
+        storyboardOptions: { enabled: true },
+        diffOptions: {
+          diffThreshold: maxAllowedProportionOfChangedPixels,
+          diffPixelThreshold: maxAllowedColorDifference,
+        },
+      },
       useAssetsSnapshottedInBaseSimulation: false,
       parallelTasks,
       deflake: false,

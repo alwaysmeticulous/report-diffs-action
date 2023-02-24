@@ -37,6 +37,16 @@ export const getInputs = () => {
     required: false,
     type: "string",
   });
+  const maxAllowedColorDifference = getInputFromEnv({
+    name: "max-allowed-color-difference",
+    required: true,
+    type: "number",
+  });
+  const maxAllowedProportionOfChangedPixels = getInputFromEnv({
+    name: "max-allowed-proportion-of-changed-pixels",
+    required: true,
+    type: "number",
+  });
 
   const appUrl = appUrl_ ? handleLocalhostUrl(appUrl_) : appUrl_;
 
@@ -48,6 +58,8 @@ export const getInputs = () => {
     maxRetriesOnFailure,
     parallelTasks,
     localhostAliases,
+    maxAllowedColorDifference,
+    maxAllowedProportionOfChangedPixels,
   };
 };
 
