@@ -4,7 +4,6 @@ import { CodeChangeEvent } from "../types";
 import { updateStatusComment } from "./update-status-comment";
 
 const SHORT_SHA_LENGTH = 7;
-const METICULOUS_MARKDOWN_LINK = "[Meticulous](https://meticulous.ai/)";
 
 /**
  * Posts/updates Github comments and Github commit statuses to keep the user updated on progress/results.
@@ -36,7 +35,7 @@ export class ResultsReporter {
       });
     }
     await this.setStatusComment({
-      body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${testRun.progress.runningTestCases} sessions to check for differences... (commit: ${this.shortHeadSha})`,
+      body: `🤖 Meticulous is replaying ${testRun.progress.runningTestCases} sessions to check for differences...`,
     });
   }
 
@@ -68,11 +67,11 @@ export class ResultsReporter {
     }
     if (testRun.progress.failedTestCases > 0) {
       await this.setStatusComment({
-        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${totalTestCases} sessions to check for differences. No differences detected so far. (${percentComplete}% complete, commit: ${this.shortHeadSha})`,
+        body: `🤖 Meticulous is replaying ${totalTestCases} sessions to check for differences. No differences detected so far (${percentComplete}% complete).`,
       });
     } else {
       await this.setStatusComment({
-        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${totalTestCases} sessions to check for differences (${percentComplete}% complete, commit: ${this.shortHeadSha}).`,
+        body: `🤖 Meticulous is replaying ${totalTestCases} sessions to check for differences (${percentComplete}% complete).`,
       });
     }
   }
@@ -98,7 +97,7 @@ export class ResultsReporter {
       if (totalScreens > 0) {
         await this.setStatusComment({
           createIfDoesNotExist: true,
-          body: `✅ ${METICULOUS_MARKDOWN_LINK} spotted zero visual differences across ${totalScreens} screens tested. (commit: ${this.shortHeadSha})`,
+          body: `✅ Meticulous spotted zero visual differences across ${totalScreens} screens tested: [view results](${testRun.url}).`,
         });
       }
     } else {
@@ -111,7 +110,7 @@ export class ResultsReporter {
       }
       await this.setStatusComment({
         createIfDoesNotExist: true,
-        body: `🤖 ${METICULOUS_MARKDOWN_LINK} spotted visual differences in ${screensWithDifferences} of ${totalScreens} screens tested: [view differences detected](${testRun.url}) (commit: ${this.shortHeadSha}).`,
+        body: `🤖 Meticulous spotted visual differences in ${screensWithDifferences} of ${totalScreens} screens tested: [view and approve differences detected](${testRun.url}).`,
       });
     }
   }
@@ -121,7 +120,7 @@ export class ResultsReporter {
     // this failure mode we can't be always sure that the current repo isn't GitHub App-integrated so be defensive and
     // only post a status comment without a Commit status.
     await this.setStatusComment({
-      body: `🤖 ${METICULOUS_MARKDOWN_LINK} failed to execute, see GitHub job logs for details (commit: ${this.shortHeadSha})`,
+      body: `🤖 Meticulous failed to execute, see GitHub job logs for details.`,
     });
   }
 
@@ -161,6 +160,7 @@ export class ResultsReporter {
       event,
       createIfDoesNotExist: createIfDoesNotExist ?? false,
       body,
+      shortHeadSha: this.shortHeadSha,
     });
   }
 }
