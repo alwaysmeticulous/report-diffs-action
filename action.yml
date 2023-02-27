@@ -35,7 +35,7 @@ inputs:
     description: Additional aliases for localhost, as a list of comma-separated values
     required: false
   max-allowed-color-difference:
-    description: A number between 0 and 1. The maximum difference in color/brightness for a pixel to ignore, and treat as unchanged. A value of 1.0 would accept any difference in color while a value of 0.0 would accept no difference in color. Uses a measure of perceived color differences based on the paper "Measuring perceived color difference using YIQ NTSC transmission color space in mobile applications" by Y. Kotsarenko and F. Ramos.
+    description: A number between 0 and 1. The maximum difference in color/brightness for a pixel to ignore, and treat as unchanged. A value of 1.0 would accept any difference in color, while a value of 0.0 would accept no difference in color. Uses a measure of perceived color differences based on the paper "Measuring perceived color difference using YIQ NTSC transmission color space in mobile applications" by Y. Kotsarenko and F. Ramos. See https://jsfiddle.net/vpfwsxby/12/ for example differences.
     required: true
     default: 0.01
   max-allowed-proportion-of-changed-pixels:
