@@ -1,8 +1,10 @@
 interface GetInputFromEnvFn {
-  (options: { name: string; required?: false; type: "number" }): number | null;
-  (options: { name: string; required?: false; type: "string" }): string | null;
   (options: { name: string; required: true; type: "string" }): string;
-  (options: { name: string; required: true; type: "number" }): number;
+  (options: { name: string; required?: false; type: "string" }): string | null;
+  (options: { name: string; required: true; type: "int" }): number;
+  (options: { name: string; required?: false; type: "int" }): number | null;
+  (options: { name: string; required: true; type: "float" }): number;
+  (options: { name: string; required?: false; type: "float" }): number | null;
 }
 
 export const getInputFromEnv: GetInputFromEnvFn = ({
@@ -15,7 +17,7 @@ export const getInputFromEnv: GetInputFromEnvFn = ({
   if (required && isEmpty(value)) {
     throw new Error(`Input ${name} is required`);
   }
-  if (value != null && typeof value !== type) {
+  if (value != null && typeof value !== expectedValueType(type)) {
     throw new Error(
       `Expected ${type} for input ${name}, but got ${typeof value}`
     );
@@ -28,7 +30,7 @@ export const getInputFromEnv: GetInputFromEnvFn = ({
 
 const parseValue = (
   value: string | undefined,
-  type: "string" | "number"
+  type: "string" | "int" | "float"
 ): string | number | null => {
   if (value == null) {
     return null;
@@ -36,8 +38,15 @@ const parseValue = (
   if (type === "string") {
     return value;
   }
-  if (type === "number") {
+  if (type === "int") {
     const parsed = Number.parseInt(value);
+    if (isNaN(parsed)) {
+      return null;
+    }
+    return parsed;
+  }
+  if (type === "float") {
+    const parsed = Number.parseFloat(value);
     if (isNaN(parsed)) {
       return null;
     }
@@ -60,4 +69,17 @@ const isEmpty = (value: unknown) => {
     return value.length === 0;
   }
   return false;
+};
+
+const expectedValueType = (type: "string" | "int" | "float") => {
+  if (type === "string") {
+    return "string";
+  }
+  if (type === "int") {
+    return "number";
+  }
+  if (type === "float") {
+    return "number";
+  }
+  return unknownType(type);
 };
