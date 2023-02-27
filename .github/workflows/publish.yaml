@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   lint:
-    name: Lint and format
+    name: Lint, format and test
     runs-on: ubuntu-latest
 
     steps:
@@ -47,6 +47,9 @@ jobs:
 
       - name: Lint
         run: yarn lint
+
+      - name: Test
+        run: yarn test
 
   publish:
     name: Publish

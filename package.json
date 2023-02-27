@@ -19,7 +19,8 @@
     "format:check": "prettier --check src",
     "lint": "eslint src --ext=ts,tsx,js --cache",
     "lint:commit": "eslint --cache $(git diff --relative --name-only --diff-filter=ACMRTUXB master | grep  -E \"(.js$|.ts$|.tsx$)\")",
-    "lint:fix": "eslint src --ext=ts,tsx,js --cache --fix"
+    "lint:fix": "eslint src --ext=ts,tsx,js --cache --fix",
+    "test": "jest"
   },
   "dependencies": {
     "@actions/core": "^1.10.0",
@@ -35,6 +36,7 @@
     "@alwaysmeticulous/api": "^2.30.1",
     "@parcel/packager-ts": "^2.8.3",
     "@parcel/transformer-typescript-types": "^2.8.3",
+    "@types/jest": "^27.0.3",
     "@types/lodash.debounce": "^4.0.7",
     "@types/luxon": "^3.2.0",
     "@types/node": "^18.13.0",
@@ -43,9 +45,11 @@
     "eslint": "^8.34.0",
     "eslint-import-resolver-typescript": "^3.5.3",
     "eslint-plugin-import": "^2.27.5",
+    "jest": "^27.4.5",
     "parcel": "^2.8.3",
     "prettier": "^2.8.4",
     "rimraf": "^4.1.2",
+    "ts-jest": "^27.1.1",
     "typescript": "^4.9.5",
     "yaml": "^2.2.1"
   },
@@ -65,5 +69,22 @@
   "bugs": {
     "url": "https://github.com/alwaysmeticulous/action-meticulous-run/issues"
   },
-  "homepage": "https://github.com/alwaysmeticulous/action-meticulous-run"
+  "homepage": "https://github.com/alwaysmeticulous/action-meticulous-run",
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
 }

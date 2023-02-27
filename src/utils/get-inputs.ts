@@ -25,12 +25,12 @@ export const getInputs = () => {
   const maxRetriesOnFailure = getInputFromEnv({
     name: "max-retries-on-failure",
     required: true,
-    type: "number",
+    type: "int",
   });
   const parallelTasks = getInputFromEnv({
     name: "parallel-tasks",
     required: false,
-    type: "number",
+    type: "int",
   });
   const localhostAliases = getInputFromEnv({
     name: "localhost-aliases",
@@ -40,12 +40,12 @@ export const getInputs = () => {
   const maxAllowedColorDifference = getInputFromEnv({
     name: "max-allowed-color-difference",
     required: true,
-    type: "number",
+    type: "float",
   });
   const maxAllowedProportionOfChangedPixels = getInputFromEnv({
     name: "max-allowed-proportion-of-changed-pixels",
     required: true,
-    type: "number",
+    type: "float",
   });
 
   const appUrl = appUrl_ ? handleLocalhostUrl(appUrl_) : appUrl_;
