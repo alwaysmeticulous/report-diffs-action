@@ -48,6 +48,13 @@ const tryGetMergeCommitBase = (headSha: string): string | null => {
     return null;
   }
   try {
+    // The .git directory is owned by a different user. By default git therefore won't let us
+    // run git commands on it in case that user has inserted malicious code into the .git directory,
+    // which gets executed when we run a git command. However we trust github to not do that, so can
+    // mark this directory as safe.
+    // See https://medium.com/@thecodinganalyst/git-detect-dubious-ownership-in-repository-e7f33037a8f for more details
+    execSync("git config --global --add safe.directory");
+
     // --format="%P" outputs just the parents of the commit
     // The GITHUB_SHA is always a merge commit for PRs
     const gitShowResult = execSync(
