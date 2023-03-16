@@ -61,11 +61,12 @@ const tryGetMergeCommitBase = (
       .toString()
       .trim();
     if (headCommitSha !== mergeCommitSha) {
-      console.error(
+      console.log(
         `The head commit SHA (${headCommitSha}) does not equal GITHUB_SHA environment variable (${mergeCommitSha}).
-          This is unexpected for pull_request events. Normally Meticulous would load the merge commit (GITHUB_SHA)
-          and try and work out the base of that merge commit, to compare screenshots against. However in this case it's possible
-          the GITHUB_SHA is not the correct merge commit to use. So instead we're just using base of the pull request instead (${pullRequestBaseSha}).`
+          This is likely because a custom ref has been passed to the 'actions/checkout' action. We're assuming therefore
+          that the head commit SHA is not a temporary merge commit, but rather the head of the branch. Therefore we're
+          using the base of the pull request (${pullRequestBaseSha}) to compare screenshots against, and not the base
+          of GitHub's temporary merge commit`
       );
       return null;
     }
