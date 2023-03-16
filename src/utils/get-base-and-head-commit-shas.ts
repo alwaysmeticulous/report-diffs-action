@@ -76,6 +76,8 @@ const tryGetMergeCommitBase = (
     const gitShowResult = execSync(
       `git show ${mergeCommitSha} --format="%P" -q`
     ).toString();
+    console.log("> ", `git show ${mergeCommitSha} --format="%P" -q`);
+    console.log("Result:", gitShowResult);
     const parents = gitShowResult.split(" ").map((sha) => sha.trim());
 
     if (parents.length !== 2) {
