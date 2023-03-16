@@ -71,14 +71,12 @@ const tryGetMergeCommitBase = (
       return null;
     }
 
-    // --format="%P" outputs just the parents of the commit
     // The GITHUB_SHA is always a merge commit for PRs
-    const gitShowResult = execSync(
-      `git show ${mergeCommitSha} --format="%P" -q`
-    ).toString();
-    console.log("> ", `git show ${mergeCommitSha} --format="%P" -q`);
-    console.log("Result:", gitShowResult);
-    const parents = gitShowResult.split(" ").map((sha) => sha.trim());
+    const parents = execSync(`git cat-file -p ${mergeCommitSha}`)
+      .toString()
+      .split("\n")
+      .filter((line) => line.startsWith("parent "))
+      .map((line) => line.substring("parent ".length).trim());
     console.log("Parents:", parents);
 
     if (parents.length !== 2) {
