@@ -55,7 +55,8 @@ const tryGetMergeCommitBase = (
     // which gets executed when we run a git command. However we trust github to not do that, so can
     // mark this directory as safe.
     // See https://medium.com/@thecodinganalyst/git-detect-dubious-ownership-in-repository-e7f33037a8f for more details
-    execSync("git config --global --add safe.directory");
+    const rootDir = execSync("git rev-parse --show-toplevel").toString().trim();
+    execSync(`git config --global --add safe.directory "${rootDir}"`);
 
     const headCommitSha = execSync("git rev-list --max-count=1 HEAD")
       .toString()
