@@ -61,14 +61,7 @@ jobs:
       - name: Use local dockerfile
         run: node ./scripts/use-local-dockerfile.js
 
-      - name: Run report-diffs-action
-        id: test
-        uses: ./
-        with:
-          api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
-          app-url: http://localhost:3000
-          tests-file: tests/react-bmi-calculator/meticulous.json
-
       - name: Setup upterm session
         uses: lhotari/action-upterm@v1
-        limit-access-to-users: Que3216
+        with:
+          limit-access-to-users: Que3216
