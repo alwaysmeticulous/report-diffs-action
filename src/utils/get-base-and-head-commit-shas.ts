@@ -12,10 +12,9 @@ export const getBaseAndHeadCommitShas = async (
 ): Promise<BaseAndHeadCommitShas> => {
   if (event.type === "pull_request") {
     const head = event.payload.pull_request.head.sha;
+    const base = event.payload.pull_request.base.sha;
     return {
-      base:
-        (await tryGetMergeCommitBase(head)) ??
-        event.payload.pull_request.base.sha,
+      base: (await tryGetMergeCommitBase(head, base)) ?? base,
       head,
     };
   }
@@ -38,12 +37,15 @@ const assertNever = (event: never): never => {
   throw new Error("Unexpected event: " + JSON.stringify(event));
 };
 
-const tryGetMergeCommitBase = (headSha: string): string | null => {
+const tryGetMergeCommitBase = (
+  pullRequestHeadSha: string,
+  pullRequestBaseSha: string
+): string | null => {
   const mergeCommitSha = process.env.GITHUB_SHA;
 
   if (mergeCommitSha == null) {
     console.error(
-      "No GITHUB_SHA environment var set, so can't work out true base of the merge commit. Using the base of the pull request instead."
+      `No GITHUB_SHA environment var set, so can't work out true base of the merge commit. Using the base of the pull request instead (${pullRequestBaseSha}).`
     );
     return null;
   }
@@ -54,6 +56,19 @@ const tryGetMergeCommitBase = (headSha: string): string | null => {
     // mark this directory as safe.
     // See https://medium.com/@thecodinganalyst/git-detect-dubious-ownership-in-repository-e7f33037a8f for more details
     execSync("git config --global --add safe.directory");
+
+    const headCommitSha = execSync("git rev-list --max-count=1 HEAD")
+      .toString()
+      .trim();
+    if (headCommitSha !== mergeCommitSha) {
+      console.error(
+        `The head commit SHA (${headCommitSha}) does not equal GITHUB_SHA environment variable (${mergeCommitSha}).
+          This is unexpected for pull_request events. Normally Meticulous would load the merge commit (GITHUB_SHA)
+          and try and work out the base of that merge commit, to compare screenshots against. However in this case it's possible
+          the GITHUB_SHA is not the correct merge commit to use. So instead we're just using base of the pull request instead (${pullRequestBaseSha}).`
+      );
+      return null;
+    }
 
     // --format="%P" outputs just the parents of the commit
     // The GITHUB_SHA is always a merge commit for PRs
@@ -74,16 +89,17 @@ const tryGetMergeCommitBase = (headSha: string): string | null => {
     // The first parent is always the base, and the second parent is the head of the PR
     const mergeBaseSha = parents[0];
     const mergeHeadSha = parents[1];
-    if (mergeHeadSha !== headSha) {
+    if (mergeHeadSha !== pullRequestHeadSha) {
       console.error(
-        `The second parent (${parents[1]}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${headSha}), so can not confidently determine the base of the merge commit to compare against. Using the base of the pull request instead.`
+        `The second parent (${parents[1]}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
+        so can not confidently determine the base of the merge commit to compare against. Using the base of the pull request instead (${pullRequestBaseSha}).`
       );
       return null;
     }
     return mergeBaseSha;
   } catch (e) {
     console.error(
-      `Error getting base of merge commit (${mergeCommitSha}). Using the base of the pull request instead.`,
+      `Error getting base of merge commit (${mergeCommitSha}). Using the base of the pull request instead (${pullRequestBaseSha}).`,
       e
     );
     return null;
