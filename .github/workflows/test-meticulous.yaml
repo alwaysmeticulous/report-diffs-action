@@ -37,6 +37,7 @@ jobs:
           path: |
             node_modules
             tests/react-bmi-calculator/node_modules
+            ~/.cache/puppeteer
           key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             node-modules-${{ runner.os }}
