@@ -77,7 +77,6 @@ const tryGetMergeCommitBase = (
       .split("\n")
       .filter((line) => line.startsWith("parent "))
       .map((line) => line.substring("parent ".length).trim());
-    console.log("Parents:", parents);
 
     if (parents.length !== 2) {
       // Note: the GITHUB_SHA is always a merge commit, even if the merge is a no-op because the PR is up to date
