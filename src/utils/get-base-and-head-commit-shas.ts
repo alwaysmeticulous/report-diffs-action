@@ -66,7 +66,7 @@ const tryGetMergeCommitBase = (
           This is likely because a custom ref has been passed to the 'actions/checkout' action. We're assuming therefore
           that the head commit SHA is not a temporary merge commit, but rather the head of the branch. Therefore we're
           using the base of the pull request (${pullRequestBaseSha}) to compare screenshots against, and not the base
-          of GitHub's temporary merge commit`
+          of GitHub's temporary merge commit.`
       );
       return null;
     }
