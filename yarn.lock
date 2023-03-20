@@ -54,10 +54,10 @@
     proper-lockfile "^4.1.2"
     yargs "^17.5.1"
 
-"@alwaysmeticulous/common@^2.33.0":
-  version "2.33.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.33.0.tgz#7d6745e6cd6d92398801d67340c5043fe96d57e5"
-  integrity sha512-2uINj9/Siu7rt29qKf3JsPa/zgf45QqrD8W+HLlfyL5nRbY2mDwTDSIfMTEZCN8mBRkeVXwIHrjg63GV9HgGuw==
+"@alwaysmeticulous/common@^2.33.0", "@alwaysmeticulous/common@^2.36.0":
+  version "2.36.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.36.0.tgz#ea2ed5e0dd6cc89823850e9c4407f3fba273ea16"
+  integrity sha512-R/morClvfQLHm9ZtR8v78vkqypPSsPcmRWVUqoIoPMAIisxG6rRch2XSG/0dh5SXJKcwoe1sSTUmRCl/28XKBQ==
   dependencies:
     loglevel "^1.8.0"
     luxon "^3.2.1"
