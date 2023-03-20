@@ -32,12 +32,12 @@
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.33.0.tgz#21bd30dac6f910fa9b3cdd13d7c80a4080b208a4"
   integrity sha512-VHN/H3EMzjzOPnsM/HgA1UFSD5F/A/mtgjiYOoLNokc4THjavlaBEDdlbLMmmwTp4PFf4PtTfpDYVYoItPJ8ZA==
 
-"@alwaysmeticulous/cli@^2.33.0":
-  version "2.33.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.33.0.tgz#f74aa4d87a8eb5d058cd88b247d501f420f27944"
-  integrity sha512-Jz7ggc4u3VuHOTp399Ns7bkWe2ezt58/CbSH1SG5ixru5HTrNrH22ui/5a13YEbs9h1i9lBs4vsy18/fMzZPrQ==
+"@alwaysmeticulous/cli@^2.36.0":
+  version "2.36.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/cli/-/cli-2.36.0.tgz#edd469b391566f04d09a57ed97ed06a19c193402"
+  integrity sha512-gAPNVpP8wE8iVWmz0NJl6I685PfytidBH3aSXl3IvdQ/lGdNUNn1xfljVN8fGVUB3x4Mb3W5DdtKnBq7SnvArg==
   dependencies:
-    "@alwaysmeticulous/common" "^2.33.0"
+    "@alwaysmeticulous/common" "^2.36.0"
     "@sentry/node" "^7.36.0"
     "@sentry/tracing" "^7.36.0"
     adm-zip "^0.5.9"
@@ -50,14 +50,14 @@
     inquirer "^8.2.4"
     luxon "^3.2.1"
     pixelmatch "^5.3.0"
-    pngjs "^6.0.0"
+    pngjs "^7.0.0"
     proper-lockfile "^4.1.2"
     yargs "^17.5.1"
 
-"@alwaysmeticulous/common@^2.33.0":
-  version "2.33.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.33.0.tgz#7d6745e6cd6d92398801d67340c5043fe96d57e5"
-  integrity sha512-2uINj9/Siu7rt29qKf3JsPa/zgf45QqrD8W+HLlfyL5nRbY2mDwTDSIfMTEZCN8mBRkeVXwIHrjg63GV9HgGuw==
+"@alwaysmeticulous/common@^2.33.0", "@alwaysmeticulous/common@^2.36.0":
+  version "2.36.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.36.0.tgz#ea2ed5e0dd6cc89823850e9c4407f3fba273ea16"
+  integrity sha512-R/morClvfQLHm9ZtR8v78vkqypPSsPcmRWVUqoIoPMAIisxG6rRch2XSG/0dh5SXJKcwoe1sSTUmRCl/28XKBQ==
   dependencies:
     loglevel "^1.8.0"
     luxon "^3.2.1"
@@ -5071,6 +5071,11 @@ pngjs@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-6.0.0.tgz#ca9e5d2aa48db0228a52c419c3308e87720da821"
   integrity sha512-TRzzuFRRmEoSW/p1KVAmiOgPco2Irlah+bGFCeNfJXxxYGwSw7YwAOAcd7X28K/m5bjBWKsC29KyoMfHbypayg==
+
+pngjs@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-7.0.0.tgz#a8b7446020ebbc6ac739db6c5415a65d17090e26"
+  integrity sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==
 
 postcss-value-parser@^4.2.0:
   version "4.2.0"
