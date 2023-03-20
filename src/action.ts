@@ -88,6 +88,22 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     octokit,
   });
 
+  if (shaToCompareAgainst != null && event.type === "pull_request") {
+    console.log(
+      `Comparing screenshots for the commit head of this PR, ${shortSha(
+        head
+      )}, against ${shortSha(shaToCompareAgainst)}`
+    );
+  } else if (shaToCompareAgainst != null) {
+    console.log(
+      `Comparing screenshots for commit ${shortSha(
+        head
+      )} against commit ${shortSha(shaToCompareAgainst)}}`
+    );
+  } else {
+    console.log(`Generating screenshots for commit ${shortSha(head)}`);
+  }
+
   const resultsReporter = new ResultsReporter({
     octokit,
     event,
@@ -174,3 +190,5 @@ const getOctokitOrFail = (githubToken: string | null) => {
     );
   }
 };
+
+const shortSha = (sha: string) => sha.slice(0, 7);
