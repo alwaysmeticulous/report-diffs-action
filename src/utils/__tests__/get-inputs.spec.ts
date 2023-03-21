@@ -25,6 +25,7 @@ const EXPECTED_DEFAULT_VALUES = {
   localhostAliases: null,
   parallelTasks: null,
   testsFile: null,
+  testSuiteId: null,
 };
 
 describe("getInputs", () => {
