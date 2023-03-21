@@ -1,4 +1,5 @@
 import { GitHub } from "@actions/github/lib/utils";
+import { EXPECTED_PERMISSIONS_BLOCK } from "./constants";
 
 const TIMEOUT_MS = 30 * 60 * 1_000; // 30 minutes
 const MIN_POLL_FREQUENCY = 1_000;
@@ -60,7 +61,10 @@ const getDeploymentUrl = async ({
   });
   if (deployments.status !== 200) {
     throw new Error(
-      `Error listing deployments for commit ${commitSha}, got status: ${deployments.status}`
+      `Not authorized to list deployments for commit ${commitSha}.\n\n` +
+        "If using 'use-deployment-url' then you must provide permissions for the action to read deployments. " +
+        "To do this edit the 'permissions:' block in your workflow file to include 'deployments: read'. Your permissions block should look like:\n\n" +
+        EXPECTED_PERMISSIONS_BLOCK
     );
   }
   console.debug(`Found ${deployments.data.length} deployments`);
