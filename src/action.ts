@@ -64,6 +64,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     maxAllowedColorDifference,
     maxAllowedProportionOfChangedPixels,
     useDeploymentUrl,
+    testSuiteId,
   } = getInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -114,6 +115,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     owner,
     repo,
     headSha: head,
+    testSuiteId,
   });
 
   try {
@@ -132,14 +134,17 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       }
     );
     await addLocalhostAliases({ appUrl, localhostAliases });
+
+    const urlToTestAgainst = useDeploymentUrl
+      ? await waitForDeploymentUrl({ owner, repo, commitSha: head, octokit })
+      : appUrl;
+
     const results = await runAllTests({
       testsFile,
       apiToken,
       commitSha: head,
       baseCommitSha: shaToCompareAgainst,
-      appUrl: useDeploymentUrl
-        ? await waitForDeploymentUrl({ owner, repo, commitSha: head, octokit })
-        : appUrl,
+      appUrl: urlToTestAgainst,
       executionOptions: DEFAULT_EXECUTION_OPTIONS,
       screenshottingOptions: {
         enabled: true,

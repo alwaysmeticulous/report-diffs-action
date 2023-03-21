@@ -68,3 +68,4 @@ jobs:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
           app-url: http://localhost:3000
           tests-file: tests/react-bmi-calculator/meticulous.json
+          test-suite-id: "test Meticulous with app url"

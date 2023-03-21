@@ -56,7 +56,7 @@ const getDeploymentUrl = async ({
     owner,
     repo,
     sha: commitSha,
-    per_page: 1000,
+    per_page: 100,
   });
   console.debug(`Found ${deployments.data.length} deployments`);
 
@@ -78,7 +78,7 @@ const getDeploymentUrl = async ({
     owner,
     repo,
     deployment_id: latestDeployment.id,
-    per_page: 1000,
+    per_page: 100,
   });
   const deploymentStatus = deploymentStatuses.data.find(
     (status) => status.state === "success"

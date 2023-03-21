@@ -52,6 +52,15 @@ export const getInputs = () => {
     required: true,
     type: "boolean",
   });
+  const testSuiteId = getInputFromEnv({
+    name: "test-suite-id",
+    required: false,
+    type: "string",
+  });
+
+  if (appUrl_ != null && useDeploymentUrl === true) {
+    throw new Error("Cannot use both app-url and use-deployment-url");
+  }
 
   const appUrl = appUrl_ ? handleLocalhostUrl(appUrl_) : appUrl_;
 
@@ -66,6 +75,7 @@ export const getInputs = () => {
     maxAllowedColorDifference,
     maxAllowedProportionOfChangedPixels,
     useDeploymentUrl,
+    testSuiteId,
   };
 };
 

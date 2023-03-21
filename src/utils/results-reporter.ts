@@ -18,6 +18,7 @@ export class ResultsReporter {
       owner: string;
       repo: string;
       headSha: string;
+      testSuiteId: string | null;
     }
   ) {
     this.shortHeadSha = this.options.headSha.substring(0, SHORT_SHA_LENGTH);
@@ -152,7 +153,7 @@ export class ResultsReporter {
     body: string;
     createIfDoesNotExist?: boolean;
   }) {
-    const { octokit, owner, repo, event } = this.options;
+    const { octokit, owner, repo, event, testSuiteId } = this.options;
     return updateStatusComment({
       octokit,
       owner,
@@ -161,6 +162,7 @@ export class ResultsReporter {
       createIfDoesNotExist: createIfDoesNotExist ?? false,
       body,
       shortHeadSha: this.shortHeadSha,
+      testSuiteId,
     });
   }
 }

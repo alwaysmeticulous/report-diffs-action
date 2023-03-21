@@ -25,40 +25,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Use Node.js LTS
-        id: nodejs
-        uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-          cache: yarn
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            tests/react-bmi-calculator/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}
-
-      - name: Install react-bmi-calculator dependencies
-        working-directory: ./tests/react-bmi-calculator
-        run: yarn install --frozen-lockfile --non-interactive
-
-      - name: Build react-bmi-calculator
-        working-directory: ./tests/react-bmi-calculator
-        run: yarn build
-
-      - name: Serve react-bmi-calculator
-        working-directory: ./tests/react-bmi-calculator
-        run: |
-          yarn serve &
-          sleep 4
-
-      - name: Install report-diffs-action dependencies
-        run: yarn install --frozen-lockfile --non-interactive
-
       - name: Use local dockerfile
         run: node ./scripts/use-local-dockerfile.js
 
@@ -69,3 +35,4 @@ jobs:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
           use-deployment-url: "true"
           tests-file: tests/react-bmi-calculator/meticulous.json
+          test-suite-id: "test Meticulous with deployment url"
