@@ -47,6 +47,11 @@ export const getInputs = () => {
     required: true,
     type: "float",
   });
+  const useDeploymentUrl = getInputFromEnv({
+    name: "use-deployment-url",
+    required: true,
+    type: "boolean",
+  });
 
   const appUrl = appUrl_ ? handleLocalhostUrl(appUrl_) : appUrl_;
 
@@ -60,6 +65,7 @@ export const getInputs = () => {
     localhostAliases,
     maxAllowedColorDifference,
     maxAllowedProportionOfChangedPixels,
+    useDeploymentUrl,
   };
 };
 

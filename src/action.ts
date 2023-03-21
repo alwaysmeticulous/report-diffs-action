@@ -17,6 +17,7 @@ import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas"
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
 import { ResultsReporter } from "./utils/results-reporter";
+import { waitForDeploymentUrl } from "./utils/wait-for-deployment-url";
 
 const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   headless: true,
@@ -62,6 +63,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     localhostAliases,
     maxAllowedColorDifference,
     maxAllowedProportionOfChangedPixels,
+    useDeploymentUrl,
   } = getInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -77,7 +79,9 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     return;
   }
 
-  const { base, head } = await getBaseAndHeadCommitShas(event);
+  const { base, head } = await getBaseAndHeadCommitShas(event, {
+    useDeploymentUrl,
+  });
   const environment = getEnvironment({ event, head });
 
   const { shaToCompareAgainst } = await safeEnsureBaseTestsExists({
@@ -133,7 +137,9 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       apiToken,
       commitSha: head,
       baseCommitSha: shaToCompareAgainst,
-      appUrl,
+      appUrl: useDeploymentUrl
+        ? await waitForDeploymentUrl({ owner, repo, commitSha: head, octokit })
+        : appUrl,
       executionOptions: DEFAULT_EXECUTION_OPTIONS,
       screenshottingOptions: {
         enabled: true,
