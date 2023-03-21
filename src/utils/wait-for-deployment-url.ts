@@ -61,8 +61,8 @@ const getDeploymentUrl = async ({
   });
   if (deployments.status !== 200) {
     throw new Error(
-      `Not authorized to list deployments for commit ${commitSha}.\n\n` +
-        "If using 'use-deployment-url' then you must provide permissions for the action to read deployments. " +
+      `Failed to list deployments for commit ${commitSha}.\n\n` +
+        "Note: if using 'use-deployment-url' then you must provide permissions for the action to read deployments. " +
         "To do this edit the 'permissions:' block in your workflow file to include 'deployments: read'. Your permissions block should look like:\n\n" +
         EXPECTED_PERMISSIONS_BLOCK
     );

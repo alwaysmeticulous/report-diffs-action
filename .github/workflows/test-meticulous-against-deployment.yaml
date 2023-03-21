@@ -14,7 +14,6 @@ permissions:
   statuses: write
   pull-requests: write
   packages: read
-  deployments: none
 
 jobs:
   test:
@@ -53,6 +52,6 @@ jobs:
         uses: ./
         with:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
-          use-deployment-url: "true"
+          use-deployment-url: true
           tests-file: tests/react-bmi-calculator/meticulous.json
           test-suite-id: "test Meticulous with deployment url"
