@@ -40,7 +40,9 @@ export const updateStatusComment = async ({
   const existingComment = comments.data.find(
     (comment) => (comment.body ?? "").indexOf(commentIdentifier) > -1
   );
-  const testSuiteDescription = testSuiteId ? `Test suite: ${testSuiteId}.` : "";
+  const testSuiteDescription = testSuiteId
+    ? `Test suite: ${testSuiteId}. `
+    : "";
 
   const fullBody = `${body}\n\n<sub>${testSuiteDescription}Last updated for commit ${shortHeadSha}. This comment will update as new commits are pushed.</sub>${commentIdentifier}`;
 

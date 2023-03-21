@@ -58,7 +58,7 @@ export const getInputs = () => {
     type: "string",
   });
 
-  if (appUrl_ != null && useDeploymentUrl === true) {
+  if (appUrl_ != null && appUrl_ != "" && useDeploymentUrl === true) {
     throw new Error("Cannot use both app-url and use-deployment-url");
   }
 

@@ -58,6 +58,11 @@ const getDeploymentUrl = async ({
     sha: commitSha,
     per_page: 100,
   });
+  if (deployments.status !== 200) {
+    throw new Error(
+      `Error listing deployments for commit ${commitSha}, got status: ${deployments.status}`
+    );
+  }
   console.debug(`Found ${deployments.data.length} deployments`);
 
   if (deployments.data.length === 0) {
