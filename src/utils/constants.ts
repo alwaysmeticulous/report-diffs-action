@@ -1,9 +1,11 @@
 export const EXPECTED_PERMISSIONS_BLOCK = [
   "  permissions:",
+  "    actions: write",
+  "    checks: write",
   "    contents: read",
-  "    statuses: write",
+  "    discussions: write",
   "    pull-requests: write",
-  "    packages: read",
+  "    statuses: write",
   "    deployments: read",
   "",
 ].join("\n");

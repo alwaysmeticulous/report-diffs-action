@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   test:
-    name: Report diffs
+    name: Report diffs (using app url)
     runs-on: ubuntu-latest
 
     steps:
