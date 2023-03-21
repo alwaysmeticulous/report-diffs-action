@@ -42,6 +42,8 @@ export const waitForDeploymentUrl = async ({
   );
 };
 
+const MAX_GITHUB_ALLOWED_PAGE_SIZE = 100;
+
 const getDeploymentUrl = async ({
   owner,
   repo,
@@ -57,7 +59,7 @@ const getDeploymentUrl = async ({
     owner,
     repo,
     sha: commitSha,
-    per_page: 100,
+    per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
   });
   if (deployments.status !== 200) {
     throw new Error(
@@ -68,6 +70,12 @@ const getDeploymentUrl = async ({
     );
   }
   console.debug(`Found ${deployments.data.length} deployments`);
+
+  if (hasMorePages(deployments)) {
+    throw new Error(
+      `More than ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployments found for commit ${commitSha}. Meticulous currently supports at most ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployments per commit.`
+    );
+  }
 
   if (deployments.data.length === 0) {
     return null;
@@ -87,10 +95,20 @@ const getDeploymentUrl = async ({
     owner,
     repo,
     deployment_id: latestDeployment.id,
-    per_page: 100,
+    per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
   });
+
+  if (hasMorePages(deploymentStatuses)) {
+    throw new Error(
+      `More than ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment status found for deployment ${latestDeployment.id} of commit ${commitSha}. Meticulous currently supports at most ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment statuses per deployment.`
+    );
+  }
+
   const deploymentStatus = deploymentStatuses.data.find(
     (status) => status.state === "success"
   );
   return deploymentStatus?.environment_url ?? null;
 };
+
+const hasMorePages = (response: { headers: { link?: string | undefined } }) =>
+  response.headers.link?.includes('rel="next"');
