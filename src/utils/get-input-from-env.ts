@@ -5,6 +5,10 @@ interface GetInputFromEnvFn {
   (options: { name: string; required?: false; type: "int" }): number | null;
   (options: { name: string; required: true; type: "float" }): number;
   (options: { name: string; required?: false; type: "float" }): number | null;
+  (options: { name: string; required: true; type: "boolean" }): boolean;
+  (options: { name: string; required?: false; type: "boolean" }):
+    | boolean
+    | null;
 }
 
 export const getInputFromEnv: GetInputFromEnvFn = ({
@@ -30,8 +34,8 @@ export const getInputFromEnv: GetInputFromEnvFn = ({
 
 const parseValue = (
   value: string | undefined,
-  type: "string" | "int" | "float"
-): string | number | null => {
+  type: "string" | "int" | "float" | "boolean"
+): string | number | boolean | null => {
   if (value == null) {
     return null;
   }
@@ -52,6 +56,14 @@ const parseValue = (
     }
     return parsed;
   }
+  if (type === "boolean") {
+    if (value != null && value != "" && value !== "true" && value !== "false") {
+      throw new Error(
+        "Boolean inputs must be equal to the string 'true' or the string 'false'"
+      );
+    }
+    return value === "true";
+  }
   return unknownType(type);
 };
 
@@ -71,7 +83,7 @@ const isEmpty = (value: unknown) => {
   return false;
 };
 
-const expectedValueType = (type: "string" | "int" | "float") => {
+const expectedValueType = (type: "string" | "int" | "float" | "boolean") => {
   if (type === "string") {
     return "string";
   }
@@ -80,6 +92,9 @@ const expectedValueType = (type: "string" | "int" | "float") => {
   }
   if (type === "float") {
     return "number";
+  }
+  if (type === "boolean") {
+    return "boolean";
   }
   return unknownType(type);
 };

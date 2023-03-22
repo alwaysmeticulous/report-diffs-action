@@ -11,6 +11,7 @@ const keys = [
   "MAX_ALLOWED_COLOR_DIFFERENCE",
   "MAX_ALLOWED_PROPORTION_OF_CHANGED_PIXELS",
   "METICULOUS_TELEMETRY_SAMPLE_RATE",
+  "USE_DEPLOYMENT_URL",
 ];
 
 const EXPECTED_DEFAULT_VALUES = {
@@ -19,10 +20,12 @@ const EXPECTED_DEFAULT_VALUES = {
   maxRetriesOnFailure: 5,
   maxAllowedColorDifference: 0.01,
   maxAllowedProportionOfChangedPixels: 0.00001,
+  useDeploymentUrl: false,
   appUrl: null,
   localhostAliases: null,
   parallelTasks: null,
   testsFile: null,
+  testSuiteId: null,
 };
 
 describe("getInputs", () => {
@@ -53,6 +56,7 @@ describe("getInputs", () => {
     process.env.MAX_RETRIES_ON_FAILURE = "5";
     process.env.MAX_ALLOWED_COLOR_DIFFERENCE = "0.01";
     process.env.MAX_ALLOWED_PROPORTION_OF_CHANGED_PIXELS = "0.00001";
+    process.env.USE_DEPLOYMENT_URL = "false";
 
     expect(getInputs()).toEqual(EXPECTED_DEFAULT_VALUES);
   });
@@ -95,5 +99,6 @@ describe("getInputs", () => {
     process.env.MAX_RETRIES_ON_FAILURE = "5";
     process.env.MAX_ALLOWED_COLOR_DIFFERENCE = "1E-02";
     process.env.MAX_ALLOWED_PROPORTION_OF_CHANGED_PIXELS = "1E-05";
+    process.env.USE_DEPLOYMENT_URL = "false";
   };
 });

@@ -8,11 +8,17 @@ interface BaseAndHeadCommitShas {
 }
 
 export const getBaseAndHeadCommitShas = async (
-  event: CodeChangeEvent
+  event: CodeChangeEvent,
+  options: { useDeploymentUrl: boolean }
 ): Promise<BaseAndHeadCommitShas> => {
   if (event.type === "pull_request") {
     const head = event.payload.pull_request.head.sha;
     const base = event.payload.pull_request.base.sha;
+    if (options.useDeploymentUrl) {
+      // Vercel deploys the head commit of the PR, not the github temporary merge commit
+      // So the PR base is the correct base commit to use
+      return { base, head };
+    }
     return {
       base: (await tryGetMergeCommitBase(head, base)) ?? base,
       head,

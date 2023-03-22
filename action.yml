@@ -14,6 +14,10 @@ inputs:
       This will almost always have to be specified. It is mostly useful to omit this if `appUrl` differs between test
       cases within the same test run. In those cases it is expected all test cases to contain have `appUrl` set.
     required: false
+  use-deployment-url:
+    description: If set to 'true' Meticulous will test against the 'environmentUrl' of the latest deployment of the current commit.
+    required: true
+    default: "false"
   tests-file:
     description: |
       The path to the meticulous.json file containing the list of tests you want to run.
@@ -42,6 +46,9 @@ inputs:
     description: Maximum acceptable proportion of pixels that exceed the `max-allowed-color-difference`, as a number between 0 and 1. Differences in a smaller or equal proportional of pixels to this will be ignored. Defaults to 0.00001, or about 20 pixels in a 1920 x 1080 px screenshot.
     required: true
     default: 0.00001
+  test-suite-id:
+    description: Used to differentiate between different Meticulous test suites if you run this action multiple times as part of a single workflow.
+    required: false
 
 outputs: {}
 runs:
@@ -57,6 +64,8 @@ runs:
     LOCALHOST_ALIASES: ${{ inputs.localhost-aliases }}
     MAX_ALLOWED_COLOR_DIFFERENCE: ${{ inputs.max-allowed-color-difference }}
     MAX_ALLOWED_PROPORTION_OF_CHANGED_PIXELS: ${{ inputs.max-allowed-proportion-of-changed-pixels }}
+    USE_DEPLOYMENT_URL: ${{ inputs.use-deployment-url }}
+    TEST_SUITE_ID: ${{ inputs.test-suite-id }}
     METICULOUS_TELEMETRY_SAMPLE_RATE: "0.01"
 branding:
   color: purple
