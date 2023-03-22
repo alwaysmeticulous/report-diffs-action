@@ -90,6 +90,7 @@ const getDeploymentUrl = async ({
     }
   });
   console.debug(`Checking status of deployment ${latestDeployment.id}`);
+  console.log("Deployments", JSON.stringify(deployments));
 
   const deploymentStatuses = await octokit.rest.repos.listDeploymentStatuses({
     owner,
@@ -103,6 +104,7 @@ const getDeploymentUrl = async ({
       `More than ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment status found for deployment ${latestDeployment.id} of commit ${commitSha}. Meticulous currently supports at most ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment statuses per deployment.`
     );
   }
+  console.log("deploymentStatuses", JSON.stringify(deploymentStatuses));
 
   const deploymentStatus = deploymentStatuses.data.find(
     (status) => status.state === "success"
