@@ -66,7 +66,7 @@ const getDeploymentUrl = async ({
       per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error listing deployments", err);
   }
 
   if (deployments == null || deployments.status !== 200) {
