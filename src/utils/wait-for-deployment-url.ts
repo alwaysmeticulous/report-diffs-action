@@ -55,13 +55,21 @@ const getDeploymentUrl = async ({
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
 }): Promise<string | null> => {
-  const deployments = await octokit.rest.repos.listDeployments({
-    owner,
-    repo,
-    sha: commitSha,
-    per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
-  });
-  if (deployments.status !== 200) {
+  let deployments: Awaited<
+    ReturnType<typeof octokit.rest.repos.listDeployments>
+  > | null = null;
+  try {
+    deployments = await octokit.rest.repos.listDeployments({
+      owner,
+      repo,
+      sha: commitSha,
+      per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+
+  if (deployments == null || deployments.status !== 200) {
     throw new Error(
       `Failed to list deployments for commit ${commitSha}.\n\n` +
         "Note: if using 'use-deployment-url' then you must provide permissions for the action to read deployments. " +
@@ -69,6 +77,7 @@ const getDeploymentUrl = async ({
         EXPECTED_PERMISSIONS_BLOCK
     );
   }
+
   console.debug(`Found ${deployments.data.length} deployments`);
 
   if (hasMorePages(deployments)) {
