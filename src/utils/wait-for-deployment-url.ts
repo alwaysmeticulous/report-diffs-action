@@ -55,13 +55,21 @@ const getDeploymentUrl = async ({
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
 }): Promise<string | null> => {
-  const deployments = await octokit.rest.repos.listDeployments({
-    owner,
-    repo,
-    sha: commitSha,
-    per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
-  });
-  if (deployments.status !== 200) {
+  let deployments: Awaited<
+    ReturnType<typeof octokit.rest.repos.listDeployments>
+  > | null = null;
+  try {
+    deployments = await octokit.rest.repos.listDeployments({
+      owner,
+      repo,
+      sha: commitSha,
+      per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
+    });
+  } catch (err) {
+    console.error("Error listing deployments", err);
+  }
+
+  if (deployments == null || deployments.status !== 200) {
     throw new Error(
       `Failed to list deployments for commit ${commitSha}.\n\n` +
         "Note: if using 'use-deployment-url' then you must provide permissions for the action to read deployments. " +
@@ -69,6 +77,7 @@ const getDeploymentUrl = async ({
         EXPECTED_PERMISSIONS_BLOCK
     );
   }
+
   console.debug(`Found ${deployments.data.length} deployments`);
 
   if (hasMorePages(deployments)) {
@@ -77,20 +86,11 @@ const getDeploymentUrl = async ({
     );
   }
 
-  if (deployments.data.length === 0) {
+  const latestDeployment = findLatest(deployments.data);
+  if (latestDeployment == null) {
     return null;
   }
-  let latestDeployment = deployments.data[0];
-  deployments.data.forEach((deployment) => {
-    if (
-      Date.parse(deployment.created_at).valueOf() >
-      Date.parse(latestDeployment.created_at).valueOf()
-    ) {
-      latestDeployment = deployment;
-    }
-  });
   console.debug(`Checking status of deployment ${latestDeployment.id}`);
-  console.log("Deployments", JSON.stringify(deployments));
 
   const deploymentStatuses = await octokit.rest.repos.listDeploymentStatuses({
     owner,
@@ -104,12 +104,38 @@ const getDeploymentUrl = async ({
       `More than ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment status found for deployment ${latestDeployment.id} of commit ${commitSha}. Meticulous currently supports at most ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment statuses per deployment.`
     );
   }
-  console.log("deploymentStatuses", JSON.stringify(deploymentStatuses));
 
   const deploymentStatus = deploymentStatuses.data.find(
     (status) => status.state === "success"
   );
-  return deploymentStatus?.environment_url ?? null;
+  if (deploymentStatus?.environment_url != null) {
+    return deploymentStatus?.environment_url;
+  }
+
+  const latestDeploymentStatus = findLatest(deploymentStatuses.data);
+  if (
+    latestDeploymentStatus?.state === "error" ||
+    latestDeploymentStatus?.state === "failure"
+  ) {
+    throw new Error(
+      `Deployment ${latestDeployment.id} failed with status ${latestDeploymentStatus?.state}. Cannot test against a failed deployment.`
+    );
+  }
+
+  return null; // Let's continue waiting for a successful deployment
+};
+
+const findLatest = <T extends { created_at: string }>(items: T[]): T | null => {
+  let latest = items[0];
+  items.forEach((item) => {
+    if (
+      Date.parse(item.created_at).valueOf() >
+      Date.parse(latest.created_at).valueOf()
+    ) {
+      latest = item;
+    }
+  });
+  return latest ?? null;
 };
 
 const hasMorePages = (response: { headers: { link?: string | undefined } }) =>
