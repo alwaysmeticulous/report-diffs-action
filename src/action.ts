@@ -23,7 +23,6 @@ const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   headless: true,
   devTools: false,
   bypassCSP: false,
-  padTime: true,
   shiftTime: true,
   networkStubbing: true,
   skipPauses: true,

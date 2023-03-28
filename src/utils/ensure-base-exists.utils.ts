@@ -1,8 +1,8 @@
 import { warning as ghWarning } from "@actions/core";
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
-import { getLatestTestRunResults } from "@alwaysmeticulous/cli";
 import { createClient } from "@alwaysmeticulous/cli/dist/api/client.js";
+import { getLatestTestRunId } from "@alwaysmeticulous/cli/dist/api/test-run.api";
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { CodeChangeEvent } from "../types";
@@ -10,7 +10,7 @@ import {
   getCurrentWorkflowId,
   getPendingWorkflowRun,
   startNewWorkflowRun,
-  waitForWorkflowCompletion,
+  waitForWorkflowCompletion
 } from "./workflow.utils";
 
 export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
@@ -53,13 +53,13 @@ export const ensureBaseTestsExists = async ({
 
   logger.debug(JSON.stringify({ base, baseRef }, null, 2));
 
-  const testRun = await getLatestTestRunResults({
+  const testRunId = await getLatestTestRunId({
     client: createClient({ apiToken }),
     commitSha: base,
   });
 
-  if (testRun != null) {
-    logger.log(`Tests already exist for commit ${base} (${testRun.id})`);
+  if (testRunId != null) {
+    logger.log(`Tests already exist for commit ${base} (${testRunId})`);
     return { shaToCompareAgainst: base };
   }
 
