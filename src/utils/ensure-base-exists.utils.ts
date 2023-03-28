@@ -10,7 +10,7 @@ import {
   getCurrentWorkflowId,
   getPendingWorkflowRun,
   startNewWorkflowRun,
-  waitForWorkflowCompletion
+  waitForWorkflowCompletion,
 } from "./workflow.utils";
 
 export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
