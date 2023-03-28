@@ -2,7 +2,7 @@ import { warning as ghWarning } from "@actions/core";
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
 import { createClient } from "@alwaysmeticulous/cli/dist/api/client.js";
-import { getLatestTestRunId } from "@alwaysmeticulous/cli/dist/api/test-run.api";
+import { getLatestTestRunId } from "@alwaysmeticulous/cli/dist/api/test-run.api.js";
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { CodeChangeEvent } from "../types";
