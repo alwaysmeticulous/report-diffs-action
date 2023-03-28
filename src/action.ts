@@ -154,7 +154,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
           diffPixelThreshold: maxAllowedColorDifference,
         },
       },
-      useAssetsSnapshottedInBaseSimulation: false,
+      baseTestRunId: null,
       parallelTasks,
       deflake: false,
       maxRetriesOnFailure,
