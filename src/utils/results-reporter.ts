@@ -79,8 +79,8 @@ export class ResultsReporter {
 
   async testRunFinished(results: RunAllTestsResult) {
     const { testRun, testCaseResults } = results;
-    const screenshotDiffResults = testCaseResults.flatMap((testCase) =>
-      Object.values(testCase.screenshotDiffResultsByBaseReplayId).flat()
+    const screenshotDiffResults = testCaseResults.flatMap(
+      (testCase) => testCase.screenshotDiffResults
     );
     const screensWithDifferences = screenshotDiffResults.filter(
       (result) => result.outcome === "diff"
