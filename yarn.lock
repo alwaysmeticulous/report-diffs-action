@@ -54,20 +54,20 @@
     proper-lockfile "^4.1.2"
     yargs "^17.5.1"
 
-"@alwaysmeticulous/common@^2.36.0":
-  version "2.36.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.36.0.tgz#ea2ed5e0dd6cc89823850e9c4407f3fba273ea16"
-  integrity sha512-R/morClvfQLHm9ZtR8v78vkqypPSsPcmRWVUqoIoPMAIisxG6rRch2XSG/0dh5SXJKcwoe1sSTUmRCl/28XKBQ==
+"@alwaysmeticulous/common@^2.36.0", "@alwaysmeticulous/common@^2.40.1":
+  version "2.40.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.40.1.tgz#94288305c2028bf7c3c73664d4dcc291f386e26d"
+  integrity sha512-lhnvZq4MGcg6JYXCpbGWHAlJczs2P4iZlEvvcuyjzTuoHWvF7xnT1TKkTv5/+i0YFsp+XI+pXi5+Uwn2coRaXQ==
   dependencies:
     loglevel "^1.8.0"
     luxon "^3.2.1"
 
-"@alwaysmeticulous/replayer@^2.36.0":
-  version "2.36.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.36.0.tgz#4f8cda35d754d06fbcc9a67ff44af4742f958189"
-  integrity sha512-u9xk/bz0YI4kSyp+qb3EpHj4laD+G3ffQNAa6OlLCj3GhZfi1ACCeJh41VCYbFpwYC7PzSiZ5T1OKQr0wt7+3Q==
+"@alwaysmeticulous/replayer@^2.40.1":
+  version "2.40.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replayer/-/replayer-2.40.1.tgz#6893bd8738e911a2757c9e4f0657e31e4b17154a"
+  integrity sha512-V2lkohXXomF7hJ9UNCX10lcBX+oCVnaIiwPGZoBFTew1+axtM9wXoW2J7koF+J4bNmQSI9XpIO+dCTw7GvU0GA==
   dependencies:
-    "@alwaysmeticulous/common" "^2.36.0"
+    "@alwaysmeticulous/common" "^2.40.1"
     loglevel "^1.8.0"
     luxon "^3.2.1"
     puppeteer "^19.7.5"
