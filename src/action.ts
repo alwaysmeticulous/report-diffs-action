@@ -57,7 +57,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     githubToken,
     appUrl,
     testsFile,
-    maxRetriesOnFailure,
     parallelTasks,
     localhostAliases,
     maxAllowedColorDifference,
@@ -157,7 +156,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       baseTestRunId: null,
       parallelTasks,
       deflake: false,
-      maxRetriesOnFailure,
+      maxRetriesOnFailure: 0, // Disable until bug is fixed
       githubSummary: true,
       environment,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
