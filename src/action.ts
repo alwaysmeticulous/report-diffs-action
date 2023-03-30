@@ -1,6 +1,5 @@
 import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import { initLogger, setLogLevel } from "@alwaysmeticulous/cli";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
 import { executeTestRun } from "@alwaysmeticulous/replay-orchestrator";
 import {
@@ -15,6 +14,7 @@ import { getEnvironment } from "./utils/environment.utils";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
+import { initLogger, setLogLevel } from "./utils/logger.utils";
 import { ResultsReporter } from "./utils/results-reporter";
 import { waitForDeploymentUrl } from "./utils/wait-for-deployment-url";
 
