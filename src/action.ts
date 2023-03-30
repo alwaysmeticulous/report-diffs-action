@@ -1,14 +1,13 @@
 import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import {
-  initLogger,
-  initSentry,
-  runAllTests,
-  RunAllTestsTestRun,
-  setLogLevel,
-} from "@alwaysmeticulous/cli";
-import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
+import { initLogger, setLogLevel } from "@alwaysmeticulous/cli";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
+import { executeTestRun } from "@alwaysmeticulous/replay-orchestrator";
+import {
+  ReplayExecutionOptions,
+  RunningTestRunExecution,
+} from "@alwaysmeticulous/sdk-bundles-api";
+import { initSentry } from "@alwaysmeticulous/sentry";
 import debounce from "lodash.debounce";
 import { addLocalhostAliases } from "./utils/add-localhost-aliases";
 import { safeEnsureBaseTestsExists } from "./utils/ensure-base-exists.utils";
@@ -23,7 +22,6 @@ const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   headless: true,
   devTools: false,
   bypassCSP: false,
-  padTime: true,
   shiftTime: true,
   networkStubbing: true,
   skipPauses: true,
@@ -41,7 +39,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   // Init Sentry without sampling traces on the action run.
   // Children processes, (test run executions) will use
   // the global sample rate.
-  const sentryHub = await initSentry(1.0);
+  const sentryHub = await initSentry("report-diffs-action-v1", 1.0);
 
   const transaction = sentryHub.startTransaction({
     name: "report-diffs-action.runMeticulousTestsAction",
@@ -121,11 +119,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   try {
     setMeticulousLocalDataDir();
     const reportTestFinished = debounce(
-      (
-        testRun: RunAllTestsTestRun & {
-          status: "Running";
-        }
-      ) => resultsReporter.testFinished(testRun),
+      (testRun: RunningTestRunExecution) =>
+        resultsReporter.testFinished(testRun),
       5_000,
       {
         leading: false,
@@ -139,26 +134,25 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       ? await waitForDeploymentUrl({ owner, repo, commitSha: head, octokit })
       : appUrl;
 
-    const results = await runAllTests({
+    const results = await executeTestRun({
       testsFile,
       apiToken,
       commitSha: head,
       baseCommitSha: shaToCompareAgainst,
+      baseTestRunId: null,
       appUrl: urlToTestAgainst,
       executionOptions: DEFAULT_EXECUTION_OPTIONS,
       screenshottingOptions: {
         enabled: true,
-        screenshotSelector: null,
         storyboardOptions: { enabled: true },
         diffOptions: {
           diffThreshold: maxAllowedProportionOfChangedPixels,
           diffPixelThreshold: maxAllowedColorDifference,
         },
       },
-      useAssetsSnapshottedInBaseSimulation: false,
       parallelTasks,
-      deflake: false,
       maxRetriesOnFailure,
+      rerunTestsNTimes: 0,
       githubSummary: true,
       environment,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
