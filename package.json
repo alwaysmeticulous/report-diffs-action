@@ -33,7 +33,7 @@
     "luxon": "^3.3.0"
   },
   "devDependencies": {
-    "@alwaysmeticulous/api": "^2.36.0",
+    "@alwaysmeticulous/api": "^2.40.0",
     "@parcel/packager-ts": "^2.8.3",
     "@parcel/transformer-typescript-types": "^2.8.3",
     "@types/jest": "^27.0.3",
