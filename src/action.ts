@@ -1,14 +1,12 @@
 import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import {
-  initLogger,
-  initSentry,
-  runAllTests,
-  RunAllTestsTestRun,
-  setLogLevel,
-} from "@alwaysmeticulous/cli";
-import type { ReplayExecutionOptions } from "@alwaysmeticulous/common";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
+import { executeTestRun } from "@alwaysmeticulous/replay-orchestrator";
+import {
+  ReplayExecutionOptions,
+  RunningTestRunExecution,
+} from "@alwaysmeticulous/sdk-bundles-api";
+import { initSentry } from "@alwaysmeticulous/sentry";
 import debounce from "lodash.debounce";
 import { addLocalhostAliases } from "./utils/add-localhost-aliases";
 import { safeEnsureBaseTestsExists } from "./utils/ensure-base-exists.utils";
@@ -16,13 +14,14 @@ import { getEnvironment } from "./utils/environment.utils";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
+import { initLogger, setLogLevel } from "./utils/logger.utils";
 import { ResultsReporter } from "./utils/results-reporter";
+import { waitForDeploymentUrl } from "./utils/wait-for-deployment-url";
 
 const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   headless: true,
   devTools: false,
   bypassCSP: false,
-  padTime: true,
   shiftTime: true,
   networkStubbing: true,
   skipPauses: true,
@@ -34,23 +33,13 @@ const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   essentialFeaturesOnly: false,
 };
 
-const DEFAULT_SCREENSHOTTING_OPTIONS = {
-  enabled: true,
-  screenshotSelector: null,
-  storyboardOptions: { enabled: true },
-  diffOptions: {
-    diffThreshold: 0.00001, // ~20 pixels on a 1920 x 1080 px screenshot
-    diffPixelThreshold: 0.01,
-  },
-} as const;
-
 export const runMeticulousTestsAction = async (): Promise<void> => {
   initLogger();
 
   // Init Sentry without sampling traces on the action run.
   // Children processes, (test run executions) will use
   // the global sample rate.
-  const sentryHub = await initSentry(1.0);
+  const sentryHub = await initSentry("report-diffs-action-v1", 1.0);
 
   const transaction = sentryHub.startTransaction({
     name: "report-diffs-action.runMeticulousTestsAction",
@@ -70,6 +59,10 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     maxRetriesOnFailure,
     parallelTasks,
     localhostAliases,
+    maxAllowedColorDifference,
+    maxAllowedProportionOfChangedPixels,
+    useDeploymentUrl,
+    testSuiteId,
   } = getInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -85,17 +78,34 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     return;
   }
 
-  const { base, head } = await getBaseAndHeadCommitShas(event);
+  const { base, head } = await getBaseAndHeadCommitShas(event, {
+    useDeploymentUrl,
+  });
   const environment = getEnvironment({ event, head });
 
-  const { currentBaseSha } =
-    (await safeEnsureBaseTestsExists({
-      event,
-      apiToken,
-      base,
-      context,
-      octokit,
-    })) ?? {};
+  const { shaToCompareAgainst } = await safeEnsureBaseTestsExists({
+    event,
+    apiToken,
+    base,
+    context,
+    octokit,
+  });
+
+  if (shaToCompareAgainst != null && event.type === "pull_request") {
+    console.log(
+      `Comparing screenshots for the commit head of this PR, ${shortSha(
+        head
+      )}, against ${shortSha(shaToCompareAgainst)}`
+    );
+  } else if (shaToCompareAgainst != null) {
+    console.log(
+      `Comparing screenshots for commit ${shortSha(
+        head
+      )} against commit ${shortSha(shaToCompareAgainst)}}`
+    );
+  } else {
+    console.log(`Generating screenshots for commit ${shortSha(head)}`);
+  }
 
   const resultsReporter = new ResultsReporter({
     octokit,
@@ -103,16 +113,14 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     owner,
     repo,
     headSha: head,
+    testSuiteId,
   });
 
   try {
     setMeticulousLocalDataDir();
     const reportTestFinished = debounce(
-      (
-        testRun: RunAllTestsTestRun & {
-          status: "Running";
-        }
-      ) => resultsReporter.testFinished(testRun),
+      (testRun: RunningTestRunExecution) =>
+        resultsReporter.testFinished(testRun),
       5_000,
       {
         leading: false,
@@ -121,18 +129,30 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       }
     );
     await addLocalhostAliases({ appUrl, localhostAliases });
-    const results = await runAllTests({
+
+    const urlToTestAgainst = useDeploymentUrl
+      ? await waitForDeploymentUrl({ owner, repo, commitSha: head, octokit })
+      : appUrl;
+
+    const results = await executeTestRun({
       testsFile,
       apiToken,
       commitSha: head,
-      baseCommitSha: currentBaseSha ?? base,
-      appUrl,
+      baseCommitSha: shaToCompareAgainst,
+      baseTestRunId: null,
+      appUrl: urlToTestAgainst,
       executionOptions: DEFAULT_EXECUTION_OPTIONS,
-      screenshottingOptions: DEFAULT_SCREENSHOTTING_OPTIONS,
-      useAssetsSnapshottedInBaseSimulation: false,
+      screenshottingOptions: {
+        enabled: true,
+        storyboardOptions: { enabled: true },
+        diffOptions: {
+          diffThreshold: maxAllowedProportionOfChangedPixels,
+          diffPixelThreshold: maxAllowedColorDifference,
+        },
+      },
       parallelTasks,
-      deflake: false,
       maxRetriesOnFailure,
+      rerunTestsNTimes: 0,
       githubSummary: true,
       environment,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
@@ -175,3 +195,5 @@ const getOctokitOrFail = (githubToken: string | null) => {
     );
   }
 };
+
+const shortSha = (sha: string) => sha.slice(0, 7);

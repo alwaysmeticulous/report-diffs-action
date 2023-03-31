@@ -1,7 +1,10 @@
 import { getOctokit } from "@actions/github";
 import { CodeChangeEvent } from "../types";
-const METICULOUS_COMMENT_IDENTIFIER =
-  "<!--- alwaysmeticulous/report-diffs-action/status-comment -->";
+
+const getMeticulousCommentIdentifier = (testSuiteId: string | null) =>
+  `<!--- alwaysmeticulous/report-diffs-action/status-comment${
+    testSuiteId ? "/" + testSuiteId : ""
+  } -->`;
 
 export const updateStatusComment = async ({
   octokit,
@@ -9,6 +12,8 @@ export const updateStatusComment = async ({
   owner,
   repo,
   body,
+  shortHeadSha,
+  testSuiteId,
   createIfDoesNotExist,
 }: {
   octokit: ReturnType<typeof getOctokit>;
@@ -16,6 +21,8 @@ export const updateStatusComment = async ({
   owner: string;
   repo: string;
   body: string;
+  shortHeadSha: string;
+  testSuiteId: string | null;
   createIfDoesNotExist?: boolean;
 }) => {
   if (event.type !== "pull_request") {
@@ -29,24 +36,29 @@ export const updateStatusComment = async ({
     issue_number: event.payload.pull_request.number,
     per_page: 1000,
   });
+  const commentIdentifier = getMeticulousCommentIdentifier(testSuiteId);
   const existingComment = comments.data.find(
-    (comment) =>
-      (comment.body ?? "").indexOf(METICULOUS_COMMENT_IDENTIFIER) > -1
+    (comment) => (comment.body ?? "").indexOf(commentIdentifier) > -1
   );
+  const testSuiteDescription = testSuiteId
+    ? `Test suite: ${testSuiteId}. `
+    : "";
+
+  const fullBody = `${body}\n\n<sub>${testSuiteDescription}Last updated for commit ${shortHeadSha}. This comment will update as new commits are pushed.</sub>${commentIdentifier}`;
 
   if (existingComment != null) {
     await octokit.rest.issues.updateComment({
       owner,
       repo,
       comment_id: existingComment.id,
-      body: `${body}${METICULOUS_COMMENT_IDENTIFIER}`,
+      body: fullBody,
     });
   } else if (createIfDoesNotExist) {
     await octokit.rest.issues.createComment({
       owner,
       repo,
       issue_number: event.payload.pull_request.number,
-      body: `${body}${METICULOUS_COMMENT_IDENTIFIER}`,
+      body: fullBody,
     });
   }
 };

@@ -14,7 +14,7 @@ export const getInputs = () => {
   });
   const appUrl_ = getInputFromEnv({
     name: "app-url",
-    required: true,
+    required: false,
     type: "string",
   });
   const testsFile = getInputFromEnv({
@@ -25,20 +25,44 @@ export const getInputs = () => {
   const maxRetriesOnFailure = getInputFromEnv({
     name: "max-retries-on-failure",
     required: true,
-    type: "number",
+    type: "int",
   });
   const parallelTasks = getInputFromEnv({
     name: "parallel-tasks",
     required: false,
-    type: "number",
+    type: "int",
   });
   const localhostAliases = getInputFromEnv({
     name: "localhost-aliases",
     required: false,
     type: "string",
   });
+  const maxAllowedColorDifference = getInputFromEnv({
+    name: "max-allowed-color-difference",
+    required: true,
+    type: "float",
+  });
+  const maxAllowedProportionOfChangedPixels = getInputFromEnv({
+    name: "max-allowed-proportion-of-changed-pixels",
+    required: true,
+    type: "float",
+  });
+  const useDeploymentUrl = getInputFromEnv({
+    name: "use-deployment-url",
+    required: true,
+    type: "boolean",
+  });
+  const testSuiteId = getInputFromEnv({
+    name: "test-suite-id",
+    required: false,
+    type: "string",
+  });
 
-  const appUrl = handleLocalhostUrl(appUrl_);
+  if (appUrl_ != null && appUrl_ != "" && useDeploymentUrl === true) {
+    throw new Error("Cannot use both app-url and use-deployment-url");
+  }
+
+  const appUrl = appUrl_ ? handleLocalhostUrl(appUrl_) : appUrl_;
 
   return {
     apiToken,
@@ -48,6 +72,10 @@ export const getInputs = () => {
     maxRetriesOnFailure,
     parallelTasks,
     localhostAliases,
+    maxAllowedColorDifference,
+    maxAllowedProportionOfChangedPixels,
+    useDeploymentUrl,
+    testSuiteId,
   };
 };
 

@@ -1,8 +1,14 @@
 interface GetInputFromEnvFn {
-  (options: { name: string; required?: false; type: "number" }): number | null;
-  (options: { name: string; required?: false; type: "string" }): string | null;
   (options: { name: string; required: true; type: "string" }): string;
-  (options: { name: string; required: true; type: "number" }): number;
+  (options: { name: string; required?: false; type: "string" }): string | null;
+  (options: { name: string; required: true; type: "int" }): number;
+  (options: { name: string; required?: false; type: "int" }): number | null;
+  (options: { name: string; required: true; type: "float" }): number;
+  (options: { name: string; required?: false; type: "float" }): number | null;
+  (options: { name: string; required: true; type: "boolean" }): boolean;
+  (options: { name: string; required?: false; type: "boolean" }):
+    | boolean
+    | null;
 }
 
 export const getInputFromEnv: GetInputFromEnvFn = ({
@@ -15,7 +21,7 @@ export const getInputFromEnv: GetInputFromEnvFn = ({
   if (required && isEmpty(value)) {
     throw new Error(`Input ${name} is required`);
   }
-  if (value != null && typeof value !== type) {
+  if (value != null && typeof value !== expectedValueType(type)) {
     throw new Error(
       `Expected ${type} for input ${name}, but got ${typeof value}`
     );
@@ -28,20 +34,35 @@ export const getInputFromEnv: GetInputFromEnvFn = ({
 
 const parseValue = (
   value: string | undefined,
-  type: "string" | "number"
-): string | number | null => {
+  type: "string" | "int" | "float" | "boolean"
+): string | number | boolean | null => {
   if (value == null) {
     return null;
   }
   if (type === "string") {
     return value;
   }
-  if (type === "number") {
+  if (type === "int") {
     const parsed = Number.parseInt(value);
     if (isNaN(parsed)) {
       return null;
     }
     return parsed;
+  }
+  if (type === "float") {
+    const parsed = Number.parseFloat(value);
+    if (isNaN(parsed)) {
+      return null;
+    }
+    return parsed;
+  }
+  if (type === "boolean") {
+    if (value != null && value != "" && value !== "true" && value !== "false") {
+      throw new Error(
+        "Boolean inputs must be equal to the string 'true' or the string 'false'"
+      );
+    }
+    return value === "true";
   }
   return unknownType(type);
 };
@@ -60,4 +81,20 @@ const isEmpty = (value: unknown) => {
     return value.length === 0;
   }
   return false;
+};
+
+const expectedValueType = (type: "string" | "int" | "float" | "boolean") => {
+  if (type === "string") {
+    return "string";
+  }
+  if (type === "int") {
+    return "number";
+  }
+  if (type === "float") {
+    return "number";
+  }
+  if (type === "boolean") {
+    return "boolean";
+  }
+  return unknownType(type);
 };

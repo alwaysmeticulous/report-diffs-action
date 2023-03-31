@@ -17,6 +17,8 @@ RUN apt-get update \
 
 COPY package.json yarn.lock ./
 
+ENV PUPPETEER_CACHE_DIR /app/.cache/puppeteer
+
 RUN yarn --frozen-lockfile
 
 COPY tsconfig.base.json tsconfig.json ./

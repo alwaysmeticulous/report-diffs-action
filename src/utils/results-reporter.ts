@@ -1,10 +1,17 @@
 import { getOctokit } from "@actions/github";
-import { RunAllTestsResult, RunAllTestsTestRun } from "@alwaysmeticulous/cli";
+import { Project } from "@alwaysmeticulous/api";
+import {
+  ExecuteTestRunResult,
+  RunningTestRunExecution,
+} from "@alwaysmeticulous/sdk-bundles-api";
 import { CodeChangeEvent } from "../types";
 import { updateStatusComment } from "./update-status-comment";
 
 const SHORT_SHA_LENGTH = 7;
-const METICULOUS_MARKDOWN_LINK = "[Meticulous](https://meticulous.ai/)";
+
+export interface EnrichedProject extends Project {
+  isGitHubIntegrationActive?: boolean;
+}
 
 /**
  * Posts/updates Github comments and Github commit statuses to keep the user updated on progress/results.
@@ -19,32 +26,25 @@ export class ResultsReporter {
       owner: string;
       repo: string;
       headSha: string;
+      testSuiteId: string | null;
     }
   ) {
     this.shortHeadSha = this.options.headSha.substring(0, SHORT_SHA_LENGTH);
   }
 
-  async testRunStarted(
-    testRun: RunAllTestsTestRun & {
-      status: "Running";
-    }
-  ) {
-    if (!testRun.project.isGitHubIntegrationActive) {
+  async testRunStarted(testRun: RunningTestRunExecution) {
+    if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
       await this.setCommitStatus({
         state: "pending",
         description: `Testing ${testRun.progress.runningTestCases} sessions...`,
       });
     }
     await this.setStatusComment({
-      body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${testRun.progress.runningTestCases} sessions to check for differences... (commit: ${this.shortHeadSha})`,
+      body: `🤖 Meticulous is replaying ${testRun.progress.runningTestCases} sessions to check for differences...`,
     });
   }
 
-  async testFinished(
-    testRun: RunAllTestsTestRun & {
-      status: "Running";
-    }
-  ) {
+  async testFinished(testRun: RunningTestRunExecution) {
     const executedTestCases =
       testRun.progress.passedTestCases + testRun.progress.failedTestCases;
     const totalTestCases =
@@ -57,7 +57,7 @@ export class ResultsReporter {
     const percentComplete = Math.round(
       (executedTestCases / totalTestCases) * 100
     );
-    if (!testRun.project.isGitHubIntegrationActive) {
+    if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
       await this.setCommitStatus({
         state: "pending",
         description: `Testing ${totalTestCases} sessions (${percentComplete}% complete)...`,
@@ -68,28 +68,27 @@ export class ResultsReporter {
     }
     if (testRun.progress.failedTestCases > 0) {
       await this.setStatusComment({
-        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${totalTestCases} sessions to check for differences. No differences detected so far. (${percentComplete}% complete, commit: ${this.shortHeadSha})`,
+        body: `🤖 Meticulous is replaying ${totalTestCases} sessions to check for differences. No differences detected so far (${percentComplete}% complete).`,
       });
     } else {
       await this.setStatusComment({
-        body: `🤖 ${METICULOUS_MARKDOWN_LINK} is replaying ${totalTestCases} sessions to check for differences (${percentComplete}% complete, commit: ${this.shortHeadSha}).`,
+        body: `🤖 Meticulous is replaying ${totalTestCases} sessions to check for differences (${percentComplete}% complete).`,
       });
     }
   }
 
-  async testRunFinished(results: RunAllTestsResult) {
+  async testRunFinished(results: ExecuteTestRunResult) {
     const { testRun, testCaseResults } = results;
-    const screenshotDiffResults = testCaseResults.flatMap(
-      (testCase) => testCase.screenshotDiffResults
+    const screenshotDiffResults = testCaseResults.flatMap((testCase) =>
+      Object.values(testCase.screenshotDiffResultsByBaseReplayId).flat()
     );
     const screensWithDifferences = screenshotDiffResults.filter(
-      (result) =>
-        result.outcome === "diff" || result.outcome === "different-size"
+      (result) => result.outcome === "diff"
     ).length;
     const totalScreens = screenshotDiffResults.length;
 
     if (screensWithDifferences === 0) {
-      if (!testRun.project.isGitHubIntegrationActive) {
+      if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
         await this.setCommitStatus({
           description: `Zero differences across ${totalScreens} screens tested`,
           state: "success",
@@ -99,11 +98,11 @@ export class ResultsReporter {
       if (totalScreens > 0) {
         await this.setStatusComment({
           createIfDoesNotExist: true,
-          body: `✅ ${METICULOUS_MARKDOWN_LINK} spotted zero visual differences across ${totalScreens} screens tested. (commit: ${this.shortHeadSha})`,
+          body: `✅ Meticulous spotted zero visual differences across ${totalScreens} screens tested: [view results](${testRun.url}).`,
         });
       }
     } else {
-      if (!testRun.project.isGitHubIntegrationActive) {
+      if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
         await this.setCommitStatus({
           description: `Differences in ${screensWithDifferences} of ${totalScreens} screens, click details to view`,
           state: "success",
@@ -112,7 +111,7 @@ export class ResultsReporter {
       }
       await this.setStatusComment({
         createIfDoesNotExist: true,
-        body: `🤖 ${METICULOUS_MARKDOWN_LINK} spotted visual differences in ${screensWithDifferences} of ${totalScreens} screens tested: [view differences detected](${testRun.url}) (commit: ${this.shortHeadSha}).`,
+        body: `🤖 Meticulous spotted visual differences in ${screensWithDifferences} of ${totalScreens} screens tested: [view and approve differences detected](${testRun.url}).`,
       });
     }
   }
@@ -122,7 +121,7 @@ export class ResultsReporter {
     // this failure mode we can't be always sure that the current repo isn't GitHub App-integrated so be defensive and
     // only post a status comment without a Commit status.
     await this.setStatusComment({
-      body: `🤖 ${METICULOUS_MARKDOWN_LINK} failed to execute, see GitHub job logs for details (commit: ${this.shortHeadSha})`,
+      body: `🤖 Meticulous failed to execute, see GitHub job logs for details.`,
     });
   }
 
@@ -154,7 +153,7 @@ export class ResultsReporter {
     body: string;
     createIfDoesNotExist?: boolean;
   }) {
-    const { octokit, owner, repo, event } = this.options;
+    const { octokit, owner, repo, event, testSuiteId } = this.options;
     return updateStatusComment({
       octokit,
       owner,
@@ -162,6 +161,8 @@ export class ResultsReporter {
       event,
       createIfDoesNotExist: createIfDoesNotExist ?? false,
       body,
+      shortHeadSha: this.shortHeadSha,
+      testSuiteId,
     });
   }
 }
