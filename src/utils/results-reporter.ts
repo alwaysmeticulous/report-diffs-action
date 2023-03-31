@@ -1,9 +1,17 @@
 import { getOctokit } from "@actions/github";
-import { RunAllTestsResult, RunAllTestsTestRun } from "@alwaysmeticulous/cli";
+import { Project } from "@alwaysmeticulous/api";
+import {
+  ExecuteTestRunResult,
+  RunningTestRunExecution,
+} from "@alwaysmeticulous/sdk-bundles-api";
 import { CodeChangeEvent } from "../types";
 import { updateStatusComment } from "./update-status-comment";
 
 const SHORT_SHA_LENGTH = 7;
+
+export interface EnrichedProject extends Project {
+  isGitHubIntegrationActive?: boolean;
+}
 
 /**
  * Posts/updates Github comments and Github commit statuses to keep the user updated on progress/results.
@@ -24,12 +32,8 @@ export class ResultsReporter {
     this.shortHeadSha = this.options.headSha.substring(0, SHORT_SHA_LENGTH);
   }
 
-  async testRunStarted(
-    testRun: RunAllTestsTestRun & {
-      status: "Running";
-    }
-  ) {
-    if (!testRun.project.isGitHubIntegrationActive) {
+  async testRunStarted(testRun: RunningTestRunExecution) {
+    if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
       await this.setCommitStatus({
         state: "pending",
         description: `Testing ${testRun.progress.runningTestCases} sessions...`,
@@ -40,11 +44,7 @@ export class ResultsReporter {
     });
   }
 
-  async testFinished(
-    testRun: RunAllTestsTestRun & {
-      status: "Running";
-    }
-  ) {
+  async testFinished(testRun: RunningTestRunExecution) {
     const executedTestCases =
       testRun.progress.passedTestCases + testRun.progress.failedTestCases;
     const totalTestCases =
@@ -57,7 +57,7 @@ export class ResultsReporter {
     const percentComplete = Math.round(
       (executedTestCases / totalTestCases) * 100
     );
-    if (!testRun.project.isGitHubIntegrationActive) {
+    if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
       await this.setCommitStatus({
         state: "pending",
         description: `Testing ${totalTestCases} sessions (${percentComplete}% complete)...`,
@@ -77,10 +77,10 @@ export class ResultsReporter {
     }
   }
 
-  async testRunFinished(results: RunAllTestsResult) {
+  async testRunFinished(results: ExecuteTestRunResult) {
     const { testRun, testCaseResults } = results;
-    const screenshotDiffResults = testCaseResults.flatMap(
-      (testCase) => testCase.screenshotDiffResults
+    const screenshotDiffResults = testCaseResults.flatMap((testCase) =>
+      Object.values(testCase.screenshotDiffResultsByBaseReplayId).flat()
     );
     const screensWithDifferences = screenshotDiffResults.filter(
       (result) => result.outcome === "diff"
@@ -88,7 +88,7 @@ export class ResultsReporter {
     const totalScreens = screenshotDiffResults.length;
 
     if (screensWithDifferences === 0) {
-      if (!testRun.project.isGitHubIntegrationActive) {
+      if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
         await this.setCommitStatus({
           description: `Zero differences across ${totalScreens} screens tested`,
           state: "success",
@@ -102,7 +102,7 @@ export class ResultsReporter {
         });
       }
     } else {
-      if (!testRun.project.isGitHubIntegrationActive) {
+      if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
         await this.setCommitStatus({
           description: `Differences in ${screensWithDifferences} of ${totalScreens} screens, click details to view`,
           state: "success",

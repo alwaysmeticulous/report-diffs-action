@@ -1,8 +1,10 @@
 import { warning as ghWarning } from "@actions/core";
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
-import { getLatestTestRunResults } from "@alwaysmeticulous/cli";
-import { createClient } from "@alwaysmeticulous/cli/dist/api/client.js";
+import {
+  createClient,
+  getLatestTestRunResults,
+} from "@alwaysmeticulous/client";
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { CodeChangeEvent } from "../types";
