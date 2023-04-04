@@ -9,6 +9,7 @@ import {
 import { initSentry } from "@alwaysmeticulous/sentry";
 import debounce from "lodash.debounce";
 import { addLocalhostAliases } from "./utils/add-localhost-aliases";
+import { throwIfCannotConnectToOrigin } from "./utils/check-connection";
 import { safeEnsureBaseTestsExists } from "./utils/ensure-base-exists.utils";
 import { getEnvironment } from "./utils/environment.utils";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
@@ -133,6 +134,10 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     const urlToTestAgainst = useDeploymentUrl
       ? await waitForDeploymentUrl({ owner, repo, commitSha: head, octokit })
       : appUrl;
+
+    if (urlToTestAgainst != null) {
+      await throwIfCannotConnectToOrigin(urlToTestAgainst);
+    }
 
     const results = await executeTestRun({
       testsFile,
