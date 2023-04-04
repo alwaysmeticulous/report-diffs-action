@@ -19,7 +19,7 @@ export const throwIfCannotConnectToOrigin = async (url: string) => {
     throw new Error(
       `Could not connect to '${rewrittenHostname}:${portNumber}'. Please check:\n\n` +
         `1. The server running at '${rewrittenOrigin}' has fully started by the time the Meticulous action starts. You may need to add a 'sleep 30' after starting the server to ensure that this is the case.\n` +
-        `2. The server running at '${rewrittenOrigin}' is using tcp instead of tcp6 and is bound to 0.0.0.0 rather than a specific IP address. You can use 'netstat -tulpen' to see what addresses and ports it is bound to.\n\n`
+        `2. The server running at '${rewrittenOrigin}' is using tcp instead of tcp6. You can use 'netstat -tulpen' to see what addresses and ports it is bound to.\n\n`
     );
   }
 };
