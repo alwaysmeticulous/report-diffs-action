@@ -1,4 +1,4 @@
-import { Socket } from "net";
+import { connect } from "tls";
 import { DOCKER_BRIDGE_NETWORK_GATEWAY } from "./get-inputs";
 
 export const throwIfCannotConnectToOrigin = async (url: string) => {
@@ -26,7 +26,10 @@ export const throwIfCannotConnectToOrigin = async (url: string) => {
 
 const canConnectTo = async (host: string, port: number, timeout = 5000) => {
   return new Promise((resolve) => {
-    const socket = new Socket();
+    const socket = connect(port, host, {}, () => {
+      socket.end();
+      resolve(true);
+    });
     const onError = () => {
       socket.destroy();
       resolve(false);
@@ -34,9 +37,5 @@ const canConnectTo = async (host: string, port: number, timeout = 5000) => {
 
     socket.setTimeout(timeout, onError);
     socket.on("error", onError);
-    socket.connect(port, host, () => {
-      socket.end();
-      resolve(true);
-    });
   });
 };
