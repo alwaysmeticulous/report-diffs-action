@@ -6,7 +6,7 @@ export const throwIfCannotConnectToOrigin = async (url: string) => {
   const defaultPortForProtocol = protocol === "https:" ? 443 : 80;
   const portNumber =
     port != null && port != "" ? Number(port) : defaultPortForProtocol;
-  const connectionAccepted = await canConnectToHttp(hostname, portNumber);
+  const connectionAccepted = await canConnectTo(hostname, portNumber);
   if (!connectionAccepted) {
     const rewrittenHostname = hostname.replace(
       DOCKER_BRIDGE_NETWORK_GATEWAY,
@@ -24,7 +24,7 @@ export const throwIfCannotConnectToOrigin = async (url: string) => {
   }
 };
 
-const canConnectToHttp = async (host: string, port: number, timeout = 5000) => {
+const canConnectTo = async (host: string, port: number, timeout = 5000) => {
   return new Promise((resolve) => {
     const socket = new Socket();
     const onError = () => {
