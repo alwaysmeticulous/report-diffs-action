@@ -26,7 +26,7 @@ export const throwIfCannotConnectToOrigin = async (url: string) => {
 
 const canConnectTo = async (host: string, port: number, timeout = 5000) => {
   return new Promise((resolve) => {
-    const socket = connect(port, host, {}, () => {
+    const socket = connect(port, host, { servername: host }, () => {
       socket.end();
       resolve(true);
     });
