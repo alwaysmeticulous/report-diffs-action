@@ -47,7 +47,7 @@ const BmiForm = ({ change }) => {
 				</div>
 
 				<div className="col m6 s12">
-					<label htmlFor="height">Height (in miles)</label>
+					<label htmlFor="height">Height (in kilometers)</label>
 					<input
 						id="height"
 						name="height"
