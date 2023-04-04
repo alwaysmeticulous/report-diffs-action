@@ -85,7 +85,7 @@ export const DOCKER_BRIDGE_NETWORK_GATEWAY = "172.17.0.1";
 const handleLocalhostUrl = (appUrl: string): string => {
   try {
     const url = new URL(appUrl);
-    if (url.hostname === "localhost") {
+    if (url.hostname === "localhost" || url.hostname === "127.0.0.1") {
       url.hostname = DOCKER_BRIDGE_NETWORK_GATEWAY;
     }
     return url.toString();
