@@ -1,7 +1,7 @@
 import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
-import { executeTestRun } from "@alwaysmeticulous/replay-orchestrator";
+import { executeTestRun } from "@alwaysmeticulous/replay-orchestrator-launcher";
 import {
   ReplayExecutionOptions,
   RunningTestRunExecution,
@@ -157,6 +157,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       environment,
       onTestRunCreated: (testRun) => resultsReporter.testRunStarted(testRun),
       onTestFinished: reportTestFinished,
+      maxSemanticVersionSupported: 1,
     });
     reportTestFinished.cancel();
     await resultsReporter.testRunFinished(results);
