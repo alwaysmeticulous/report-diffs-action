@@ -17,3 +17,11 @@ Follow the instructions at https://app.meticulous.ai/docs to set this up on your
    3. Write release notes
 
 4. Once the build completes the @v1 tag will automatically be pointed to the new head of the releases/v1 branch
+
+## Building the docker image on a MacBook with Apple silicon
+
+To build run:
+
+```bash
+docker build . --platform=linux/amd64
+```
