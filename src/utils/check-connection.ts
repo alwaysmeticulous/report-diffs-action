@@ -4,7 +4,8 @@ import { DOCKER_BRIDGE_NETWORK_GATEWAY } from "./get-inputs";
 export const throwIfCannotConnectToOrigin = async (url: string) => {
   const { hostname, port, protocol, origin } = new URL(url);
   const defaultPortForProtocol = protocol === "https:" ? 443 : 80;
-  const portNumber = port != null ? Number(port) : defaultPortForProtocol;
+  const portNumber =
+    port != null && port != "" ? Number(port) : defaultPortForProtocol;
   const connectionAccepted = await canConnectTo(hostname, Number(port));
   if (!connectionAccepted) {
     const rewrittenHostname = hostname.replace(
