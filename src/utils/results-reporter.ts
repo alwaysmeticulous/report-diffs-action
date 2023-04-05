@@ -138,7 +138,10 @@ export class ResultsReporter {
     return octokit.rest.repos.createCommitStatus({
       owner,
       repo,
-      context: "Meticulous",
+      context:
+        this.options.testSuiteId != null
+          ? `Meticulous (${this.options.testSuiteId})`
+          : "Meticulous",
       description,
       state,
       sha: headSha,
