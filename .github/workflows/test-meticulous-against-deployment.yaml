@@ -53,6 +53,5 @@ jobs:
         with:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
           use-deployment-url: true
-          environment-to-test: Preview
           tests-file: tests/react-bmi-calculator/meticulous.json
           test-suite-id: "test Meticulous with deployment url"
