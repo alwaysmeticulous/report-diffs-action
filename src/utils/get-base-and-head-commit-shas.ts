@@ -55,6 +55,8 @@ const tryGetMergeBaseOfHeadCommit = (
 ): string | null => {
   try {
     markGitDirectoryAsSafe();
+    execSync(`git fetch origin ${pullRequestHeadSha}`);
+    execSync(`git fetch origin ${baseRef}`);
     const mergeBase = execSync(
       `git merge-base ${pullRequestHeadSha} ${baseRef}`
     )
