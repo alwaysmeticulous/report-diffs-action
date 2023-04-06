@@ -12,6 +12,7 @@ const keys = [
   "MAX_ALLOWED_PROPORTION_OF_CHANGED_PIXELS",
   "METICULOUS_TELEMETRY_SAMPLE_RATE",
   "USE_DEPLOYMENT_URL",
+  "ALLOWED_ENVIRONMENTS",
 ];
 
 const EXPECTED_DEFAULT_VALUES = {
@@ -21,6 +22,7 @@ const EXPECTED_DEFAULT_VALUES = {
   maxAllowedColorDifference: 0.01,
   maxAllowedProportionOfChangedPixels: 0.00001,
   useDeploymentUrl: false,
+  allowedEnvironments: null,
   appUrl: null,
   localhostAliases: null,
   parallelTasks: null,
@@ -81,6 +83,46 @@ describe("getInputs", () => {
       parallelTasks: 5,
       testsFile: "tests.json",
     });
+  });
+
+  it("treats empty strings as nulls if param is optional", () => {
+    setupDefaultEnvVars();
+    process.env.ALLOWED_ENVIRONMENTS = "";
+
+    expect(getInputs()).toEqual({
+      ...EXPECTED_DEFAULT_VALUES,
+    });
+  });
+
+  it("parses deployment url values correctly", () => {
+    setupDefaultEnvVars();
+    process.env.USE_DEPLOYMENT_URL = "true";
+    process.env.ALLOWED_ENVIRONMENTS = "staging";
+
+    expect(getInputs()).toEqual({
+      ...EXPECTED_DEFAULT_VALUES,
+      useDeploymentUrl: true,
+      allowedEnvironments: ["staging"],
+    });
+  });
+
+  it("can parse a list of allowed environment values", () => {
+    setupDefaultEnvVars();
+    process.env.USE_DEPLOYMENT_URL = "true";
+    process.env.ALLOWED_ENVIRONMENTS = "     staging \n  \t production ";
+
+    expect(getInputs()).toEqual({
+      ...EXPECTED_DEFAULT_VALUES,
+      useDeploymentUrl: true,
+      allowedEnvironments: ["staging", "production"],
+    });
+  });
+
+  it("throws if allowed environments is set but use deployment url is false", () => {
+    setupDefaultEnvVars();
+    process.env.ALLOWED_ENVIRONMENTS = "staging";
+
+    expect(() => getInputs()).toThrowError();
   });
 
   it("handles rewriting localhost urls to the docker bridge IP", () => {
