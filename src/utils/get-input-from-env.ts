@@ -60,6 +60,9 @@ const parseValue = (
     return parsed;
   }
   if (type === "boolean") {
+    if (value === "") {
+      return null;
+    }
     if (value != null && value != "" && value !== "true" && value !== "false") {
       throw new Error(
         "Boolean inputs must be equal to the string 'true' or the string 'false'"
