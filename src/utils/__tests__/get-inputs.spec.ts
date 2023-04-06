@@ -85,6 +85,15 @@ describe("getInputs", () => {
     });
   });
 
+  it("treats empty strings as nulls if param is optional", () => {
+    setupDefaultEnvVars();
+    process.env.ENVIRONMENT_TO_TEST = "";
+
+    expect(getInputs()).toEqual({
+      ...EXPECTED_DEFAULT_VALUES,
+    });
+  });
+
   it("parses deployment url values correctly", () => {
     setupDefaultEnvVars();
     process.env.USE_DEPLOYMENT_URL = "true";
