@@ -1,6 +1,10 @@
 interface GetInputFromEnvFn {
   (options: { name: string; required: true; type: "string" }): string;
   (options: { name: string; required?: false; type: "string" }): string | null;
+  (options: { name: string; required: true; type: "string-array" }): string[];
+  (options: { name: string; required?: false; type: "string-array" }):
+    | string[]
+    | null;
   (options: { name: string; required: true; type: "int" }): number;
   (options: { name: string; required?: false; type: "int" }): number | null;
   (options: { name: string; required: true; type: "float" }): number;
@@ -17,8 +21,21 @@ export const getInputFromEnv: GetInputFromEnvFn = ({
   type,
 }) => {
   const environmentVariableName = name.toUpperCase().replaceAll("-", "_");
-  const value = parseValue(process.env[environmentVariableName], type);
-  if (required && isEmpty(value)) {
+  const rawValue = process.env[environmentVariableName];
+
+  if (
+    (type === "string" || type === "string-array") &&
+    rawValue === "" &&
+    !required
+  ) {
+    return null;
+  }
+
+  const value = parseValue(rawValue, type);
+  if (required && value == null) {
+    throw new Error(`Input ${name} is required`);
+  }
+  if (required && isEmpty(value) && type !== "string-array") {
     throw new Error(`Input ${name} is required`);
   }
   if (value != null && typeof value !== expectedValueType(type)) {
@@ -34,13 +51,28 @@ export const getInputFromEnv: GetInputFromEnvFn = ({
 
 const parseValue = (
   value: string | undefined,
-  type: "string" | "int" | "float" | "boolean"
-): string | number | boolean | null => {
+  type: "string-array" | "string" | "int" | "float" | "boolean"
+): string[] | string | number | boolean | null => {
   if (value == null) {
     return null;
   }
   if (type === "string") {
     return value;
+  }
+  if (type === "string-array") {
+    // Support both new line and , delimited lists
+    // The built-in Github actions generally use new line delimited lists: https://github.com/actions/cache/blob/940f3d7cf195ba83374c77632d1e2cbb2f24ae68/src/utils/actionUtils.ts#L33
+    // But some third-party Github actions use comma seperated lists
+    if (value.indexOf("\n") === -1) {
+      return value
+        .split(",")
+        .map((s) => s.trim())
+        .filter((s) => s !== "");
+    }
+    return value
+      .split("\n")
+      .map((s) => s.trim())
+      .filter((s) => s !== "");
   }
   if (type === "int") {
     const parsed = Number.parseInt(value);
@@ -57,7 +89,10 @@ const parseValue = (
     return parsed;
   }
   if (type === "boolean") {
-    if (value != null && value != "" && value !== "true" && value !== "false") {
+    if (value === "") {
+      return null;
+    }
+    if (value !== "true" && value !== "false") {
       throw new Error(
         "Boolean inputs must be equal to the string 'true' or the string 'false'"
       );
@@ -83,7 +118,12 @@ const isEmpty = (value: unknown) => {
   return false;
 };
 
-const expectedValueType = (type: "string" | "int" | "float" | "boolean") => {
+const expectedValueType = (
+  type: "string-array" | "string" | "int" | "float" | "boolean"
+) => {
+  if (type === "string-array") {
+    return "object";
+  }
   if (type === "string") {
     return "string";
   }

@@ -1,4 +1,7 @@
+import { getOctokit } from "@actions/github";
 import { GitHub } from "@actions/github/lib/utils";
+import { Hub } from "@sentry/node";
+import { Transaction } from "@sentry/types";
 import { EXPECTED_PERMISSIONS_BLOCK } from "./constants";
 
 const TIMEOUT_MS = 30 * 60 * 1_000; // 30 minutes
@@ -10,21 +13,34 @@ export const waitForDeploymentUrl = async ({
   repo,
   commitSha,
   octokit,
+  sentryHub,
+  transaction,
+  allowedEnvironments,
 }: {
   owner: string;
   repo: string;
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
+  sentryHub: Hub;
+  transaction: Transaction;
+  allowedEnvironments: string[] | null;
 }): Promise<string> => {
+  const waitForDeploymentSpan = transaction.startChild({
+    op: "waitForDeployment",
+  });
   const startTime = Date.now();
   let pollFrequency = MIN_POLL_FREQUENCY;
+  let deploymentsFound: DeploymentsArray | null = null;
   while (Date.now() - startTime < TIMEOUT_MS) {
-    const deploymentUrl = await getDeploymentUrl({
+    const { deploymentUrl, availableDeployments } = await getDeploymentUrl({
       owner,
       repo,
       commitSha,
       octokit,
+      sentryHub,
+      allowedEnvironments,
     });
+    deploymentsFound = availableDeployments;
     if (deploymentUrl != null) {
       console.log(`Testing against deployment URL '${deploymentUrl}'`);
       return deploymentUrl;
@@ -35,26 +51,45 @@ export const waitForDeploymentUrl = async ({
       pollFrequency + MIN_POLL_FREQUENCY
     );
   }
+  waitForDeploymentSpan.finish();
+
+  const timeoutInSeconds = (TIMEOUT_MS / 1000).toFixed(0);
+  const environmentFilter =
+    allowedEnvironments != null
+      ? ` for an environment named ${joinWithOr(
+          allowedEnvironments.map((e) => `'${e}'`)
+        )}`
+      : "";
   throw new Error(
-    `Timed out after waiting ${(TIMEOUT_MS / 1000).toFixed(
-      0
-    )} seconds for a deployment URL for commit ${commitSha}`
+    `Timed out after waiting ${timeoutInSeconds} seconds for a successful deployment URL for commit ${commitSha}${environmentFilter}. ` +
+      `Available deployments: ${describeDeployments(deploymentsFound)}.`
   );
 };
 
 const MAX_GITHUB_ALLOWED_PAGE_SIZE = 100;
+
+type DeploymentsArray = Awaited<
+  ReturnType<ReturnType<typeof getOctokit>["rest"]["repos"]["listDeployments"]>
+>["data"];
 
 const getDeploymentUrl = async ({
   owner,
   repo,
   commitSha,
   octokit,
+  sentryHub,
+  allowedEnvironments,
 }: {
   owner: string;
   repo: string;
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
-}): Promise<string | null> => {
+  sentryHub: Hub;
+  allowedEnvironments: string[] | null;
+}): Promise<{
+  deploymentUrl: string | null;
+  availableDeployments: DeploymentsArray | null;
+}> => {
   let deployments: Awaited<
     ReturnType<typeof octokit.rest.repos.listDeployments>
   > | null = null;
@@ -86,22 +121,60 @@ const getDeploymentUrl = async ({
     );
   }
 
-  const latestDeployment = findLatest(deployments.data);
-  if (latestDeployment == null) {
-    return null;
+  sentryHub.captureEvent({
+    message: "Found deployments",
+    level: "debug",
+    extra: {
+      deployments: deployments.data.map((deployment) => ({
+        id: deployment.id,
+        environment: deployment.environment,
+        original_environment: deployment.original_environment,
+        production_environment: deployment.production_environment,
+      })),
+      allowedEnvironments,
+    },
+  });
+
+  const matchingDeployments = deployments.data.filter(
+    (deployment) =>
+      allowedEnvironments == null ||
+      allowedEnvironments.includes(deployment.environment)
+  );
+
+  if (matchingDeployments.length > 1) {
+    if (allowedEnvironments == null) {
+      console.warn(
+        `More than one deployment found for commit ${commitSha}: ${describeDeployments(
+          matchingDeployments
+        )}. Please specify an environment name using the 'allowed-environments' input.`
+      );
+    } else {
+      throw new Error(
+        `More than one deployment found for commit ${commitSha} for an environment named ${joinWithOr(
+          allowedEnvironments.map((e) => `'${e}'`)
+        )}.`
+      );
+    }
   }
-  console.debug(`Checking status of deployment ${latestDeployment.id}`);
+
+  const latestMatchingDeployment = findLatest(matchingDeployments);
+
+  if (latestMatchingDeployment == null) {
+    return { deploymentUrl: null, availableDeployments: deployments.data };
+  }
+
+  console.debug(`Checking status of deployment ${latestMatchingDeployment.id}`);
 
   const deploymentStatuses = await octokit.rest.repos.listDeploymentStatuses({
     owner,
     repo,
-    deployment_id: latestDeployment.id,
+    deployment_id: latestMatchingDeployment.id,
     per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
   });
 
   if (hasMorePages(deploymentStatuses)) {
     throw new Error(
-      `More than ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment status found for deployment ${latestDeployment.id} of commit ${commitSha}. Meticulous currently supports at most ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment statuses per deployment.`
+      `More than ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment status found for deployment ${latestMatchingDeployment.id} of commit ${commitSha}. Meticulous currently supports at most ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment statuses per deployment.`
     );
   }
 
@@ -109,7 +182,10 @@ const getDeploymentUrl = async ({
     (status) => status.state === "success"
   );
   if (deploymentStatus?.environment_url != null) {
-    return deploymentStatus?.environment_url;
+    return {
+      deploymentUrl: deploymentStatus?.environment_url,
+      availableDeployments: deployments.data,
+    };
   }
 
   const latestDeploymentStatus = findLatest(deploymentStatuses.data);
@@ -118,11 +194,22 @@ const getDeploymentUrl = async ({
     latestDeploymentStatus?.state === "failure"
   ) {
     throw new Error(
-      `Deployment ${latestDeployment.id} failed with status ${latestDeploymentStatus?.state}. Cannot test against a failed deployment.`
+      `Deployment ${latestMatchingDeployment.id} failed with status ${latestDeploymentStatus?.state}. Cannot test against a failed deployment.`
     );
   }
 
-  return null; // Let's continue waiting for a successful deployment
+  return { deploymentUrl: null, availableDeployments: deployments.data }; // Let's continue waiting for a successful deployment
+};
+
+const describeDeployments = (deployments: DeploymentsArray | null): string => {
+  if (deployments == null || deployments.length === 0) {
+    return "none";
+  }
+  const deploymentDescriptions = deployments.map(
+    (deployment) =>
+      `deployment ${deployment.id} (environment name: "${deployment.environment}", description: "${deployment.description}")`
+  );
+  return deploymentDescriptions.join(", ");
 };
 
 const findLatest = <T extends { created_at: string }>(items: T[]): T | null => {
@@ -140,3 +227,16 @@ const findLatest = <T extends { created_at: string }>(items: T[]): T | null => {
 
 const hasMorePages = (response: { headers: { link?: string | undefined } }) =>
   response.headers.link?.includes('rel="next"');
+
+const joinWithOr = (names: string[]): string => {
+  if (names.length === 0) {
+    return "";
+  }
+  if (names.length === 1) {
+    return names[0];
+  }
+  if (names.length === 2) {
+    return `${names[0]} or ${names[1]}`;
+  }
+  return `${names.slice(0, -1).join(", ")}, or ${names[names.length - 1]}`;
+};

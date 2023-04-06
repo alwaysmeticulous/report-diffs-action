@@ -18,6 +18,14 @@ inputs:
     description: If set to 'true' Meticulous will test against the 'environmentUrl' of the latest deployment of the current commit.
     required: true
     default: "false"
+  allowed-environments:
+    description: |
+      To only be used when 'use-deployment-url' is set to true. If set will ignore any deployments to environments with names not in this list. The names of multiple environments can be seperated by new lines.
+
+      If allowed-environments is not specified then Meticulous will just test against the first deployment.
+
+      You find your environment names in the 'Environments' tab in the 'Settings' tab of your GitHub repository.
+    required: false
   tests-file:
     description: |
       The path to the meticulous.json file containing the list of tests you want to run.
@@ -65,6 +73,7 @@ runs:
     MAX_ALLOWED_COLOR_DIFFERENCE: ${{ inputs.max-allowed-color-difference }}
     MAX_ALLOWED_PROPORTION_OF_CHANGED_PIXELS: ${{ inputs.max-allowed-proportion-of-changed-pixels }}
     USE_DEPLOYMENT_URL: ${{ inputs.use-deployment-url }}
+    ALLOWED_ENVIRONMENTS: ${{ inputs.allowed-environments }}
     TEST_SUITE_ID: ${{ inputs.test-suite-id }}
     METICULOUS_TELEMETRY_SAMPLE_RATE: "0.01"
 branding:

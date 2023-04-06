@@ -63,6 +63,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     maxAllowedColorDifference,
     maxAllowedProportionOfChangedPixels,
     useDeploymentUrl,
+    allowedEnvironments,
     testSuiteId,
   } = getInputs();
   const { payload } = context;
@@ -132,7 +133,15 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     await addLocalhostAliases({ appUrl, localhostAliases });
 
     const urlToTestAgainst = useDeploymentUrl
-      ? await waitForDeploymentUrl({ owner, repo, commitSha: head, octokit })
+      ? await waitForDeploymentUrl({
+          owner,
+          repo,
+          commitSha: head,
+          octokit,
+          sentryHub,
+          transaction,
+          allowedEnvironments,
+        })
       : appUrl;
 
     if (urlToTestAgainst != null) {
