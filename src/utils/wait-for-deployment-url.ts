@@ -131,6 +131,7 @@ const getDeploymentUrl = async ({
         original_environment: deployment.original_environment,
         production_environment: deployment.production_environment,
       })),
+      allowedEnvironments,
     },
   });
 
