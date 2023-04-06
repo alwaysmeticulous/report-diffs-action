@@ -12,7 +12,7 @@ const keys = [
   "MAX_ALLOWED_PROPORTION_OF_CHANGED_PIXELS",
   "METICULOUS_TELEMETRY_SAMPLE_RATE",
   "USE_DEPLOYMENT_URL",
-  "ENVIRONMENT_TO_TEST",
+  "ALLOWED_ENVIRONMENTS",
 ];
 
 const EXPECTED_DEFAULT_VALUES = {
@@ -22,7 +22,7 @@ const EXPECTED_DEFAULT_VALUES = {
   maxAllowedColorDifference: 0.01,
   maxAllowedProportionOfChangedPixels: 0.00001,
   useDeploymentUrl: false,
-  environmentToTest: null,
+  allowedEnvironments: null,
   appUrl: null,
   localhostAliases: null,
   parallelTasks: null,
@@ -87,7 +87,7 @@ describe("getInputs", () => {
 
   it("treats empty strings as nulls if param is optional", () => {
     setupDefaultEnvVars();
-    process.env.ENVIRONMENT_TO_TEST = "";
+    process.env.ALLOWED_ENVIRONMENTS = "";
 
     expect(getInputs()).toEqual({
       ...EXPECTED_DEFAULT_VALUES,
@@ -97,18 +97,30 @@ describe("getInputs", () => {
   it("parses deployment url values correctly", () => {
     setupDefaultEnvVars();
     process.env.USE_DEPLOYMENT_URL = "true";
-    process.env.ENVIRONMENT_TO_TEST = "staging";
+    process.env.ALLOWED_ENVIRONMENTS = "staging";
 
     expect(getInputs()).toEqual({
       ...EXPECTED_DEFAULT_VALUES,
       useDeploymentUrl: true,
-      environmentToTest: "staging",
+      allowedEnvironments: ["staging"],
     });
   });
 
-  it("throws if environment to test is set but use deployment url is false", () => {
+  it("can parse a list of allowed environment values", () => {
     setupDefaultEnvVars();
-    process.env.ENVIRONMENT_TO_TEST = "staging";
+    process.env.USE_DEPLOYMENT_URL = "true";
+    process.env.ALLOWED_ENVIRONMENTS = "     staging \n  \t production ";
+
+    expect(getInputs()).toEqual({
+      ...EXPECTED_DEFAULT_VALUES,
+      useDeploymentUrl: true,
+      allowedEnvironments: ["staging", "production"],
+    });
+  });
+
+  it("throws if allowed environments is set but use deployment url is false", () => {
+    setupDefaultEnvVars();
+    process.env.ALLOWED_ENVIRONMENTS = "staging";
 
     expect(() => getInputs()).toThrowError();
   });

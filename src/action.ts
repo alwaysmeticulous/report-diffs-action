@@ -63,7 +63,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     maxAllowedColorDifference,
     maxAllowedProportionOfChangedPixels,
     useDeploymentUrl,
-    environmentToTest,
+    allowedEnvironments,
     testSuiteId,
   } = getInputs();
   const { payload } = context;
@@ -140,7 +140,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
           octokit,
           sentryHub,
           transaction,
-          environmentName: environmentToTest,
+          allowedEnvironments,
         })
       : appUrl;
 

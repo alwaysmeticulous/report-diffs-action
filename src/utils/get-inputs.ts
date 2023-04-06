@@ -57,20 +57,26 @@ export const getInputs = () => {
     required: false,
     type: "string",
   });
-  const environmentToTest = getInputFromEnv({
-    name: "environment-to-test",
+  const allowedEnvironments = getInputFromEnv({
+    name: "allowed-environments",
     required: false,
-    type: "string",
+    type: "string-array",
   });
 
   if (appUrl_ != null && appUrl_ != "" && useDeploymentUrl === true) {
     throw new Error("Cannot use both app-url and use-deployment-url");
   }
 
-  if (!useDeploymentUrl && environmentToTest != null) {
+  if (!useDeploymentUrl && allowedEnvironments != null) {
     throw new Error(
-      "environment-to-test can only be used when use-deployment-url is true. Please set use-deployment-url to true to run the tests " +
-        "against a deployment URL, and then set environment-to-test to specify which environment to test against."
+      "allowed-environments can only be used when use-deployment-url is true. Please set use-deployment-url to true to run the tests " +
+        "against a deployment URL, and then set allowed-environments to specify which environment to test against."
+    );
+  }
+
+  if (allowedEnvironments != null && allowedEnvironments.length === 0) {
+    throw new Error(
+      "allowed-environments cannot be empty. Please either omit it as an input or specify at least one environment to test against."
     );
   }
 
@@ -88,7 +94,7 @@ export const getInputs = () => {
     maxAllowedProportionOfChangedPixels,
     useDeploymentUrl,
     testSuiteId,
-    environmentToTest,
+    allowedEnvironments,
   };
 };
 

@@ -15,7 +15,7 @@ export const waitForDeploymentUrl = async ({
   octokit,
   sentryHub,
   transaction,
-  environmentName,
+  allowedEnvironments,
 }: {
   owner: string;
   repo: string;
@@ -23,7 +23,7 @@ export const waitForDeploymentUrl = async ({
   octokit: InstanceType<typeof GitHub>;
   sentryHub: Hub;
   transaction: Transaction;
-  environmentName: string | null;
+  allowedEnvironments: string[] | null;
 }): Promise<string> => {
   const waitForDeploymentSpan = transaction.startChild({
     op: "waitForDeployment",
@@ -38,7 +38,7 @@ export const waitForDeploymentUrl = async ({
       commitSha,
       octokit,
       sentryHub,
-      environmentName,
+      allowedEnvironments,
     });
     deploymentsFound = availableDeployments;
     if (deploymentUrl != null) {
@@ -55,7 +55,11 @@ export const waitForDeploymentUrl = async ({
 
   const timeoutInSeconds = (TIMEOUT_MS / 1000).toFixed(0);
   const environmentFilter =
-    environmentName != null ? ` for the '${environmentName}' environment` : "";
+    allowedEnvironments != null
+      ? ` for an environment named ${joinWithOr(
+          allowedEnvironments.map((e) => `'${e}'`)
+        )}`
+      : "";
   throw new Error(
     `Timed out after waiting ${timeoutInSeconds} seconds for a successful deployment URL for commit ${commitSha}${environmentFilter}. ` +
       `Available deployments: ${describeDeployments(deploymentsFound)}.`
@@ -74,14 +78,14 @@ const getDeploymentUrl = async ({
   commitSha,
   octokit,
   sentryHub,
-  environmentName,
+  allowedEnvironments,
 }: {
   owner: string;
   repo: string;
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
   sentryHub: Hub;
-  environmentName: string | null;
+  allowedEnvironments: string[] | null;
 }): Promise<{
   deploymentUrl: string | null;
   availableDeployments: DeploymentsArray | null;
@@ -132,22 +136,25 @@ const getDeploymentUrl = async ({
 
   const matchingDeployments = deployments.data.filter(
     (deployment) =>
-      environmentName == null || deployment.environment === environmentName
+      allowedEnvironments == null ||
+      allowedEnvironments.includes(deployment.environment)
   );
 
   if (matchingDeployments.length === 0) {
     return { deploymentUrl: null, availableDeployments: deployments.data };
   }
   if (matchingDeployments.length > 1) {
-    if (environmentName == null) {
-      throw new Error(
+    if (allowedEnvironments == null) {
+      console.warn(
         `More than one deployment found for commit ${commitSha}: ${describeDeployments(
           matchingDeployments
-        )}. Please specify an environment name using the 'environment-to-test' input.`
+        )}. Please specify an environment name using the 'allowed-environments' input.`
       );
     } else {
       throw new Error(
-        `More than one deployment found for commit ${commitSha} with environment ${environmentName}.`
+        `More than one deployment found for commit ${commitSha} for an environment named ${joinWithOr(
+          allowedEnvironments.map((e) => `'${e}'`)
+        )}.`
       );
     }
   }
@@ -218,3 +225,16 @@ const findLatest = <T extends { created_at: string }>(items: T[]): T | null => {
 
 const hasMorePages = (response: { headers: { link?: string | undefined } }) =>
   response.headers.link?.includes('rel="next"');
+
+const joinWithOr = (names: string[]): string => {
+  if (names.length === 0) {
+    return "";
+  }
+  if (names.length === 1) {
+    return names[0];
+  }
+  if (names.length === 2) {
+    return `${names[0]} or ${names[1]}`;
+  }
+  return `${names.slice(0, -1).join(", ")}, or ${names[names.length - 1]}`;
+};
