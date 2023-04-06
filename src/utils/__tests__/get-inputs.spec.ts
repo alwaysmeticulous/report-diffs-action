@@ -12,6 +12,7 @@ const keys = [
   "MAX_ALLOWED_PROPORTION_OF_CHANGED_PIXELS",
   "METICULOUS_TELEMETRY_SAMPLE_RATE",
   "USE_DEPLOYMENT_URL",
+  "ENVIRONMENT_TO_TEST",
 ];
 
 const EXPECTED_DEFAULT_VALUES = {
@@ -21,6 +22,7 @@ const EXPECTED_DEFAULT_VALUES = {
   maxAllowedColorDifference: 0.01,
   maxAllowedProportionOfChangedPixels: 0.00001,
   useDeploymentUrl: false,
+  environmentToTest: null,
   appUrl: null,
   localhostAliases: null,
   parallelTasks: null,
@@ -81,6 +83,25 @@ describe("getInputs", () => {
       parallelTasks: 5,
       testsFile: "tests.json",
     });
+  });
+
+  it("parses deployment url values correctly", () => {
+    setupDefaultEnvVars();
+    process.env.USE_DEPLOYMENT_URL = "true";
+    process.env.ENVIRONMENT_TO_TEST = "staging";
+
+    expect(getInputs()).toEqual({
+      ...EXPECTED_DEFAULT_VALUES,
+      useDeploymentUrl: true,
+      environmentToTest: "staging",
+    });
+  });
+
+  it("throws if environment to test is set but use deployment url is false", () => {
+    setupDefaultEnvVars();
+    process.env.ENVIRONMENT_TO_TEST = "staging";
+
+    expect(() => getInputs()).toThrowError();
   });
 
   it("handles rewriting localhost urls to the docker bridge IP", () => {

@@ -67,6 +67,13 @@ export const getInputs = () => {
     throw new Error("Cannot use both app-url and use-deployment-url");
   }
 
+  if (useDeploymentUrl === false && environmentToTest != null) {
+    throw new Error(
+      "environment-to-test can only be used when use-deployment-url is true. Please set use-deployment-url to true to run the tests " +
+        "against a deployment URL, and then set environment-to-test to specify which environment to test against."
+    );
+  }
+
   const appUrl = appUrl_ ? handleLocalhostUrl(appUrl_) : appUrl_;
 
   return {
