@@ -1,4 +1,6 @@
 import { GitHub } from "@actions/github/lib/utils";
+import { Hub } from "@sentry/node";
+import { Transaction } from "@sentry/types";
 import { EXPECTED_PERMISSIONS_BLOCK } from "./constants";
 
 const TIMEOUT_MS = 30 * 60 * 1_000; // 30 minutes
@@ -10,12 +12,21 @@ export const waitForDeploymentUrl = async ({
   repo,
   commitSha,
   octokit,
+  sentryHub,
+  transaction,
+  environmentName,
 }: {
   owner: string;
   repo: string;
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
+  sentryHub: Hub;
+  transaction: Transaction;
+  environmentName: string | null;
 }): Promise<string> => {
+  const waitForDeploymentSpan = transaction.startChild({
+    op: "waitForDeployment",
+  });
   const startTime = Date.now();
   let pollFrequency = MIN_POLL_FREQUENCY;
   while (Date.now() - startTime < TIMEOUT_MS) {
@@ -24,6 +35,8 @@ export const waitForDeploymentUrl = async ({
       repo,
       commitSha,
       octokit,
+      sentryHub,
+      environmentName,
     });
     if (deploymentUrl != null) {
       console.log(`Testing against deployment URL '${deploymentUrl}'`);
@@ -35,6 +48,7 @@ export const waitForDeploymentUrl = async ({
       pollFrequency + MIN_POLL_FREQUENCY
     );
   }
+  waitForDeploymentSpan.finish();
   throw new Error(
     `Timed out after waiting ${(TIMEOUT_MS / 1000).toFixed(
       0
@@ -49,11 +63,15 @@ const getDeploymentUrl = async ({
   repo,
   commitSha,
   octokit,
+  sentryHub,
+  environmentName,
 }: {
   owner: string;
   repo: string;
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
+  sentryHub: Hub;
+  environmentName: string | null;
 }): Promise<string | null> => {
   let deployments: Awaited<
     ReturnType<typeof octokit.rest.repos.listDeployments>
@@ -86,22 +104,59 @@ const getDeploymentUrl = async ({
     );
   }
 
-  const latestDeployment = findLatest(deployments.data);
-  if (latestDeployment == null) {
+  sentryHub.captureEvent({
+    message: "Found deployments",
+    level: "debug",
+    extra: {
+      deployments: deployments.data.map((deployment) => ({
+        id: deployment.id,
+        environment: deployment.environment,
+        original_environment: deployment.original_environment,
+        production_environment: deployment.production_environment,
+      })),
+    },
+  });
+
+  const matchingDeployments = deployments.data.filter(
+    (deployment) =>
+      environmentName == null || deployment.environment === environmentName
+  );
+
+  if (matchingDeployments.length === 0) {
     return null;
   }
-  console.debug(`Checking status of deployment ${latestDeployment.id}`);
+  if (matchingDeployments.length > 1) {
+    if (environmentName == null) {
+      const deploymentDescriptions = matchingDeployments.map(
+        (deployment) =>
+          `deployment ${deployment.id} (environment name: "${deployment.environment}", description: "${deployment.description}")`
+      );
+      throw new Error(
+        `More than one deployment found for commit ${commitSha}: ${deploymentDescriptions.join(
+          ", "
+        )}. Please specify an environment name using the 'environment-to-test' input.`
+      );
+    } else {
+      throw new Error(
+        `More than one deployment found for commit ${commitSha} with environment ${environmentName}.`
+      );
+    }
+  }
+
+  const matchingDeployment = matchingDeployments[0];
+
+  console.debug(`Checking status of deployment ${matchingDeployment.id}`);
 
   const deploymentStatuses = await octokit.rest.repos.listDeploymentStatuses({
     owner,
     repo,
-    deployment_id: latestDeployment.id,
+    deployment_id: matchingDeployment.id,
     per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
   });
 
   if (hasMorePages(deploymentStatuses)) {
     throw new Error(
-      `More than ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment status found for deployment ${latestDeployment.id} of commit ${commitSha}. Meticulous currently supports at most ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment statuses per deployment.`
+      `More than ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment status found for deployment ${matchingDeployment.id} of commit ${commitSha}. Meticulous currently supports at most ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment statuses per deployment.`
     );
   }
 
@@ -118,7 +173,7 @@ const getDeploymentUrl = async ({
     latestDeploymentStatus?.state === "failure"
   ) {
     throw new Error(
-      `Deployment ${latestDeployment.id} failed with status ${latestDeploymentStatus?.state}. Cannot test against a failed deployment.`
+      `Deployment ${matchingDeployment.id} failed with status ${latestDeploymentStatus?.state}. Cannot test against a failed deployment.`
     );
   }
 

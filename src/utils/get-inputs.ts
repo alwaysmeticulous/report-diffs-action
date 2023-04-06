@@ -57,6 +57,11 @@ export const getInputs = () => {
     required: false,
     type: "string",
   });
+  const environmentToTest = getInputFromEnv({
+    name: "environment-to-test",
+    required: false,
+    type: "string",
+  });
 
   if (appUrl_ != null && appUrl_ != "" && useDeploymentUrl === true) {
     throw new Error("Cannot use both app-url and use-deployment-url");
@@ -76,6 +81,7 @@ export const getInputs = () => {
     maxAllowedProportionOfChangedPixels,
     useDeploymentUrl,
     testSuiteId,
+    environmentToTest,
   };
 };
 
