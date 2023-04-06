@@ -140,9 +140,6 @@ const getDeploymentUrl = async ({
       allowedEnvironments.includes(deployment.environment)
   );
 
-  if (matchingDeployments.length === 0) {
-    return { deploymentUrl: null, availableDeployments: deployments.data };
-  }
   if (matchingDeployments.length > 1) {
     if (allowedEnvironments == null) {
       console.warn(
@@ -159,20 +156,24 @@ const getDeploymentUrl = async ({
     }
   }
 
-  const matchingDeployment = matchingDeployments[0];
+  const latestMatchingDeployment = findLatest(matchingDeployments);
 
-  console.debug(`Checking status of deployment ${matchingDeployment.id}`);
+  if (latestMatchingDeployment == null) {
+    return { deploymentUrl: null, availableDeployments: deployments.data };
+  }
+
+  console.debug(`Checking status of deployment ${latestMatchingDeployment.id}`);
 
   const deploymentStatuses = await octokit.rest.repos.listDeploymentStatuses({
     owner,
     repo,
-    deployment_id: matchingDeployment.id,
+    deployment_id: latestMatchingDeployment.id,
     per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
   });
 
   if (hasMorePages(deploymentStatuses)) {
     throw new Error(
-      `More than ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment status found for deployment ${matchingDeployment.id} of commit ${commitSha}. Meticulous currently supports at most ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment statuses per deployment.`
+      `More than ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment status found for deployment ${latestMatchingDeployment.id} of commit ${commitSha}. Meticulous currently supports at most ${MAX_GITHUB_ALLOWED_PAGE_SIZE} deployment statuses per deployment.`
     );
   }
 
@@ -192,7 +193,7 @@ const getDeploymentUrl = async ({
     latestDeploymentStatus?.state === "failure"
   ) {
     throw new Error(
-      `Deployment ${matchingDeployment.id} failed with status ${latestDeploymentStatus?.state}. Cannot test against a failed deployment.`
+      `Deployment ${latestMatchingDeployment.id} failed with status ${latestDeploymentStatus?.state}. Cannot test against a failed deployment.`
     );
   }
 
