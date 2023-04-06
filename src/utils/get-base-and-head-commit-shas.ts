@@ -58,7 +58,7 @@ const tryGetMergeBaseOfHeadCommit = (
     execSync(`git fetch origin ${pullRequestHeadSha}`);
     execSync(`git fetch origin ${baseRef}`);
     const mergeBase = execSync(
-      `git merge-base ${pullRequestHeadSha} ${baseRef}`
+      `git merge-base ${pullRequestHeadSha} origin/${baseRef}`
     )
       .toString()
       .trim();
