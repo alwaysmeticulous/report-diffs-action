@@ -26,6 +26,9 @@ export const getInputFromEnv: GetInputFromEnvFn = ({
       `Expected ${type} for input ${name}, but got ${typeof value}`
     );
   }
+  if (type === "string" && !required) {
+    return value || null;
+  }
 
   // Typescript can't infer that if type === number value is a number etc., so
   // so we need to force cast here
