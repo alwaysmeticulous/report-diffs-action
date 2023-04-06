@@ -14,13 +14,18 @@ export const getBaseAndHeadCommitShas = async (
   if (event.type === "pull_request") {
     const head = event.payload.pull_request.head.sha;
     const base = event.payload.pull_request.base.sha;
+    const baseRef = event.payload.pull_request.base.ref;
     if (options.useDeploymentUrl) {
       // Vercel deploys the head commit of the PR, not the github temporary merge commit
-      // So the PR base is the correct base commit to use
-      return { base, head };
+      // The PR base can sometimes point to a commit ahead of the merge-base of the head commit
+      // (I believe it's based on the github temporary merge commit)
+      return {
+        base: (await tryGetMergeBaseOfHeadCommit(head, base, baseRef)) ?? base,
+        head,
+      };
     }
     return {
-      base: (await tryGetMergeCommitBase(head, base)) ?? base,
+      base: (await tryGetMergeBaseOfTemporaryMergeCommit(head, base)) ?? base,
       head,
     };
   }
@@ -43,7 +48,39 @@ const assertNever = (event: never): never => {
   throw new Error("Unexpected event: " + JSON.stringify(event));
 };
 
-const tryGetMergeCommitBase = (
+const tryGetMergeBaseOfHeadCommit = (
+  pullRequestHeadSha: string,
+  pullRequestBaseSha: string,
+  baseRef: string
+): string | null => {
+  try {
+    markGitDirectoryAsSafe();
+    const mergeBase = execSync(
+      `git merge-base ${pullRequestHeadSha} ${baseRef}`
+    )
+      .toString()
+      .trim();
+
+    if (!isValidGitSha(mergeBase)) {
+      // Note: the GITHUB_SHA is always a merge commit, even if the merge is a no-op because the PR is up to date
+      // So this should never happen
+      console.error(
+        `Failed to get merge base of ${pullRequestHeadSha} and ${baseRef}: value returned by 'git merge-base' was not a valid git SHA ('${mergeBase}').` +
+          `Using the base of the pull request instead (${pullRequestBaseSha}).`
+      );
+      return null;
+    }
+
+    return mergeBase;
+  } catch (error) {
+    console.error(
+      `Failed to get merge base of ${pullRequestHeadSha} and ${baseRef}. Error: ${error}. Using the base of the pull request instead (${pullRequestBaseSha}).`
+    );
+    return null;
+  }
+};
+
+const tryGetMergeBaseOfTemporaryMergeCommit = (
   pullRequestHeadSha: string,
   pullRequestBaseSha: string
 ): string | null => {
@@ -56,12 +93,7 @@ const tryGetMergeCommitBase = (
     return null;
   }
   try {
-    // The .git directory is owned by a different user. By default git therefore won't let us
-    // run git commands on it in case that user has inserted malicious code into the .git directory,
-    // which gets executed when we run a git command. However we trust github to not do that, so can
-    // mark this directory as safe.
-    // See https://medium.com/@thecodinganalyst/git-detect-dubious-ownership-in-repository-e7f33037a8f for more details
-    execSync(`git config --global --add safe.directory "${process.cwd()}"`);
+    markGitDirectoryAsSafe();
 
     const headCommitSha = execSync("git rev-list --max-count=1 HEAD")
       .toString()
@@ -111,4 +143,17 @@ const tryGetMergeCommitBase = (
     );
     return null;
   }
+};
+
+const markGitDirectoryAsSafe = () => {
+  // The .git directory is owned by a different user. By default git therefore won't let us
+  // run git commands on it in case that user has inserted malicious code into the .git directory,
+  // which gets executed when we run a git command. However we trust github to not do that, so can
+  // mark this directory as safe.
+  // See https://medium.com/@thecodinganalyst/git-detect-dubious-ownership-in-repository-e7f33037a8f for more details
+  execSync(`git config --global --add safe.directory "${process.cwd()}"`);
+};
+
+const isValidGitSha = (sha: string): boolean => {
+  return /^[a-f0-9]{40}$/.test(sha);
 };
