@@ -45,15 +45,11 @@ export const ensureBaseTestsExists = async ({
 }): Promise<{ shaToCompareAgainst: string | null }> => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
-  // Running missing tests on base is only supported for Pull Request events
-  if (event.type !== "pull_request" || !base) {
+  const { owner, repo } = context.repo;
+
+  if (!base) {
     return { shaToCompareAgainst: null };
   }
-
-  const { owner, repo } = context.repo;
-  const baseRef = event.payload.pull_request.base.ref;
-
-  logger.debug(JSON.stringify({ base, baseRef }, null, 2));
 
   const testRun = await getLatestTestRunResults({
     client: createClient({ apiToken }),
@@ -88,8 +84,16 @@ export const ensureBaseTestsExists = async ({
     return { shaToCompareAgainst: base };
   }
 
+  // Running missing tests on base is only supported for Pull Request events
+  if (event.type !== "pull_request") {
+    return { shaToCompareAgainst: null };
+  }
+
   // We can only trigger a workflow_run against the head of the base branch
   // This will give some spurious diffs if it's different from `base`, but it's the best we can do
+  const baseRef = event.payload.pull_request.base.ref;
+
+  logger.debug(JSON.stringify({ base, baseRef }, null, 2));
 
   const currentBaseSha = await getHeadCommitForRef({
     owner,
