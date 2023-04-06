@@ -1,3 +1,4 @@
+import { getOctokit } from "@actions/github";
 import { GitHub } from "@actions/github/lib/utils";
 import { Hub } from "@sentry/node";
 import { Transaction } from "@sentry/types";
@@ -29,8 +30,9 @@ export const waitForDeploymentUrl = async ({
   });
   const startTime = Date.now();
   let pollFrequency = MIN_POLL_FREQUENCY;
+  let deploymentsFound: DeploymentsArray | null = null;
   while (Date.now() - startTime < TIMEOUT_MS) {
-    const deploymentUrl = await getDeploymentUrl({
+    const { deploymentUrl, availableDeployments } = await getDeploymentUrl({
       owner,
       repo,
       commitSha,
@@ -38,6 +40,7 @@ export const waitForDeploymentUrl = async ({
       sentryHub,
       environmentName,
     });
+    deploymentsFound = availableDeployments;
     if (deploymentUrl != null) {
       console.log(`Testing against deployment URL '${deploymentUrl}'`);
       return deploymentUrl;
@@ -49,14 +52,21 @@ export const waitForDeploymentUrl = async ({
     );
   }
   waitForDeploymentSpan.finish();
+
+  const timeoutInSeconds = (TIMEOUT_MS / 1000).toFixed(0);
+  const environmentFilter =
+    environmentName != null ? ` for the '${environmentName}' environment` : "";
   throw new Error(
-    `Timed out after waiting ${(TIMEOUT_MS / 1000).toFixed(
-      0
-    )} seconds for a deployment URL for commit ${commitSha}`
+    `Timed out after waiting ${timeoutInSeconds} seconds for a successful deployment URL for commit ${commitSha}${environmentFilter}. ` +
+      `Available deployments: ${describeDeployments(deploymentsFound)}.`
   );
 };
 
 const MAX_GITHUB_ALLOWED_PAGE_SIZE = 100;
+
+type DeploymentsArray = Awaited<
+  ReturnType<ReturnType<typeof getOctokit>["rest"]["repos"]["listDeployments"]>
+>["data"];
 
 const getDeploymentUrl = async ({
   owner,
@@ -72,7 +82,10 @@ const getDeploymentUrl = async ({
   octokit: InstanceType<typeof GitHub>;
   sentryHub: Hub;
   environmentName: string | null;
-}): Promise<string | null> => {
+}): Promise<{
+  deploymentUrl: string | null;
+  availableDeployments: DeploymentsArray | null;
+}> => {
   let deployments: Awaited<
     ReturnType<typeof octokit.rest.repos.listDeployments>
   > | null = null;
@@ -123,17 +136,13 @@ const getDeploymentUrl = async ({
   );
 
   if (matchingDeployments.length === 0) {
-    return null;
+    return { deploymentUrl: null, availableDeployments: deployments.data };
   }
   if (matchingDeployments.length > 1) {
     if (environmentName == null) {
-      const deploymentDescriptions = matchingDeployments.map(
-        (deployment) =>
-          `deployment ${deployment.id} (environment name: "${deployment.environment}", description: "${deployment.description}")`
-      );
       throw new Error(
-        `More than one deployment found for commit ${commitSha}: ${deploymentDescriptions.join(
-          ", "
+        `More than one deployment found for commit ${commitSha}: ${describeDeployments(
+          matchingDeployments
         )}. Please specify an environment name using the 'environment-to-test' input.`
       );
     } else {
@@ -164,7 +173,10 @@ const getDeploymentUrl = async ({
     (status) => status.state === "success"
   );
   if (deploymentStatus?.environment_url != null) {
-    return deploymentStatus?.environment_url;
+    return {
+      deploymentUrl: deploymentStatus?.environment_url,
+      availableDeployments: deployments.data,
+    };
   }
 
   const latestDeploymentStatus = findLatest(deploymentStatuses.data);
@@ -177,7 +189,18 @@ const getDeploymentUrl = async ({
     );
   }
 
-  return null; // Let's continue waiting for a successful deployment
+  return { deploymentUrl: null, availableDeployments: deployments.data }; // Let's continue waiting for a successful deployment
+};
+
+const describeDeployments = (deployments: DeploymentsArray | null): string => {
+  if (deployments == null || deployments.length === 0) {
+    return "none";
+  }
+  const deploymentDescriptions = deployments.map(
+    (deployment) =>
+      `deployment ${deployment.id} (environment name: "${deployment.environment}", description: "${deployment.description}")`
+  );
+  return deploymentDescriptions.join(", ");
 };
 
 const findLatest = <T extends { created_at: string }>(items: T[]): T | null => {
