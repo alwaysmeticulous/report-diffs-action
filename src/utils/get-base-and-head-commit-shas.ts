@@ -55,6 +55,9 @@ const tryGetMergeBaseOfHeadCommit = (
 ): string | null => {
   try {
     markGitDirectoryAsSafe();
+    // Only a single commit is fetched by the checkout action by default
+    // (https://github.com/actions/checkout#checkout-v3)
+    // We therefore run fetch without a `--depth` param to fetch the whole branch/commit ancestor chains, which merge-base needs
     execSync(`git fetch origin ${pullRequestHeadSha}`);
     execSync(`git fetch origin ${baseRef}`);
     const mergeBase = execSync(
