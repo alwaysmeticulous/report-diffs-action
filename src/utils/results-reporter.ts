@@ -134,6 +134,7 @@ export class ResultsReporter {
     description: string;
     targetUrl?: string;
   }) {
+    console.log("Setting commit status", state, description, targetUrl);
     const { octokit, owner, repo, headSha } = this.options;
     return octokit.rest.repos.createCommitStatus({
       owner,
