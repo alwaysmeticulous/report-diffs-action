@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   test:
-    name: Report diffs (using deployment url)
+    name: Report diffs (public-tests-clone project)
     runs-on: ubuntu-latest
 
     steps:
