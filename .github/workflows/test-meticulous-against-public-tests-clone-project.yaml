@@ -1,6 +1,9 @@
 # Workflow for automated Meticulous tests
 
-name: Tests - react-bmi-calculator - local server
+# This test tests that we can run Meticulous for two projects against the same commit, without
+# anything clashing. Most of the tests use the 'public-tests' project, but this one uses 'public-tests-clone'.
+
+name: Tests - react-bmi-calculator - public-tests-clone project
 
 on:
   push:
@@ -17,7 +20,7 @@ permissions:
 
 jobs:
   test:
-    name: Report diffs (using app url)
+    name: Report diffs (using deployment url)
     runs-on: ubuntu-latest
 
     steps:
@@ -41,31 +44,17 @@ jobs:
           restore-keys: |
             node-modules-${{ runner.os }}
 
-      - name: Install react-bmi-calculator dependencies
-        working-directory: ./tests/react-bmi-calculator
-        run: yarn install --frozen-lockfile --non-interactive
-
-      - name: Build react-bmi-calculator
-        working-directory: ./tests/react-bmi-calculator
-        run: yarn build
-
-      - name: Serve react-bmi-calculator
-        working-directory: ./tests/react-bmi-calculator
-        run: |
-          yarn serve &
-          sleep 4
-
-      - name: Install report-diffs-action dependencies
+      - name: Install local dockerfile script dependencies
         run: yarn install --frozen-lockfile --non-interactive
 
       - name: Use local dockerfile
         run: node ./scripts/use-local-dockerfile.js
 
-      - name: Run report-diffs-action
+      - name: Run report-diffs-action (using public-tests-clone project)
         id: test
         uses: ./
         with:
-          api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
-          app-url: http://localhost:3000
-          tests-file: tests/react-bmi-calculator/meticulous.json
-          test-suite-id: "test Meticulous with app url"
+          api-token: "${{ secrets.METICULOUS_API_TOKEN_FOR_PUBLIC_TESTS_CLONE_PROJECT }}"
+          use-deployment-url: true
+          tests-file: tests/react-bmi-calculator/meticulous.public-tests-clone-project.json
+          test-suite-id: "test Meticulous with deployment url (public-tests-clone project)"

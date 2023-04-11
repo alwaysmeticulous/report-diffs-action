@@ -1,6 +1,6 @@
 # Workflow for automated Meticulous tests
 
-name: Tests - react-bmi-calculator
+name: Tests - react-bmi-calculator - deployment url
 
 on:
   push:
