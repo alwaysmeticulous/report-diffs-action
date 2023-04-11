@@ -138,7 +138,9 @@ const getDeploymentUrl = async ({
   const matchingDeployments = deployments.data.filter(
     (deployment) =>
       allowedEnvironments == null ||
-      allowedEnvironments.includes(deployment.environment)
+      allowedEnvironments
+        .map(normalizeEnvironmentName)
+        .includes(normalizeEnvironmentName(deployment.environment))
   );
 
   if (matchingDeployments.length > 1) {
@@ -240,3 +242,7 @@ const joinWithOr = (names: string[]): string => {
   }
   return `${names.slice(0, -1).join(", ")}, or ${names[names.length - 1]}`;
 };
+
+// Vercel uses long — em-dashes in it's names, and users often confuse these with the short - hyphens.
+const normalizeEnvironmentName = (name: string | null) =>
+  name?.toLowerCase().replaceAll(/[—–]/g, "-");
