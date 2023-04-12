@@ -108,11 +108,10 @@ export class ResultsReporter {
         });
       } else {
         if (totalScreenshotsTaken === 0) {
-          if (testCaseResults)
-            await this.setStatusComment({
-              createIfDoesNotExist: true,
-              body: `❌ Meticulous replayed ${testCaseResults.length} user sessions, but no screenshots were taken. This likely means there was an error replaying the sessions. Please view the logs of the Github workflow.`,
-            });
+          await this.setStatusComment({
+            createIfDoesNotExist: true,
+            body: `❌ Meticulous replayed ${testCaseResults.length} user sessions, but no screenshots were taken. This likely means there was an error replaying the sessions. Please view the logs of the Github workflow.`,
+          });
         } else {
           const baseRefStr = this.options.baseRef
             ? this.options.baseRef
