@@ -27,7 +27,7 @@
     "@actions/github": "^5.1.1",
     "@alwaysmeticulous/client": "^2.44.0",
     "@alwaysmeticulous/common": "^2.44.0",
-    "@alwaysmeticulous/replay-orchestrator-launcher": "^2.44.0",
+    "@alwaysmeticulous/replay-orchestrator-launcher": "^2.45.0",
     "@alwaysmeticulous/sentry": "^2.40.3",
     "@sentry/node": "^7.36.0",
     "puppeteer": "19.7.5",
@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@alwaysmeticulous/api": "^2.41.0",
-    "@alwaysmeticulous/sdk-bundles-api": "^2.41.0",
+    "@alwaysmeticulous/sdk-bundles-api": "^2.45.0",
     "@parcel/packager-ts": "^2.8.3",
     "@parcel/transformer-typescript-types": "^2.8.3",
     "@types/jest": "^27.0.3",

@@ -115,6 +115,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     owner,
     repo,
     headSha: head,
+    baseSha: shaToCompareAgainst,
+    baseRef:
+      event.type === "pull_request"
+        ? event.payload.pull_request.base.ref
+        : null,
     testSuiteId,
   });
 
