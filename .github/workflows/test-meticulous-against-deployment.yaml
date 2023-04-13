@@ -55,5 +55,6 @@ jobs:
           use-deployment-url: true
           allowed-environments: |
             Preview
+            Production
           tests-file: tests/react-bmi-calculator/meticulous.json
           test-suite-id: "test Meticulous with deployment url"

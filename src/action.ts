@@ -115,6 +115,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     owner,
     repo,
     headSha: head,
+    baseSha: shaToCompareAgainst,
+    baseRef:
+      event.type === "pull_request"
+        ? event.payload.pull_request.base.ref
+        : null,
     testSuiteId,
   });
 
@@ -185,7 +190,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   } catch (error) {
     const message = error instanceof Error ? error.message : `${error}`;
     setFailed(message);
-    resultsReporter.errorRunningTests();
+    await resultsReporter.errorRunningTests();
 
     transaction.setStatus("unknown_error");
     transaction.finish();
