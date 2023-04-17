@@ -62,18 +62,10 @@
     axios "^1.2.6"
     loglevel "^1.8.0"
 
-"@alwaysmeticulous/common@^2.44.0":
-  version "2.44.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.44.0.tgz#5009e5fe6f2435249300b77ed7a243119877b8ca"
-  integrity sha512-EYKyxaH2dSJ68Paepi8zAZjuSgi7kqvekeELh054qPdtz3q79Iy5VmWxDjk2ntcL6fne0rEIhZHh5kb/m0Vm9Q==
-  dependencies:
-    loglevel "^1.8.0"
-    luxon "^3.2.1"
-
-"@alwaysmeticulous/common@^2.44.1":
-  version "2.44.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.44.1.tgz#644e4816274dbcdf1c1d4e27f086211fd3d44c55"
-  integrity sha512-RNF32MJqrUg0yPCIPQ6ahnrgByFyljUuhSAWVlSj4j//J/tX2izdwjni1NS7GAW/fmpKsZPjcYReQ8Thr6kCDw==
+"@alwaysmeticulous/common@^2.44.0", "@alwaysmeticulous/common@^2.44.1", "@alwaysmeticulous/common@^2.46.0":
+  version "2.46.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.46.0.tgz#79de6672e1c0fc8805ebd137b36d826864a2a540"
+  integrity sha512-l1FmSIaoOpwMkaiOWkEjYJfhelvbQbdUvZvdr5GocKPe/EQSA5uhN/D5hNbJJtPBCVpv30EhdrqK+euJNYfb0w==
   dependencies:
     loglevel "^1.8.0"
     luxon "^3.2.1"
