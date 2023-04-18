@@ -220,7 +220,7 @@ const waitForWorkflowCompletionAndSkipComparisonsIfFailed = async ({
 
   if (finalWorkflowRun == null || isPendingStatus(finalWorkflowRun.status)) {
     logger.warn(
-      `Error timed out while waiting for worflow run [${otherOpts.workflowRunId}] to complete. Running without comparisons.`
+      `Timed out while waiting for workflow run (${otherOpts.workflowRunId}) to complete. Running without comparisons.`
     );
     return { shaToCompareAgainst: null };
   }
