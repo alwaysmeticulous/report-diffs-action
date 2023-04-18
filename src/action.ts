@@ -63,6 +63,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     maxAllowedColorDifference,
     maxAllowedProportionOfChangedPixels,
     useDeploymentUrl,
+    allowedEnvironments,
     testSuiteId,
   } = getInputs();
   const { payload } = context;
@@ -114,6 +115,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     owner,
     repo,
     headSha: head,
+    baseSha: shaToCompareAgainst,
+    baseRef:
+      event.type === "pull_request"
+        ? event.payload.pull_request.base.ref
+        : null,
     testSuiteId,
   });
 
@@ -132,7 +138,15 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     await addLocalhostAliases({ appUrl, localhostAliases });
 
     const urlToTestAgainst = useDeploymentUrl
-      ? await waitForDeploymentUrl({ owner, repo, commitSha: head, octokit })
+      ? await waitForDeploymentUrl({
+          owner,
+          repo,
+          commitSha: head,
+          octokit,
+          sentryHub,
+          transaction,
+          allowedEnvironments,
+        })
       : appUrl;
 
     if (urlToTestAgainst != null) {
@@ -176,7 +190,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   } catch (error) {
     const message = error instanceof Error ? error.message : `${error}`;
     setFailed(message);
-    resultsReporter.errorRunningTests();
+    await resultsReporter.errorRunningTests();
 
     transaction.setStatus("unknown_error");
     transaction.finish();

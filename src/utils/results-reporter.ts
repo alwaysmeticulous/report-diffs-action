@@ -26,6 +26,8 @@ export class ResultsReporter {
       owner: string;
       repo: string;
       headSha: string;
+      baseSha: string | null;
+      baseRef: string | null;
       testSuiteId: string | null;
     }
   ) {
@@ -85,33 +87,56 @@ export class ResultsReporter {
     const screensWithDifferences = screenshotDiffResults.filter(
       (result) => result.outcome === "diff"
     ).length;
-    const totalScreens = screenshotDiffResults.length;
+    const totalScreensCompared = screenshotDiffResults.length;
+    const totalScreenshotsTaken = testCaseResults.reduce(
+      (total, testCase) => total + testCase.totalNumberOfScreenshots,
+      0
+    );
 
     if (screensWithDifferences === 0) {
       if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
         await this.setCommitStatus({
-          description: `Zero differences across ${totalScreens} screens tested`,
+          description: `Zero differences across ${totalScreensCompared} screens tested`,
           state: "success",
           targetUrl: testRun.url,
         });
       }
-      if (totalScreens > 0) {
+      if (totalScreensCompared > 0) {
         await this.setStatusComment({
           createIfDoesNotExist: true,
-          body: `✅ Meticulous spotted zero visual differences across ${totalScreens} screens tested: [view results](${testRun.url}).`,
+          body: `✅ Meticulous spotted zero visual differences across ${totalScreensCompared} screens tested: [view results](${testRun.url}).`,
         });
+      } else {
+        if (totalScreenshotsTaken === 0) {
+          await this.setStatusComment({
+            createIfDoesNotExist: true,
+            body: `❌ Meticulous replayed ${testCaseResults.length} user sessions, but no screenshots were taken. This likely means there was an error replaying the sessions. Please view the logs of the Github workflow.`,
+          });
+        } else {
+          const baseRefStr = this.options.baseRef
+            ? this.options.baseRef
+            : "main/master";
+
+          // This likely means that the baseRef is not set up for Meticulous yet, so we can't compare against it.
+          // Usually this means that the user has just set up Meticulous and is running it for the first time.
+          await this.setStatusComment({
+            createIfDoesNotExist: true,
+            body: `🤖 Meticulous replayed ${testCaseResults.length} user sessions and [took ${totalScreenshotsTaken} screenshots](${testRun.url}). Meticulous did not run on ${this.options.baseRef} of the ${baseRefStr} branch and so there was nothing to compare against.
+            Please merge your pull request for setting up Meticulous in CI and ensure that it’s running on push events to the ${baseRefStr} branch.`,
+          });
+        }
       }
     } else {
       if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
         await this.setCommitStatus({
-          description: `Differences in ${screensWithDifferences} of ${totalScreens} screens, click details to view`,
+          description: `Differences in ${screensWithDifferences} of ${totalScreensCompared} screens, click details to view`,
           state: "success",
           targetUrl: testRun.url,
         });
       }
       await this.setStatusComment({
         createIfDoesNotExist: true,
-        body: `🤖 Meticulous spotted visual differences in ${screensWithDifferences} of ${totalScreens} screens tested: [view and approve differences detected](${testRun.url}).`,
+        body: `🤖 Meticulous spotted visual differences in ${screensWithDifferences} of ${totalScreensCompared} screens tested: [view and approve differences detected](${testRun.url}).`,
       });
     }
   }
