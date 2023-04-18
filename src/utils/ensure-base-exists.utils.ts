@@ -189,7 +189,7 @@ const waitForWorkflowCompletionAndThrowIfFailed = async ({
 
   if (finalWorkflowRun == null || isPendingStatus(finalWorkflowRun.status)) {
     throw new Error(
-      `Error timed out while waiting for worflow run [${otherOpts.workflowRunId}] to complete.`
+      `Timed out while waiting for workflow run (${otherOpts.workflowRunId}) to complete.`
     );
   }
 
