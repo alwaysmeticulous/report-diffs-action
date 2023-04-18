@@ -7,13 +7,22 @@ import {
 } from "@alwaysmeticulous/client";
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
+import { Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
 import {
   getCurrentWorkflowId,
   getPendingWorkflowRun,
+  isPendingStatus,
   startNewWorkflowRun,
   waitForWorkflowCompletion,
 } from "./workflow.utils";
+
+const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST = Duration.fromObject({
+  minutes: 30,
+});
+const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PUSH_EVENT = Duration.fromObject({
+  minutes: 10,
+});
 
 export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
   ...params
@@ -74,14 +83,36 @@ export const ensureBaseTestsExists = async ({
     logger.log(
       `Waiting on workflow run on base commit (${base}) to compare against: ${alreadyPending.html_url}`
     );
-    await waitForWorkflowCompletionAndThrowIfFailed({
-      owner,
-      repo,
-      workflowRunId: alreadyPending.workflowRunId,
-      octokit,
-      commitSha: base,
-    });
-    return { shaToCompareAgainst: base };
+
+    if (event.type === "pull_request") {
+      await waitForWorkflowCompletionAndThrowIfFailed({
+        owner,
+        repo,
+        workflowRunId: alreadyPending.workflowRunId,
+        octokit,
+        commitSha: base,
+        timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+      });
+      return { shaToCompareAgainst: base };
+    } else {
+      // If it's a push event to the main branch then the comparisons aren't as essential
+      // (it's unlikely anyone will be looking at the comparison results). However we do want to
+      // perform comparisons _if possible_ since we want to detect any flakes, so that we can determine
+      // the most common variant, and future runs comparing against us as a base can compare against the most
+      // common variant, reducing the chance of an undetected flake.
+      //
+      // So we wait for a shorter amount of time, and if we timeout or fail then we just disable comparisons,
+      // rather than disabling the whole run.
+      return await waitForWorkflowCompletionAndSkipComparisonsIfFailed({
+        owner,
+        repo,
+        workflowRunId: alreadyPending.workflowRunId,
+        octokit,
+        commitSha: base,
+        timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PUSH_EVENT,
+        logger,
+      });
+    }
   }
 
   // Running missing tests on base is only supported for Pull Request events
@@ -137,6 +168,7 @@ export const ensureBaseTestsExists = async ({
     workflowRunId: workflowRun.workflowRunId,
     octokit,
     commitSha: base,
+    timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
   });
 
   return { shaToCompareAgainst: base };
@@ -151,8 +183,15 @@ const waitForWorkflowCompletionAndThrowIfFailed = async ({
   workflowRunId: number;
   octokit: InstanceType<typeof GitHub>;
   commitSha: string;
+  timeout: Duration;
 }) => {
   const finalWorkflowRun = await waitForWorkflowCompletion(otherOpts);
+
+  if (finalWorkflowRun == null || isPendingStatus(finalWorkflowRun.status)) {
+    throw new Error(
+      `Error timed out while waiting for worflow run [${otherOpts.workflowRunId}] to complete.`
+    );
+  }
 
   if (
     finalWorkflowRun.status !== "completed" ||
@@ -162,6 +201,41 @@ const waitForWorkflowCompletionAndThrowIfFailed = async ({
       `Comparing against screenshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
     );
   }
+};
+
+const waitForWorkflowCompletionAndSkipComparisonsIfFailed = async ({
+  commitSha,
+  logger,
+  ...otherOpts
+}: {
+  logger: log.Logger;
+  owner: string;
+  repo: string;
+  workflowRunId: number;
+  octokit: InstanceType<typeof GitHub>;
+  commitSha: string;
+  timeout: Duration;
+}) => {
+  const finalWorkflowRun = await waitForWorkflowCompletion(otherOpts);
+
+  if (finalWorkflowRun == null || isPendingStatus(finalWorkflowRun.status)) {
+    logger.warn(
+      `Error timed out while waiting for worflow run [${otherOpts.workflowRunId}] to complete. Running without comparisons.`
+    );
+    return { shaToCompareAgainst: null };
+  }
+
+  if (
+    finalWorkflowRun.status !== "completed" ||
+    finalWorkflowRun.conclusion !== "success"
+  ) {
+    logger.warn(
+      `Comparing against screenshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}. Running without comparisons.`
+    );
+    return { shaToCompareAgainst: null };
+  }
+
+  return { shaToCompareAgainst: commitSha };
 };
 
 const getHeadCommitForRef = async ({
