@@ -9,8 +9,6 @@ const LISTING_AFTER_DISPATCH_DELAY = Duration.fromObject({ seconds: 10 });
 
 const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL = Duration.fromObject({ seconds: 5 });
 
-const WORKFLOW_RUN_COMPLETION_TIMEOUT = Duration.fromObject({ minutes: 30 });
-
 export const getCurrentWorkflowId = async ({
   context,
   octokit,
@@ -68,17 +66,19 @@ export const waitForWorkflowCompletion = async ({
   repo,
   workflowRunId,
   octokit,
+  timeout,
 }: {
   owner: string;
   repo: string;
   workflowRunId: number;
   octokit: InstanceType<typeof GitHub>;
+  timeout: Duration;
 }): Promise<{
   id: number;
   status: string | null;
   conclusion: string | null;
   [key: string]: unknown;
-}> => {
+} | null> => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
   let workflowRun: {
@@ -92,7 +92,7 @@ export const waitForWorkflowCompletion = async ({
 
   while (
     (workflowRun == null || isPendingStatus(workflowRun.status)) &&
-    DateTime.now().diff(start) < WORKFLOW_RUN_COMPLETION_TIMEOUT
+    DateTime.now().diff(start) < timeout
   ) {
     const workflowRunResult = await octokit.rest.actions.getWorkflowRun({
       owner,
@@ -113,12 +113,6 @@ export const waitForWorkflowCompletion = async ({
     );
     // Wait before listing again
     await delay(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL);
-  }
-
-  if (workflowRun == null) {
-    throw new Error(
-      `Error timed out while waiting for worflow run [${workflowRunId}] to complete.`
-    );
   }
 
   return workflowRun;
@@ -159,7 +153,7 @@ export const getPendingWorkflowRun = async ({
   };
 };
 
-const isPendingStatus = (status: string | null): boolean => {
+export const isPendingStatus = (status: string | null): boolean => {
   return ["in_progress", "queued", "requested", "waiting"].some(
     (pending) => pending === status
   );
