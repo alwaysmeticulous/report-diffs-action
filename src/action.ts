@@ -32,6 +32,7 @@ const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
   maxDurationMs: 5 * 60 * 1_000, // 5 minutes
   maxEventCount: null,
   essentialFeaturesOnly: false,
+  logPossibleNonDeterminism: false,
 };
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
