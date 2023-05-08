@@ -27,25 +27,25 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/api@^2.48.0":
-  version "2.48.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.48.0.tgz#ad583cae60748d91a0e933e074df52d8e06afaee"
-  integrity sha512-X3+RgupgrLYifF+HHWsG24tmy4S2dSvvWnAhBeQeH5QZsjqfGErjHIw/CWAzDe0gi2BoLlzAUC2DgQzZpjRtog==
+"@alwaysmeticulous/api@^2.48.0", "@alwaysmeticulous/api@^2.51.0":
+  version "2.51.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.51.0.tgz#fcfbde664fa618b62dc43f48436a9c410f28f3b5"
+  integrity sha512-G60jupZydpDTwg0OUKZh4CMHfcfGJ6JHA2PI0sOl2zniDVvXarGm81u0LyX9Ms15xpq0agbTIbbwXnQFJprYGQ==
 
-"@alwaysmeticulous/client@^2.48.0":
-  version "2.48.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.48.0.tgz#68913339e62ca9145775d5b7f46bafc2e087710c"
-  integrity sha512-VSOv6Bg6xzJPIUJSgZx4FfQZM3963XzT+b5EClprvljjXlkh8GlmeNKUV93QDJtfukVFr8VP1FoQdQxQCUqIgA==
+"@alwaysmeticulous/client@^2.48.0", "@alwaysmeticulous/client@^2.51.0":
+  version "2.51.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.51.0.tgz#2dc4c59ef9c650ff9089960bad8e6c1cb3238c12"
+  integrity sha512-t5uvF/ToluwOqZkOVcVWaMdqsFv1uoHtWT0A4YOqX1j0Qv8L71DSXInWiZlhhkwaN1BXUmGh2FcuhtYxwqjdNA==
   dependencies:
-    "@alwaysmeticulous/api" "^2.48.0"
-    "@alwaysmeticulous/common" "^2.48.0"
+    "@alwaysmeticulous/api" "^2.51.0"
+    "@alwaysmeticulous/common" "^2.51.0"
     axios "^1.2.6"
     loglevel "^1.8.0"
 
-"@alwaysmeticulous/common@^2.48.0":
-  version "2.48.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.48.0.tgz#aa16f0d1376bad39508a3983a098b62186e57687"
-  integrity sha512-kYTt/FZWE9rnaJKozOPw0gvamIvMxbqbERMJ7m4aCm01krxPH6c/IdpqmIAadKHx86DF9fing1vrvm5xNaWRnQ==
+"@alwaysmeticulous/common@^2.48.0", "@alwaysmeticulous/common@^2.51.0":
+  version "2.51.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.51.0.tgz#6b868a520210209bbde7e637ea282d474ac7918d"
+  integrity sha512-9qoZhgxaYytCcgnypSiyIsRssqFTfUvtj+VfFw9g7MN01/IIaHh2Wq65uzU6BaV5sI3y66aqdHbJ9A22kJlUlQ==
   dependencies:
     loglevel "^1.8.0"
     luxon "^3.2.1"
