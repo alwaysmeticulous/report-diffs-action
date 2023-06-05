@@ -9,6 +9,7 @@ import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
+import { LOGICAL_ENVIRONMENT_VERSION } from "./constants";
 import {
   getCurrentWorkflowId,
   getPendingWorkflowRun,
@@ -63,6 +64,7 @@ export const ensureBaseTestsExists = async ({
   const testRun = await getLatestTestRunResults({
     client: createClient({ apiToken }),
     commitSha: base,
+    logicalEnvironmentVersion: LOGICAL_ENVIRONMENT_VERSION,
   });
 
   if (testRun != null) {
