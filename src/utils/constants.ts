@@ -9,3 +9,8 @@ export const EXPECTED_PERMISSIONS_BLOCK = [
   "    deployments: read",
   "",
 ].join("\n");
+
+// The version of the environment in which a replay is executed. This should be bumped whenever
+// the environment changes in a way that would cause a replay to behave differently, e.g. upgrading to a newer
+// replay-orchestrator-launcher version, or changing the version of puppeteer.
+export const LOGICAL_ENVIRONMENT_VERSION = 1;

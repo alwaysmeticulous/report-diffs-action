@@ -27,6 +27,7 @@
     "@actions/github": "^5.1.1",
     "@alwaysmeticulous/client": "^2.58.0",
     "@alwaysmeticulous/common": "^2.56.0",
+    "//": "Upgrading `replay-orchestrator-launcher`? Consider bumping the environment version `LOGICAL_ENVIRONMENT_VERSION` in `constants.ts` if the new version includes visible changes.",
     "@alwaysmeticulous/replay-orchestrator-launcher": "^2.58.0",
     "@alwaysmeticulous/sentry": "^2.40.3",
     "@sentry/node": "^7.50.0",
