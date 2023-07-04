@@ -27,58 +27,60 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/api@^2.56.0":
-  version "2.56.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.56.0.tgz#d82d9c3f6885086ff1b28d16ee036a168712f88f"
-  integrity sha512-seT5/B2+mJNUzi0KXasisZ5AKZ0VVIWzqDMiSR15PS++3Q7YCwQFs0KfwtZzKsGSiedL//dpx76WjT1FJFaP9g==
+"@alwaysmeticulous/api@^2.69.0":
+  version "2.69.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.69.0.tgz#0ada8f49d0e535198b90ad83a17e901ef6238342"
+  integrity sha512-TJy+VVlQ53DIj5YOcP5em1RcHTxw2Nzzk0wGA7JJvaELmUqgCCdy6tOYsRllGZJ/s3GaW1ci2RM/3Ri9pur5Bw==
 
-"@alwaysmeticulous/client@^2.58.0":
-  version "2.58.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.58.0.tgz#7a80b9defde88d271e7a3a25d466195408d44f75"
-  integrity sha512-3ZQ8eooMuIyprCbxzctXKP58wtCfPgxVsPd99kLtyajHaF4/msRWTO/4B6QmWdm4YfiC7MiK4WQaf6x89Q1ZEA==
+"@alwaysmeticulous/client@^2.69.0":
+  version "2.69.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.69.0.tgz#4b7f0cb80ccea4688f7de1ef2d3166098f74d770"
+  integrity sha512-vkfjsyqRGgwaKlM8EV//t1LEYw6KCtakTcUFvkcq1U/FkjEuHAlPGHd5FjhgVufUZHXys1tK+bpl6iOKhn1U0A==
   dependencies:
-    "@alwaysmeticulous/api" "^2.56.0"
-    "@alwaysmeticulous/common" "^2.56.0"
+    "@alwaysmeticulous/api" "^2.69.0"
+    "@alwaysmeticulous/common" "^2.69.0"
     axios "^1.2.6"
+    axios-retry "^3.5.0"
     loglevel "^1.8.0"
 
-"@alwaysmeticulous/common@^2.56.0":
-  version "2.56.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.56.0.tgz#ed19271d0530e01203bc07307c7f4df9002ed702"
-  integrity sha512-eVlVNZy75d5lS9qsA7zeZjY0uLW2oskKN1ap9PqRhIiEpsaWc/s5YJpTslTzTR/O42TJsfm8zppi3EN1pobQcw==
+"@alwaysmeticulous/common@^2.69.0":
+  version "2.69.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.69.0.tgz#d2cd58e0e3cb0a748b5c980df3b17b40a9f85689"
+  integrity sha512-iT1FoybAtBj7t6NXs5Sw8DH38PJwFjVw8LnWHNHNZp+2KCeJ9c/pXDbQpBeps9ulnvFGV0QtercFlRcLCorHWA==
   dependencies:
     loglevel "^1.8.0"
     luxon "^3.2.1"
 
-"@alwaysmeticulous/downloading-helpers@^2.58.0":
-  version "2.58.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.58.0.tgz#ca93a8790d6ea665e1c8b70933c163e5c89ab5b7"
-  integrity sha512-y4L9NHzRvzU7W/Zj/GDSX/COG32BbYd99cDFhQbmN9Q0T5gAZZmgxNwgnJOw+QZAi8c+f8JlP3uWrANRPgonQw==
+"@alwaysmeticulous/downloading-helpers@^2.69.0":
+  version "2.69.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.69.0.tgz#5ef5f32960c30876caba7a883b870e2f2cceaf20"
+  integrity sha512-eZUJXo+2K4O6wyZVrcnPun7Uty8c96ydEWIj1GYMLzHy8oThT663cYJ+lk/Yg14ONnEibu8xSZ2KzBNjk3CqDQ==
   dependencies:
-    "@alwaysmeticulous/api" "^2.56.0"
-    "@alwaysmeticulous/client" "^2.58.0"
-    "@alwaysmeticulous/common" "^2.56.0"
-    adm-zip "^0.5.9"
+    "@alwaysmeticulous/api" "^2.69.0"
+    "@alwaysmeticulous/client" "^2.69.0"
+    "@alwaysmeticulous/common" "^2.69.0"
     axios "^1.2.6"
+    axios-retry "^3.5.0"
+    extract-zip "^2.0.1"
     loglevel "^1.8.0"
     luxon "^3.2.1"
     proper-lockfile "^4.1.2"
 
-"@alwaysmeticulous/replay-orchestrator-launcher@^2.58.0":
-  version "2.58.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.58.0.tgz#b958edadaaf15664dde8bf8154552b7d45e356b7"
-  integrity sha512-rAedaxrh4YS15NaihMAeebbx0SPF7o/bTQGaIFhqWhFGBO962Ha4FUm6aYdORXwa8z4XH99ZcQq5SCzvVw+0JQ==
+"@alwaysmeticulous/replay-orchestrator-launcher@^2.69.0":
+  version "2.69.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.69.0.tgz#54e93cd0954a762ff2260f54a80ad93f1c20442b"
+  integrity sha512-TTWpzaWx2nKIUmQ4uMr1rgfGBH3hWhrQaOPSPVdcaRFjj3H3z8NQ1+BbLGIaB2e6we+hhu9U59vmu2hGmA3daQ==
   dependencies:
-    "@alwaysmeticulous/common" "^2.56.0"
-    "@alwaysmeticulous/downloading-helpers" "^2.58.0"
-    "@alwaysmeticulous/sdk-bundles-api" "^2.56.0"
+    "@alwaysmeticulous/common" "^2.69.0"
+    "@alwaysmeticulous/downloading-helpers" "^2.69.0"
+    "@alwaysmeticulous/sdk-bundles-api" "^2.69.0"
     loglevel "^1.8.0"
     puppeteer "19.11.1"
 
-"@alwaysmeticulous/sdk-bundles-api@^2.56.0":
-  version "2.56.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.56.0.tgz#446ec3b29df2bcfe1a942b6bb127167ecaebda47"
-  integrity sha512-FJtWGvOFJjesBy559F8F0CwUpDoDxwnW7az9chziYr5F7OlLkMl0tG9lNHZCjRzUE3O5G3IwD46OuucUw6nACQ==
+"@alwaysmeticulous/sdk-bundles-api@^2.69.0":
+  version "2.69.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.69.0.tgz#4534c5b1f63e5db308fc55e28f806307a7f772e0"
+  integrity sha512-ysSN2gj+fmnmeLTw+1KPlm0/JOTtOoBzc2mZntOCyO4gb/fHKHor0LyOMoI50jT+cxaYvfZe9rN5NVYyq2O12w==
 
 "@alwaysmeticulous/sentry@^2.40.3":
   version "2.40.3"
@@ -339,6 +341,13 @@
   integrity sha512-rd9TkG+u1CExzS4SM1BlMEhMXwFLKVjOAFFCDx9PbX5ycJWDoWMcwdJH9RhkPu1dOgn5TrxLot/Gx6lWFuAUNQ==
   dependencies:
     "@babel/helper-plugin-utils" "^7.19.0"
+
+"@babel/runtime@^7.15.4":
+  version "7.22.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.6.tgz#57d64b9ae3cff1d67eb067ae117dac087f5bd438"
+  integrity sha512-wDb5pWm4WDdF6LFUde3Jl8WzPA+3ZbxYqkC6xAXuD3irdEHN1k0NfTRrJD8ZD378SJ61miMLCqIOXYhd8x+AJQ==
+  dependencies:
+    regenerator-runtime "^0.13.11"
 
 "@babel/template@^7.20.7", "@babel/template@^7.3.3":
   version "7.20.7"
@@ -1871,11 +1880,6 @@ acorn@^8.5.0, acorn@^8.8.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.8.1.tgz#0a3f9cbecc4ec3bea6f0a80b66ae8dd2da250b73"
   integrity sha512-7zFpHzhnqYKrkYdUjF1HI1bzd0VygEGX8lFk4k5zVMqHEoES+P+7TKI+EvLO9WVMJ8eekdO0aDEK044xTXwPPA==
 
-adm-zip@^0.5.9:
-  version "0.5.9"
-  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.5.9.tgz#b33691028333821c0cf95c31374c5462f2905a83"
-  integrity sha512-s+3fXLkeeLjZ2kLjCBwQufpI5fuN+kIGBxu6530nVQZGVol0d7Y/M88/xw9HGGUcJjKf8LutN3VPRUBq6N7Ajg==
-
 agent-base@6:
   version "6.0.2"
   resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-6.0.2.tgz#49fff58577cfee3f37176feab4c22e00f86d7f77"
@@ -1984,6 +1988,14 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
+
+axios-retry@^3.5.0:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/axios-retry/-/axios-retry-3.5.1.tgz#d902f69fe1b2a71902e29605318f887bef0981c6"
+  integrity sha512-mQRJ4IyAUnYig14BQ4MnnNHHuH1cNH7NW4JxEUD6mNJwK6pwOY66wKLCwZ6Y0o3POpfStalqRC+J4+Hnn6Om7w==
+  dependencies:
+    "@babel/runtime" "^7.15.4"
+    is-retry-allowed "^2.2.0"
 
 axios@^1.2.6:
   version "1.3.2"
@@ -2900,7 +2912,7 @@ expect@^27.5.1:
     jest-matcher-utils "^27.5.1"
     jest-message-util "^27.5.1"
 
-extract-zip@2.0.1:
+extract-zip@2.0.1, extract-zip@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/extract-zip/-/extract-zip-2.0.1.tgz#663dca56fe46df890d5f131ef4a06d22bb8ba13a"
   integrity sha512-GDhU9ntwuKyGXdZBUgTIe+vXnWj0fppUEtMDL0+idd5Sta8TGpHssn/eusA9mrPr9qNDym6SxAYZjNvCn/9RBg==
@@ -3473,6 +3485,11 @@ is-regex@^1.1.4:
   dependencies:
     call-bind "^1.0.2"
     has-tostringtag "^1.0.0"
+
+is-retry-allowed@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/is-retry-allowed/-/is-retry-allowed-2.2.0.tgz#88f34cbd236e043e71b6932d09b0c65fb7b4d71d"
+  integrity sha512-XVm7LOeLpTW4jV19QSH38vkswxoLud8sQ57YwJVTPWdiaI9I8keEhGFpBlslyVsgdQy4Opg8QOLb8YRgsyZiQg==
 
 is-shared-array-buffer@^1.0.2:
   version "1.0.2"
@@ -4825,6 +4842,11 @@ readable-stream@^3.1.1, readable-stream@^3.4.0:
     inherits "^2.0.3"
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
+
+regenerator-runtime@^0.13.11:
+  version "0.13.11"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.11.tgz#f6dca3e7ceec20590d07ada785636a90cdca17f9"
+  integrity sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==
 
 regenerator-runtime@^0.13.7:
   version "0.13.10"
