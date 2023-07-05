@@ -1,5 +1,6 @@
 import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
+import { applyDefaultExecutionOptionsFromProject } from "@alwaysmeticulous/client";
 import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
 import { executeTestRun } from "@alwaysmeticulous/replay-orchestrator-launcher";
 import {
@@ -155,6 +156,11 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       await throwIfCannotConnectToOrigin(urlToTestAgainst);
     }
 
+    const executionOptions = await applyDefaultExecutionOptionsFromProject({
+      executionOptions: DEFAULT_EXECUTION_OPTIONS,
+      apiToken,
+    });
+
     const results = await executeTestRun({
       testsFile,
       apiToken,
@@ -162,7 +168,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       baseCommitSha: shaToCompareAgainst,
       baseTestRunId: null,
       appUrl: urlToTestAgainst,
-      executionOptions: DEFAULT_EXECUTION_OPTIONS,
+      executionOptions,
       screenshottingOptions: {
         enabled: true,
         storyboardOptions: { enabled: true },
