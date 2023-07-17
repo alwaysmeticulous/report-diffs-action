@@ -52,10 +52,9 @@ export const startNewWorkflowRun = async ({
     });
   } catch (err: unknown) {
     const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+    const message = (err as { message?: string } | null)?.message ?? "";
     if (
-      (err as { message?: string } | null)?.message?.includes(
-        "Workflow does not have 'workflow_dispatch' trigger"
-      )
+      message.includes("Workflow does not have 'workflow_dispatch' trigger")
     ) {
       logger.error(
         `Could not trigger a workflow run on ${commitSha} of the base branch (${ref}) to compare against, because there was no Meticulous workflow with the 'workflow_dispatch' trigger on the ${ref} branch.` +
@@ -67,6 +66,16 @@ export const startNewWorkflowRun = async ({
       logger.debug(err);
       return undefined;
     }
+    if (message.includes("Resource not accessible by integration")) {
+      logger.error(
+        `Does not have permission to trigger a workflow run on ${commitSha} of the base branch (${ref}) to compare against, because the 'actions: write' permission is missing in your workflow YAML file.` +
+          ` Screenshots of the new flows will be taken, but no comparisons will be made.` +
+          ` Please check that the Meticulous workflow has the correct permissions: see ${DOCS_URL} for the correct setup.`
+      );
+      logger.debug(err);
+      return undefined;
+    }
+
     logger.error(
       `Could not trigger a workflow run on ${commitSha} of the base branch (${ref}) to compare against.` +
         ` Screenshots of the new flows will be taken, but no comparisons will be made.` +
