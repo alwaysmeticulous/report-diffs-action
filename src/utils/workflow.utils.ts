@@ -4,6 +4,7 @@ import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { DateTime, Duration } from "luxon";
 import { DOCS_URL } from "./constants";
+import { shortSha } from "./logger.utils";
 
 // The GitHub REST API will not list a workflow run immediately after it has been dispatched
 const LISTING_AFTER_DISPATCH_DELAY = Duration.fromObject({ seconds: 10 });
@@ -57,7 +58,9 @@ export const startNewWorkflowRun = async ({
       message.includes("Workflow does not have 'workflow_dispatch' trigger")
     ) {
       logger.error(
-        `Could not trigger a workflow run on ${commitSha} of the base branch (${ref}) to compare against, because there was no Meticulous workflow with the 'workflow_dispatch' trigger on the ${ref} branch.` +
+        `Could not trigger a workflow run on commit ${shortSha(
+          commitSha
+        )} of the base branch (${ref}) to compare against, because there was no Meticulous workflow with the 'workflow_dispatch' trigger on the ${ref} branch.` +
           ` Screenshots of the new flows will be taken, but no comparisons will be made.` +
           ` If you haven't merged the PR to setup Meticulous in Github Actions to the ${ref} branch yet then this is expected.` +
           ` Otherwise please check that Meticulous is running on the ${ref} branch, that it has a 'workflow_dispatch' trigger, and has the appropiate permissions.` +
@@ -68,16 +71,18 @@ export const startNewWorkflowRun = async ({
     }
     if (message.includes("Resource not accessible by integration")) {
       logger.error(
-        `Does not have permission to trigger a workflow run on ${commitSha} of the base branch (${ref}) to compare against, because the 'actions: write' permission is missing in your workflow YAML file.` +
+        `Missing permission to trigger a workflow run on the base branch (${ref}).` +
           ` Screenshots of the new flows will be taken, but no comparisons will be made.` +
-          ` Please check that the Meticulous workflow has the correct permissions: see ${DOCS_URL} for the correct setup.`
+          ` Please add the 'actions: write' permission to your workflow YAML file: see ${DOCS_URL} for the correct setup.`
       );
       logger.debug(err);
       return undefined;
     }
 
     logger.error(
-      `Could not trigger a workflow run on ${commitSha} of the base branch (${ref}) to compare against.` +
+      `Could not trigger a workflow run on commit ${shortSha(
+        commitSha
+      )} of the base branch (${ref}) to compare against.` +
         ` Screenshots of the new flows will be taken, but no comparisons will be made.` +
         ` Please check that Meticulous is running on the ${ref} branch, that it has a 'workflow_dispatch' trigger, and has the appropiate permissions.` +
         ` See ${DOCS_URL} for the correct setup.`,
