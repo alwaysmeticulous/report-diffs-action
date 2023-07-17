@@ -3,6 +3,7 @@ import { GitHub } from "@actions/github/lib/utils";
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { DateTime, Duration } from "luxon";
+import { DOCS_URL } from "./constants";
 
 // The GitHub REST API will not list a workflow run immediately after it has been dispatched
 const LISTING_AFTER_DISPATCH_DELAY = Duration.fromObject({ seconds: 10 });
@@ -42,12 +43,40 @@ export const startNewWorkflowRun = async ({
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
 }): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
-  await octokit.rest.actions.createWorkflowDispatch({
-    owner,
-    repo,
-    workflow_id: workflowId,
-    ref,
-  });
+  try {
+    await octokit.rest.actions.createWorkflowDispatch({
+      owner,
+      repo,
+      workflow_id: workflowId,
+      ref,
+    });
+  } catch (err: unknown) {
+    const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+    if (
+      (err as { message?: string } | null)?.message?.includes(
+        "Workflow does not have 'workflow_dispatch' trigger"
+      )
+    ) {
+      logger.error(
+        `Could not trigger a workflow run on ${commitSha} of the base branch (${ref}) to compare against, because there was no Meticulous workflow with the 'workflow_dispatch' trigger on the ${ref} branch.` +
+          ` Screenshots of the new flows will be taken, but no comparisons will be made.` +
+          ` If you haven't merged the PR to setup Meticulous in Github Actions to the ${ref} branch yet then this is expected.` +
+          ` Otherwise please check that Meticulous is running on the ${ref} branch, that it has a 'workflow_dispatch' trigger, and has the appropiate permissions.` +
+          ` See ${DOCS_URL} for the correct setup.`
+      );
+      logger.debug(err);
+      return undefined;
+    }
+    logger.error(
+      `Could not trigger a workflow run on ${commitSha} of the base branch (${ref}) to compare against.` +
+        ` Screenshots of the new flows will be taken, but no comparisons will be made.` +
+        ` Please check that Meticulous is running on the ${ref} branch, that it has a 'workflow_dispatch' trigger, and has the appropiate permissions.` +
+        ` See ${DOCS_URL} for the correct setup.`,
+      err
+    );
+    return undefined;
+  }
+
   // Wait before listing again
   await delay(LISTING_AFTER_DISPATCH_DELAY);
 
