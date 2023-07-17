@@ -5,7 +5,6 @@ name: Tests - react-bmi-calculator
 on:
   push:
     branches:
-      - main
       - releases/*
   pull_request: {}
 
