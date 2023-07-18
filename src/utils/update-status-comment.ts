@@ -1,5 +1,9 @@
 import { getOctokit } from "@actions/github";
+import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
+import log from "loglevel";
 import { CodeChangeEvent } from "../types";
+import { DOCS_URL } from "./constants";
+import { isGithubPermissionsError } from "./error.utils";
 
 const getMeticulousCommentIdentifier = (testSuiteId: string | null) =>
   `<!--- alwaysmeticulous/report-diffs-action/status-comment${
@@ -30,35 +34,50 @@ export const updateStatusComment = async ({
   }
 
   // Check for existing comments
-  const comments = await octokit.rest.issues.listComments({
-    owner,
-    repo,
-    issue_number: event.payload.pull_request.number,
-    per_page: 1000,
-  });
-  const commentIdentifier = getMeticulousCommentIdentifier(testSuiteId);
-  const existingComment = comments.data.find(
-    (comment) => (comment.body ?? "").indexOf(commentIdentifier) > -1
-  );
-  const testSuiteDescription = testSuiteId
-    ? `Test suite: ${testSuiteId}. `
-    : "";
-
-  const fullBody = `${body}\n\n<sub>${testSuiteDescription}Last updated for commit ${shortHeadSha}. This comment will update as new commits are pushed.</sub>${commentIdentifier}`;
-
-  if (existingComment != null) {
-    await octokit.rest.issues.updateComment({
-      owner,
-      repo,
-      comment_id: existingComment.id,
-      body: fullBody,
-    });
-  } else if (createIfDoesNotExist) {
-    await octokit.rest.issues.createComment({
+  try {
+    const comments = await octokit.rest.issues.listComments({
       owner,
       repo,
       issue_number: event.payload.pull_request.number,
-      body: fullBody,
+      per_page: 1000,
     });
+
+    const commentIdentifier = getMeticulousCommentIdentifier(testSuiteId);
+    const existingComment = comments.data.find(
+      (comment) => (comment.body ?? "").indexOf(commentIdentifier) > -1
+    );
+    const testSuiteDescription = testSuiteId
+      ? `Test suite: ${testSuiteId}. `
+      : "";
+
+    const fullBody = `${body}\n\n<sub>${testSuiteDescription}Last updated for commit ${shortHeadSha}. This comment will update as new commits are pushed.</sub>${commentIdentifier}`;
+
+    if (existingComment != null) {
+      await octokit.rest.issues.updateComment({
+        owner,
+        repo,
+        comment_id: existingComment.id,
+        body: fullBody,
+      });
+    } else if (createIfDoesNotExist) {
+      await octokit.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number: event.payload.pull_request.number,
+        body: fullBody,
+      });
+    }
+  } catch (err) {
+    if (isGithubPermissionsError(err)) {
+      // https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-pull-requests
+      throw new Error(
+        `Missing permission to list and post comments to the pull request #${event.payload.pull_request.number}. Please add the 'pull-requests: write' permission to your workflow YAML file: see ${DOCS_URL} for the correct setup.`
+      );
+    }
+    const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+    logger.error(
+      `Unable to post / update comment on PR #${event.payload.pull_request.number}. Please check that you have setup the correct permissions: see ${DOCS_URL} for the correct setup.`
+    );
+    throw err;
   }
 };

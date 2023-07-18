@@ -4,6 +4,7 @@ import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { DateTime, Duration } from "luxon";
 import { DOCS_URL } from "./constants";
+import { isGithubPermissionsError } from "./error.utils";
 import { shortSha } from "./logger.utils";
 
 // The GitHub REST API will not list a workflow run immediately after it has been dispatched
@@ -69,7 +70,8 @@ export const startNewWorkflowRun = async ({
       logger.debug(err);
       return undefined;
     }
-    if (message.includes("Resource not accessible by integration")) {
+    if (isGithubPermissionsError(err)) {
+      // https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-actions
       logger.error(
         `Missing permission to trigger a workflow run on the base branch (${ref}).` +
           ` Screenshots of the new flows will be taken, but no comparisons will be made.` +

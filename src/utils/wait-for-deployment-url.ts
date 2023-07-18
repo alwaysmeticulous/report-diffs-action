@@ -1,8 +1,11 @@
 import { getOctokit } from "@actions/github";
 import { GitHub } from "@actions/github/lib/utils";
+import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import { Hub } from "@sentry/node";
 import { Transaction } from "@sentry/types";
-import { EXPECTED_PERMISSIONS_BLOCK } from "./constants";
+import log from "loglevel";
+import { DOCS_URL, EXPECTED_PERMISSIONS_BLOCK } from "./constants";
+import { isGithubPermissionsError } from "./error.utils";
 
 const TIMEOUT_MS = 30 * 60 * 1_000; // 30 minutes
 const MIN_POLL_FREQUENCY = 1_000;
@@ -101,15 +104,21 @@ const getDeploymentUrl = async ({
       per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
     });
   } catch (err) {
-    console.error("Error listing deployments", err);
+    if (!isGithubPermissionsError(err)) {
+      // If it's a permission error our main error message is sufficient, we don't need to log the raw github one,
+      // but otherwise we should log it:
+      console.error("Error listing deployments", err);
+    }
   }
 
   if (deployments == null || deployments.status !== 200) {
+    // https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-deployments
     throw new Error(
       `Failed to list deployments for commit ${commitSha}.\n\n` +
         "Note: if using 'use-deployment-url' then you must provide permissions for the action to read deployments. " +
         "To do this edit the 'permissions:' block in your workflow file to include 'deployments: read'. Your permissions block should look like:\n\n" +
-        EXPECTED_PERMISSIONS_BLOCK
+        EXPECTED_PERMISSIONS_BLOCK +
+        "\n\nSee ${DOCS_URL} for the correct setup."
     );
   }
 

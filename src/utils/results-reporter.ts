@@ -1,10 +1,15 @@
 import { getOctokit } from "@actions/github";
 import { Project } from "@alwaysmeticulous/api";
+import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import {
   ExecuteTestRunResult,
   RunningTestRunExecution,
 } from "@alwaysmeticulous/sdk-bundles-api";
+import log from "loglevel";
 import { CodeChangeEvent } from "../types";
+import { DOCS_URL } from "./constants";
+import { isGithubPermissionsError } from "./error.utils";
+import { shortSha } from "./logger.utils";
 import { updateStatusComment } from "./update-status-comment";
 
 const SHORT_SHA_LENGTH = 7;
@@ -160,18 +165,35 @@ export class ResultsReporter {
     targetUrl?: string;
   }) {
     const { octokit, owner, repo, headSha } = this.options;
-    return octokit.rest.repos.createCommitStatus({
-      owner,
-      repo,
-      context:
-        this.options.testSuiteId != null
-          ? `Meticulous (${this.options.testSuiteId})`
-          : "Meticulous",
-      description,
-      state,
-      sha: headSha,
-      ...(targetUrl ? { target_url: targetUrl } : {}),
-    });
+    try {
+      return octokit.rest.repos.createCommitStatus({
+        owner,
+        repo,
+        context:
+          this.options.testSuiteId != null
+            ? `Meticulous (${this.options.testSuiteId})`
+            : "Meticulous",
+        description,
+        state,
+        sha: headSha,
+        ...(targetUrl ? { target_url: targetUrl } : {}),
+      });
+    } catch (err: unknown) {
+      if (isGithubPermissionsError(err)) {
+        // https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+        throw new Error(
+          `Missing permission to create and update commit statuses.` +
+            ` Please add the 'statuses: write' permission to your workflow YAML file: see ${DOCS_URL} for the correct setup.`
+        );
+      }
+      const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+      logger.error(
+        `Unable to create commit status for commit '${shortSha(
+          headSha
+        )}'. Please check that you have setup the correct permissions: see ${DOCS_URL} for the correct setup.`
+      );
+      throw err;
+    }
   }
 
   private setStatusComment({
