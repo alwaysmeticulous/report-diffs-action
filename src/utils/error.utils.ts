@@ -1,3 +1,5 @@
+import { DOCS_URL } from "./constants";
+
 export const isGithubPermissionsError = (
   error: MaybeOctokitRequestError | unknown
 ): boolean => {
@@ -23,3 +25,5 @@ type MaybeOctokitRequestError =
     }
   | null
   | undefined;
+
+export const DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE = `Please check www.githubstatus.com, and that you have setup the action correctly, including with the correct permissions: see ${DOCS_URL} for the correct setup.`;

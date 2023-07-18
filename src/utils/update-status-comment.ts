@@ -3,7 +3,10 @@ import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { CodeChangeEvent } from "../types";
 import { DOCS_URL } from "./constants";
-import { isGithubPermissionsError } from "./error.utils";
+import {
+  DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
+  isGithubPermissionsError,
+} from "./error.utils";
 
 const getMeticulousCommentIdentifier = (testSuiteId: string | null) =>
   `<!--- alwaysmeticulous/report-diffs-action/status-comment${
@@ -76,7 +79,7 @@ export const updateStatusComment = async ({
     }
     const logger = log.getLogger(METICULOUS_LOGGER_NAME);
     logger.error(
-      `Unable to post / update comment on PR #${event.payload.pull_request.number}. Please check that you have setup the correct permissions: see ${DOCS_URL} for the correct setup.`
+      `Unable to post / update comment on PR #${event.payload.pull_request.number}. ${DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE}`
     );
     throw err;
   }

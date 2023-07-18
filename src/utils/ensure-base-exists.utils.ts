@@ -10,7 +10,10 @@ import log from "loglevel";
 import { Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
 import { DOCS_URL, LOGICAL_ENVIRONMENT_VERSION } from "./constants";
-import { isGithubPermissionsError } from "./error.utils";
+import {
+  DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
+  isGithubPermissionsError,
+} from "./error.utils";
 import {
   getCurrentWorkflowId,
   getPendingWorkflowRun,
@@ -270,7 +273,7 @@ const getHeadCommitForRef = async ({
     }
     const logger = log.getLogger(METICULOUS_LOGGER_NAME);
     logger.error(
-      `Unable to get head commit of branch '${ref}'. This is required in order to correctly calculate the two commits to compare. Please check that you have setup the correct permissions: see ${DOCS_URL} for the correct setup.`
+      `Unable to get head commit of branch '${ref}'. This is required in order to correctly calculate the two commits to compare. ${DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE}`
     );
     throw err;
   }

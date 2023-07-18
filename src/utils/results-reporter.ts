@@ -8,7 +8,10 @@ import {
 import log from "loglevel";
 import { CodeChangeEvent } from "../types";
 import { DOCS_URL } from "./constants";
-import { isGithubPermissionsError } from "./error.utils";
+import {
+  DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
+  isGithubPermissionsError,
+} from "./error.utils";
 import { shortSha } from "./logger.utils";
 import { updateStatusComment } from "./update-status-comment";
 
@@ -190,7 +193,7 @@ export class ResultsReporter {
       logger.error(
         `Unable to create commit status for commit '${shortSha(
           headSha
-        )}'. Please check that you have setup the correct permissions: see ${DOCS_URL} for the correct setup.`
+        )}'. ${DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE}`
       );
       throw err;
     }
