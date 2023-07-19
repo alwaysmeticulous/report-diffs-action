@@ -1,8 +1,11 @@
 import { getOctokit } from "@actions/github";
 import { GitHub } from "@actions/github/lib/utils";
+import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import { Hub } from "@sentry/node";
 import { Transaction } from "@sentry/types";
-import { EXPECTED_PERMISSIONS_BLOCK } from "./constants";
+import log from "loglevel";
+import { DOCS_URL, EXPECTED_PERMISSIONS_BLOCK } from "./constants";
+import { isGithubPermissionsError } from "./error.utils";
 
 const TIMEOUT_MS = 30 * 60 * 1_000; // 30 minutes
 const MIN_POLL_FREQUENCY = 1_000;
@@ -25,6 +28,8 @@ export const waitForDeploymentUrl = async ({
   transaction: Transaction;
   allowedEnvironments: string[] | null;
 }): Promise<string> => {
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+
   const waitForDeploymentSpan = transaction.startChild({
     op: "waitForDeployment",
   });
@@ -42,7 +47,7 @@ export const waitForDeploymentUrl = async ({
     });
     deploymentsFound = availableDeployments;
     if (deploymentUrl != null) {
-      console.log(`Testing against deployment URL '${deploymentUrl}'`);
+      logger.info(`Testing against deployment URL '${deploymentUrl}'`);
       return deploymentUrl;
     }
     await new Promise((resolve) => setTimeout(resolve, pollFrequency));
@@ -90,6 +95,8 @@ const getDeploymentUrl = async ({
   deploymentUrl: string | null;
   availableDeployments: DeploymentsArray | null;
 }> => {
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+
   let deployments: Awaited<
     ReturnType<typeof octokit.rest.repos.listDeployments>
   > | null = null;
@@ -101,19 +108,25 @@ const getDeploymentUrl = async ({
       per_page: MAX_GITHUB_ALLOWED_PAGE_SIZE,
     });
   } catch (err) {
-    console.error("Error listing deployments", err);
+    if (!isGithubPermissionsError(err)) {
+      // If it's a permission error our main error message is sufficient, we don't need to log the raw github one,
+      // but otherwise we should log it:
+      logger.error("Error listing deployments", err);
+    }
   }
 
   if (deployments == null || deployments.status !== 200) {
+    // https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-deployments
     throw new Error(
       `Failed to list deployments for commit ${commitSha}.\n\n` +
         "Note: if using 'use-deployment-url' then you must provide permissions for the action to read deployments. " +
         "To do this edit the 'permissions:' block in your workflow file to include 'deployments: read'. Your permissions block should look like:\n\n" +
-        EXPECTED_PERMISSIONS_BLOCK
+        EXPECTED_PERMISSIONS_BLOCK +
+        `\n\nSee ${DOCS_URL} for the correct setup.`
     );
   }
 
-  console.debug(`Found ${deployments.data.length} deployments`);
+  logger.debug(`Found ${deployments.data.length} deployments`);
 
   if (hasMorePages(deployments)) {
     throw new Error(
@@ -145,7 +158,7 @@ const getDeploymentUrl = async ({
 
   if (matchingDeployments.length > 1) {
     if (allowedEnvironments == null) {
-      console.warn(
+      logger.warn(
         `More than one deployment found for commit ${commitSha}: ${describeDeployments(
           matchingDeployments
         )}. Please specify an environment name using the 'allowed-environments' input.`
@@ -165,7 +178,7 @@ const getDeploymentUrl = async ({
     return { deploymentUrl: null, availableDeployments: deployments.data };
   }
 
-  console.debug(`Checking status of deployment ${latestMatchingDeployment.id}`);
+  logger.debug(`Checking status of deployment ${latestMatchingDeployment.id}`);
 
   const deploymentStatuses = await octokit.rest.repos.listDeploymentStatuses({
     owner,

@@ -1,5 +1,7 @@
 import { execSync } from "child_process";
 import { context } from "@actions/github";
+import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
+import log from "loglevel";
 import { CodeChangeEvent } from "../types";
 
 interface BaseAndHeadCommitShas {
@@ -53,6 +55,8 @@ const tryGetMergeBaseOfHeadCommit = (
   pullRequestBaseSha: string,
   baseRef: string
 ): string | null => {
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+
   try {
     markGitDirectoryAsSafe();
     // Only a single commit is fetched by the checkout action by default
@@ -69,7 +73,7 @@ const tryGetMergeBaseOfHeadCommit = (
     if (!isValidGitSha(mergeBase)) {
       // Note: the GITHUB_SHA is always a merge commit, even if the merge is a no-op because the PR is up to date
       // So this should never happen
-      console.error(
+      logger.error(
         `Failed to get merge base of ${pullRequestHeadSha} and ${baseRef}: value returned by 'git merge-base' was not a valid git SHA ('${mergeBase}').` +
           `Using the base of the pull request instead (${pullRequestBaseSha}).`
       );
@@ -78,7 +82,7 @@ const tryGetMergeBaseOfHeadCommit = (
 
     return mergeBase;
   } catch (error) {
-    console.error(
+    logger.error(
       `Failed to get merge base of ${pullRequestHeadSha} and ${baseRef}. Error: ${error}. Using the base of the pull request instead (${pullRequestBaseSha}).`
     );
     return null;
@@ -90,9 +94,10 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
   pullRequestBaseSha: string
 ): string | null => {
   const mergeCommitSha = process.env.GITHUB_SHA;
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
   if (mergeCommitSha == null) {
-    console.error(
+    logger.error(
       `No GITHUB_SHA environment var set, so can't work out true base of the merge commit. Using the base of the pull request instead (${pullRequestBaseSha}).`
     );
     return null;
@@ -104,7 +109,7 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
       .toString()
       .trim();
     if (headCommitSha !== mergeCommitSha) {
-      console.log(
+      logger.info(
         `The head commit SHA (${headCommitSha}) does not equal GITHUB_SHA environment variable (${mergeCommitSha}).
           This is likely because a custom ref has been passed to the 'actions/checkout' action. We're assuming therefore
           that the head commit SHA is not a temporary merge commit, but rather the head of the branch. Therefore we're
@@ -124,7 +129,7 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
     if (parents.length !== 2) {
       // Note: the GITHUB_SHA is always a merge commit, even if the merge is a no-op because the PR is up to date
       // So this should never happen
-      console.error(
+      logger.error(
         `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit. Using the base of the pull request instead.`
       );
       return null;
@@ -134,7 +139,7 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
     const mergeBaseSha = parents[0];
     const mergeHeadSha = parents[1];
     if (mergeHeadSha !== pullRequestHeadSha) {
-      console.error(
+      logger.error(
         `The second parent (${parents[1]}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
         so can not confidently determine the base of the merge commit to compare against. Using the base of the pull request instead (${pullRequestBaseSha}).`
       );
@@ -142,7 +147,7 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
     }
     return mergeBaseSha;
   } catch (e) {
-    console.error(
+    logger.error(
       `Error getting base of merge commit (${mergeCommitSha}). Using the base of the pull request instead (${pullRequestBaseSha}).`,
       e
     );
