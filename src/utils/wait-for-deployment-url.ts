@@ -118,7 +118,7 @@ const getDeploymentUrl = async ({
         "Note: if using 'use-deployment-url' then you must provide permissions for the action to read deployments. " +
         "To do this edit the 'permissions:' block in your workflow file to include 'deployments: read'. Your permissions block should look like:\n\n" +
         EXPECTED_PERMISSIONS_BLOCK +
-        "\n\nSee ${DOCS_URL} for the correct setup."
+        `\n\nSee ${DOCS_URL} for the correct setup.`
     );
   }
 
