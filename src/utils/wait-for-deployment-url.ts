@@ -47,7 +47,7 @@ export const waitForDeploymentUrl = async ({
     });
     deploymentsFound = availableDeployments;
     if (deploymentUrl != null) {
-      logger.log(`Testing against deployment URL '${deploymentUrl}'`);
+      logger.info(`Testing against deployment URL '${deploymentUrl}'`);
       return deploymentUrl;
     }
     await new Promise((resolve) => setTimeout(resolve, pollFrequency));

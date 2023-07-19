@@ -72,7 +72,7 @@ export const ensureBaseTestsExists = async ({
   });
 
   if (testRun != null) {
-    logger.log(`Tests already exist for commit ${base} (${testRun.id})`);
+    logger.info(`Tests already exist for commit ${base} (${testRun.id})`);
     return { shaToCompareAgainst: base };
   }
 
@@ -86,7 +86,7 @@ export const ensureBaseTestsExists = async ({
     octokit,
   });
   if (alreadyPending != null) {
-    logger.log(
+    logger.info(
       `Waiting on workflow run on base commit (${base}) to compare against: ${alreadyPending.html_url}`
     );
 
@@ -167,7 +167,7 @@ export const ensureBaseTestsExists = async ({
     return { shaToCompareAgainst: null };
   }
 
-  logger.log(`Waiting on workflow run: ${workflowRun.html_url}`);
+  logger.info(`Waiting on workflow run: ${workflowRun.html_url}`);
   await waitForWorkflowCompletionAndThrowIfFailed({
     owner,
     repo,
