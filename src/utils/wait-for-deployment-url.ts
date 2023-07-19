@@ -28,6 +28,8 @@ export const waitForDeploymentUrl = async ({
   transaction: Transaction;
   allowedEnvironments: string[] | null;
 }): Promise<string> => {
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+
   const waitForDeploymentSpan = transaction.startChild({
     op: "waitForDeployment",
   });
@@ -45,7 +47,7 @@ export const waitForDeploymentUrl = async ({
     });
     deploymentsFound = availableDeployments;
     if (deploymentUrl != null) {
-      console.log(`Testing against deployment URL '${deploymentUrl}'`);
+      logger.log(`Testing against deployment URL '${deploymentUrl}'`);
       return deploymentUrl;
     }
     await new Promise((resolve) => setTimeout(resolve, pollFrequency));
@@ -93,6 +95,8 @@ const getDeploymentUrl = async ({
   deploymentUrl: string | null;
   availableDeployments: DeploymentsArray | null;
 }> => {
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+
   let deployments: Awaited<
     ReturnType<typeof octokit.rest.repos.listDeployments>
   > | null = null;
@@ -107,7 +111,7 @@ const getDeploymentUrl = async ({
     if (!isGithubPermissionsError(err)) {
       // If it's a permission error our main error message is sufficient, we don't need to log the raw github one,
       // but otherwise we should log it:
-      console.error("Error listing deployments", err);
+      logger.error("Error listing deployments", err);
     }
   }
 
@@ -122,7 +126,7 @@ const getDeploymentUrl = async ({
     );
   }
 
-  console.debug(`Found ${deployments.data.length} deployments`);
+  logger.debug(`Found ${deployments.data.length} deployments`);
 
   if (hasMorePages(deployments)) {
     throw new Error(
@@ -154,7 +158,7 @@ const getDeploymentUrl = async ({
 
   if (matchingDeployments.length > 1) {
     if (allowedEnvironments == null) {
-      console.warn(
+      logger.warn(
         `More than one deployment found for commit ${commitSha}: ${describeDeployments(
           matchingDeployments
         )}. Please specify an environment name using the 'allowed-environments' input.`
@@ -174,7 +178,7 @@ const getDeploymentUrl = async ({
     return { deploymentUrl: null, availableDeployments: deployments.data };
   }
 
-  console.debug(`Checking status of deployment ${latestMatchingDeployment.id}`);
+  logger.debug(`Checking status of deployment ${latestMatchingDeployment.id}`);
 
   const deploymentStatuses = await octokit.rest.repos.listDeploymentStatuses({
     owner,
