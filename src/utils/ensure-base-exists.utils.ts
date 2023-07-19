@@ -9,7 +9,11 @@ import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
-import { LOGICAL_ENVIRONMENT_VERSION } from "./constants";
+import { DOCS_URL, LOGICAL_ENVIRONMENT_VERSION } from "./constants";
+import {
+  DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
+  isGithubPermissionsError,
+} from "./error.utils";
 import {
   getCurrentWorkflowId,
   getPendingWorkflowRun,
@@ -68,7 +72,7 @@ export const ensureBaseTestsExists = async ({
   });
 
   if (testRun != null) {
-    logger.log(`Tests already exist for commit ${base} (${testRun.id})`);
+    logger.info(`Tests already exist for commit ${base} (${testRun.id})`);
     return { shaToCompareAgainst: base };
   }
 
@@ -82,7 +86,7 @@ export const ensureBaseTestsExists = async ({
     octokit,
   });
   if (alreadyPending != null) {
-    logger.log(
+    logger.info(
       `Waiting on workflow run on base commit (${base}) to compare against: ${alreadyPending.html_url}`
     );
 
@@ -163,7 +167,7 @@ export const ensureBaseTestsExists = async ({
     return { shaToCompareAgainst: null };
   }
 
-  logger.log(`Waiting on workflow run: ${workflowRun.html_url}`);
+  logger.info(`Waiting on workflow run: ${workflowRun.html_url}`);
   await waitForWorkflowCompletionAndThrowIfFailed({
     owner,
     repo,
@@ -251,11 +255,26 @@ const getHeadCommitForRef = async ({
   ref: string;
   octokit: InstanceType<typeof GitHub>;
 }): Promise<string> => {
-  const result = await octokit.rest.repos.getBranch({
-    owner,
-    repo,
-    branch: ref,
-  });
-  const commitSha = result.data.commit.sha;
-  return commitSha;
+  try {
+    const result = await octokit.rest.repos.getBranch({
+      owner,
+      repo,
+      branch: ref,
+    });
+    const commitSha = result.data.commit.sha;
+    return commitSha;
+  } catch (err: unknown) {
+    if (isGithubPermissionsError(err)) {
+      // https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-contents
+      throw new Error(
+        `Missing permission to get the head commit of the branch '${ref}'. This is required in order to correctly calculate the two commits to compare.` +
+          ` Please add the 'contents: read' permission to your workflow YAML file: see ${DOCS_URL} for the correct setup.`
+      );
+    }
+    const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+    logger.error(
+      `Unable to get head commit of branch '${ref}'. This is required in order to correctly calculate the two commits to compare. ${DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE}`
+    );
+    throw err;
+  }
 };

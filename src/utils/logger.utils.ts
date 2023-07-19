@@ -33,3 +33,5 @@ export const setLogLevel: (logLevel: string | undefined) => void = (
       break;
   }
 };
+
+export const shortSha = (sha: string) => sha.slice(0, 7);

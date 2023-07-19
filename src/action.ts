@@ -1,7 +1,10 @@
 import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
 import { applyDefaultExecutionOptionsFromProject } from "@alwaysmeticulous/client";
-import { setMeticulousLocalDataDir } from "@alwaysmeticulous/common";
+import {
+  METICULOUS_LOGGER_NAME,
+  setMeticulousLocalDataDir,
+} from "@alwaysmeticulous/common";
 import { executeTestRun } from "@alwaysmeticulous/replay-orchestrator-launcher";
 import {
   ReplayExecutionOptions,
@@ -9,6 +12,7 @@ import {
 } from "@alwaysmeticulous/sdk-bundles-api";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import debounce from "lodash.debounce";
+import log from "loglevel";
 import { addLocalhostAliases } from "./utils/add-localhost-aliases";
 import { throwIfCannotConnectToOrigin } from "./utils/check-connection";
 import { LOGICAL_ENVIRONMENT_VERSION } from "./utils/constants";
@@ -17,7 +21,7 @@ import { getEnvironment } from "./utils/environment.utils";
 import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
-import { initLogger, setLogLevel } from "./utils/logger.utils";
+import { initLogger, setLogLevel, shortSha } from "./utils/logger.utils";
 import { ResultsReporter } from "./utils/results-reporter";
 import { waitForDeploymentUrl } from "./utils/wait-for-deployment-url";
 
@@ -73,9 +77,10 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
   const octokit = getOctokitOrFail(githubToken);
+  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
   if (event == null) {
-    console.warn(
+    logger.warn(
       `Running report-diffs-action is only supported for 'push', \
       'pull_request' and 'workflow_dispatch' events, but was triggered \
       on a '${context.eventName}' event. Skipping execution.`
@@ -97,19 +102,19 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   });
 
   if (shaToCompareAgainst != null && event.type === "pull_request") {
-    console.log(
+    logger.info(
       `Comparing screenshots for the commit head of this PR, ${shortSha(
         head
       )}, against ${shortSha(shaToCompareAgainst)}`
     );
   } else if (shaToCompareAgainst != null) {
-    console.log(
+    logger.info(
       `Comparing screenshots for commit ${shortSha(
         head
       )} against commit ${shortSha(shaToCompareAgainst)}}`
     );
   } else {
-    console.log(`Generating screenshots for commit ${shortSha(head)}`);
+    logger.info(`Generating screenshots for commit ${shortSha(head)}`);
   }
 
   const resultsReporter = new ResultsReporter({
@@ -218,11 +223,10 @@ const getOctokitOrFail = (githubToken: string | null) => {
   try {
     return getOctokit(githubToken);
   } catch (err) {
-    console.error(err);
+    const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+    logger.error(err);
     throw new Error(
       "Error connecting to GitHub. Did you specify a valid 'github-token'?"
     );
   }
 };
-
-const shortSha = (sha: string) => sha.slice(0, 7);
