@@ -28,7 +28,7 @@
     "@alwaysmeticulous/client": "^2.70.0",
     "@alwaysmeticulous/common": "^2.70.0",
     "//": "Upgrading `replay-orchestrator-launcher`? Consider bumping the environment version `LOGICAL_ENVIRONMENT_VERSION` in `constants.ts` if the new version includes visible changes.",
-    "@alwaysmeticulous/replay-orchestrator-launcher": "^2.70.0",
+    "@alwaysmeticulous/replay-orchestrator-launcher": "^2.71.0",
     "@alwaysmeticulous/sentry": "^2.40.3",
     "@sentry/node": "^7.50.0",
     "lodash.debounce": "^4.0.8",
