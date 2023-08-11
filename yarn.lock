@@ -37,19 +37,7 @@
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.71.0.tgz#e5268607674ddf8619fb493e893ddd1f9d4e914a"
   integrity sha512-Bmug6Ye1mUgdeCsbJjuRQ4FSGb3JLXBWldgm1FEwyinKkOhwmDR69lA0T+Dv8HW3nlfxiiQdO+fxnN1qd3vu1g==
 
-"@alwaysmeticulous/client@^2.70.0":
-  version "2.70.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.70.0.tgz#21399b16ef2287a75ad5910874ae3548ea330ac6"
-  integrity sha512-5HmKJL/5mBLGiGYPkTyt5cGjMMjzjHCA5bO8hzzWkLiGRhrctATSdAI3+V6ae0RQpjuW9kwOYAKsBlmHT3Gyew==
-  dependencies:
-    "@alwaysmeticulous/api" "^2.70.0"
-    "@alwaysmeticulous/common" "^2.70.0"
-    "@alwaysmeticulous/sdk-bundles-api" "^2.70.0"
-    axios "^1.2.6"
-    axios-retry "^3.5.0"
-    loglevel "^1.8.0"
-
-"@alwaysmeticulous/client@^2.71.0":
+"@alwaysmeticulous/client@^2.71.0", "@alwaysmeticulous/client@^2.71.1":
   version "2.71.0"
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.71.0.tgz#f0a2cf9c518a4daab2117be8e64d33583b79b0c2"
   integrity sha512-fzzIUxNj4gaH5Kco8f+RHeNrUbI1odliHHQ/O8br0xVEgOhsbVkI3kLiUYUDmsbd36aYBL/x6tCG+OyjAVK9yg==
