@@ -27,11 +27,6 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/api@^2.70.0":
-  version "2.70.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.70.0.tgz#3523886f32582edee8f52a455424369c52dec1be"
-  integrity sha512-61U3cPZnlPuSerl/x8JPFqqGM/+dmjY+w5oNBbwUHShRoGVEJb11Dg+1ziHPoLffT+QKoM3g8XpuD3d4FIziZw==
-
 "@alwaysmeticulous/api@^2.71.0":
   version "2.71.0"
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.71.0.tgz#e5268607674ddf8619fb493e893ddd1f9d4e914a"
