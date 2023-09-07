@@ -103,18 +103,18 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   if (shaToCompareAgainst != null && event.type === "pull_request") {
     logger.info(
-      `Comparing screenshots for the commit head of this PR, ${shortSha(
+      `Comparing visual snapshots for the commit head of this PR, ${shortSha(
         head
       )}, against ${shortSha(shaToCompareAgainst)}`
     );
   } else if (shaToCompareAgainst != null) {
     logger.info(
-      `Comparing screenshots for commit ${shortSha(
+      `Comparing visual snapshots for commit ${shortSha(
         head
       )} against commit ${shortSha(shaToCompareAgainst)}}`
     );
   } else {
-    logger.info(`Generating screenshots for commit ${shortSha(head)}`);
+    logger.info(`Generating visual snapshots for commit ${shortSha(head)}`);
   }
 
   const resultsReporter = new ResultsReporter({

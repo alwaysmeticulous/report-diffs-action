@@ -34,7 +34,7 @@ inputs:
     required: false
   max-retries-on-failure:
     description: |
-      The number of times to re-run any replays that give a screenshot diff. If any of the retryed replays differs from that in the first replay
+      The number of times to re-run any replays that give a visual diff. If any of the retryed replays differs from that in the first replay
       then the original diff will be marked as a flake, and ignored.
 
       Setting to 0 disables this feature.
@@ -51,7 +51,7 @@ inputs:
     required: true
     default: 0.01
   max-allowed-proportion-of-changed-pixels:
-    description: Maximum acceptable proportion of pixels that exceed the `max-allowed-color-difference`, as a number between 0 and 1. Differences in a smaller or equal proportional of pixels to this will be ignored. Defaults to 0.00001, or about 20 pixels in a 1920 x 1080 px screenshot.
+    description: Maximum acceptable proportion of pixels that exceed the `max-allowed-color-difference`, as a number between 0 and 1. Differences in a smaller or equal proportional of pixels to this will be ignored. Defaults to 0.00001, or about 20 pixels in a 1920 x 1080 px visual snapshot.
     required: true
     default: 0.00001
   test-suite-id:

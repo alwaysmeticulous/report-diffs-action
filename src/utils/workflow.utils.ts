@@ -62,7 +62,7 @@ export const startNewWorkflowRun = async ({
         `Could not trigger a workflow run on commit ${shortSha(
           commitSha
         )} of the base branch (${ref}) to compare against, because there was no Meticulous workflow with the 'workflow_dispatch' trigger on the ${ref} branch.` +
-          ` Screenshots of the new flows will be taken, but no comparisons will be made.` +
+          ` Visual snapshots of the new flows will be taken, but no comparisons will be made.` +
           ` If you haven't merged the PR to setup Meticulous in Github Actions to the ${ref} branch yet then this is expected.` +
           ` Otherwise please check that Meticulous is running on the ${ref} branch, that it has a 'workflow_dispatch' trigger, and has the appropiate permissions.` +
           ` See ${DOCS_URL} for the correct setup.`
@@ -74,7 +74,7 @@ export const startNewWorkflowRun = async ({
       // https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-actions
       logger.error(
         `Missing permission to trigger a workflow run on the base branch (${ref}).` +
-          ` Screenshots of the new flows will be taken, but no comparisons will be made.` +
+          ` Visual snapshots of the new flows will be taken, but no comparisons will be made.` +
           ` Please add the 'actions: write' permission to your workflow YAML file: see ${DOCS_URL} for the correct setup.`
       );
       logger.debug(err);
@@ -85,7 +85,7 @@ export const startNewWorkflowRun = async ({
       `Could not trigger a workflow run on commit ${shortSha(
         commitSha
       )} of the base branch (${ref}) to compare against.` +
-        ` Screenshots of the new flows will be taken, but no comparisons will be made.` +
+        ` Visual snapshots of the new flows will be taken, but no comparisons will be made.` +
         ` Please check that Meticulous is running on the ${ref} branch, that it has a 'workflow_dispatch' trigger, and has the appropiate permissions.` +
         ` See ${DOCS_URL} for the correct setup.`,
       err
