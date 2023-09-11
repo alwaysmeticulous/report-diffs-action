@@ -1,15 +1,12 @@
 import { setFailed } from "@actions/core";
 import { context, getOctokit } from "@actions/github";
-import { applyDefaultExecutionOptionsFromProject } from "@alwaysmeticulous/client";
 import {
+  DEFAULT_EXECUTION_OPTIONS,
   METICULOUS_LOGGER_NAME,
   setMeticulousLocalDataDir,
 } from "@alwaysmeticulous/common";
 import { executeTestRun } from "@alwaysmeticulous/replay-orchestrator-launcher";
-import {
-  ReplayExecutionOptions,
-  RunningTestRunExecution,
-} from "@alwaysmeticulous/sdk-bundles-api";
+import { RunningTestRunExecution } from "@alwaysmeticulous/sdk-bundles-api";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import debounce from "lodash.debounce";
 import log from "loglevel";
@@ -25,20 +22,9 @@ import { initLogger, setLogLevel, shortSha } from "./utils/logger.utils";
 import { ResultsReporter } from "./utils/results-reporter";
 import { waitForDeploymentUrl } from "./utils/wait-for-deployment-url";
 
-const DEFAULT_EXECUTION_OPTIONS: ReplayExecutionOptions = {
-  headless: true,
-  devTools: false,
-  bypassCSP: false,
-  shiftTime: true,
-  networkStubbing: true,
-  skipPauses: true,
-  moveBeforeClick: false,
-  disableRemoteFonts: false,
+const EXECUTION_OPTIONS = {
+  ...DEFAULT_EXECUTION_OPTIONS,
   noSandbox: true,
-  maxDurationMs: 5 * 60 * 1_000, // 5 minutes
-  maxEventCount: null,
-  essentialFeaturesOnly: false,
-  logPossibleNonDeterminism: false,
 };
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
@@ -161,11 +147,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       await throwIfCannotConnectToOrigin(urlToTestAgainst);
     }
 
-    const executionOptions = await applyDefaultExecutionOptionsFromProject({
-      executionOptions: DEFAULT_EXECUTION_OPTIONS,
-      apiToken,
-    });
-
     const results = await executeTestRun({
       testsFile,
       apiToken,
@@ -173,7 +154,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       baseCommitSha: shaToCompareAgainst,
       baseTestRunId: null,
       appUrl: urlToTestAgainst,
-      executionOptions,
+      executionOptions: EXECUTION_OPTIONS,
       screenshottingOptions: {
         enabled: true,
         storyboardOptions: { enabled: true },
