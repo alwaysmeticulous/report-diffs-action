@@ -27,15 +27,10 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/api@^2.70.0":
-  version "2.70.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.70.0.tgz#3523886f32582edee8f52a455424369c52dec1be"
-  integrity sha512-61U3cPZnlPuSerl/x8JPFqqGM/+dmjY+w5oNBbwUHShRoGVEJb11Dg+1ziHPoLffT+QKoM3g8XpuD3d4FIziZw==
-
-"@alwaysmeticulous/api@^2.73.0":
-  version "2.73.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.73.0.tgz#20d0c4e4ed1ae4f8b05cdbc08820c4281430160a"
-  integrity sha512-u4ZtmqvOovMcDhG8XJEjSWdzr9apEunL4HWvpF4L46L7HKF0vrk7Mwx2e0XT8C3Xn39TgbdMhKc++4W0ANtk5w==
+"@alwaysmeticulous/api@^2.73.0", "@alwaysmeticulous/api@^2.77.0":
+  version "2.77.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.77.0.tgz#bbd07abdb72e5ab644a00490e7498ec019c13b28"
+  integrity sha512-JreqY3FdhNuJWcd5Vx/xATuoIieKsbG45kF0kIR3tguVxVHCleX4MarU+AW8AmRsevkbsdLfun2sFp0VT5Zjvg==
 
 "@alwaysmeticulous/client@^2.73.0":
   version "2.73.0"
