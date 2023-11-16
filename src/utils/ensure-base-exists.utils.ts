@@ -204,7 +204,7 @@ const waitForWorkflowCompletionAndThrowIfFailed = async ({
     finalWorkflowRun.conclusion !== "success"
   ) {
     throw new Error(
-      `Comparing against screenshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
+      `Comparing against visual snapshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
     );
   }
 };
@@ -236,7 +236,7 @@ const waitForWorkflowCompletionAndSkipComparisonsIfFailed = async ({
     finalWorkflowRun.conclusion !== "success"
   ) {
     logger.warn(
-      `Comparing against screenshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}. Running without comparisons.`
+      `Comparing against visual snapshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}. Running without comparisons.`
     );
     return { shaToCompareAgainst: null };
   }
