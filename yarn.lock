@@ -32,38 +32,38 @@
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.79.0.tgz#2fc6262e0627a9116f8ddbeecfd5bdd4ca761689"
   integrity sha512-gO7ntjYjSGTRD0Q7ZqmTml+qI8Mfcpemzcctrk83rVayiDnuLyfdnHHeMgZ2BzL2AHuqJ/NuaZakGqaam8+qTw==
 
-"@alwaysmeticulous/api@^2.87.0":
-  version "2.87.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.87.0.tgz#dfc9ccb453aa17ebb5e2464c1c76a65fa74378b2"
-  integrity sha512-RwQHlWKs3kcXV/NZFJwlF4z2kW9tV/rSIvfOSYw43kAAQtPOkSoo641Vu/ousVhWHgdVml5ek5GMBVTEAaFcDw==
+"@alwaysmeticulous/api@^2.89.0":
+  version "2.89.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.89.0.tgz#9caf20639df5f8c4c328e882bf2d1ecd4fb72b94"
+  integrity sha512-4C4O6dPKQdS4AoGPBdZptoGAS6ByKFsgJUQxHCfqnXmRzlKWB8QXdRMsKvZ3/PH9v7+FFX1k9qkPZHFixN/VSg==
 
-"@alwaysmeticulous/client@^2.88.0":
-  version "2.88.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.88.0.tgz#fab6f421ad2ac1f5cd61cfaf919367b6fe270542"
-  integrity sha512-a0lIfgG5O9Pjdj5TPdmSVQONbfaSNhy4lmDl5zKPy11y7CliI2wJ0CYkLLPJbleNlFw4qLx03pMBX0IPhmZMxQ==
+"@alwaysmeticulous/client@^2.90.0":
+  version "2.90.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.90.0.tgz#d788d9e9f7aa367846a838bc2b617d6fc521b9aa"
+  integrity sha512-RybfKBGBPO0fWBnXYtCmrkZusnfewUfGm1jO5szhO8eTxf1XaJKTKsjdcTLMRxAnmqGjp269PRNdDtMwElYoAw==
   dependencies:
-    "@alwaysmeticulous/api" "^2.87.0"
-    "@alwaysmeticulous/common" "^2.88.0"
+    "@alwaysmeticulous/api" "^2.89.0"
+    "@alwaysmeticulous/common" "^2.89.0"
     axios "^1.2.6"
     axios-retry "^3.5.0"
     loglevel "^1.8.0"
 
-"@alwaysmeticulous/common@^2.88.0":
-  version "2.88.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.88.0.tgz#571b3c886d25bae6b7dd0aff1ecc2a7fe43f501f"
-  integrity sha512-8wHQsEGc5NpW7vayNE2hX5KOQ73gHJhypuevzZqKcDVnYS6UCqmboqryFY5l9/g1C+D6hAZM00ujiGdUCJZ9jw==
+"@alwaysmeticulous/common@^2.89.0":
+  version "2.89.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.89.0.tgz#1b23a318654e5699dc202df3437dd2cbe91d5995"
+  integrity sha512-gtTXFq1Uoj1Tq3CdKRBRxbMnyIVQoPZjNAGLxstUqperEN1eE406QNSIosgGgNzCeI9Af0zKC+juNfZEoP+ovQ==
   dependencies:
     loglevel "^1.8.0"
     luxon "^3.2.1"
 
-"@alwaysmeticulous/downloading-helpers@^2.88.0":
-  version "2.88.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.88.0.tgz#b6fc5f4923af1640baf99a8a8b3212a672d8ccad"
-  integrity sha512-QC/YwXHg+5dIHRnBbeW5KaDoA4tEFh0S4glADWzGvEcGIdAR2KRuozhxAWQ4b/lISbeU8/wHHvndDwS7qA14zw==
+"@alwaysmeticulous/downloading-helpers@^2.90.0":
+  version "2.90.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.90.0.tgz#718bbf82d8da03c7fed9b78a092cbf067aea8053"
+  integrity sha512-ChR7jeCaNfNwglZV7RIgt8VuhlktTGi9Zh5anOhTfj3AbvmvDCehk0tGw0DXd64gzsco032wQsLr2ba9U6K94Q==
   dependencies:
-    "@alwaysmeticulous/api" "^2.87.0"
-    "@alwaysmeticulous/client" "^2.88.0"
-    "@alwaysmeticulous/common" "^2.88.0"
+    "@alwaysmeticulous/api" "^2.89.0"
+    "@alwaysmeticulous/client" "^2.90.0"
+    "@alwaysmeticulous/common" "^2.89.0"
     axios "^1.2.6"
     axios-retry "^3.5.0"
     extract-zip "^2.0.1"
@@ -72,14 +72,14 @@
     p-limit "^3.1.0"
     proper-lockfile "^4.1.2"
 
-"@alwaysmeticulous/replay-orchestrator-launcher@^2.88.0":
-  version "2.88.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.88.0.tgz#2fe03026b61f8991a507c0581aaca9207af2d7fd"
-  integrity sha512-BsWmPWVXqtDU3BjsdIPs+E0x3po6ENm31euMgzgq5DvtvIflhs5Vw/5tbkOlPyNAsk9+/qTXgCM63Z7Sg+bNmw==
+"@alwaysmeticulous/replay-orchestrator-launcher@^2.90.0":
+  version "2.90.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.90.0.tgz#24d8a9d561411d3b3db74af11babee1b24c93678"
+  integrity sha512-6/GV9pvwP+D0owVwhfjrHUCrO0PLO8/7zhQKoSvAO2UMUPVEz0iHdU4JzsxrYe1VaHUVe0Ni7IcL7IKPhZIjMA==
   dependencies:
-    "@alwaysmeticulous/common" "^2.88.0"
-    "@alwaysmeticulous/downloading-helpers" "^2.88.0"
-    "@alwaysmeticulous/sdk-bundles-api" "^2.88.0"
+    "@alwaysmeticulous/common" "^2.89.0"
+    "@alwaysmeticulous/downloading-helpers" "^2.90.0"
+    "@alwaysmeticulous/sdk-bundles-api" "^2.89.0"
     loglevel "^1.8.0"
     puppeteer "21.3.8"
 
@@ -88,10 +88,10 @@
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.79.0.tgz#70b0c65c1abebf82b9811b5996b20f889da2e6fe"
   integrity sha512-ms2aET7dgzzUuAUKAWszsb/MreA7EG+5Lcr/Cw8AUnRnMRCZKAfsxCYYE9nH5MiMBC4jvZz7rcXyik8PrvIHgw==
 
-"@alwaysmeticulous/sdk-bundles-api@^2.88.0":
-  version "2.88.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.88.0.tgz#adce13a02d102f17ebbb1cbf8f37723ecee9967c"
-  integrity sha512-a5zhd0PaYmh713299WR4G+qiZ0zL8h9m1uDjDc7W27/v/Q3ByH9waKJqQsuZJAe4QIsDUmc/fJfJ3LNMgHU6zg==
+"@alwaysmeticulous/sdk-bundles-api@^2.89.0":
+  version "2.89.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.89.0.tgz#650977a715a8657cb64bcc4ea92d011cf9cca06c"
+  integrity sha512-5RYcWyfC/jlxcntsb6tk7GjuKlEC+C9ytPoN/I2V9LKDOXGjJyaqaUcf9BvxGMNpzLD/AZyf4v88Hobb0IQ7YA==
 
 "@alwaysmeticulous/sentry@^2.72.0":
   version "2.72.0"
