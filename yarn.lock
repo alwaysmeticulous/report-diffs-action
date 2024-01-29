@@ -32,15 +32,10 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/api@^2.79.0":
-  version "2.79.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.79.0.tgz#2fc6262e0627a9116f8ddbeecfd5bdd4ca761689"
-  integrity sha512-gO7ntjYjSGTRD0Q7ZqmTml+qI8Mfcpemzcctrk83rVayiDnuLyfdnHHeMgZ2BzL2AHuqJ/NuaZakGqaam8+qTw==
-
-"@alwaysmeticulous/api@^2.89.0":
-  version "2.89.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.89.0.tgz#9caf20639df5f8c4c328e882bf2d1ecd4fb72b94"
-  integrity sha512-4C4O6dPKQdS4AoGPBdZptoGAS6ByKFsgJUQxHCfqnXmRzlKWB8QXdRMsKvZ3/PH9v7+FFX1k9qkPZHFixN/VSg==
+"@alwaysmeticulous/api@^2.89.0", "@alwaysmeticulous/api@^2.97.0":
+  version "2.97.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.97.0.tgz#4264db8b423a2147661966f4b0827aa73795f0eb"
+  integrity sha512-WGa6zTfB7JctUUDuYsdkJjoqFu4n62CgFETmy8eIMLjiiFk3IJ1ZBL67Ih4AXg4vr1aAHQtPsTR/Fp7NQZEARA==
 
 "@alwaysmeticulous/client@^2.90.0":
   version "2.90.0"

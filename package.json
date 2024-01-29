@@ -36,7 +36,7 @@
     "luxon": "^3.4.3"
   },
   "devDependencies": {
-    "@alwaysmeticulous/api": "^2.79.0",
+    "@alwaysmeticulous/api": "^2.97.0",
     "@alwaysmeticulous/sdk-bundles-api": "^2.79.0",
     "@parcel/packager-ts": "^2.8.3",
     "@parcel/transformer-typescript-types": "^2.8.3",
