@@ -8,6 +8,7 @@ on:
       - main
       - releases/*
   pull_request: {}
+  workflow_dispatch: {}
 
 permissions:
   actions: write
