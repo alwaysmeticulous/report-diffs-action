@@ -1,5 +1,4 @@
 import { Socket } from "net";
-import { DOCKER_BRIDGE_NETWORK_GATEWAY } from "./get-inputs";
 
 export const throwIfCannotConnectToOrigin = async (url: string) => {
   const { hostname, port, protocol, origin } = new URL(url);
@@ -8,18 +7,10 @@ export const throwIfCannotConnectToOrigin = async (url: string) => {
     port != null && port != "" ? Number(port) : defaultPortForProtocol;
   const connectionAccepted = await canConnectTo(hostname, portNumber);
   if (!connectionAccepted) {
-    const rewrittenHostname = hostname.replace(
-      DOCKER_BRIDGE_NETWORK_GATEWAY,
-      "127.0.0.1"
-    );
-    const rewrittenOrigin = origin.replace(
-      DOCKER_BRIDGE_NETWORK_GATEWAY,
-      "127.0.0.1"
-    );
     throw new Error(
-      `Could not connect to '${rewrittenHostname}:${portNumber}'. Please check:\n\n` +
-        `1. The server running at '${rewrittenOrigin}' has fully started by the time the Meticulous action starts. You may need to add a 'sleep 30' after starting the server to ensure that this is the case.\n` +
-        `2. The server running at '${rewrittenOrigin}' is using tcp instead of tcp6. You can use 'netstat -tulpen' to see what addresses and ports it is bound to.\n\n`
+      `Could not connect to '${hostname}:${portNumber}'. Please check:\n\n` +
+        `1. The server running at '${origin}' has fully started by the time the Meticulous action starts. You may need to add a 'sleep 30' after starting the server to ensure that this is the case.\n` +
+        `2. The server running at '${origin}' is using tcp instead of tcp6. You can use 'netstat -tulpen' to see what addresses and ports it is bound to.\n\n`
     );
   }
 };

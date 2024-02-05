@@ -19,6 +19,7 @@ import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas"
 import { getCodeChangeEvent } from "./utils/get-code-change-event";
 import { getInputs } from "./utils/get-inputs";
 import { initLogger, setLogLevel, shortSha } from "./utils/logger.utils";
+import { spinUpProxyIfNeeded } from "./utils/proxy";
 import { ResultsReporter } from "./utils/results-reporter";
 import { waitForDeploymentUrl } from "./utils/wait-for-deployment-url";
 
@@ -144,6 +145,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       : appUrl;
 
     if (urlToTestAgainst != null) {
+      spinUpProxyIfNeeded(urlToTestAgainst, logger);
       await throwIfCannotConnectToOrigin(urlToTestAgainst);
     }
 
