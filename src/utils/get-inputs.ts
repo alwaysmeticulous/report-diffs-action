@@ -12,7 +12,7 @@ export const getInputs = () => {
     required: true,
     type: "string",
   });
-  const appUrl_ = getInputFromEnv({
+  const appUrl = getInputFromEnv({
     name: "app-url",
     required: false,
     type: "string",
@@ -63,7 +63,7 @@ export const getInputs = () => {
     type: "string-array",
   });
 
-  if (appUrl_ != null && appUrl_ != "" && useDeploymentUrl === true) {
+  if (appUrl != null && appUrl != "" && useDeploymentUrl === true) {
     throw new Error("Cannot use both app-url and use-deployment-url");
   }
 
@@ -80,8 +80,6 @@ export const getInputs = () => {
     );
   }
 
-  const appUrl = appUrl_ ? handleLocalhostUrl(appUrl_) : appUrl_;
-
   return {
     apiToken,
     githubToken,
@@ -96,19 +94,4 @@ export const getInputs = () => {
     testSuiteId,
     allowedEnvironments,
   };
-};
-
-export const DOCKER_BRIDGE_NETWORK_GATEWAY = "172.17.0.1";
-
-// Swaps "localhost" with the IP address of the Docker host
-const handleLocalhostUrl = (appUrl: string): string => {
-  try {
-    const url = new URL(appUrl);
-    if (url.hostname === "localhost" || url.hostname === "127.0.0.1") {
-      url.hostname = DOCKER_BRIDGE_NETWORK_GATEWAY;
-    }
-    return url.toString();
-  } catch (error) {
-    return appUrl;
-  }
 };

@@ -78,7 +78,7 @@ describe("getInputs", () => {
 
     expect(getInputs()).toEqual({
       ...EXPECTED_DEFAULT_VALUES,
-      appUrl: "https://example.com/",
+      appUrl: "https://example.com",
       localhostAliases: "app1.local,app2.local",
       parallelTasks: 5,
       testsFile: "tests.json",
@@ -123,16 +123,6 @@ describe("getInputs", () => {
     process.env.ALLOWED_ENVIRONMENTS = "staging";
 
     expect(() => getInputs()).toThrowError();
-  });
-
-  it("handles rewriting localhost urls to the docker bridge IP", () => {
-    setupDefaultEnvVars();
-    process.env.APP_URL = "https://localhost/app";
-
-    expect(getInputs()).toEqual({
-      ...EXPECTED_DEFAULT_VALUES,
-      appUrl: "https://172.17.0.1/app",
-    });
   });
 
   const setupDefaultEnvVars = () => {
