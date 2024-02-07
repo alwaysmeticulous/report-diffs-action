@@ -1,33 +1,44 @@
-import { Socket } from "net";
+import * as retry from "retry";
 
-export const throwIfCannotConnectToOrigin = async (url: string) => {
-  const { hostname, port, protocol, origin } = new URL(url);
-  const defaultPortForProtocol = protocol === "https:" ? 443 : 80;
-  const portNumber =
-    port != null && port != "" ? Number(port) : defaultPortForProtocol;
-  const connectionAccepted = await canConnectTo(hostname, portNumber);
-  if (!connectionAccepted) {
-    throw new Error(
-      `Could not connect to '${hostname}:${portNumber}'. Please check:\n\n` +
-        `1. The server running at '${origin}' has fully started by the time the Meticulous action starts. You may need to add a 'sleep 30' after starting the server to ensure that this is the case.\n` +
-        `2. The server running at '${origin}' is using tcp instead of tcp6. You can use 'netstat -tulpen' to see what addresses and ports it is bound to.\n\n`
+export const throwIfCannotConnectToOrigin = async (appUrl: string) => {
+  // Wait 1s, 2s, 4s, 8s, 16s, 32s, 64s for a total of just over 2 minutes
+  const operation = retry.operation({
+    retries: 7,
+    factor: 2,
+    minTimeout: 1_000,
+  });
+  const url = new URL(appUrl);
+  operation.attempt(async () => {
+    if (await canConnectTo(url)) {
+      return;
+    }
+    operation.retry(
+      new Error(
+        `Could not connect to '${appUrl}'. Please check:\n\n` +
+          `1. The server running at '${origin}' has fully started by the time the Meticulous action starts. You may need to add a 'sleep 30' after starting the server to ensure that this is the case.\n` +
+          `2. The server running at '${origin}' is using tcp instead of tcp6. You can use 'netstat -tulpen' to see what addresses and ports it is bound to.\n\n`
+      )
     );
+  });
+};
+
+const canConnectTo = async (url: URL) => {
+  try {
+    const result = await fetchWithTimeout(url);
+    return result.status !== 502;
+  } catch (error) {
+    return false;
   }
 };
 
-const canConnectTo = async (host: string, port: number, timeout = 5000) => {
-  return new Promise((resolve) => {
-    const socket = new Socket();
-    const onError = () => {
-      socket.destroy();
-      resolve(false);
-    };
+async function fetchWithTimeout(url: URL) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), 5000);
 
-    socket.setTimeout(timeout, onError);
-    socket.on("error", onError);
-    socket.connect(port, host, () => {
-      socket.end();
-      resolve(true);
-    });
+  const response = await fetch(url, {
+    signal: controller.signal,
   });
-};
+  clearTimeout(id);
+
+  return response;
+}

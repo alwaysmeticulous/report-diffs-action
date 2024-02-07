@@ -33,7 +33,8 @@
     "@sentry/node": "^7.50.0",
     "lodash.debounce": "^4.0.8",
     "loglevel": "^1.8.1",
-    "luxon": "^3.4.3"
+    "luxon": "^3.4.3",
+    "retry": "^0.13.1"
   },
   "devDependencies": {
     "@alwaysmeticulous/api": "^2.97.0",
@@ -43,6 +44,7 @@
     "@types/jest": "^27.0.3",
     "@types/lodash.debounce": "^4.0.7",
     "@types/luxon": "^3.3.2",
+    "@types/retry": "^0.12.5",
     "@types/node": "^20.2.5",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
