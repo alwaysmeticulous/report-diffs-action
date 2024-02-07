@@ -42,7 +42,7 @@
     "@parcel/packager-ts": "^2.8.3",
     "@parcel/transformer-typescript-types": "^2.8.3",
     "@types/jest": "^27.0.3",
-    "@types/lodash.debounce": "^4.0.7",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/luxon": "^3.3.2",
     "@types/retry": "^0.12.5",
     "@types/node": "^20.2.5",
