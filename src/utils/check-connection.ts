@@ -15,8 +15,8 @@ export const throwIfCannotConnectToOrigin = async (appUrl: string) => {
     operation.retry(
       new Error(
         `Could not connect to '${appUrl}'. Please check:\n\n` +
-          `1. The server running at '${origin}' has fully started by the time the Meticulous action starts. You may need to add a 'sleep 30' after starting the server to ensure that this is the case.\n` +
-          `2. The server running at '${origin}' is using tcp instead of tcp6. You can use 'netstat -tulpen' to see what addresses and ports it is bound to.\n\n`
+          `1. The server running at '${appUrl}' has fully started by the time the Meticulous action starts. You may need to add a 'sleep 30' after starting the server to ensure that this is the case.\n` +
+          `2. The server running at '${appUrl}' is using tcp instead of tcp6. You can use 'netstat -tulpen' to see what addresses and ports it is bound to.\n\n`
       )
     );
   });
