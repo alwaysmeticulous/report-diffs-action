@@ -4,14 +4,20 @@
   "description": "Run Meticulous tests",
   "license": "Unliscensed",
   "private": true,
+  "main": "dist/main.entrypoint.mjs",
+  "in-cloud": "out/in-cloud.entrypoint.js",
   "targets": {
     "main": {
       "source": "src/main.entrypoint.ts",
-      "distDir": "dist"
+      "distDir": "dist",
+      "outputFormat": "esmodule"
     },
     "in-cloud": {
       "source": "src/in-cloud.entrypoint.ts",
-      "distDir": "out"
+      "includeNodeModules": true,
+      "distDir": "out",
+      "sourceMap": false,
+      "outputFormat": "commonjs"
     }
   },
   "files": [

@@ -61,7 +61,7 @@ jobs:
         run: yarn install --frozen-lockfile --non-interactive
 
       - name: Use local dockerfile
-        run: node ./scripts/use-local-dockerfile.js
+        run: node ./scripts/use-local-dockerfile.mjs
 
       - name: Run report-diffs-action
         id: test
