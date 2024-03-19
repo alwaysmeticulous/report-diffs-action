@@ -1,5 +1,5 @@
 import { setFailed } from "@actions/core";
-import { context, getOctokit } from "@actions/github";
+import { context } from "@actions/github";
 import {
   DEFAULT_EXECUTION_OPTIONS,
   METICULOUS_LOGGER_NAME,
@@ -10,18 +10,19 @@ import { RunningTestRunExecution } from "@alwaysmeticulous/sdk-bundles-api";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import debounce from "lodash.debounce";
 import log from "loglevel";
-import { addLocalhostAliases } from "./utils/add-localhost-aliases";
-import { throwIfCannotConnectToOrigin } from "./utils/check-connection";
-import { LOGICAL_ENVIRONMENT_VERSION } from "./utils/constants";
-import { safeEnsureBaseTestsExists } from "./utils/ensure-base-exists.utils";
-import { getEnvironment } from "./utils/environment.utils";
-import { getBaseAndHeadCommitShas } from "./utils/get-base-and-head-commit-shas";
-import { getCodeChangeEvent } from "./utils/get-code-change-event";
-import { getInputs } from "./utils/get-inputs";
-import { initLogger, setLogLevel, shortSha } from "./utils/logger.utils";
-import { spinUpProxyIfNeeded } from "./utils/proxy";
-import { ResultsReporter } from "./utils/results-reporter";
-import { waitForDeploymentUrl } from "./utils/wait-for-deployment-url";
+import { addLocalhostAliases } from "../../utils/add-localhost-aliases";
+import { throwIfCannotConnectToOrigin } from "../../utils/check-connection";
+import { LOGICAL_ENVIRONMENT_VERSION } from "../../utils/constants";
+import { safeEnsureBaseTestsExists } from "../../utils/ensure-base-exists.utils";
+import { getEnvironment } from "../../utils/environment.utils";
+import { getBaseAndHeadCommitShas } from "../../utils/get-base-and-head-commit-shas";
+import { getCodeChangeEvent } from "../../utils/get-code-change-event";
+import { initLogger, setLogLevel, shortSha } from "../../utils/logger.utils";
+import { getOctokitOrFail } from "../../utils/octokit";
+import { spinUpProxyIfNeeded } from "../../utils/proxy";
+import { ResultsReporter } from "../../utils/results-reporter";
+import { waitForDeploymentUrl } from "../../utils/wait-for-deployment-url";
+import { getMainActionInputs } from "./get-inputs";
 
 const EXECUTION_OPTIONS = {
   ...DEFAULT_EXECUTION_OPTIONS,
@@ -59,7 +60,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     useDeploymentUrl,
     allowedEnvironments,
     testSuiteId,
-  } = getInputs();
+  } = getMainActionInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
@@ -195,21 +196,5 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     await sentryHub.getClient()?.close(5_000);
 
     process.exit(1);
-  }
-};
-
-const getOctokitOrFail = (githubToken: string | null) => {
-  if (githubToken == null) {
-    throw new Error("github-token is required");
-  }
-
-  try {
-    return getOctokit(githubToken);
-  } catch (err) {
-    const logger = log.getLogger(METICULOUS_LOGGER_NAME);
-    logger.error(err);
-    throw new Error(
-      "Error connecting to GitHub. Did you specify a valid 'github-token'?"
-    );
   }
 };

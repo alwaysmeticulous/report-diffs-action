@@ -32,10 +32,26 @@
   dependencies:
     tunnel "^0.0.6"
 
+"@alwaysmeticulous/api@^2.116.0":
+  version "2.116.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.116.0.tgz#e9b4d3d343d990fe103d3f6e2ac886d4a7c65ebd"
+  integrity sha512-uQoywSRU7ZshunwsFWnNPYfLPtHPtrM0Om2Mzta0hQG5ckAAYFvRZ/k1qkXzHoZvVEbnpfnvDhbQ+VcRv7CdhA==
+
 "@alwaysmeticulous/api@^2.97.0":
   version "2.97.0"
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.97.0.tgz#4264db8b423a2147661966f4b0827aa73795f0eb"
   integrity sha512-WGa6zTfB7JctUUDuYsdkJjoqFu4n62CgFETmy8eIMLjiiFk3IJ1ZBL67Ih4AXg4vr1aAHQtPsTR/Fp7NQZEARA==
+
+"@alwaysmeticulous/client@^2.118.0":
+  version "2.118.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.118.0.tgz#4cc203cae242f20890deb30ea8b2cfb31d5c198d"
+  integrity sha512-2c2wuiY/EVJyuwm4OE8AMhxQhlBC0YQq0f9V6mT4LTfTdSnFYWqTgl6amWQ4XV5tNxU7RghzG5PYRFzsHi6Jkw==
+  dependencies:
+    "@alwaysmeticulous/api" "^2.116.0"
+    "@alwaysmeticulous/common" "^2.118.0"
+    axios "^1.2.6"
+    axios-retry "^3.5.0"
+    loglevel "^1.8.0"
 
 "@alwaysmeticulous/client@^2.97.0":
   version "2.97.0"
@@ -47,6 +63,14 @@
     axios "^1.2.6"
     axios-retry "^3.5.0"
     loglevel "^1.8.0"
+
+"@alwaysmeticulous/common@^2.118.0":
+  version "2.118.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.118.0.tgz#33ee4314d76d774957a5f9ef983d8529019b34e3"
+  integrity sha512-P/gwfaee3uvU9YyxPRGtMdjSn/tfLMB/U0P4ioMIrW0j2ktxZOiHmuuVY+Dv/PNmr7685N5EM0vO7sHdOsnUNw==
+  dependencies:
+    loglevel "^1.8.0"
+    luxon "^3.2.1"
 
 "@alwaysmeticulous/common@^2.97.0":
   version "2.97.0"
@@ -72,6 +96,16 @@
     p-limit "^3.1.0"
     proper-lockfile "^4.1.2"
 
+"@alwaysmeticulous/remote-replay-launcher@^2.118.0":
+  version "2.118.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/remote-replay-launcher/-/remote-replay-launcher-2.118.0.tgz#c974eaad3698b525f796648fbe2f09cee49e6086"
+  integrity sha512-SpkWK6JL8EHUr6ufaaXNVHqZcelGOBiYxFH7QmhpCQnol4Ftoos1yuZPPQDqR7+rpBf6aVAjgaxWZGVxF7qG9w==
+  dependencies:
+    "@alwaysmeticulous/client" "^2.118.0"
+    "@alwaysmeticulous/common" "^2.118.0"
+    "@alwaysmeticulous/tunnels-client" "^2.118.0"
+    loglevel "^1.8.0"
+
 "@alwaysmeticulous/replay-orchestrator-launcher@^2.100.0":
   version "2.100.0"
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.100.0.tgz#540dea870a1ff4f49fff358245904ab9ecfaf69f"
@@ -83,19 +117,33 @@
     loglevel "^1.8.0"
     puppeteer "21.9.0"
 
+"@alwaysmeticulous/sdk-bundles-api@^2.116.0":
+  version "2.116.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.116.0.tgz#ff35f54445e77036644bc7808fe117ac6ef3ef76"
+  integrity sha512-G4ndttIx5D2vf2GrNYZGwA9sBfeBVPpeRG1fRBNfWMNKys9dXny9eN5ex8b5xAPRjZjWf73+6XLyJFbxZ1imZA==
+
 "@alwaysmeticulous/sdk-bundles-api@^2.97.0":
   version "2.97.0"
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.97.0.tgz#1354284b033a7d2882996c7e04dc9e8381c1d751"
   integrity sha512-RZzfxMQbs1FSoaDvDI2c0beCTtsd7uv9iYAPyglv3AxH7YfdOxyMCewr+V4sPWUmlFSl3D69+l9hjPgw83KpiQ==
 
-"@alwaysmeticulous/sentry@^2.72.0":
-  version "2.72.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sentry/-/sentry-2.72.0.tgz#472391f330dc6b961c2be85da27ad93484cf517c"
-  integrity sha512-u8BL9/HApUTE2ZFW37c1qb3XPxPQGijJKxuLovkKmYr8+1a8Jgj/UzUOX0GP5AyHIGOI7c8MlgQpCYqEaZhhTw==
+"@alwaysmeticulous/sentry@^2.118.0":
+  version "2.118.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sentry/-/sentry-2.118.0.tgz#3ebca92e38fefa7ef6d5d9e357f4e8eeaa5a8929"
+  integrity sha512-jQIR8l5qd//nWhqSSj3CwNNd4OrOV2WzgHFnLBj2cX1N7ybhQ4pL8aPRoG9KtJIqkSTZS42dCd3BHnvS1+sbmw==
   dependencies:
+    "@alwaysmeticulous/common" "^2.118.0"
     "@sentry/node" "^7.36.0"
     "@sentry/tracing" "^7.36.0"
     luxon "^3.2.1"
+
+"@alwaysmeticulous/tunnels-client@^2.118.0":
+  version "2.118.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/tunnels-client/-/tunnels-client-2.118.0.tgz#d9f58d1444ae83f29842c59c3988f990dc527835"
+  integrity sha512-SvxFJ+ECZlE3Ptd+FfvjwkQs0IY9l37bSOlRy0DCfpgq1AnGEJU5G4QtPT9r9qpxm2/p7wj2PGiiVFyT6MxXwg==
+  dependencies:
+    axios "^1.2.6"
+    loglevel "^1.8.0"
 
 "@ampproject/remapping@^2.2.0":
   version "2.2.0"
