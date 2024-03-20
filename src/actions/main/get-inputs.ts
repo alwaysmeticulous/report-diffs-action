@@ -1,4 +1,4 @@
-import { getInputFromEnv } from "../../utils/get-input-from-env";
+import { getInputFromEnv } from "../../common/get-input-from-env";
 
 export const getMainActionInputs = () => {
   // The names, required value, and types should match that in action.yml

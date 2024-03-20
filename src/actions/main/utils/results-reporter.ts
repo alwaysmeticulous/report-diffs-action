@@ -6,14 +6,14 @@ import {
   RunningTestRunExecution,
 } from "@alwaysmeticulous/sdk-bundles-api";
 import log from "loglevel";
-import { CodeChangeEvent } from "../types";
-import { DOCS_URL } from "./constants";
+import { DOCS_URL } from "../../../common/constants";
 import {
   DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
   isGithubPermissionsError,
-} from "./error.utils";
-import { shortSha } from "./logger.utils";
-import { updateStatusComment } from "./update-status-comment";
+} from "../../../common/error.utils";
+import { shortSha } from "../../../common/logger.utils";
+import { updateStatusComment } from "../../../common/update-status-comment";
+import { CodeChangeEvent } from "../../../types";
 
 const SHORT_SHA_LENGTH = 7;
 

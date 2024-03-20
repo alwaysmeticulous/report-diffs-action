@@ -10,19 +10,19 @@ import { RunningTestRunExecution } from "@alwaysmeticulous/sdk-bundles-api";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import debounce from "lodash.debounce";
 import log from "loglevel";
-import { addLocalhostAliases } from "../../utils/add-localhost-aliases";
-import { throwIfCannotConnectToOrigin } from "../../utils/check-connection";
-import { LOGICAL_ENVIRONMENT_VERSION } from "../../utils/constants";
-import { safeEnsureBaseTestsExists } from "../../utils/ensure-base-exists.utils";
-import { getEnvironment } from "../../utils/environment.utils";
-import { getBaseAndHeadCommitShas } from "../../utils/get-base-and-head-commit-shas";
-import { getCodeChangeEvent } from "../../utils/get-code-change-event";
-import { initLogger, setLogLevel, shortSha } from "../../utils/logger.utils";
-import { getOctokitOrFail } from "../../utils/octokit";
-import { spinUpProxyIfNeeded } from "../../utils/proxy";
-import { ResultsReporter } from "../../utils/results-reporter";
-import { waitForDeploymentUrl } from "../../utils/wait-for-deployment-url";
+import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
+import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
+import { getEnvironment } from "../../common/environment.utils";
+import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
+import { getCodeChangeEvent } from "../../common/get-code-change-event";
+import { initLogger, setLogLevel, shortSha } from "../../common/logger.utils";
+import { getOctokitOrFail } from "../../common/octokit";
 import { getMainActionInputs } from "./get-inputs";
+import { addLocalhostAliases } from "./utils/add-localhost-aliases";
+import { LOGICAL_ENVIRONMENT_VERSION } from "./utils/constants";
+import { spinUpProxyIfNeeded } from "./utils/proxy";
+import { ResultsReporter } from "./utils/results-reporter";
+import { waitForDeploymentUrl } from "./utils/wait-for-deployment-url";
 
 const EXECUTION_OPTIONS = {
   ...DEFAULT_EXECUTION_OPTIONS,

@@ -4,13 +4,13 @@ import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import { executeRemoteTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import log from "loglevel";
-import { throwIfCannotConnectToOrigin } from "../../utils/check-connection";
-import { safeEnsureBaseTestsExists } from "../../utils/ensure-base-exists.utils";
-import { getEnvironment } from "../../utils/environment.utils";
-import { getBaseAndHeadCommitShas } from "../../utils/get-base-and-head-commit-shas";
-import { getCodeChangeEvent } from "../../utils/get-code-change-event";
-import { initLogger, setLogLevel, shortSha } from "../../utils/logger.utils";
-import { getOctokitOrFail } from "../../utils/octokit";
+import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
+import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
+import { getEnvironment } from "../../common/environment.utils";
+import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
+import { getCodeChangeEvent } from "../../common/get-code-change-event";
+import { initLogger, setLogLevel, shortSha } from "../../common/logger.utils";
+import { getOctokitOrFail } from "../../common/octokit";
 import { getInCloudActionInputs } from "./get-inputs";
 
 export const runMeticulousTestsInCloudAction = async (): Promise<void> => {

@@ -8,8 +8,9 @@ import {
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { Duration } from "luxon";
+import { LOGICAL_ENVIRONMENT_VERSION } from "../actions/main/utils/constants";
 import { CodeChangeEvent } from "../types";
-import { DOCS_URL, LOGICAL_ENVIRONMENT_VERSION } from "./constants";
+import { DOCS_URL } from "./constants";
 import {
   DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
   isGithubPermissionsError,
@@ -68,6 +69,7 @@ export const ensureBaseTestsExists = async ({
   const testRun = await getLatestTestRunResults({
     client: createClient({ apiToken }),
     commitSha: base,
+    // TODO(in-cloud action): Set useCloudReplayEnvironmentVersion instead
     logicalEnvironmentVersion: LOGICAL_ENVIRONMENT_VERSION,
   });
 

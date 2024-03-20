@@ -4,8 +4,9 @@ import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import { Hub } from "@sentry/node";
 import { Transaction } from "@sentry/types";
 import log from "loglevel";
-import { DOCS_URL, EXPECTED_PERMISSIONS_BLOCK } from "./constants";
-import { isGithubPermissionsError } from "./error.utils";
+import { DOCS_URL } from "../../../common/constants";
+import { isGithubPermissionsError } from "../../../common/error.utils";
+import { EXPECTED_PERMISSIONS_BLOCK } from "./constants";
 
 const TIMEOUT_MS = 30 * 60 * 1_000; // 30 minutes
 const MIN_POLL_FREQUENCY = 1_000;
