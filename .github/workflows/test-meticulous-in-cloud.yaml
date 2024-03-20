@@ -1,6 +1,6 @@
 # Workflow for automated Meticulous tests in Meticulous' cloud.
 
-name: Tests - react-bmi-calculator (in cloud)
+name: Tests - react-bmi-calculator
 
 on:
   push:
