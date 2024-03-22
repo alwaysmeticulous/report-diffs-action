@@ -1,6 +1,6 @@
-# report-diffs-action in-cloud
+# report-diffs-action cloud-compute
 
-Action for running Meticulous tests. `@alwaysmeticulous/report-diffs-action/in-cloud` is similar
+Action for running Meticulous tests. `@alwaysmeticulous/report-diffs-action/cloud-compute` is similar
 to `@alwaysmeticulous/report-diffs-action` but tests are executed in Meticulous' cloud, rather than
 within the GitHub Action runner.
 

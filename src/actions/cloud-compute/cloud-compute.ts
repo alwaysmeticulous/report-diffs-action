@@ -13,13 +13,16 @@ import { initLogger, setLogLevel, shortSha } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { getInCloudActionInputs } from "./get-inputs";
 
-export const runMeticulousTestsInCloudAction = async (): Promise<void> => {
+export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   initLogger();
 
   // Init Sentry without sampling traces on the action run.
   // Children processes, (test run executions) will use
   // the global sample rate.
-  const sentryHub = await initSentry("report-diffs-action-in-cloud-v1", 1.0);
+  const sentryHub = await initSentry(
+    "report-diffs-action-cloud-compute-v1",
+    1.0
+  );
 
   const transaction = sentryHub.startTransaction({
     name: "report-diffs-action.runMeticulousTestsActionInCloud",

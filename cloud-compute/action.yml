@@ -1,4 +1,4 @@
-name: "Meticulous - Report Diffs (In Cloud)"
+name: "Meticulous - Report Diffs (Cloud Compute)"
 description: "Run automated Meticulous tests in Meticulous' cloud."
 inputs:
   api-token:
@@ -16,7 +16,7 @@ inputs:
 outputs: {}
 runs:
   using: node20
-  main: "../out/in-cloud.entrypoint.js"
+  main: "../out/cloud-compute.entrypoint.js"
 branding:
   color: purple
   icon: camera

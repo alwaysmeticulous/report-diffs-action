@@ -59,7 +59,7 @@ jobs:
 
       - name: Run report-diffs-action
         id: test
-        uses: ./in-cloud
+        uses: ./cloud-compute
         with:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
           app-url: http://localhost:3000
