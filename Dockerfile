@@ -27,4 +27,4 @@ COPY src src
 
 RUN yarn build
 
-CMD ["/app/dist/index.mjs"]
+CMD ["/app/dist/main.entrypoint.mjs"]

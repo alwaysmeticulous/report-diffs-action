@@ -32,38 +32,38 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/api@^2.97.0":
-  version "2.97.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.97.0.tgz#4264db8b423a2147661966f4b0827aa73795f0eb"
-  integrity sha512-WGa6zTfB7JctUUDuYsdkJjoqFu4n62CgFETmy8eIMLjiiFk3IJ1ZBL67Ih4AXg4vr1aAHQtPsTR/Fp7NQZEARA==
+"@alwaysmeticulous/api@^2.116.0":
+  version "2.116.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.116.0.tgz#e9b4d3d343d990fe103d3f6e2ac886d4a7c65ebd"
+  integrity sha512-uQoywSRU7ZshunwsFWnNPYfLPtHPtrM0Om2Mzta0hQG5ckAAYFvRZ/k1qkXzHoZvVEbnpfnvDhbQ+VcRv7CdhA==
 
-"@alwaysmeticulous/client@^2.97.0":
-  version "2.97.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.97.0.tgz#1a9cf13646ab475c62bdf9f6f54684761821199b"
-  integrity sha512-kuN375GzkLJSgVLd1P24DULvTDrbLSu+kT91u4OhtIcROJ2xnrrrhgqN56B5pVzp+cFxYAxUdqF24m4UW5ngKQ==
+"@alwaysmeticulous/client@^2.119.0":
+  version "2.119.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.119.0.tgz#1ffe15807532ffc9ccd7d9412d3d85930ca43403"
+  integrity sha512-rPppkgyEni8OSZN35tCu7SOVRRwd00yY1xjEQ8RbGwFZizvDH2u/2sDe2Q4hHuC/tnmEsZ5NuoHdDepgsTPQkg==
   dependencies:
-    "@alwaysmeticulous/api" "^2.97.0"
-    "@alwaysmeticulous/common" "^2.97.0"
+    "@alwaysmeticulous/api" "^2.116.0"
+    "@alwaysmeticulous/common" "^2.118.0"
     axios "^1.2.6"
     axios-retry "^3.5.0"
     loglevel "^1.8.0"
 
-"@alwaysmeticulous/common@^2.97.0":
-  version "2.97.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.97.0.tgz#d107d99da2b83343b83917afb118f696c6686928"
-  integrity sha512-Bg+d0unxxOrXYCLwGGRlnv9qq0gQxZHgHWzzdD8uqGA2vP4SN6di0vVJQjWVqCgxf+mYY+FzlfGbZ+tbRW/kpg==
+"@alwaysmeticulous/common@^2.118.0":
+  version "2.118.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.118.0.tgz#33ee4314d76d774957a5f9ef983d8529019b34e3"
+  integrity sha512-P/gwfaee3uvU9YyxPRGtMdjSn/tfLMB/U0P4ioMIrW0j2ktxZOiHmuuVY+Dv/PNmr7685N5EM0vO7sHdOsnUNw==
   dependencies:
     loglevel "^1.8.0"
     luxon "^3.2.1"
 
-"@alwaysmeticulous/downloading-helpers@^2.97.0":
-  version "2.97.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.97.0.tgz#8c43371a4609f6521a9954b474f1e9a5e9427ed3"
-  integrity sha512-OR/u9FphAWmvVieVImcRPtiinhMtX8n2l4ed4fOUyfD1VeXjIeVm0o1QRaRE0JFqPFXJAp2GjgvwCb8ohKuicQ==
+"@alwaysmeticulous/downloading-helpers@^2.119.0":
+  version "2.119.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.119.0.tgz#0081e9ba8405cd9a843fbcbef73fe5f054d04421"
+  integrity sha512-pePYWlkOKT4QgFP3D+qmrd+iCjvVQnmcJ21smcXzr1QMPnI8t62LRjvrjWg8FJIHUA6mVQNenLmBiuQFaDa5bQ==
   dependencies:
-    "@alwaysmeticulous/api" "^2.97.0"
-    "@alwaysmeticulous/client" "^2.97.0"
-    "@alwaysmeticulous/common" "^2.97.0"
+    "@alwaysmeticulous/api" "^2.116.0"
+    "@alwaysmeticulous/client" "^2.119.0"
+    "@alwaysmeticulous/common" "^2.118.0"
     axios "^1.2.6"
     axios-retry "^3.5.0"
     extract-zip "^2.0.1"
@@ -72,30 +72,49 @@
     p-limit "^3.1.0"
     proper-lockfile "^4.1.2"
 
-"@alwaysmeticulous/replay-orchestrator-launcher@^2.100.0":
-  version "2.100.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.100.0.tgz#540dea870a1ff4f49fff358245904ab9ecfaf69f"
-  integrity sha512-L4igsHljOFJKce5/fMyaylfmZBSRDwBXrxMSjtup+YyCpsukaTpcGLyQ7+AlZ0Bv77SM5CBuTDst8jCFV15EvQ==
+"@alwaysmeticulous/remote-replay-launcher@^2.119.0":
+  version "2.119.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/remote-replay-launcher/-/remote-replay-launcher-2.119.0.tgz#dcc5cf598ebcae9b95b6fcb832aa97c846d59eb2"
+  integrity sha512-GJItEhvdh2yUqUNHik78aMrvsy2/VBKqkFI595jOLI8V4CAXKS/MzcmrgYWMsyG6mTgOul39VVkWXNJHNg5cYw==
   dependencies:
-    "@alwaysmeticulous/common" "^2.97.0"
-    "@alwaysmeticulous/downloading-helpers" "^2.97.0"
-    "@alwaysmeticulous/sdk-bundles-api" "^2.97.0"
+    "@alwaysmeticulous/client" "^2.119.0"
+    "@alwaysmeticulous/common" "^2.118.0"
+    "@alwaysmeticulous/tunnels-client" "^2.118.0"
+    loglevel "^1.8.0"
+
+"@alwaysmeticulous/replay-orchestrator-launcher@^2.119.0":
+  version "2.119.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.119.0.tgz#1db92dfcf0a57db64eda00134a3ecd80197827ec"
+  integrity sha512-l8SVu7IyJaC/aElCEkQ26LRU2KI+8+YJcLIZzOkN3XvlJjsZ2Yle+75/hh+r/Vsnf28lbAFh9Cu89hMxOvbPxw==
+  dependencies:
+    "@alwaysmeticulous/common" "^2.118.0"
+    "@alwaysmeticulous/downloading-helpers" "^2.119.0"
+    "@alwaysmeticulous/sdk-bundles-api" "^2.116.0"
     loglevel "^1.8.0"
     puppeteer "21.9.0"
 
-"@alwaysmeticulous/sdk-bundles-api@^2.97.0":
-  version "2.97.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.97.0.tgz#1354284b033a7d2882996c7e04dc9e8381c1d751"
-  integrity sha512-RZzfxMQbs1FSoaDvDI2c0beCTtsd7uv9iYAPyglv3AxH7YfdOxyMCewr+V4sPWUmlFSl3D69+l9hjPgw83KpiQ==
+"@alwaysmeticulous/sdk-bundles-api@^2.116.0":
+  version "2.116.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.116.0.tgz#ff35f54445e77036644bc7808fe117ac6ef3ef76"
+  integrity sha512-G4ndttIx5D2vf2GrNYZGwA9sBfeBVPpeRG1fRBNfWMNKys9dXny9eN5ex8b5xAPRjZjWf73+6XLyJFbxZ1imZA==
 
-"@alwaysmeticulous/sentry@^2.72.0":
-  version "2.72.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sentry/-/sentry-2.72.0.tgz#472391f330dc6b961c2be85da27ad93484cf517c"
-  integrity sha512-u8BL9/HApUTE2ZFW37c1qb3XPxPQGijJKxuLovkKmYr8+1a8Jgj/UzUOX0GP5AyHIGOI7c8MlgQpCYqEaZhhTw==
+"@alwaysmeticulous/sentry@^2.118.1":
+  version "2.118.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sentry/-/sentry-2.118.1.tgz#53da9d59ed88268eaaa39af3d5ce57fdc53f0291"
+  integrity sha512-CL4HptiFbS5EMJD9YK0gup/aupsl7IzP3rzascQp+NtJgSALlcrexT2OKwkcjPAbPuMCMvBC1JDM8qp3KJRjeA==
   dependencies:
-    "@sentry/node" "^7.36.0"
-    "@sentry/tracing" "^7.36.0"
+    "@alwaysmeticulous/common" "^2.118.0"
+    "@sentry/node" "^7.107.0"
+    "@sentry/tracing" "^7.107.0"
     luxon "^3.2.1"
+
+"@alwaysmeticulous/tunnels-client@^2.118.0":
+  version "2.118.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/tunnels-client/-/tunnels-client-2.118.0.tgz#d9f58d1444ae83f29842c59c3988f990dc527835"
+  integrity sha512-SvxFJ+ECZlE3Ptd+FfvjwkQs0IY9l37bSOlRy0DCfpgq1AnGEJU5G4QtPT9r9qpxm2/p7wj2PGiiVFyT6MxXwg==
+  dependencies:
+    axios "^1.2.6"
+    loglevel "^1.8.0"
 
 "@ampproject/remapping@^2.2.0":
   version "2.2.0"
@@ -1569,6 +1588,15 @@
     unbzip2-stream "1.4.3"
     yargs "17.7.2"
 
+"@sentry-internal/tracing@7.107.0":
+  version "7.107.0"
+  resolved "https://registry.yarnpkg.com/@sentry-internal/tracing/-/tracing-7.107.0.tgz#a10b4abcbc9e0d8da948e3a95029574387ca7b16"
+  integrity sha512-le9wM8+OHBbq7m/8P7JUJ1UhSPIty+Z/HmRXc5Z64ODZcOwFV6TmDpYx729IXDdz36XUKmeI+BeM7yQdTTZPfQ==
+  dependencies:
+    "@sentry/core" "7.107.0"
+    "@sentry/types" "7.107.0"
+    "@sentry/utils" "7.107.0"
+
 "@sentry-internal/tracing@7.50.0":
   version "7.50.0"
   resolved "https://registry.yarnpkg.com/@sentry-internal/tracing/-/tracing-7.50.0.tgz#74454af99a03d81762993835d2687c881e14f41e"
@@ -1579,14 +1607,13 @@
     "@sentry/utils" "7.50.0"
     tslib "^1.9.3"
 
-"@sentry/core@7.36.0":
-  version "7.36.0"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.36.0.tgz#37c82a1ad3f74dbe2c2fcd55f45068e127012fcc"
-  integrity sha512-lq1MlcMhvm7QIwUOknFeufkg4M6QREY3s61y6pm1o+o3vSqB7Hz0D19xlyEpP62qMn8OyuttVKOVK1UfGc2EyQ==
+"@sentry/core@7.107.0":
+  version "7.107.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.107.0.tgz#926838ba2c2861d6bd2bced0232e1f9d1ead6c75"
+  integrity sha512-C7ogye6+KPyBi8NVL0P8Rxx3Ur7Td8ufnjxosVy678lqY+dcYPk/HONROrzUFYW5fMKWL4/KYnwP+x9uHnkDmw==
   dependencies:
-    "@sentry/types" "7.36.0"
-    "@sentry/utils" "7.36.0"
-    tslib "^1.9.3"
+    "@sentry/types" "7.107.0"
+    "@sentry/utils" "7.107.0"
 
 "@sentry/core@7.50.0":
   version "7.50.0"
@@ -1597,7 +1624,17 @@
     "@sentry/utils" "7.50.0"
     tslib "^1.9.3"
 
-"@sentry/node@^7.36.0", "@sentry/node@^7.50.0":
+"@sentry/node@^7.107.0":
+  version "7.107.0"
+  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-7.107.0.tgz#d60c2e28953f2ba14d12ada9190f1fc577b2b280"
+  integrity sha512-UZXkG7uThT2YyPW8AOSKRXp1LbVcBHufa4r1XAwBukA2FKO6HHJPjMUgY6DYVQ6k+BmA56CNfVjYrdLbyjBYYA==
+  dependencies:
+    "@sentry-internal/tracing" "7.107.0"
+    "@sentry/core" "7.107.0"
+    "@sentry/types" "7.107.0"
+    "@sentry/utils" "7.107.0"
+
+"@sentry/node@^7.50.0":
   version "7.50.0"
   resolved "https://registry.yarnpkg.com/@sentry/node/-/node-7.50.0.tgz#d6adab136d87f7dca614ea0d77944f902fa45626"
   integrity sha512-11UJBKoQFMp7f8sbzeO2gENsKIUkVCNBTzuPRib7l2K1HMjSfacXmwwma7ZEs0mc3ofIZ1UYuyONAXmI1lK9cQ==
@@ -1611,33 +1648,29 @@
     lru_map "^0.3.3"
     tslib "^1.9.3"
 
-"@sentry/tracing@^7.36.0":
-  version "7.36.0"
-  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-7.36.0.tgz#aa38319ed07f3b642134cf47da81f43df7835629"
-  integrity sha512-5R5mfWMDncOcTMmmyYMjgus1vZJzIFw4LHaSbrX7e1IRNT/6vFyNeVxATa2ePXb9mI3XHo5f2p7YrnreAtaSXw==
+"@sentry/tracing@^7.107.0":
+  version "7.107.0"
+  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-7.107.0.tgz#fc38ac79fdc6cc69549c2b56dc5a382fe76d77bb"
+  integrity sha512-nxOmwlJgx9gW1c0EWtTWQxOBLxcgCGNOT2LezZTcGZ0G0Fw4y5Y+pNY0f8hP4rcJdNHhXzetEOR/I3Jauix+fw==
   dependencies:
-    "@sentry/core" "7.36.0"
-    "@sentry/types" "7.36.0"
-    "@sentry/utils" "7.36.0"
-    tslib "^1.9.3"
+    "@sentry-internal/tracing" "7.107.0"
 
-"@sentry/types@7.36.0":
-  version "7.36.0"
-  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.36.0.tgz#205baaf7332ff55d1fb35413cbde16dea4168520"
-  integrity sha512-uvfwUn3okAWSZ948D/xqBrkc3Sn6TeHUgi3+p/dTTNGAXXskzavgfgQ4rSW7f3YD4LL+boZojpoIARVLodMGuA==
+"@sentry/types@7.107.0":
+  version "7.107.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.107.0.tgz#5ba4b472be6ccad9aecd58dbc0141a09dafb68c1"
+  integrity sha512-H7qcPjPSUWHE/Zf5bR1EE24G0pGVuJgrSx8Tvvl5nKEepswMYlbXHRVSDN0gTk/E5Z7cqf+hUBOpkQgZyps77w==
 
 "@sentry/types@7.50.0":
   version "7.50.0"
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.50.0.tgz#52a035cad83a80ca26fa53c09eb1241250c3df3e"
   integrity sha512-Zo9vyI98QNeYT0K0y57Rb4JRWDaPEgmp+QkQ4CRQZFUTWetO5fvPZ4Gb/R7TW16LajuHZlbJBHmvmNj2pkL2kw==
 
-"@sentry/utils@7.36.0":
-  version "7.36.0"
-  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.36.0.tgz#b81cf63c7b5daad3f0f152c4ad319203f968ba1b"
-  integrity sha512-mgDi5X5Bm0sydCzXpnyKD/sD98yc2qnKXyRdNX4HRRwruhC/P53LT0hGhZXsyqsB/l8OAMl0zWXJLg0xONQsEw==
+"@sentry/utils@7.107.0":
+  version "7.107.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.107.0.tgz#b8524539d052a40f9c5f34a8347501f0f81a0751"
+  integrity sha512-C6PbN5gHh73MRHohnReeQ60N8rrLYa9LciHue3Ru2290eSThg4CzsPnx4SzkGpkSeVlhhptKtKZ+hp/ha3iVuw==
   dependencies:
-    "@sentry/types" "7.36.0"
-    tslib "^1.9.3"
+    "@sentry/types" "7.107.0"
 
 "@sentry/utils@7.50.0":
   version "7.50.0"

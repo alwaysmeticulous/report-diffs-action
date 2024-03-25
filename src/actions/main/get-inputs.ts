@@ -1,6 +1,6 @@
-import { getInputFromEnv } from "./get-input-from-env";
+import { getInputFromEnv } from "../../common/get-input-from-env";
 
-export const getInputs = () => {
+export const getMainActionInputs = () => {
   // The names, required value, and types should match that in action.yml
   const apiToken = getInputFromEnv({
     name: "api-token",
