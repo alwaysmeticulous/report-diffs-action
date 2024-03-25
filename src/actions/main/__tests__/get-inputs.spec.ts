@@ -1,4 +1,4 @@
-import { getInputs } from "../get-inputs";
+import { getMainActionInputs } from "../get-inputs";
 
 const keys = [
   "API_TOKEN",
@@ -30,7 +30,7 @@ const EXPECTED_DEFAULT_VALUES = {
   testSuiteId: null,
 };
 
-describe("getInputs", () => {
+describe("getMainActionInputs", () => {
   const oldEnv: Record<string, any> = {};
 
   beforeEach(() => {
@@ -60,13 +60,13 @@ describe("getInputs", () => {
     process.env.MAX_ALLOWED_PROPORTION_OF_CHANGED_PIXELS = "0.00001";
     process.env.USE_DEPLOYMENT_URL = "false";
 
-    expect(getInputs()).toEqual(EXPECTED_DEFAULT_VALUES);
+    expect(getMainActionInputs()).toEqual(EXPECTED_DEFAULT_VALUES);
   });
 
   it("parses the required values correctly, even when GH passes us '1E-05' style values", () => {
     setupDefaultEnvVars();
 
-    expect(getInputs()).toEqual(EXPECTED_DEFAULT_VALUES);
+    expect(getMainActionInputs()).toEqual(EXPECTED_DEFAULT_VALUES);
   });
 
   it("parses the optional values correctly", () => {
@@ -76,7 +76,7 @@ describe("getInputs", () => {
     process.env.PARALLEL_TASKS = "5";
     process.env.LOCALHOST_ALIASES = "app1.local,app2.local";
 
-    expect(getInputs()).toEqual({
+    expect(getMainActionInputs()).toEqual({
       ...EXPECTED_DEFAULT_VALUES,
       appUrl: "https://example.com",
       localhostAliases: "app1.local,app2.local",
@@ -89,7 +89,7 @@ describe("getInputs", () => {
     setupDefaultEnvVars();
     process.env.ALLOWED_ENVIRONMENTS = "";
 
-    expect(getInputs()).toEqual({
+    expect(getMainActionInputs()).toEqual({
       ...EXPECTED_DEFAULT_VALUES,
     });
   });
@@ -99,7 +99,7 @@ describe("getInputs", () => {
     process.env.USE_DEPLOYMENT_URL = "true";
     process.env.ALLOWED_ENVIRONMENTS = "staging";
 
-    expect(getInputs()).toEqual({
+    expect(getMainActionInputs()).toEqual({
       ...EXPECTED_DEFAULT_VALUES,
       useDeploymentUrl: true,
       allowedEnvironments: ["staging"],
@@ -111,7 +111,7 @@ describe("getInputs", () => {
     process.env.USE_DEPLOYMENT_URL = "true";
     process.env.ALLOWED_ENVIRONMENTS = "     staging \n  \t production ";
 
-    expect(getInputs()).toEqual({
+    expect(getMainActionInputs()).toEqual({
       ...EXPECTED_DEFAULT_VALUES,
       useDeploymentUrl: true,
       allowedEnvironments: ["staging", "production"],
@@ -122,7 +122,7 @@ describe("getInputs", () => {
     setupDefaultEnvVars();
     process.env.ALLOWED_ENVIRONMENTS = "staging";
 
-    expect(() => getInputs()).toThrowError();
+    expect(() => getMainActionInputs()).toThrowError();
   });
 
   const setupDefaultEnvVars = () => {

@@ -1,0 +1,22 @@
+name: "Meticulous - Report Diffs (Cloud Compute)"
+description: "Run automated Meticulous tests in Meticulous' cloud."
+inputs:
+  api-token:
+    description: "Meticulous API token"
+    required: true
+  github-token:
+    description: "GITHUB_TOKEN or a repo scoped PAT."
+    required: true
+    default: ${{ github.token }}
+  app-url:
+    description: |
+      The URL to execute the tests against. This URL should serve the code from the current commit (e.g. a localhost URL served up by a local server).
+    required: true
+
+outputs: {}
+runs:
+  using: node20
+  main: "../out/cloud-compute.entrypoint.js"
+branding:
+  color: purple
+  icon: camera
