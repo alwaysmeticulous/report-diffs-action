@@ -17,7 +17,7 @@ permissions:
   packages: write
 
 jobs:
-  lint:
+  lint-test-check-transpile:
     name: Lint, format and test
     runs-on: ubuntu-latest
 
@@ -51,10 +51,24 @@ jobs:
       - name: Test
         run: yarn test
 
+      - name: Build actions
+        id: build
+        run: yarn build
+
+      - name: Check JS Transpile
+        id: diff
+        run: |
+          if [ "$(git diff --ignore-space-at-eol --text out/ | wc -l)" -gt "0" ]; then
+            echo "Detected uncommitted changes after build. See status below:"
+            git diff --ignore-space-at-eol --text out/
+            exit 1
+          fi
+
   publish:
     name: Publish
     runs-on: ubuntu-latest
     concurrency: ${{ github.ref }}
+    needs: lint-test-check-transpile
 
     steps:
       - name: Checkout repository
