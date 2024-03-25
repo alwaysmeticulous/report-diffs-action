@@ -32,26 +32,26 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/api@^2.97.0":
-  version "2.97.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.97.0.tgz#4264db8b423a2147661966f4b0827aa73795f0eb"
-  integrity sha512-WGa6zTfB7JctUUDuYsdkJjoqFu4n62CgFETmy8eIMLjiiFk3IJ1ZBL67Ih4AXg4vr1aAHQtPsTR/Fp7NQZEARA==
+"@alwaysmeticulous/api@^2.116.0", "@alwaysmeticulous/api@^2.97.0":
+  version "2.116.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.116.0.tgz#e9b4d3d343d990fe103d3f6e2ac886d4a7c65ebd"
+  integrity sha512-uQoywSRU7ZshunwsFWnNPYfLPtHPtrM0Om2Mzta0hQG5ckAAYFvRZ/k1qkXzHoZvVEbnpfnvDhbQ+VcRv7CdhA==
 
-"@alwaysmeticulous/client@^2.97.0":
-  version "2.97.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.97.0.tgz#1a9cf13646ab475c62bdf9f6f54684761821199b"
-  integrity sha512-kuN375GzkLJSgVLd1P24DULvTDrbLSu+kT91u4OhtIcROJ2xnrrrhgqN56B5pVzp+cFxYAxUdqF24m4UW5ngKQ==
+"@alwaysmeticulous/client@^2.119.0", "@alwaysmeticulous/client@^2.97.0":
+  version "2.119.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.119.0.tgz#1ffe15807532ffc9ccd7d9412d3d85930ca43403"
+  integrity sha512-rPppkgyEni8OSZN35tCu7SOVRRwd00yY1xjEQ8RbGwFZizvDH2u/2sDe2Q4hHuC/tnmEsZ5NuoHdDepgsTPQkg==
   dependencies:
-    "@alwaysmeticulous/api" "^2.97.0"
-    "@alwaysmeticulous/common" "^2.97.0"
+    "@alwaysmeticulous/api" "^2.116.0"
+    "@alwaysmeticulous/common" "^2.118.0"
     axios "^1.2.6"
     axios-retry "^3.5.0"
     loglevel "^1.8.0"
 
-"@alwaysmeticulous/common@^2.97.0":
-  version "2.97.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.97.0.tgz#d107d99da2b83343b83917afb118f696c6686928"
-  integrity sha512-Bg+d0unxxOrXYCLwGGRlnv9qq0gQxZHgHWzzdD8uqGA2vP4SN6di0vVJQjWVqCgxf+mYY+FzlfGbZ+tbRW/kpg==
+"@alwaysmeticulous/common@^2.118.0", "@alwaysmeticulous/common@^2.97.0":
+  version "2.118.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.118.0.tgz#33ee4314d76d774957a5f9ef983d8529019b34e3"
+  integrity sha512-P/gwfaee3uvU9YyxPRGtMdjSn/tfLMB/U0P4ioMIrW0j2ktxZOiHmuuVY+Dv/PNmr7685N5EM0vO7sHdOsnUNw==
   dependencies:
     loglevel "^1.8.0"
     luxon "^3.2.1"
