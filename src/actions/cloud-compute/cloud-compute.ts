@@ -6,7 +6,6 @@ import { initSentry } from "@alwaysmeticulous/sentry";
 import log from "loglevel";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
-import { getEnvironment } from "../../common/environment.utils";
 import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger, setLogLevel, shortSha } from "../../common/logger.utils";
@@ -52,7 +51,6 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   const { base, head } = await getBaseAndHeadCommitShas(event, {
     useDeploymentUrl: false,
   });
-  const environment = getEnvironment({ event, head });
 
   const { shaToCompareAgainst } = await safeEnsureBaseTestsExists({
     event,
@@ -96,10 +94,17 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
       );
     };
 
+    // We use MERGE_COMMIT_SHA as the deployment is created for the merge commit.
+    // Our backend is responsible for computing the correct HEAD and BASE commits to create the test run for.
+    const mergeCommitSha = process.env.GITHUB_SHA;
+    if (!mergeCommitSha) {
+      throw new Error("GITHUB_SHA is not set.");
+    }
+
     await executeRemoteTestRun({
       apiToken,
       appUrl,
-      commitSha: head,
+      commitSha: mergeCommitSha,
       environment: "github-actions",
       onTunnelCreated,
     });
