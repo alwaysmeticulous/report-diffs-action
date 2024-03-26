@@ -55,11 +55,6 @@ jobs:
         id: build
         run: yarn build
 
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          limit-access-to-users: alexivanov
-
       - name: Check JS Transpile
         id: diff
         run: |
