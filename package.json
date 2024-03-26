@@ -25,7 +25,7 @@
     "out"
   ],
   "scripts": {
-    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "clean": "rimraf dist tsconfig.tsbuildinfo .parcel-cache",
     "dev": "parcel watch",
     "build": "parcel build",
     "format": "prettier --write src",
