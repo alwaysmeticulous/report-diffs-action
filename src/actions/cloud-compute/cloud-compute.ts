@@ -56,7 +56,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     event,
     apiToken,
     base,
-    useCloudReplayEnvironmentVersion: false,
+    useCloudReplayEnvironmentVersion: true,
     context,
     octokit,
   });
