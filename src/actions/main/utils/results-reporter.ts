@@ -7,6 +7,7 @@ import {
 } from "@alwaysmeticulous/sdk-bundles-api";
 import log from "loglevel";
 import { DOCS_URL } from "../../../common/constants";
+import { shortCommitSha } from "../../../common/environment.utils";
 import {
   DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
   isGithubPermissionsError,
@@ -14,8 +15,6 @@ import {
 import { shortSha } from "../../../common/logger.utils";
 import { updateStatusComment } from "../../../common/update-status-comment";
 import { CodeChangeEvent } from "../../../types";
-
-const SHORT_SHA_LENGTH = 7;
 
 export interface EnrichedProject extends Project {
   isGitHubIntegrationActive?: boolean;
@@ -39,7 +38,7 @@ export class ResultsReporter {
       testSuiteId: string | null;
     }
   ) {
-    this.shortHeadSha = this.options.headSha.substring(0, SHORT_SHA_LENGTH);
+    this.shortHeadSha = shortCommitSha(this.options.headSha);
   }
 
   async testRunStarted(testRun: RunningTestRunExecution) {
