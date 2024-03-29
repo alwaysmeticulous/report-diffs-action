@@ -124,6 +124,8 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     const keepTunnelOpenPromise = isDebugPRRun ? defer<void>() : null;
     let keepTunnelOpenTimeout: NodeJS.Timeout | null = null;
 
+    let lastSeenNumberOfCompletedTestCases = 0;
+
     const onProgressUpdate = (testRun: TestRun) => {
       if (
         !IN_PROGRESS_TEST_RUN_STATUS.includes(testRun.status) &&
@@ -137,6 +139,23 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
           keepTunnelOpenPromise.resolve();
         }, DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.as("milliseconds"));
       }
+
+      const numTestCases = testRun.configData.testCases?.length || 0;
+      const completedTestCases = testRun.resultData?.results?.length || 0;
+
+      if (
+        completedTestCases != lastSeenNumberOfCompletedTestCases &&
+        numTestCases
+      ) {
+        logger.info(
+          `Executed ${completedTestCases}/${numTestCases} test cases`
+        );
+        lastSeenNumberOfCompletedTestCases = completedTestCases;
+      }
+    };
+
+    const onTestRunCreated = (testRun: TestRun) => {
+      logger.info(`Test run created: ${testRun.url}`);
     };
 
     // We use MERGE_COMMIT_SHA as the deployment is created for the merge commit.
@@ -152,6 +171,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
       commitSha: mergeCommitSha,
       environment: "github-actions",
       onTunnelCreated,
+      onTestRunCreated,
       onProgressUpdate,
       ...(keepTunnelOpenPromise
         ? { keepTunnelOpenPromise: keepTunnelOpenPromise.promise }
