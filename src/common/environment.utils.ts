@@ -44,3 +44,8 @@ export const getEnvironment = ({
     },
   };
 };
+
+const SHORT_SHA_LENGTH = 7;
+
+export const shortCommitSha = (sha: string) =>
+  sha.substring(0, SHORT_SHA_LENGTH);

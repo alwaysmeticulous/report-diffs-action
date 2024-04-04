@@ -1,16 +1,25 @@
 import { setFailed } from "@actions/core";
 import { context } from "@actions/github";
-import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
+import { IN_PROGRESS_TEST_RUN_STATUS, TestRun } from "@alwaysmeticulous/client";
+import { defer, METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import { executeRemoteTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import log from "loglevel";
+import { Duration } from "luxon";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
+import { shortCommitSha } from "../../common/environment.utils";
 import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
+import { isDebugPullRequestRun } from "../../common/is-debug-pr-run";
 import { initLogger, setLogLevel, shortSha } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
+import { updateStatusComment } from "../../common/update-status-comment";
 import { getInCloudActionInputs } from "./get-inputs";
+
+const DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION = Duration.fromObject({
+  minutes: 45,
+});
 
 export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   initLogger();
@@ -36,6 +45,8 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   const { apiToken, githubToken, appUrl } = getInCloudActionInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
+  const { owner, repo } = context.repo;
+  const isDebugPRRun = isDebugPullRequestRun(event);
   const octokit = getOctokitOrFail(githubToken);
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
@@ -92,6 +103,59 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
       logger.info(
         `Secure tunnel to ${appUrl} created: ${url}, user: ${basicAuthUser}, password: ${basicAuthPassword}`
       );
+
+      if (isDebugPRRun) {
+        updateStatusComment({
+          octokit,
+          event,
+          owner,
+          repo,
+          body: `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: ${basicAuthUser} password: ${basicAuthPassword}.\n\n
+          Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. Cancel the workflow run to close the tunnel early.`,
+          testSuiteId: "__meticulous_debug__",
+          shortHeadSha: shortCommitSha(head),
+          createIfDoesNotExist: true,
+        }).catch((err) => {
+          logger.error(err);
+        });
+      }
+    };
+
+    const keepTunnelOpenPromise = isDebugPRRun ? defer<void>() : null;
+    let keepTunnelOpenTimeout: NodeJS.Timeout | null = null;
+
+    let lastSeenNumberOfCompletedTestCases = 0;
+
+    const onProgressUpdate = (testRun: TestRun) => {
+      if (
+        !IN_PROGRESS_TEST_RUN_STATUS.includes(testRun.status) &&
+        keepTunnelOpenPromise &&
+        !keepTunnelOpenTimeout
+      ) {
+        logger.info(
+          `Test run execution completed. Keeping tunnel open for $${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}`
+        );
+        keepTunnelOpenTimeout = setTimeout(() => {
+          keepTunnelOpenPromise.resolve();
+        }, DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.as("milliseconds"));
+      }
+
+      const numTestCases = testRun.configData.testCases?.length || 0;
+      const completedTestCases = testRun.resultData?.results?.length || 0;
+
+      if (
+        completedTestCases != lastSeenNumberOfCompletedTestCases &&
+        numTestCases
+      ) {
+        logger.info(
+          `Executed ${completedTestCases}/${numTestCases} test cases`
+        );
+        lastSeenNumberOfCompletedTestCases = completedTestCases;
+      }
+    };
+
+    const onTestRunCreated = (testRun: TestRun) => {
+      logger.info(`Test run created: ${testRun.url}`);
     };
 
     // We use MERGE_COMMIT_SHA as the deployment is created for the merge commit.
@@ -107,6 +171,11 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
       commitSha: mergeCommitSha,
       environment: "github-actions",
       onTunnelCreated,
+      onTestRunCreated,
+      onProgressUpdate,
+      ...(keepTunnelOpenPromise
+        ? { keepTunnelOpenPromise: keepTunnelOpenPromise.promise }
+        : {}),
     });
 
     transaction.setStatus("ok");
