@@ -110,8 +110,8 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
           event,
           owner,
           repo,
-          body: `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: ${basicAuthUser} password: ${basicAuthPassword}.\n\n
-          Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. Cancel the workflow run to close the tunnel early.`,
+          body: `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: \`${basicAuthUser}\` password: \`${basicAuthPassword}\`.\n\n
+Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. Cancel the workflow run to close the tunnel early.`,
           testSuiteId: "__meticulous_debug__",
           shortHeadSha: shortCommitSha(head),
           createIfDoesNotExist: true,
