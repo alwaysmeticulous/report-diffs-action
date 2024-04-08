@@ -133,7 +133,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
         !keepTunnelOpenTimeout
       ) {
         logger.info(
-          `Test run execution completed. Keeping tunnel open for $${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}`
+          `Test run execution completed. Keeping tunnel open for ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}`
         );
         keepTunnelOpenTimeout = setTimeout(() => {
           keepTunnelOpenPromise.resolve();
