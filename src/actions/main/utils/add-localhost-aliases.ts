@@ -57,9 +57,6 @@ export const addLocalhostAliases = async ({
     .map((alias) => `${getIp(alias)}\t${alias}`)
     .join("\n");
 
-  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
-  logger.debug(`Adding aliases to /etc/hosts: ${hostsEntries}`);
-
   await appendFile(HOSTS_FILE, `\n${hostsEntries}`, { encoding: "utf-8" });
   return appUrlAliasedToLocalhost;
 };
