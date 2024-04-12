@@ -132,7 +132,10 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         maxWait: 15_000,
       }
     );
-    await addLocalhostAliases({ appUrl, localhostAliases });
+    const appUrlAliasedToLocalhost = await addLocalhostAliases({
+      appUrl,
+      localhostAliases,
+    });
 
     const urlToTestAgainst = useDeploymentUrl
       ? await waitForDeploymentUrl({
@@ -147,7 +150,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       : appUrl;
 
     if (urlToTestAgainst != null) {
-      spinUpProxyIfNeeded(urlToTestAgainst, logger);
+      spinUpProxyIfNeeded(urlToTestAgainst, appUrlAliasedToLocalhost, logger);
       await throwIfCannotConnectToOrigin(urlToTestAgainst);
     }
 
