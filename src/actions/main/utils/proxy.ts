@@ -29,7 +29,7 @@ export const spinUpProxyIfNeeded = (
             server {
                 listen ${port};
                 server_name ${
-                  appUrlAliasedToLocalhost ? url.host : "localhost"
+                  appUrlAliasedToLocalhost ? url.hostname : "localhost"
                 };
                 location / {
                     proxy_pass http://${DOCKER_BRIDGE_NETWORK_GATEWAY}:${port};
