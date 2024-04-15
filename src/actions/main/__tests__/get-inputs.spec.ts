@@ -13,6 +13,7 @@ const keys = [
   "METICULOUS_TELEMETRY_SAMPLE_RATE",
   "USE_DEPLOYMENT_URL",
   "ALLOWED_ENVIRONMENTS",
+  "ADDITIONAL_PORTS",
 ];
 
 const EXPECTED_DEFAULT_VALUES = {
@@ -28,6 +29,7 @@ const EXPECTED_DEFAULT_VALUES = {
   parallelTasks: null,
   testsFile: null,
   testSuiteId: null,
+  additionalPorts: null,
 };
 
 describe("getMainActionInputs", () => {
