@@ -60,6 +60,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     useDeploymentUrl,
     allowedEnvironments,
     testSuiteId,
+    additionalPorts,
   } = getMainActionInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -150,7 +151,12 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       : appUrl;
 
     if (urlToTestAgainst != null) {
-      spinUpProxyIfNeeded(urlToTestAgainst, appUrlAliasedToLocalhost, logger);
+      spinUpProxyIfNeeded(
+        urlToTestAgainst,
+        additionalPorts,
+        appUrlAliasedToLocalhost,
+        logger
+      );
       await throwIfCannotConnectToOrigin(urlToTestAgainst);
     }
 
