@@ -23,6 +23,8 @@ export interface PushPayload {
 
 // https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request
 export interface PullRequestPayload {
+  repository: string;
+  organization: string;
   pull_request: {
     number: number;
     head: {

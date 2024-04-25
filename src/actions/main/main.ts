@@ -79,6 +79,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   const { base, head } = await getBaseAndHeadCommitShas(event, {
     useDeploymentUrl,
+    octokit,
   });
   const environment = getEnvironment({ event, head });
 

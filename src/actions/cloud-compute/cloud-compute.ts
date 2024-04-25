@@ -61,6 +61,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
 
   const { base, head } = await getBaseAndHeadCommitShas(event, {
     useDeploymentUrl: false,
+    octokit,
   });
 
   const { shaToCompareAgainst } = await safeEnsureBaseTestsExists({

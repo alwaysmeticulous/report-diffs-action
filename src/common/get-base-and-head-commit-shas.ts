@@ -1,8 +1,9 @@
 import { execSync } from "child_process";
 import { context } from "@actions/github";
+import { GitHub } from "@actions/github/lib/utils";
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
-import { CodeChangeEvent } from "../types";
+import { CodeChangeEvent, PullRequestPayload } from "../types";
 
 interface BaseAndHeadCommitShas {
   base: string | null;
@@ -11,7 +12,7 @@ interface BaseAndHeadCommitShas {
 
 export const getBaseAndHeadCommitShas = async (
   event: CodeChangeEvent,
-  options: { useDeploymentUrl: boolean }
+  options: { useDeploymentUrl: boolean; octokit: InstanceType<typeof GitHub> }
 ): Promise<BaseAndHeadCommitShas> => {
   if (event.type === "pull_request") {
     const head = event.payload.pull_request.head.sha;
@@ -27,7 +28,13 @@ export const getBaseAndHeadCommitShas = async (
       };
     }
     return {
-      base: (await tryGetMergeBaseOfTemporaryMergeCommit(head, base)) ?? base,
+      base:
+        (await tryGetMergeBaseOfTemporaryMergeCommit(
+          options.octokit,
+          event.payload,
+          head,
+          base
+        )) ?? base,
       head,
     };
   }
@@ -89,10 +96,12 @@ const tryGetMergeBaseOfHeadCommit = (
   }
 };
 
-const tryGetMergeBaseOfTemporaryMergeCommit = (
+const tryGetMergeBaseOfTemporaryMergeCommit = async (
+  octokit: InstanceType<typeof GitHub>,
+  event: PullRequestPayload,
   pullRequestHeadSha: string,
   pullRequestBaseSha: string
-): string | null => {
+): Promise<string | null> => {
   const mergeCommitSha = process.env.GITHUB_SHA;
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
@@ -147,12 +156,27 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
     }
     return mergeBaseSha;
   } catch (e) {
-    logger.error(
-      `Error getting base of merge commit (${mergeCommitSha}). Using the base of the pull request instead (${pullRequestBaseSha}).`,
+    logger.warn(
+      `Error getting base of merge commit (${mergeCommitSha}). Trying with a call to the GitHub API instead.`,
       e
     );
-    return null;
   }
+  const response = await octokit.rest.repos.getCommit({
+    owner: event.organization,
+    repo: event.repository,
+    ref: pullRequestHeadSha,
+  });
+  if (response.data.parents.length >= 1) {
+    const parentSha = response.data.parents[0].sha;
+    logger.info(
+      `Got parent of merge commit from GitHub API call: ${parentSha}`
+    );
+    return parentSha;
+  }
+  logger.error(
+    `Making an API call to get the parent of the merge commit also failed. Using the base of the pull request instead (${pullRequestBaseSha}).`
+  );
+  return null;
 };
 
 const markGitDirectoryAsSafe = () => {
