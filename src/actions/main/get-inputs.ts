@@ -62,6 +62,11 @@ export const getMainActionInputs = () => {
     required: false,
     type: "string-array",
   });
+  const additionalPorts = getInputFromEnv({
+    name: "additional-ports",
+    required: false,
+    type: "string",
+  });
 
   if (appUrl != null && appUrl != "" && useDeploymentUrl === true) {
     throw new Error("Cannot use both app-url and use-deployment-url");
@@ -93,5 +98,6 @@ export const getMainActionInputs = () => {
     useDeploymentUrl,
     testSuiteId,
     allowedEnvironments,
+    additionalPorts,
   };
 };

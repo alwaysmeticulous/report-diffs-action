@@ -101,7 +101,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
       basicAuthPassword: string;
     }) => {
       logger.info(
-        `Secure tunnel to ${appUrl} created: ${url}, user: ${basicAuthUser}, password: ${basicAuthPassword}`
+        `Secure tunnel to ${appUrl} created: ${url} user: ${basicAuthUser} password: ${basicAuthPassword}`
       );
 
       if (isDebugPRRun) {
