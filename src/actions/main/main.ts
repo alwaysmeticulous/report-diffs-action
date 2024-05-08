@@ -61,6 +61,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     allowedEnvironments,
     testSuiteId,
     additionalPorts,
+    baseSha,
+    headSha,
   } = getMainActionInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -79,6 +81,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   const { base, head } = await getBaseAndHeadCommitShas(event, {
     useDeploymentUrl,
+    baseSha,
+    headSha,
   });
   const environment = getEnvironment({ event, head });
 
