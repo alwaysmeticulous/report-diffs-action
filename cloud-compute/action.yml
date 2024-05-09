@@ -14,11 +14,11 @@ inputs:
     required: true
   base-sha:
     description: |
-      The base commit SHA to compare against. This can usually be inferred automatically by Meticulous, so typically you do not need to set this.
+      Override the base commit SHA to compare against instead of using the one inferred automatically by Meticulous. This normally should not be set, but is useful in some scenarios.
     required: false
   head-sha:
     description: |
-      The head commit SHA that we are running on. This can usually be inferred automatically by Meticulous, so typically you do not need to set this.
+      Override the head commit SHA that we are analysing instead of using the one inferred automatically by Meticulous. This normally should not be set, but is useful in some scenarios.
     required: false
 
 outputs: {}
