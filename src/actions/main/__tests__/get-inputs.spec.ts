@@ -14,6 +14,7 @@ const keys = [
   "USE_DEPLOYMENT_URL",
   "ALLOWED_ENVIRONMENTS",
   "ADDITIONAL_PORTS",
+  "HEAD_SHA",
 ];
 
 const EXPECTED_DEFAULT_VALUES = {
@@ -30,6 +31,7 @@ const EXPECTED_DEFAULT_VALUES = {
   testsFile: null,
   testSuiteId: null,
   additionalPorts: null,
+  headSha: null,
 };
 
 describe("getMainActionInputs", () => {

@@ -12,6 +12,10 @@ inputs:
     description: |
       The URL to execute the tests against. This URL should serve the code from the current commit (e.g. a localhost URL served up by a local server).
     required: true
+  head-sha:
+    description: |
+      Override the head commit SHA that we are analysing instead of using the one inferred automatically by Meticulous. This normally should not be set, but is useful in some scenarios.
+    required: false
 
 outputs: {}
 runs:
