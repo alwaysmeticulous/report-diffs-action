@@ -67,11 +67,6 @@ export const getMainActionInputs = () => {
     required: false,
     type: "string",
   });
-  const baseSha = getInputFromEnv({
-    name: "base-sha",
-    required: false,
-    type: "string",
-  });
   const headSha = getInputFromEnv({
     name: "head-sha",
     required: false,
@@ -109,7 +104,6 @@ export const getMainActionInputs = () => {
     testSuiteId,
     allowedEnvironments,
     additionalPorts,
-    baseSha,
     headSha,
   };
 };

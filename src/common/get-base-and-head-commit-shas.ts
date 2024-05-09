@@ -13,7 +13,6 @@ export const getBaseAndHeadCommitShas = async (
   event: CodeChangeEvent,
   options: {
     useDeploymentUrl: boolean;
-    baseSha: string | null;
     headSha: string | null;
   }
 ): Promise<BaseAndHeadCommitShas> => {
@@ -26,22 +25,18 @@ export const getBaseAndHeadCommitShas = async (
       // The PR base can sometimes point to a commit ahead of the merge-base of the head commit
       // (I believe it's based on the github temporary merge commit)
       return {
-        base:
-          options.baseSha ||
-          ((await tryGetMergeBaseOfHeadCommit(head, base, baseRef)) ?? base),
+        base: (await tryGetMergeBaseOfHeadCommit(head, base, baseRef)) ?? base,
         head,
       };
     }
     return {
-      base:
-        options.baseSha ||
-        ((await tryGetMergeBaseOfTemporaryMergeCommit(head, base)) ?? base),
+      base: (await tryGetMergeBaseOfTemporaryMergeCommit(head, base)) ?? base,
       head,
     };
   }
   if (event.type === "push") {
     return {
-      base: options.baseSha || event.payload.before,
+      base: event.payload.before,
       head: options.headSha || event.payload.after,
     };
   }

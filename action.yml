@@ -60,10 +60,6 @@ inputs:
   additional-ports:
     description: Ports the client needs to access the application in addition to the one in the app URL, as a list of comma-separated values
     required: false
-  base-sha:
-    description: |
-      Override the base commit SHA to compare against instead of using the one inferred automatically by Meticulous. This normally should not be set, but is useful in some scenarios.
-    required: false
   head-sha:
     description: |
       Override the head commit SHA that we are analysing instead of using the one inferred automatically by Meticulous. This normally should not be set, but is useful in some scenarios.
@@ -88,7 +84,6 @@ runs:
     TEST_SUITE_ID: ${{ inputs.test-suite-id }}
     METICULOUS_TELEMETRY_SAMPLE_RATE: "0.01"
     ADDITIONAL_PORTS: ${{ inputs.additional-ports }}
-    BASE_SHA: ${{ inputs.base-sha }}
     HEAD_SHA: ${{ inputs.head-sha }}
 branding:
   color: purple

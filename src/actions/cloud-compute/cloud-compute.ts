@@ -42,8 +42,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     setLogLevel("trace");
   }
 
-  const { apiToken, githubToken, appUrl, baseSha, headSha } =
-    getInCloudActionInputs();
+  const { apiToken, githubToken, appUrl, headSha } = getInCloudActionInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
@@ -62,7 +61,6 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
 
   const { base, head } = await getBaseAndHeadCommitShas(event, {
     useDeploymentUrl: false,
-    baseSha,
     headSha,
   });
 

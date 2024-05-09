@@ -14,7 +14,6 @@ const keys = [
   "USE_DEPLOYMENT_URL",
   "ALLOWED_ENVIRONMENTS",
   "ADDITIONAL_PORTS",
-  "BASE_SHA",
   "HEAD_SHA",
 ];
 
@@ -32,7 +31,6 @@ const EXPECTED_DEFAULT_VALUES = {
   testsFile: null,
   testSuiteId: null,
   additionalPorts: null,
-  baseSha: null,
   headSha: null,
 };
 
