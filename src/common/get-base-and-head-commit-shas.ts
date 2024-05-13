@@ -11,10 +11,13 @@ interface BaseAndHeadCommitShas {
 
 export const getBaseAndHeadCommitShas = async (
   event: CodeChangeEvent,
-  options: { useDeploymentUrl: boolean }
+  options: {
+    useDeploymentUrl: boolean;
+    headSha: string | null;
+  }
 ): Promise<BaseAndHeadCommitShas> => {
   if (event.type === "pull_request") {
-    const head = event.payload.pull_request.head.sha;
+    const head = options.headSha || event.payload.pull_request.head.sha;
     const base = event.payload.pull_request.base.sha;
     const baseRef = event.payload.pull_request.base.ref;
     if (options.useDeploymentUrl) {
@@ -34,13 +37,13 @@ export const getBaseAndHeadCommitShas = async (
   if (event.type === "push") {
     return {
       base: event.payload.before,
-      head: event.payload.after,
+      head: options.headSha || event.payload.after,
     };
   }
   if (event.type === "workflow_dispatch") {
     return {
       base: null,
-      head: context.sha,
+      head: options.headSha || context.sha,
     };
   }
   return assertNever(event);
