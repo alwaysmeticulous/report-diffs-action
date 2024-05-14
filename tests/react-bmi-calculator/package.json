@@ -7,13 +7,16 @@
 		"@types/jest": "24.0.20",
 		"chart.js": "2.9.4",
 		"materialize-css": "1.0.0",
-		"postcss": "^8.4.31",
 		"prop-types": "15.7.2",
 		"react": "16.11.0",
 		"react-chartjs-2": "2.8.0",
 		"react-dom": "16.11.0",
 		"react-scripts": "^5.0.1",
 		"uuid": "3.3.3"
+	},
+	"resolutions": {
+		"//": "https://nvd.nist.gov/vuln/detail/CVE-2023-44270",
+		"postcss": "^8.4.31"
 	},
 	"scripts": {
 		"start": "react-scripts start",
