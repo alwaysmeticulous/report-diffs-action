@@ -73,6 +73,10 @@
     "typescript": "^4.9.5",
     "yaml": "^2.4.1"
   },
+  "resolutions": {
+    "//": "https://nvd.nist.gov/vuln/detail/CVE-2022-46175",
+    "json5": "^2.2.2"
+  },
   "engines": {
     "node": ">= 20"
   },
