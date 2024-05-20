@@ -37,10 +37,10 @@
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.127.0.tgz#88d7692d6a78b83f2fcbc148ecdb7ff402fd64c0"
   integrity sha512-cAt/y1Y5o3TTlHhDvDQS9d1wGS85dOd9x94S42eR4xiZ4AUNBWyzu0elX67txfvzr8S5zx11cEsjGaoHYHieig==
 
-"@alwaysmeticulous/client@^2.127.0":
-  version "2.127.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.127.0.tgz#b88ba78bbefd4fc38b46db66c6159f265a788942"
-  integrity sha512-r0coJrr0tmwnzqBhQL0mkNGPs4DzuiWekTKD3102b+J8OryfFMXHse8w41S7Ys/cbkSOJqb4SVRc/WydVAliOA==
+"@alwaysmeticulous/client@^2.128.0":
+  version "2.128.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.128.0.tgz#1d2ee013570c3d766a4aaf81a0a35c394b1844ae"
+  integrity sha512-A3CNYh2ROef74YgF7m177CYr3Yj9UODyuuL3NksihtA2g5pgQBVVHcchRUXsBhUZYJ012dCjhJ88RnHiNnAP4Q==
   dependencies:
     "@alwaysmeticulous/api" "^2.127.0"
     "@alwaysmeticulous/common" "^2.127.0"
@@ -56,13 +56,13 @@
     loglevel "^1.8.0"
     luxon "^3.2.1"
 
-"@alwaysmeticulous/downloading-helpers@^2.127.0":
-  version "2.127.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.127.0.tgz#bd322ba81e9ab310255def1d90603409e21bd013"
-  integrity sha512-Nz0hSGK1kleU+lly/u2KjcJqwcTNLTX8QC1r9ZG4Q5OXq0EkY0PRYBsHa5zMYhliF61VUIrHSIT/hUx3CPYQYg==
+"@alwaysmeticulous/downloading-helpers@^2.128.0":
+  version "2.128.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.128.0.tgz#6a6b1be40617886f0a18f867cfce9326898e808a"
+  integrity sha512-oubw1Bb3AxCX4GgyG25N4VJOvyU7Lvoyz2L1AAnscgbAo2Z8rxhJ5CParsHXUiQlHshjQ1wokcIFXHYjSYfWJA==
   dependencies:
     "@alwaysmeticulous/api" "^2.127.0"
-    "@alwaysmeticulous/client" "^2.127.0"
+    "@alwaysmeticulous/client" "^2.128.0"
     "@alwaysmeticulous/common" "^2.127.0"
     axios "^1.2.6"
     axios-retry "^4.1.0"
@@ -72,23 +72,23 @@
     p-limit "^3.1.0"
     proper-lockfile "^4.1.2"
 
-"@alwaysmeticulous/remote-replay-launcher@^2.127.0":
-  version "2.127.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/remote-replay-launcher/-/remote-replay-launcher-2.127.0.tgz#ef07bb4d8d997f542494495265b219e8a39a4836"
-  integrity sha512-JFnV3p1JnzrLVmSZo6Whg/861iwGLzfvgkJfGTRGAhCCZVbzYqdnqWQM8xXXcvq/Y7i4oJoyRiQeToPkLp4vag==
+"@alwaysmeticulous/remote-replay-launcher@^2.128.0":
+  version "2.128.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/remote-replay-launcher/-/remote-replay-launcher-2.128.0.tgz#d163b188de94fd79b3cc9ac7f492bdcf66e9d0c9"
+  integrity sha512-VVFj1vks68+XrtAisqfnBMe9qTIVPqy1izb+oQVJSCxDsegqmhHO8g/siANSxi3hw9wMyMhuWODK/1POz1zdig==
   dependencies:
-    "@alwaysmeticulous/client" "^2.127.0"
+    "@alwaysmeticulous/client" "^2.128.0"
     "@alwaysmeticulous/common" "^2.127.0"
-    "@alwaysmeticulous/tunnels-client" "^2.127.0"
+    "@alwaysmeticulous/tunnels-client" "^2.128.0"
     loglevel "^1.8.0"
 
-"@alwaysmeticulous/replay-orchestrator-launcher@^2.127.0":
-  version "2.127.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.127.0.tgz#1c924dcdf6c8fd4b0c6ecd54af3b76371a4ffc11"
-  integrity sha512-vEuRLLdlwKY3HKdc73/ob9cvehpii1JkggnGu0yvJQ0ITg1SRLQfF+Np1qI68a31qfmUrc4sAnpXTqKWoi0n2g==
+"@alwaysmeticulous/replay-orchestrator-launcher@^2.128.0":
+  version "2.128.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.128.0.tgz#fb2c77d6cf83c9e0031fbe29488e1ecba00ffc68"
+  integrity sha512-dON6nUTAxys/hB2pFWSrXEuj0mwcvxo6+02HrBXsVJfadNu5snNHqr/UoeIpDe+ZQPHC9SVQmE9eG0k+Jz6n/g==
   dependencies:
     "@alwaysmeticulous/common" "^2.127.0"
-    "@alwaysmeticulous/downloading-helpers" "^2.127.0"
+    "@alwaysmeticulous/downloading-helpers" "^2.128.0"
     "@alwaysmeticulous/sdk-bundles-api" "^2.127.0"
     loglevel "^1.8.0"
     puppeteer "21.9.0"
@@ -108,10 +108,10 @@
     "@sentry/tracing" "^7.107.0"
     luxon "^3.2.1"
 
-"@alwaysmeticulous/tunnels-client@^2.127.0":
-  version "2.127.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/tunnels-client/-/tunnels-client-2.127.0.tgz#fb80ae34e1d190b32d2d5f70a814958c132d7f49"
-  integrity sha512-45DiWPVxtlG8GFZMGpgHdPcZYRVDPTVG7sBJ8ZGDLScaG1qSvGRQ7iKKUhGhvp+bBlUqwwF5bEfSbj85aEgfiw==
+"@alwaysmeticulous/tunnels-client@^2.128.0":
+  version "2.128.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/tunnels-client/-/tunnels-client-2.128.0.tgz#fd27d14a51c4c2a53d32ad76cb7595c202a7211e"
+  integrity sha512-Zy974gW594uc2OCcn0GbcLQ6ZEAFbvDepZHGBeJ2iYBjY1s9SPzSj18pfMkyibBz97xrBDqFaIcg9Fd5Tc8RbQ==
   dependencies:
     axios "^1.2.6"
     axios-retry "^4.1.0"
@@ -4403,22 +4403,10 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
   integrity sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==
 
-json5@2.x, json5@^2.2.2:
+json5@2.x, json5@^1.0.2, json5@^2.2.0, json5@^2.2.1, json5@^2.2.2:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
   integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
-
-json5@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/json5/-/json5-1.0.2.tgz#63d98d60f21b313b77c4d6da18bfa69d80e1d593"
-  integrity sha512-g1MWMLBiz8FKi1e4w0UyVL3w+iJceWAFBAaBnnGKOpNa5f8TLktkbre1+s6oICydWAm+HRUGTmI+//xv2hvXYA==
-  dependencies:
-    minimist "^1.2.0"
-
-json5@^2.2.0, json5@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.1.tgz#655d50ed1e6f95ad1a3caababd2b0efda10b395c"
-  integrity sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA==
 
 jsonfile@^4.0.0:
   version "4.0.0"
@@ -4679,7 +4667,7 @@ minimatch@^9.0.0:
   dependencies:
     brace-expansion "^2.0.1"
 
-minimist@^1.2.0, minimist@^1.2.6:
+minimist@^1.2.6:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.7.tgz#daa1c4d91f507390437c6a8bc01078e7000c4d18"
   integrity sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==
