@@ -83,7 +83,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     logger.info(
       `Comparing visual snapshots for commit ${shortSha(
         head
-      )} against commit ${shortSha(shaToCompareAgainst)}}`
+      )} against commit ${shortSha(shaToCompareAgainst)}`
     );
   } else {
     logger.info(`Generating visual snapshots for commit ${shortSha(head)}`);
