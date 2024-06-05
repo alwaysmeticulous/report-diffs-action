@@ -73,7 +73,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   // Users can also explicitly provide the head commit SHA to use as input. This is useful when the action is not
   // run with the code checked out.
   // Our backend is responsible for computing the correct BASE commit to create the test run for.
-  const headSha = headShaFromInput ?? getHeadCommitShaFromRepo();
+  const headSha = headShaFromInput || getHeadCommitShaFromRepo();
 
   logger.info(`Head sha is ${headSha}`);
 
