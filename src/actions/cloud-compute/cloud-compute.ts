@@ -75,8 +75,6 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   // Our backend is responsible for computing the correct BASE commit to create the test run for.
   const headSha = headShaFromInput || getHeadCommitShaFromRepo();
 
-  logger.info(`Head sha is ${headSha}`);
-
   const { base, head } = await getBaseAndHeadCommitShas(event, {
     useDeploymentUrl: false,
     // Always use either the headSha explicity provided as input or
