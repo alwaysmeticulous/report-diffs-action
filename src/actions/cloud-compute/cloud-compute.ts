@@ -9,7 +9,10 @@ import { Duration } from "luxon";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import { shortCommitSha } from "../../common/environment.utils";
-import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
+import {
+  getBaseAndHeadCommitShas,
+  getHeadCommitShaFromRepo,
+} from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { isDebugPullRequestRun } from "../../common/is-debug-pr-run";
 import { initLogger, setLogLevel, shortSha } from "../../common/logger.utils";
@@ -42,7 +45,12 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     setLogLevel("trace");
   }
 
-  const { apiToken, githubToken, appUrl, headSha } = getInCloudActionInputs();
+  const {
+    apiToken,
+    githubToken,
+    appUrl,
+    headSha: headShaFromInput,
+  } = getInCloudActionInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
@@ -59,8 +67,18 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     return;
   }
 
+  // Compute the HEAD commit SHA to use when creating a test run.
+  // In a PR workflow this will by default be process.env.GITHUB_SHA (the temporary merge commit) or
+  // sometimes the head commit of the PR.
+  // Users can also explicitly provide the head commit SHA to use as input. This is useful when the action is not
+  // run with the code checked out.
+  // Our backend is responsible for computing the correct BASE commit to create the test run for.
+  const headSha = headShaFromInput ?? getHeadCommitShaFromRepo();
+
   const { base, head } = await getBaseAndHeadCommitShas(event, {
     useDeploymentUrl: false,
+    // Always use either the headSha explicity provided as input or
+    // head sha from the repo.
     headSha,
   });
 
@@ -160,16 +178,11 @@ Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. 
     };
 
     // We use MERGE_COMMIT_SHA as the deployment is created for the merge commit.
-    // Our backend is responsible for computing the correct HEAD and BASE commits to create the test run for.
-    const mergeCommitSha = process.env.GITHUB_SHA;
-    if (!mergeCommitSha) {
-      throw new Error("GITHUB_SHA is not set.");
-    }
 
     await executeRemoteTestRun({
       apiToken,
       appUrl,
-      commitSha: mergeCommitSha,
+      commitSha: headSha,
       environment: "github-actions",
       onTunnelCreated,
       onTestRunCreated,

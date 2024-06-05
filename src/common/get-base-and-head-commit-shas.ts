@@ -92,6 +92,10 @@ const tryGetMergeBaseOfHeadCommit = (
   }
 };
 
+export const getHeadCommitShaFromRepo = (): string => {
+  return execSync("git rev-list --max-count=1 HEAD").toString().trim();
+};
+
 const tryGetMergeBaseOfTemporaryMergeCommit = (
   pullRequestHeadSha: string,
   pullRequestBaseSha: string
@@ -108,9 +112,7 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
   try {
     markGitDirectoryAsSafe();
 
-    const headCommitSha = execSync("git rev-list --max-count=1 HEAD")
-      .toString()
-      .trim();
+    const headCommitSha = getHeadCommitShaFromRepo();
     if (headCommitSha !== mergeCommitSha) {
       logger.info(
         `The head commit SHA (${headCommitSha}) does not equal GITHUB_SHA environment variable (${mergeCommitSha}).
