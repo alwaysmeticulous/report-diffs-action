@@ -67,11 +67,6 @@ export const getMainActionInputs = () => {
     required: false,
     type: "string",
   });
-  const headSha = getInputFromEnv({
-    name: "head-sha",
-    required: false,
-    type: "string",
-  });
 
   if (appUrl != null && appUrl != "" && useDeploymentUrl === true) {
     throw new Error("Cannot use both app-url and use-deployment-url");
@@ -104,6 +99,5 @@ export const getMainActionInputs = () => {
     testSuiteId,
     allowedEnvironments,
     additionalPorts,
-    headSha,
   };
 };
