@@ -9,15 +9,13 @@ import { Duration } from "luxon";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import { shortCommitSha } from "../../common/environment.utils";
-import {
-  getBaseAndHeadCommitShas,
-  getHeadCommitShaFromRepo,
-} from "../../common/get-base-and-head-commit-shas";
+import { getHeadCommitShaFromRepo } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { isDebugPullRequestRun } from "../../common/is-debug-pr-run";
 import { initLogger, setLogLevel, shortSha } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { updateStatusComment } from "../../common/update-status-comment";
+import { getCloudComputeBaseTestRun } from "./get-cloud-compute-base-test-run";
 import { getInCloudActionInputs } from "./get-inputs";
 
 const DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION = Duration.fromObject({
@@ -73,35 +71,30 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   // Users can also explicitly provide the head commit SHA to use as input. This is useful when the action is not
   // run with the code checked out.
   // Our backend is responsible for computing the correct BASE commit to create the test run for.
-  const headSha = headShaFromInput || getHeadCommitShaFromRepo();
+  const head = headShaFromInput || getHeadCommitShaFromRepo();
 
-  const { base, head } = await getBaseAndHeadCommitShas(event, {
-    useDeploymentUrl: false,
-    // Always use either the headSha explicity provided as input or
-    // head sha from the repo.
-    headSha,
+  // Compute the base commit SHA to compare to for the HEAD commit.
+  // This will usually be the merge base of the PR head and base commit. In some cases it can be an older main branch commit,
+  // for example when running in a monorepo setup.
+  const { baseCommitSha } = await getCloudComputeBaseTestRun({
+    apiToken,
+    headCommitSha: head,
   });
 
   const { shaToCompareAgainst } = await safeEnsureBaseTestsExists({
     event,
     apiToken,
-    base,
+    base: baseCommitSha,
     useCloudReplayEnvironmentVersion: true,
     context,
     octokit,
   });
 
-  if (shaToCompareAgainst != null && event.type === "pull_request") {
+  if (shaToCompareAgainst != null) {
     logger.info(
-      `Comparing visual snapshots for the commit head of this PR, ${shortSha(
+      `Comparing visual snapshots for the commit ${shortSha(
         head
       )}, against ${shortSha(shaToCompareAgainst)}`
-    );
-  } else if (shaToCompareAgainst != null) {
-    logger.info(
-      `Comparing visual snapshots for commit ${shortSha(
-        head
-      )} against commit ${shortSha(shaToCompareAgainst)}`
     );
   } else {
     logger.info(`Generating visual snapshots for commit ${shortSha(head)}`);
