@@ -12,5 +12,10 @@ export const getCloudComputeBaseTestRun = async ({
   headCommitSha: string;
 }): Promise<GitHubBaseTestRunResponse> => {
   const client = createClient({ apiToken });
-  return await getGitHubCloudReplayBaseTestRun({ client, headCommitSha });
+  const result = await getGitHubCloudReplayBaseTestRun({
+    client,
+    headCommitSha,
+  });
+  console.log(result);
+  return result;
 };
