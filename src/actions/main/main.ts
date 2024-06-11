@@ -79,7 +79,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
 
   const { base, head } = await getBaseAndHeadCommitShas(event, {
     useDeploymentUrl,
-    headSha: null,
   });
   const environment = getEnvironment({ event, head });
 
