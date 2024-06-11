@@ -76,7 +76,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   // Compute the base commit SHA to compare to for the HEAD commit.
   // This will usually be the merge base of the PR head and base commit. In some cases it can be an older main branch commit,
   // for example when running in a monorepo setup.
-  const { baseCommitSha } = await getCloudComputeBaseTestRun({
+  const { baseCommitSha, baseTestRun } = await getCloudComputeBaseTestRun({
     apiToken,
     headCommitSha: head,
   });
@@ -85,9 +85,10 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     event,
     apiToken,
     base: baseCommitSha,
-    useCloudReplayEnvironmentVersion: true,
     context,
     octokit,
+    // We don't need to fetch the base test run again if we already have it.
+    getBaseTestRun: async () => baseTestRun,
   });
 
   if (shaToCompareAgainst != null) {

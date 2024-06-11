@@ -1,6 +1,10 @@
 import { setFailed } from "@actions/core";
 import { context } from "@actions/github";
 import {
+  createClient,
+  getLatestTestRunResults,
+} from "@alwaysmeticulous/client";
+import {
   DEFAULT_EXECUTION_OPTIONS,
   METICULOUS_LOGGER_NAME,
   setMeticulousLocalDataDir,
@@ -86,9 +90,14 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     event,
     apiToken,
     base,
-    useCloudReplayEnvironmentVersion: false,
     context,
     octokit,
+    getBaseTestRun: async ({ baseSha }) =>
+      await getLatestTestRunResults({
+        client: createClient({ apiToken }),
+        commitSha: baseSha,
+        logicalEnvironmentVersion: LOGICAL_ENVIRONMENT_VERSION,
+      }),
   });
 
   if (shaToCompareAgainst != null && event.type === "pull_request") {
