@@ -13,11 +13,10 @@ export const getBaseAndHeadCommitShas = async (
   event: CodeChangeEvent,
   options: {
     useDeploymentUrl: boolean;
-    headSha: string | null;
   }
 ): Promise<BaseAndHeadCommitShas> => {
   if (event.type === "pull_request") {
-    const head = options.headSha || event.payload.pull_request.head.sha;
+    const head = event.payload.pull_request.head.sha;
     const base = event.payload.pull_request.base.sha;
     const baseRef = event.payload.pull_request.base.ref;
     if (options.useDeploymentUrl) {
@@ -37,13 +36,13 @@ export const getBaseAndHeadCommitShas = async (
   if (event.type === "push") {
     return {
       base: event.payload.before,
-      head: options.headSha || event.payload.after,
+      head: event.payload.after,
     };
   }
   if (event.type === "workflow_dispatch") {
     return {
       base: null,
-      head: options.headSha || context.sha,
+      head: context.sha,
     };
   }
   return assertNever(event);
@@ -92,6 +91,10 @@ const tryGetMergeBaseOfHeadCommit = (
   }
 };
 
+export const getHeadCommitShaFromRepo = (): string => {
+  return execSync("git rev-list --max-count=1 HEAD").toString().trim();
+};
+
 const tryGetMergeBaseOfTemporaryMergeCommit = (
   pullRequestHeadSha: string,
   pullRequestBaseSha: string
@@ -108,9 +111,7 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
   try {
     markGitDirectoryAsSafe();
 
-    const headCommitSha = execSync("git rev-list --max-count=1 HEAD")
-      .toString()
-      .trim();
+    const headCommitSha = getHeadCommitShaFromRepo();
     if (headCommitSha !== mergeCommitSha) {
       logger.info(
         `The head commit SHA (${headCommitSha}) does not equal GITHUB_SHA environment variable (${mergeCommitSha}).
