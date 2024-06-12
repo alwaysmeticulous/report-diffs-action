@@ -1,14 +1,10 @@
 import { warning as ghWarning } from "@actions/core";
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
-import {
-  createClient,
-  getLatestTestRunResults,
-} from "@alwaysmeticulous/client";
+import { TestRun } from "@alwaysmeticulous/client";
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { Duration } from "luxon";
-import { LOGICAL_ENVIRONMENT_VERSION } from "../actions/main/utils/constants";
 import { CodeChangeEvent } from "../types";
 import { DOCS_URL } from "./constants";
 import {
@@ -47,18 +43,17 @@ export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
 
 export const ensureBaseTestsExists = async ({
   event,
-  apiToken,
   base, // from the PR event
   context,
-  useCloudReplayEnvironmentVersion,
   octokit,
+  getBaseTestRun,
 }: {
   event: CodeChangeEvent;
   apiToken: string;
   base: string | null;
-  useCloudReplayEnvironmentVersion: boolean;
   context: Context;
   octokit: InstanceType<typeof GitHub>;
+  getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
 }): Promise<{ shaToCompareAgainst: string | null }> => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
@@ -68,13 +63,7 @@ export const ensureBaseTestsExists = async ({
     return { shaToCompareAgainst: null };
   }
 
-  const testRun = await getLatestTestRunResults({
-    client: createClient({ apiToken }),
-    commitSha: base,
-    ...(useCloudReplayEnvironmentVersion
-      ? { useCloudReplayEnvironmentVersion: true }
-      : { logicalEnvironmentVersion: LOGICAL_ENVIRONMENT_VERSION }),
-  });
+  const testRun = await getBaseTestRun({ baseSha: base });
 
   if (testRun != null) {
     logger.info(`Tests already exist for commit ${base} (${testRun.id})`);
