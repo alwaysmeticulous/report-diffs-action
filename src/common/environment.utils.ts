@@ -29,7 +29,9 @@ export const getEnvironment = ({
         number: event.payload.pull_request.number,
         htmlUrl: event.payload.pull_request.html_url,
         baseSha: event.payload.pull_request.base.sha,
+        baseRef: event.payload.pull_request.base.ref,
         headSha: event.payload.pull_request.head.sha,
+        headRef: event.payload.pull_request.head.ref,
       },
     };
   }
