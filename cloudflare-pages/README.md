@@ -1,6 +1,8 @@
 # Cloudflare Pages Action
 
-To use this Action please create a GitHub Actions workflow `.github/workflows/trigger-meticulous.yaml` with the contents:
+This GitHub Action will create a GitHub deployment from your Cloudflare Pages one, thus triggering Meticulous to run tests.
+
+To use this Action please create a GitHub Actions workflow `.github/workflows/cloudflare-pages.yaml` with the contents:
 
 ```yaml
 name: Trigger Meticulous
