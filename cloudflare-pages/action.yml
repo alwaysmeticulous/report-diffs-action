@@ -17,6 +17,14 @@ inputs:
     description: 'Time to sleep before starting to poll deployment status (in seconds)'
     required: false
     default: "300"
+  deployment-poll-seconds:
+    description: 'Time to wait between API calls to poll for the deployment to be ready (in seconds)'
+    required: false
+    default: "60"
+  wait-till-ready-seconds:
+    description: 'Maximum time to wait for the deployment to be ready (in seconds)'
+    required: false
+    default: "3600"
 runs:
   using: "composite"
   steps:
@@ -34,13 +42,13 @@ runs:
           echo "Checking deployment status..."
           STATUS=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/${{ inputs.cloudflare-account-id }}/pages/projects/${{ inputs.cloudflare-project-name }}/deployments" -H "Authorization: Bearer ${{ inputs.cloudflare-api-token }}" -H "Content-Type:application/json" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "${{ github.sha }}") | .latest_stage.status)' --raw-output | tr -d '\n')
           if [[ "$STATUS" != "success" ]]; then
-            if [[ $SLEPT -gt 3600 ]]; then
-              echo "Deployment is still not ready after waiting an hour, failing..."
+            if [[ $SLEPT -gt ${{ inputs.wait-till-ready-seconds }} ]]; then
+              echo "Deployment is still not ready, failing..."
               exit 1
             fi
-            echo "Deployment is not ready yet, sleeping for a minute..."
-            sleep 60
-            SLEPT=$((SLEPT+30))
+            echo "Deployment is not ready yet, sleeping..."
+            sleep ${{ inputs.deployment-poll-seconds }}
+            SLEPT=$((SLEPT+${{ inputs.deployment-poll-seconds }}))
           fi
         done
         echo "Deployment is ready!"
