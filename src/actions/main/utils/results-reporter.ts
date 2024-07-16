@@ -1,7 +1,12 @@
 import { getOctokit } from "@actions/github";
-import { Project } from "@alwaysmeticulous/api";
+import {
+  Project,
+  ScreenshotDiffResult,
+  TestCaseResult,
+} from "@alwaysmeticulous/api";
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import {
+  DetailedTestCaseResult,
   ExecuteTestRunResult,
   RunningTestRunExecution,
 } from "@alwaysmeticulous/sdk-bundles-api";
@@ -19,6 +24,29 @@ import { CodeChangeEvent } from "../../../types";
 export interface EnrichedProject extends Project {
   isGitHubIntegrationActive?: boolean;
 }
+
+interface OldDetailedTestCaseResult extends TestCaseResult {
+  screenshotDiffResultsByBaseReplayId: Record<string, ScreenshotDiffResult[]>;
+  totalNumberOfScreenshots: number;
+}
+
+const isOldDetailedTestCaseResult = (
+  result: DetailedTestCaseResult | OldDetailedTestCaseResult
+): result is OldDetailedTestCaseResult => {
+  return (
+    (result as OldDetailedTestCaseResult)
+      .screenshotDiffResultsByBaseReplayId !== undefined
+  );
+};
+
+/**
+ * v2.140.0 of `@alwaysmeticulous/sdk-bundles-api` changed the type of DetailedTestCaseResult to include a
+ * `screenshotDiffDataByBaseReplayId` field instead of a `screenshotDiffResultsByBaseReplayId` field.
+ * To stay backwards compatible, we need to support both types.
+ */
+type VersionedDetailedTestCaseResult =
+  | DetailedTestCaseResult
+  | OldDetailedTestCaseResult;
 
 /**
  * Posts/updates Github comments and Github commit statuses to keep the user updated on progress/results.
@@ -88,8 +116,18 @@ export class ResultsReporter {
 
   async testRunFinished(results: ExecuteTestRunResult) {
     const { testRun, testCaseResults } = results;
-    const screenshotDiffResults = testCaseResults.flatMap((testCase) =>
-      Object.values(testCase.screenshotDiffResultsByBaseReplayId).flat()
+    const screenshotDiffResults = testCaseResults.flatMap(
+      (testCase: VersionedDetailedTestCaseResult) => {
+        if (isOldDetailedTestCaseResult(testCase)) {
+          return Object.values(
+            testCase.screenshotDiffResultsByBaseReplayId
+          ).flat();
+        } else {
+          return Object.values(
+            testCase.screenshotDiffDataByBaseReplayId
+          ).flatMap((data) => data.results);
+        }
+      }
     );
     const screensWithDifferences = screenshotDiffResults.filter(
       (result) => result.outcome === "diff"
