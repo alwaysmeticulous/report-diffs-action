@@ -29,3 +29,8 @@ You should pass in:
 - `cloudflare-api-token`: This should be created as documented [here](https://developers.cloudflare.com/pages/configuration/api/) with the `Read` permission for `Cloudflare Pages` and stored in a [GitHub Actions secret](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) named `CLOUDFLARE_API_TOKEN`. Then it can be passed into our step as shown above.
 - `cloudflare-account-id`: You can find this by following the instructions [here](https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/#find-account-id-workers-and-pages), then paste it into the workflow file (it is not confidential).
 - `cloudflare-project-name`: You can find this on the same dashboard your account ID is on, then paste it into the workflow file (it is not confidential).
+
+### Note
+This action will create deployments to a new environment named: __Cloudflare Pages: {cloudflare-project-name} ({environment})__.
+
+To ensure Meticulous triggers test runs from these deployments, please toggle on the checkbox for this environment in the __CI & Execution__ section of your project's settings.
