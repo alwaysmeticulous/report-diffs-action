@@ -30,7 +30,15 @@ You should pass in:
 - `cloudflare-account-id`: You can find this by following the instructions [here](https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/#find-account-id-workers-and-pages), then paste it into the workflow file (it is not confidential).
 - `cloudflare-project-name`: You can find this on the same dashboard your account ID is on, then paste it into the workflow file (it is not confidential).
 
-### Note
-This action will create deployments to a new environment named: __Cloudflare Pages: {cloudflare-project-name} ({environment})__.
+### Notes
 
-To ensure Meticulous triggers test runs from these deployments, please toggle on the checkbox for this environment in the __CI & Execution__ section of your project's settings.
+- This action will create deployments to a new environment named: **Cloudflare Pages: {cloudflare-project-name} ({environment})**. To ensure Meticulous triggers test runs from these deployments, please toggle on the checkbox for this environment in the **CI & Execution** section of your project's settings.
+- In the example workflow file above, `on: [push]` means that this action will run every time you push to your repository. This job will hang for up to an hour if a Cloudflare deployment is not created, so, if you only create Cloudflare previews in certain situations, you should modify this to use other [GitHub events](https://docs.github.com/en/actions/reference/events-that-trigger-workflows). For example, if you only create cloudflare previews for pushes to the `main` branch and for pull_request events, you can change this to:
+
+```yaml
+on:
+  push:
+    branches:
+      - main
+  pull_request: {}
+```
