@@ -33,7 +33,7 @@ You should pass in:
 ### Notes
 
 - This action will create deployments to a new environment named: **Cloudflare Pages: {cloudflare-project-name} ({environment})**. To ensure Meticulous triggers test runs from these deployments, please toggle on the checkbox for this environment in the **CI & Execution** section of your project's settings.
-- In the example workflow file above, `on: [push]` means that this action will run every time you push to your repository. This job will hang for up to an hour if a Cloudflare deployment is not created, so, if you only create Cloudflare previews in certain situations, you should modify this to use other [GitHub events](https://docs.github.com/en/actions/reference/events-that-trigger-workflows). For example, if you only create cloudflare previews for pushes to the `main` branch and for pull_request events, you can change this to:
+- In the example workflow file above, `on: [push]` means that this action will run every time you push to your repository. This job will hang for up to an hour if a Cloudflare preview is not created, so, if you only create Cloudflare previews in certain situations, you should modify this to use other [GitHub events](https://docs.github.com/en/actions/reference/events-that-trigger-workflows). For example, if you only create Cloudflare previews for pushes to the `main` branch and for pull_request events, you can change this to:
 
 ```yaml
 on:
