@@ -39,13 +39,15 @@ runs:
         echo "${{ github.event_name }}"
         echo "${{ github.event.pull_request.head.sha }}"
         echo "${{ github.sha }}"
+        echo "${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}" > $HEAD_SHA
+        echo $HEAD_SHA
         STATUS="unknown"
         LAST_RESULT=""
         SLEPT=0
         while [[ "$STATUS" != "success" ]]; do
           echo "Checking deployment status..."
           LAST_RESULT=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/${{ inputs.cloudflare-account-id }}/pages/projects/${{ inputs.cloudflare-project-name }}/deployments" -H "Authorization: Bearer ${{ inputs.cloudflare-api-token }}" -H "Content-Type:application/json")
-          STATUS=$(echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "${{ env.HEAD_SHA }}") | .latest_stage.status)' --raw-output | tr -d '\n')
+          STATUS=$(echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "$HEAD_SHA") | .latest_stage.status)' --raw-output | tr -d '\n')
           if [[ "$STATUS" != "success" ]]; then
             if [[ $SLEPT -gt ${{ inputs.wait-till-ready-seconds }} ]]; then
               echo "Deployment is still not ready, failing..."
@@ -57,8 +59,8 @@ runs:
           fi
         done
         echo "Deployment is ready!"
-        echo "url=`echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "${{ env.HEAD_SHA }}") | .url)' --raw-output | tr -d '\n'`" >> $GITHUB_OUTPUT
-        echo "environment=`echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "${{ env.HEAD_SHA }}") | .environment)' --raw-output | tr -d '\n'`" >> $GITHUB_OUTPUT
+        echo "url=`echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == ""$HEAD_SHA") | .url)' --raw-output | tr -d '\n'`" >> $GITHUB_OUTPUT
+        echo "environment=`echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "$HEAD_SHA") | .environment)' --raw-output | tr -d '\n'`" >> $GITHUB_OUTPUT
     - name: Create GitHub deployment from Cloudflare Pages deployment
       uses: altinukshini/deployment-action@releases/v1
       with:
