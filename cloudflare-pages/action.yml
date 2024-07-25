@@ -25,10 +25,10 @@ inputs:
     description: "Maximum time to wait for the deployment to be ready (in seconds)"
     required: false
     default: "3600"
+env:
+  HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 runs:
   using: "composite"
-  env:
-    HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
   steps:
     - name: Sleep a bit to wait for the deployment to exist
       if: ${{ inputs.sleep-time != '0' }}
