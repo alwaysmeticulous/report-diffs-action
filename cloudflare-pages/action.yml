@@ -39,8 +39,8 @@ runs:
         echo "${{ github.event_name }}"
         echo "${{ github.event.pull_request.head.sha }}"
         echo "${{ github.sha }}"
-        echo "${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}" > $HEAD_SHA
-        echo $HEAD_SHA
+        HEAD_SHA="${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}"
+        echo "$HEAD_SHA"
         STATUS="unknown"
         LAST_RESULT=""
         SLEPT=0
