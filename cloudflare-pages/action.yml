@@ -1,32 +1,34 @@
-name: 'Meticulous - Create a GitHub deployment from a Cloudflare Pages deployment'
-description: 'Create a GitHub deployment from a Cloudflare Pages deployment thus triggering Meticulous tests'
+name: "Meticulous - Create a GitHub deployment from a Cloudflare Pages deployment"
+description: "Create a GitHub deployment from a Cloudflare Pages deployment thus triggering Meticulous tests"
 inputs:
   github-token:
-    description: 'A GitHub Actions token (should have write permission on deployments)'
+    description: "A GitHub Actions token (should have write permission on deployments)"
     required: true
   cloudflare-api-token:
-    description: 'API token for Cloudflare (should have Read permission for Cloudflare Pages)'
+    description: "API token for Cloudflare (should have Read permission for Cloudflare Pages)"
     required: true
   cloudflare-account-id:
-    description: 'Account ID for Cloudflare Pages (from the Workers & Pages section of the dashboard)'
+    description: "Account ID for Cloudflare Pages (from the Workers & Pages section of the dashboard)"
     required: true
   cloudflare-project-name:
-    description: 'Name of your Cloudflare Pages project (from the Workers & Pages section of the dashboard)'
+    description: "Name of your Cloudflare Pages project (from the Workers & Pages section of the dashboard)"
     required: true
   sleep-seconds:
-    description: 'Time to sleep before starting to poll deployment status (in seconds)'
+    description: "Time to sleep before starting to poll deployment status (in seconds)"
     required: false
     default: "300"
   deployment-poll-seconds:
-    description: 'Time to wait between API calls to poll for the deployment to be ready (in seconds)'
+    description: "Time to wait between API calls to poll for the deployment to be ready (in seconds)"
     required: false
     default: "30"
   wait-till-ready-seconds:
-    description: 'Maximum time to wait for the deployment to be ready (in seconds)'
+    description: "Maximum time to wait for the deployment to be ready (in seconds)"
     required: false
     default: "3600"
 runs:
   using: "composite"
+  env:
+    HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
   steps:
     - name: Sleep a bit to wait for the deployment to exist
       if: ${{ inputs.sleep-time != '0' }}
@@ -42,7 +44,7 @@ runs:
         while [[ "$STATUS" != "success" ]]; do
           echo "Checking deployment status..."
           LAST_RESULT=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/${{ inputs.cloudflare-account-id }}/pages/projects/${{ inputs.cloudflare-project-name }}/deployments" -H "Authorization: Bearer ${{ inputs.cloudflare-api-token }}" -H "Content-Type:application/json")
-          STATUS=$(echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "${{ github.sha }}") | .latest_stage.status)' --raw-output | tr -d '\n')
+          STATUS=$(echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "${{ env.HEAD_SHA }}") | .latest_stage.status)' --raw-output | tr -d '\n')
           if [[ "$STATUS" != "success" ]]; then
             if [[ $SLEPT -gt ${{ inputs.wait-till-ready-seconds }} ]]; then
               echo "Deployment is still not ready, failing..."
@@ -54,8 +56,8 @@ runs:
           fi
         done
         echo "Deployment is ready!"
-        echo "url=`echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "${{ github.sha }}") | .url)' --raw-output | tr -d '\n'`" >> $GITHUB_OUTPUT
-        echo "environment=`echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "${{ github.sha }}") | .environment)' --raw-output | tr -d '\n'`" >> $GITHUB_OUTPUT
+        echo "url=`echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "${{ env.HEAD_SHA }}") | .url)' --raw-output | tr -d '\n'`" >> $GITHUB_OUTPUT
+        echo "environment=`echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "${{ env.HEAD_SHA }}") | .environment)' --raw-output | tr -d '\n'`" >> $GITHUB_OUTPUT
     - name: Create GitHub deployment from Cloudflare Pages deployment
       uses: altinukshini/deployment-action@releases/v1
       with:
