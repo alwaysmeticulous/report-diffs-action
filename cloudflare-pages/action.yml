@@ -47,7 +47,7 @@ runs:
         while [[ "$STATUS" != "success" ]]; do
           echo "Checking deployment status..."
           LAST_RESULT=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/${{ inputs.cloudflare-account-id }}/pages/projects/${{ inputs.cloudflare-project-name }}/deployments" -H "Authorization: Bearer ${{ inputs.cloudflare-api-token }}" -H "Content-Type:application/json")
-          STATUS=$(echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "$HEAD_SHA") | .latest_stage.status)' --raw-output | tr -d '\n')
+          STATUS=$(echo "$LAST_RESULT" | jq -c 'first(.result[] | select(.deployment_trigger.metadata.commit_hash == "echo $HEAD_SHA") | .latest_stage.status)' --raw-output | tr -d '\n')
           if [[ "$STATUS" != "success" ]]; then
             if [[ $SLEPT -gt ${{ inputs.wait-till-ready-seconds }} ]]; then
               echo "Deployment is still not ready, failing..."
