@@ -25,8 +25,6 @@ inputs:
     description: "Maximum time to wait for the deployment to be ready (in seconds)"
     required: false
     default: "3600"
-env:
-  HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 runs:
   using: "composite"
   steps:
@@ -38,7 +36,9 @@ runs:
       shell: bash
       id: get-deployment
       run: |
-        echo "${{ env.HEAD_SHA }}"
+        echo "${{ github.event_name }}"
+        echo "${{ github.event.pull_request.head.sha }}"
+        echo "${{ github.sha }}"
         STATUS="unknown"
         LAST_RESULT=""
         SLEPT=0
