@@ -38,6 +38,7 @@ runs:
       shell: bash
       id: get-deployment
       run: |
+        echo "${{ env.HEAD_SHA }}"
         STATUS="unknown"
         LAST_RESULT=""
         SLEPT=0
