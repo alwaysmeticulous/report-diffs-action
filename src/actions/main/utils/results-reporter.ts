@@ -138,6 +138,32 @@ export class ResultsReporter {
       0
     );
 
+    let coverageLine = "";
+    const executableLinesEdited =
+      testRun.coverageInfo?.editedFileCoverage?.executableLinesEdited;
+    const executableLinesEditedAndCovered =
+      testRun.coverageInfo?.editedFileCoverage?.executableLinesEditedAndCovered;
+    if (
+      executableLinesEdited &&
+      executableLinesEditedAndCovered !== undefined &&
+      testRun.coverageInfo?.hadCoverageData
+    ) {
+      const notTested = executableLinesEdited - executableLinesEditedAndCovered;
+      coverageLine += "\n\n";
+      const coverageLink = `${testRun.url}/coverage?mode=pr`;
+      if (executableLinesEditedAndCovered === 0) {
+        coverageLine += `Meticulous tested none of the executable lines edited in this PR. If this PR does not modify your frontend this is expected. If this is a new feature or Meticulous was recently introduced then Meticulous will generate tests to cover your code in the coming days[1].`;
+        coverageLine +=
+          "[^1]:\n<sub>1. If you wish to increase coverage immediately you can do so by interacting with your feature on localhost.</sub>";
+      } else if (notTested > 0) {
+        coverageLine += `Meticulous tested [${executableLinesEditedAndCovered}/${executableLinesEdited} of the executable lines](${coverageLink}) edited in this PR<sup>1</sup>.\n\n`;
+        coverageLine +=
+          "[^1]:\n<sub>1. These lines will likely automatically gain test coverage over the coming days, however if you wish to increase coverage immediately you can do so by interacting with your feature on localhost.</sub>";
+      } else {
+        coverageLine += `Meticulous tested [100% of the executable lines](${coverageLink}) edited in this PR.`;
+      }
+    }
+
     if (screensWithDifferences === 0) {
       if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
         await this.setCommitStatus({
@@ -149,7 +175,7 @@ export class ResultsReporter {
       if (totalScreensCompared > 0) {
         await this.setStatusComment({
           createIfDoesNotExist: true,
-          body: `✅ Meticulous spotted zero visual differences across ${totalScreensCompared} screens tested: [view results](${testRun.url}).`,
+          body: `✅ Meticulous spotted zero visual differences across ${totalScreensCompared} screens tested: [view results](${testRun.url}).${coverageLine}`,
         });
       } else {
         if (totalScreenshotsTaken === 0) {
@@ -181,7 +207,7 @@ export class ResultsReporter {
       }
       await this.setStatusComment({
         createIfDoesNotExist: true,
-        body: `🤖 Meticulous spotted visual differences in ${screensWithDifferences} of ${totalScreensCompared} screens tested: [view and approve differences detected](${testRun.url}).`,
+        body: `🤖 Meticulous spotted visual differences in ${screensWithDifferences} of ${totalScreensCompared} screens tested: [view and approve differences detected](${testRun.url}).${coverageLine}`,
       });
     }
   }
