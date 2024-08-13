@@ -196,6 +196,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       logicalEnvironmentVersion: LOGICAL_ENVIRONMENT_VERSION,
     });
     reportTestFinished.cancel();
+    logger.warn("Got test run results: " + JSON.stringify(results));
     await resultsReporter.testRunFinished(results);
 
     transaction.setStatus("ok");
