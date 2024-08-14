@@ -5,12 +5,20 @@
   "license": "Unliscensed",
   "private": true,
   "main": "dist/main.entrypoint.mjs",
+  "post": "out/post.entrypoint.js",
   "cloud-compute": "out/cloud-compute.entrypoint.js",
   "targets": {
     "main": {
       "source": "src/main.entrypoint.ts",
       "distDir": "dist",
       "outputFormat": "esmodule"
+    },
+    "post": {
+      "source": "src/post.entrypoint.ts",
+      "includeNodeModules": true,
+      "distDir": "out",
+      "sourceMap": false,
+      "outputFormat": "commonjs"
     },
     "cloud-compute": {
       "source": "src/cloud-compute.entrypoint.ts",

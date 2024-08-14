@@ -65,6 +65,7 @@ outputs: {}
 runs:
   using: "docker"
   image: "docker://ghcr.io/alwaysmeticulous/report-diffs-action:main"
+  post-entrypoint: "/app/post.sh"
   env:
     API_TOKEN: ${{ inputs.api-token }}
     GITHUB_TOKEN: ${{ inputs.github-token }}
