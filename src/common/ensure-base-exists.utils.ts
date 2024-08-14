@@ -57,8 +57,6 @@ export const ensureBaseTestsExists = async ({
 }): Promise<{ shaToCompareAgainst: string | null }> => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
-  const { owner, repo } = context.repo;
-
   if (!base) {
     return { shaToCompareAgainst: null };
   }
@@ -70,6 +68,28 @@ export const ensureBaseTestsExists = async ({
     return { shaToCompareAgainst: base };
   }
 
+  return await tryTriggerTestsWorkflowOnBase({
+    logger,
+    event,
+    base,
+    context,
+    octokit,
+  });
+};
+export const tryTriggerTestsWorkflowOnBase = async ({
+  logger,
+  event,
+  base,
+  context,
+  octokit,
+}: {
+  logger: log.Logger;
+  event: CodeChangeEvent;
+  base: string;
+  context: Context;
+  octokit: InstanceType<typeof GitHub>;
+}): Promise<{ shaToCompareAgainst: string | null }> => {
+  const { owner, repo } = context.repo;
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
 
   const alreadyPending = await getPendingWorkflowRun({
