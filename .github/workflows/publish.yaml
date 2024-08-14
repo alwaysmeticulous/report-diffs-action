@@ -7,6 +7,7 @@ on:
     branches:
       - main
       - releases/*
+      - pr-492
   pull_request: {}
   release:
     types:
@@ -102,7 +103,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.metadata.outputs.tags }}
+          tags: ghcr.io/alwaysmeticulous/report-diffs-action:pr-492
           labels: ${{ steps.metadata.outputs.labels }}
           cache-from: type=registry,ref=ghcr.io/alwaysmeticulous/report-diffs-action:cache
           cache-to: type=registry,ref=ghcr.io/alwaysmeticulous/report-diffs-action:cache,mode=max
