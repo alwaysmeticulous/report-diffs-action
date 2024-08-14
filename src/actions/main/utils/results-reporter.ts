@@ -152,13 +152,13 @@ export class ResultsReporter {
       coverageLine += "\n\n";
       const coverageLink = `${testRun.url}/coverage?mode=pr`;
       if (executableLinesEditedAndCovered === 0) {
-        coverageLine += `Meticulous tested none of the executable lines edited in this PR. If this PR does not modify your frontend this is expected. If this is a new feature or Meticulous was recently introduced then Meticulous will generate tests to cover your code in the coming days[1].`;
+        coverageLine += `Meticulous tested none of the executable lines edited in this PR. If this PR does not modify your frontend this is expected. If this is a new feature or Meticulous was recently introduced then Meticulous will generate tests to cover your code in the coming days<sup>1</sup>.\n\n`;
         coverageLine +=
-          "[^1]:\n<sub>1. If you wish to increase coverage immediately you can do so by interacting with your feature on localhost.</sub>";
+          "\n<sub>1. If you wish to increase coverage immediately you can do so by interacting with your feature on localhost.</sub>";
       } else if (notTested > 0) {
         coverageLine += `Meticulous tested [${executableLinesEditedAndCovered}/${executableLinesEdited} of the executable lines](${coverageLink}) edited in this PR<sup>1</sup>.\n\n`;
         coverageLine +=
-          "[^1]:\n<sub>1. These lines will likely automatically gain test coverage over the coming days, however if you wish to increase coverage immediately you can do so by interacting with your feature on localhost.</sub>";
+          "\n<sub>1. These lines will likely automatically gain test coverage over the coming days, however if you wish to increase coverage immediately you can do so by interacting with your feature on localhost.</sub>";
       } else {
         coverageLine += `Meticulous tested [100% of the executable lines](${coverageLink}) edited in this PR.`;
       }
