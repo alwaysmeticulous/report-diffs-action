@@ -146,7 +146,7 @@ export class ResultsReporter {
     if (
       executableLinesEdited &&
       executableLinesEditedAndCovered !== undefined &&
-      testRun.coverageInfo?.hadCoverageData
+      testRun.coverageInfo?.editedFileCoverage?.hadCoverageData
     ) {
       const notTested = executableLinesEdited - executableLinesEditedAndCovered;
       coverageLine += "\n\n";
