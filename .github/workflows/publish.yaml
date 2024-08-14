@@ -90,6 +90,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: debug-missing-covg
+          tags: ghcr.io/alwaysmeticulous/report-diffs-action:debug-missing-covg
           cache-from: type=registry,ref=ghcr.io/alwaysmeticulous/report-diffs-action:cache
           cache-to: type=registry,ref=ghcr.io/alwaysmeticulous/report-diffs-action:cache,mode=max
