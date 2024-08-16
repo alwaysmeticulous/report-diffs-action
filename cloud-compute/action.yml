@@ -21,6 +21,7 @@ outputs: {}
 runs:
   using: node20
   main: "../out/cloud-compute.entrypoint.js"
+  post: "../out/post-step.entrypoint.js"
 branding:
   color: purple
   icon: camera
