@@ -7,9 +7,12 @@ import { initSentry } from "@alwaysmeticulous/sentry";
 import log from "loglevel";
 import { Duration } from "luxon";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
-import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
+import { tryTriggerTestsWorkflowOnBase } from "../../common/ensure-base-exists.utils";
 import { shortCommitSha } from "../../common/environment.utils";
-import { getHeadCommitShaFromRepo } from "../../common/get-base-and-head-commit-shas";
+import {
+  getBaseAndHeadCommitShas,
+  getHeadCommitShaFromRepo,
+} from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { isDebugPullRequestRun } from "../../common/is-debug-pr-run";
 import { initLogger, setLogLevel, shortSha } from "../../common/logger.utils";
@@ -81,15 +84,37 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     headCommitSha: head,
   });
 
-  const { shaToCompareAgainst } = await safeEnsureBaseTestsExists({
-    event,
-    apiToken,
-    base: baseCommitSha,
-    context,
-    octokit,
-    // We don't need to fetch the base test run again if we already have it.
-    getBaseTestRun: async () => baseTestRun,
-  });
+  let shaToCompareAgainst: string | null = null;
+  if (baseTestRun != null) {
+    shaToCompareAgainst = baseCommitSha;
+    logger.info(
+      `Tests already exist for commit ${baseCommitSha} (${baseTestRun.id})`
+    );
+  } else {
+    // We compute and use the base SHA from the code change event rather than the `baseCommitSha` computed above
+    // as `tryTriggerTestsWorkflowOnBase` can only trigger workflow for the HEAD `main` branch commit.
+    // `baseCommitSha` can be an older commit in a monorepo setup (in cases where we selectively run tests for a specific package).
+    // In such cases we won't be able to trigger a workflow for the base commit SHA provided by the backend.
+    // We will instead trigger test run for a newer base which is the base commit SHA from the code change event and
+    // will use that as the base to compare against. This is safe as `codeChangeBase` is guaranteed to be the same
+    // or newer commit to `baseCommitSha`.
+    const { base: codeChangeBase } = await getBaseAndHeadCommitShas(event, {
+      useDeploymentUrl: false,
+    });
+    if (codeChangeBase) {
+      const { baseTestRunExists } = await tryTriggerTestsWorkflowOnBase({
+        logger,
+        event,
+        base: codeChangeBase,
+        context,
+        octokit,
+      });
+
+      if (baseTestRunExists) {
+        shaToCompareAgainst = codeChangeBase;
+      }
+    }
+  }
 
   if (shaToCompareAgainst != null) {
     logger.info(
