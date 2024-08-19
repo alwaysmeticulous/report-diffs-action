@@ -102,16 +102,17 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
       useDeploymentUrl: false,
     });
     if (codeChangeBase) {
-      const { shaToCompareAgainst: baseShaFromWorkflow } =
-        await tryTriggerTestsWorkflowOnBase({
-          logger,
-          event,
-          base: codeChangeBase,
-          context,
-          octokit,
-        });
+      const { baseTestRunExists } = await tryTriggerTestsWorkflowOnBase({
+        logger,
+        event,
+        base: codeChangeBase,
+        context,
+        octokit,
+      });
 
-      shaToCompareAgainst = baseShaFromWorkflow;
+      if (baseTestRunExists) {
+        shaToCompareAgainst = codeChangeBase;
+      }
     }
   }
 

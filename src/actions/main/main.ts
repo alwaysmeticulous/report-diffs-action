@@ -86,7 +86,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   });
   const environment = getEnvironment({ event, head });
 
-  const { shaToCompareAgainst } = await safeEnsureBaseTestsExists({
+  const { baseTestRunExists } = await safeEnsureBaseTestsExists({
     event,
     apiToken,
     base,
@@ -99,6 +99,8 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         logicalEnvironmentVersion: LOGICAL_ENVIRONMENT_VERSION,
       }),
   });
+
+  const shaToCompareAgainst = baseTestRunExists ? base : null;
 
   if (shaToCompareAgainst != null && event.type === "pull_request") {
     logger.info(
