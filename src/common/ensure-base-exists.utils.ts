@@ -37,7 +37,7 @@ export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
     const message = `Error while running tests on base ${params[0].base}. No diffs will be reported for this run.`;
     logger.warn(message);
     ghWarning(message);
-    return { shaToCompareAgainst: null };
+    return { baseTestRunExists: false };
   }
 };
 
@@ -54,22 +54,42 @@ export const ensureBaseTestsExists = async ({
   context: Context;
   octokit: InstanceType<typeof GitHub>;
   getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
-}): Promise<{ shaToCompareAgainst: string | null }> => {
+}): Promise<{ baseTestRunExists: boolean }> => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
-  const { owner, repo } = context.repo;
-
   if (!base) {
-    return { shaToCompareAgainst: null };
+    return { baseTestRunExists: false };
   }
 
   const testRun = await getBaseTestRun({ baseSha: base });
 
   if (testRun != null) {
     logger.info(`Tests already exist for commit ${base} (${testRun.id})`);
-    return { shaToCompareAgainst: base };
+    return { baseTestRunExists: true };
   }
 
+  return await tryTriggerTestsWorkflowOnBase({
+    logger,
+    event,
+    base,
+    context,
+    octokit,
+  });
+};
+export const tryTriggerTestsWorkflowOnBase = async ({
+  logger,
+  event,
+  base,
+  context,
+  octokit,
+}: {
+  logger: log.Logger;
+  event: CodeChangeEvent;
+  base: string;
+  context: Context;
+  octokit: InstanceType<typeof GitHub>;
+}): Promise<{ baseTestRunExists: boolean }> => {
+  const { owner, repo } = context.repo;
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
 
   const alreadyPending = await getPendingWorkflowRun({
@@ -93,7 +113,7 @@ export const ensureBaseTestsExists = async ({
         commitSha: base,
         timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
       });
-      return { shaToCompareAgainst: base };
+      return { baseTestRunExists: true };
     } else {
       // If it's a push event to the main branch then the comparisons aren't as essential
       // (it's unlikely anyone will be looking at the comparison results). However we do want to
@@ -117,7 +137,7 @@ export const ensureBaseTestsExists = async ({
 
   // Running missing tests on base is only supported for Pull Request events
   if (event.type !== "pull_request") {
-    return { shaToCompareAgainst: null };
+    return { baseTestRunExists: false };
   }
 
   // We can only trigger a workflow_run against the head of the base branch
@@ -142,7 +162,7 @@ export const ensureBaseTestsExists = async ({
     Therefore no diffs will be reported for this run. Re-running the tests may fix this.`;
     logger.warn(message);
     ghWarning(message);
-    return { shaToCompareAgainst: null };
+    return { baseTestRunExists: false };
   }
 
   const workflowRun = await startNewWorkflowRun({
@@ -158,7 +178,7 @@ export const ensureBaseTestsExists = async ({
     const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${base}.`;
     logger.warn(message);
     ghWarning(message);
-    return { shaToCompareAgainst: null };
+    return { baseTestRunExists: false };
   }
 
   logger.info(`Waiting on workflow run: ${workflowRun.html_url}`);
@@ -171,7 +191,7 @@ export const ensureBaseTestsExists = async ({
     timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
   });
 
-  return { shaToCompareAgainst: base };
+  return { baseTestRunExists: true };
 };
 
 const waitForWorkflowCompletionAndThrowIfFailed = async ({
@@ -215,14 +235,14 @@ const waitForWorkflowCompletionAndSkipComparisonsIfFailed = async ({
   octokit: InstanceType<typeof GitHub>;
   commitSha: string;
   timeout: Duration;
-}) => {
+}): Promise<{ baseTestRunExists: boolean }> => {
   const finalWorkflowRun = await waitForWorkflowCompletion(otherOpts);
 
   if (finalWorkflowRun == null || isPendingStatus(finalWorkflowRun.status)) {
     logger.warn(
       `Timed out while waiting for workflow run (${otherOpts.workflowRunId}) to complete. Running without comparisons.`
     );
-    return { shaToCompareAgainst: null };
+    return { baseTestRunExists: false };
   }
 
   if (
@@ -232,10 +252,10 @@ const waitForWorkflowCompletionAndSkipComparisonsIfFailed = async ({
     logger.warn(
       `Comparing against visual snapshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}. Running without comparisons.`
     );
-    return { shaToCompareAgainst: null };
+    return { baseTestRunExists: false };
   }
 
-  return { shaToCompareAgainst: commitSha };
+  return { baseTestRunExists: true };
 };
 
 const getHeadCommitForRef = async ({
