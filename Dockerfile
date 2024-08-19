@@ -23,6 +23,8 @@ RUN yarn --frozen-lockfile
 
 COPY tsconfig.base.json tsconfig.json ./
 
+COPY scripts/post-step.sh /app
+
 COPY src src
 
 RUN yarn build
