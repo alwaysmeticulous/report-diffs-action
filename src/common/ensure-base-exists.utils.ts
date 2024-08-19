@@ -54,7 +54,7 @@ export const ensureBaseTestsExists = async ({
   context: Context;
   octokit: InstanceType<typeof GitHub>;
   getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
-}): Promise<{ baseTestRunExists: boolean | null }> => {
+}): Promise<{ baseTestRunExists: boolean }> => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
   if (!base) {
@@ -88,7 +88,7 @@ export const tryTriggerTestsWorkflowOnBase = async ({
   base: string;
   context: Context;
   octokit: InstanceType<typeof GitHub>;
-}): Promise<{ baseTestRunExists: boolean | null }> => {
+}): Promise<{ baseTestRunExists: boolean }> => {
   const { owner, repo } = context.repo;
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
 
@@ -137,7 +137,7 @@ export const tryTriggerTestsWorkflowOnBase = async ({
 
   // Running missing tests on base is only supported for Pull Request events
   if (event.type !== "pull_request") {
-    return { baseTestRunExists: null };
+    return { baseTestRunExists: false };
   }
 
   // We can only trigger a workflow_run against the head of the base branch
@@ -162,7 +162,7 @@ export const tryTriggerTestsWorkflowOnBase = async ({
     Therefore no diffs will be reported for this run. Re-running the tests may fix this.`;
     logger.warn(message);
     ghWarning(message);
-    return { baseTestRunExists: null };
+    return { baseTestRunExists: false };
   }
 
   const workflowRun = await startNewWorkflowRun({
@@ -178,7 +178,7 @@ export const tryTriggerTestsWorkflowOnBase = async ({
     const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${base}.`;
     logger.warn(message);
     ghWarning(message);
-    return { baseTestRunExists: null };
+    return { baseTestRunExists: false };
   }
 
   logger.info(`Waiting on workflow run: ${workflowRun.html_url}`);
