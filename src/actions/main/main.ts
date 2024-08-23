@@ -98,6 +98,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         commitSha: baseSha,
         logicalEnvironmentVersion: LOGICAL_ENVIRONMENT_VERSION,
       }),
+    logger,
   });
 
   const shaToCompareAgainst = baseTestRunExists ? base : null;

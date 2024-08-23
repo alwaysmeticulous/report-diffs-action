@@ -1,10 +1,9 @@
-import { setFailed } from "@actions/core";
+import { error, setFailed } from "@actions/core";
 import { context } from "@actions/github";
 import { IN_PROGRESS_TEST_RUN_STATUS, TestRun } from "@alwaysmeticulous/client";
-import { defer, METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
+import { defer } from "@alwaysmeticulous/common";
 import { executeRemoteTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import { initSentry } from "@alwaysmeticulous/sentry";
-import log from "loglevel";
 import { Duration } from "luxon";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
 import { tryTriggerTestsWorkflowOnBase } from "../../common/ensure-base-exists.utils";
@@ -15,7 +14,7 @@ import {
 } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { isDebugPullRequestRun } from "../../common/is-debug-pr-run";
-import { initLogger, setLogLevel, shortSha } from "../../common/logger.utils";
+import { getPrefixedLogger, shortSha } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { updateStatusComment } from "../../common/update-status-comment";
 import { getCloudComputeBaseTestRun } from "./get-cloud-compute-base-test-run";
@@ -26,8 +25,6 @@ const DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION = Duration.fromObject({
 });
 
 export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
-  initLogger();
-
   // Init Sentry without sampling traces on the action run.
   // Children processes, (test run executions) will use
   // the global sample rate.
@@ -42,22 +39,54 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     op: "report-diffs-action.runMeticulousTestsActionInCloud",
   });
 
-  if (+(process.env["RUNNER_DEBUG"] ?? "0")) {
-    setLogLevel("trace");
+  let failureMessage = "";
+  const { apiToken: apiTokenInput, appUrl: appUrlInput } =
+    getInCloudActionInputs();
+  const apiTokens = apiTokenInput.split(",").map((token) => token.trim());
+  const appUrls = appUrlInput.split(",").map((token) => token.trim());
+  while (appUrls.length < apiTokens.length) {
+    // If the number of app URLs is less than the number of API tokens, the
+    // last URL will be used for all remaining projects. This allow for
+    // more concise inputs when one app URL is to be used many times. In
+    // particular in the common case of one app URL for all projects.
+    appUrls.push(appUrls[appUrls.length - 1]);
   }
+  (
+    await Promise.allSettled(
+      apiTokens.map((token, index) =>
+        runOneTestRun(token, appUrls[index], index)
+      )
+    )
+  ).forEach((result, index) => {
+    if (result.status === "rejected") {
+      const message =
+        result.reason instanceof Error ? result.reason.message : `${error}`;
+      failureMessage += `Run #${index + 1} failed: ${message}\n`;
+    }
+  });
+  if (failureMessage) {
+    setFailed(failureMessage);
+    transaction.setStatus("unknown_error");
+  } else {
+    transaction.setStatus("ok");
+  }
+  transaction.finish();
+  await sentryHub.getClient()?.close(5_000);
+  process.exit(failureMessage ? 1 : 0);
+};
 
-  const {
-    apiToken,
-    githubToken,
-    appUrl,
-    headSha: headShaFromInput,
-  } = getInCloudActionInputs();
+const runOneTestRun = async (
+  apiToken: string,
+  appUrl: string,
+  runNumber: number
+) => {
+  const { githubToken, headSha: headShaFromInput } = getInCloudActionInputs();
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
   const isDebugPRRun = isDebugPullRequestRun(event);
   const octokit = getOctokitOrFail(githubToken);
-  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
+  const logger = getPrefixedLogger(`Run #${runNumber}`);
 
   if (event == null) {
     logger.warn(
@@ -98,9 +127,13 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     // We will instead trigger test run for a newer base which is the base commit SHA from the code change event and
     // will use that as the base to compare against. This is safe as `codeChangeBase` is guaranteed to be the same
     // or newer commit to `baseCommitSha`.
-    const { base: codeChangeBase } = await getBaseAndHeadCommitShas(event, {
-      useDeploymentUrl: false,
-    });
+    const { base: codeChangeBase } = await getBaseAndHeadCommitShas(
+      event,
+      {
+        useDeploymentUrl: false,
+      },
+      logger
+    );
     if (codeChangeBase) {
       const { baseTestRunExists } = await tryTriggerTestsWorkflowOnBase({
         logger,
@@ -126,106 +159,86 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     logger.info(`Generating visual snapshots for commit ${shortSha(head)}`);
   }
 
-  try {
-    await throwIfCannotConnectToOrigin(appUrl);
+  await throwIfCannotConnectToOrigin(appUrl);
 
-    const onTunnelCreated = ({
-      url,
-      basicAuthUser,
-      basicAuthPassword,
-    }: {
-      url: string;
-      basicAuthUser: string;
-      basicAuthPassword: string;
-    }) => {
-      logger.info(
-        `Secure tunnel to ${appUrl} created: ${url}, user: ${basicAuthUser}, password: ${basicAuthPassword}`
-      );
+  const onTunnelCreated = ({
+    url,
+    basicAuthUser,
+    basicAuthPassword,
+  }: {
+    url: string;
+    basicAuthUser: string;
+    basicAuthPassword: string;
+  }) => {
+    logger.info(
+      `Secure tunnel to ${appUrl} created: ${url}, user: ${basicAuthUser}, password: ${basicAuthPassword}`
+    );
 
-      if (isDebugPRRun) {
-        updateStatusComment({
-          octokit,
-          event,
-          owner,
-          repo,
-          body: `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: \`${basicAuthUser}\` password: \`${basicAuthPassword}\`.\n\n
+    if (isDebugPRRun) {
+      updateStatusComment({
+        octokit,
+        event,
+        owner,
+        repo,
+        body: `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: \`${basicAuthUser}\` password: \`${basicAuthPassword}\`.\n\n
 Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. Cancel the workflow run to close the tunnel early.`,
-          testSuiteId: "__meticulous_debug__",
-          shortHeadSha: shortCommitSha(head),
-          createIfDoesNotExist: true,
-        }).catch((err) => {
-          logger.error(err);
-        });
-      }
-    };
+        testSuiteId: "__meticulous_debug__",
+        shortHeadSha: shortCommitSha(head),
+        createIfDoesNotExist: true,
+        logger,
+      }).catch((err) => {
+        logger.error(err);
+      });
+    }
+  };
 
-    const keepTunnelOpenPromise = isDebugPRRun ? defer<void>() : null;
-    let keepTunnelOpenTimeout: NodeJS.Timeout | null = null;
+  const keepTunnelOpenPromise = isDebugPRRun ? defer<void>() : null;
+  let keepTunnelOpenTimeout: NodeJS.Timeout | null = null;
 
-    let lastSeenNumberOfCompletedTestCases = 0;
+  let lastSeenNumberOfCompletedTestCases = 0;
 
-    const onProgressUpdate = (testRun: TestRun) => {
-      if (
-        !IN_PROGRESS_TEST_RUN_STATUS.includes(testRun.status) &&
-        keepTunnelOpenPromise &&
-        !keepTunnelOpenTimeout
-      ) {
-        logger.info(
-          `Test run execution completed. Keeping tunnel open for ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}`
-        );
-        keepTunnelOpenTimeout = setTimeout(() => {
-          keepTunnelOpenPromise.resolve();
-        }, DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.as("milliseconds"));
-      }
+  const onProgressUpdate = (testRun: TestRun) => {
+    if (
+      !IN_PROGRESS_TEST_RUN_STATUS.includes(testRun.status) &&
+      keepTunnelOpenPromise &&
+      !keepTunnelOpenTimeout
+    ) {
+      logger.info(
+        `Test run execution completed. Keeping tunnel open for ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}`
+      );
+      keepTunnelOpenTimeout = setTimeout(() => {
+        keepTunnelOpenPromise.resolve();
+      }, DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.as("milliseconds"));
+    }
 
-      const numTestCases = testRun.configData.testCases?.length || 0;
-      const completedTestCases = testRun.resultData?.results?.length || 0;
+    const numTestCases = testRun.configData.testCases?.length || 0;
+    const completedTestCases = testRun.resultData?.results?.length || 0;
 
-      if (
-        completedTestCases != lastSeenNumberOfCompletedTestCases &&
-        numTestCases
-      ) {
-        logger.info(
-          `Executed ${completedTestCases}/${numTestCases} test cases`
-        );
-        lastSeenNumberOfCompletedTestCases = completedTestCases;
-      }
-    };
+    if (
+      completedTestCases != lastSeenNumberOfCompletedTestCases &&
+      numTestCases
+    ) {
+      logger.info(`Executed ${completedTestCases}/${numTestCases} test cases`);
+      lastSeenNumberOfCompletedTestCases = completedTestCases;
+    }
+  };
 
-    const onTestRunCreated = (testRun: TestRun) => {
-      logger.info(`Test run created: ${testRun.url}`);
-    };
+  const onTestRunCreated = (testRun: TestRun) => {
+    logger.info(`Test run created: ${testRun.url}`);
+  };
 
-    // We use MERGE_COMMIT_SHA as the deployment is created for the merge commit.
+  // We use MERGE_COMMIT_SHA as the deployment is created for the merge commit.
 
-    await executeRemoteTestRun({
-      apiToken,
-      appUrl,
-      commitSha: head,
-      environment: "github-actions",
-      onTunnelCreated,
-      onTestRunCreated,
-      onProgressUpdate,
-      ...(keepTunnelOpenPromise
-        ? { keepTunnelOpenPromise: keepTunnelOpenPromise.promise }
-        : {}),
-    });
-
-    transaction.setStatus("ok");
-    transaction.finish();
-
-    await sentryHub.getClient()?.close(5_000);
-
-    process.exit(0);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : `${error}`;
-    setFailed(message);
-
-    transaction.setStatus("unknown_error");
-    transaction.finish();
-
-    await sentryHub.getClient()?.close(5_000);
-
-    process.exit(1);
-  }
+  await executeRemoteTestRun({
+    apiToken,
+    appUrl,
+    commitSha: head,
+    environment: "github-actions",
+    onTunnelCreated,
+    onTestRunCreated,
+    onProgressUpdate,
+    ...(keepTunnelOpenPromise
+      ? { keepTunnelOpenPromise: keepTunnelOpenPromise.promise }
+      : {}),
+  });
 };

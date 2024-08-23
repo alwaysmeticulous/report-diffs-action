@@ -1,5 +1,4 @@
 import { getOctokit } from "@actions/github";
-import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { CodeChangeEvent } from "../types";
 import { DOCS_URL } from "./constants";
@@ -22,6 +21,7 @@ export const updateStatusComment = async ({
   shortHeadSha,
   testSuiteId,
   createIfDoesNotExist,
+  logger,
 }: {
   octokit: ReturnType<typeof getOctokit>;
   event: CodeChangeEvent;
@@ -31,6 +31,7 @@ export const updateStatusComment = async ({
   shortHeadSha: string;
   testSuiteId: string | null;
   createIfDoesNotExist?: boolean;
+  logger: log.Logger;
 }) => {
   if (event.type !== "pull_request") {
     return;
@@ -77,7 +78,6 @@ export const updateStatusComment = async ({
         `Missing permission to list and post comments to the pull request #${event.payload.pull_request.number}. Please add the 'pull-requests: write' permission to your workflow YAML file: see ${DOCS_URL} for the correct setup.`
       );
     }
-    const logger = log.getLogger(METICULOUS_LOGGER_NAME);
     logger.error(
       `Unable to post / update comment on PR #${event.payload.pull_request.number}. ${DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE}`
     );
