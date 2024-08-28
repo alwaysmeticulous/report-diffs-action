@@ -16,9 +16,15 @@ export const getPrefixedLogger = (logPrefix: string) => {
   return prefixedLogger;
 };
 
-export const initLogger: () => void = () => {
+export const initLogger: () => log.Logger = () => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
   logger.setDefaultLevel(log.levels.INFO);
+
+  if (+(process.env["RUNNER_DEBUG"] ?? "0")) {
+    setLogLevel("trace");
+  }
+
+  return logger;
 };
 
 export const setLogLevel: (logLevel: string | undefined) => void = (

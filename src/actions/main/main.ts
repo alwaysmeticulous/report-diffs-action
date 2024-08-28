@@ -6,20 +6,18 @@ import {
 } from "@alwaysmeticulous/client";
 import {
   DEFAULT_EXECUTION_OPTIONS,
-  METICULOUS_LOGGER_NAME,
   setMeticulousLocalDataDir,
 } from "@alwaysmeticulous/common";
 import { executeTestRun } from "@alwaysmeticulous/replay-orchestrator-launcher";
 import { RunningTestRunExecution } from "@alwaysmeticulous/sdk-bundles-api";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import debounce from "lodash.debounce";
-import log from "loglevel";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import { getEnvironment } from "../../common/environment.utils";
 import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
-import { initLogger, setLogLevel, shortSha } from "../../common/logger.utils";
+import { initLogger, shortSha } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { getMainActionInputs } from "./get-inputs";
 import { addLocalhostAliases } from "./utils/add-localhost-aliases";
@@ -34,7 +32,7 @@ const EXECUTION_OPTIONS = {
 };
 
 export const runMeticulousTestsAction = async (): Promise<void> => {
-  initLogger();
+  const logger = initLogger();
 
   // Init Sentry without sampling traces on the action run.
   // Children processes, (test run executions) will use
@@ -46,10 +44,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     description: "Run Meticulous tests action",
     op: "report-diffs-action.runMeticulousTestsAction",
   });
-
-  if (+(process.env["RUNNER_DEBUG"] ?? "0")) {
-    setLogLevel("trace");
-  }
 
   const {
     apiToken,
@@ -70,7 +64,6 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
   const octokit = getOctokitOrFail(githubToken);
-  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
   if (event == null) {
     logger.warn(
@@ -81,9 +74,13 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
     return;
   }
 
-  const { base, head } = await getBaseAndHeadCommitShas(event, {
-    useDeploymentUrl,
-  });
+  const { base, head } = await getBaseAndHeadCommitShas(
+    event,
+    {
+      useDeploymentUrl,
+    },
+    logger
+  );
   const environment = getEnvironment({ event, head });
 
   const { baseTestRunExists } = await safeEnsureBaseTestsExists({
@@ -131,6 +128,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         ? event.payload.pull_request.base.ref
         : null,
     testSuiteId,
+    logger,
   });
 
   try {
