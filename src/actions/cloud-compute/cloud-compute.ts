@@ -62,7 +62,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
         runOneTestRun({
           testRunId: target.name,
           apiToken: target.apiToken,
-          appUrl: target.apiToken,
+          appUrl: target.appUrl,
           githubToken,
           headSha,
           isSingleTestRunExecution,
