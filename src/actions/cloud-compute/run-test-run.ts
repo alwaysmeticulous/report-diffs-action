@@ -5,10 +5,7 @@ import { executeRemoteTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
 import { tryTriggerTestsWorkflowOnBase } from "../../common/ensure-base-exists.utils";
 import { shortCommitSha } from "../../common/environment.utils";
-import {
-  getBaseAndHeadCommitShas,
-  getHeadCommitShaFromRepo,
-} from "../../common/get-base-and-head-commit-shas";
+import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { isDebugPullRequestRun } from "../../common/is-debug-pr-run";
 import { getPrefixedLogger, shortSha } from "../../common/logger.utils";
@@ -16,14 +13,20 @@ import { getOctokitOrFail } from "../../common/octokit";
 import { updateStatusComment } from "../../common/update-status-comment";
 import { DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION } from "./consts";
 import { getCloudComputeBaseTestRun } from "./get-cloud-compute-base-test-run";
-import { getInCloudActionInputs } from "./get-inputs";
 
-export const runOneTestRun = async (
-  apiToken: string,
-  appUrl: string,
-  runNumber: number
-) => {
-  const { githubToken, headSha: headShaFromInput } = getInCloudActionInputs();
+export const runOneTestRun = async ({
+  apiToken,
+  appUrl,
+  runNumber,
+  githubToken,
+  headSha,
+}: {
+  apiToken: string;
+  appUrl: string;
+  runNumber: number;
+  githubToken: string;
+  headSha: string;
+}) => {
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
@@ -40,20 +43,12 @@ export const runOneTestRun = async (
     return;
   }
 
-  // Compute the HEAD commit SHA to use when creating a test run.
-  // In a PR workflow this will by default be process.env.GITHUB_SHA (the temporary merge commit) or
-  // sometimes the head commit of the PR.
-  // Users can also explicitly provide the head commit SHA to use as input. This is useful when the action is not
-  // run with the code checked out.
-  // Our backend is responsible for computing the correct BASE commit to create the test run for.
-  const head = headShaFromInput || getHeadCommitShaFromRepo();
-
   // Compute the base commit SHA to compare to for the HEAD commit.
   // This will usually be the merge base of the PR head and base commit. In some cases it can be an older main branch commit,
   // for example when running in a monorepo setup.
   const { baseCommitSha, baseTestRun } = await getCloudComputeBaseTestRun({
     apiToken,
-    headCommitSha: head,
+    headCommitSha: headSha,
   });
 
   let shaToCompareAgainst: string | null = null;
@@ -95,11 +90,11 @@ export const runOneTestRun = async (
   if (shaToCompareAgainst != null) {
     logger.info(
       `Comparing visual snapshots for the commit ${shortSha(
-        head
+        headSha
       )}, against ${shortSha(shaToCompareAgainst)}`
     );
   } else {
-    logger.info(`Generating visual snapshots for commit ${shortSha(head)}`);
+    logger.info(`Generating visual snapshots for commit ${shortSha(headSha)}`);
   }
 
   await throwIfCannotConnectToOrigin(appUrl);
@@ -126,7 +121,7 @@ export const runOneTestRun = async (
         body: `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: \`${basicAuthUser}\` password: \`${basicAuthPassword}\`.\n\n
 Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. Cancel the workflow run to close the tunnel early.`,
         testSuiteId: "__meticulous_debug__",
-        shortHeadSha: shortCommitSha(head),
+        shortHeadSha: shortCommitSha(headSha),
         createIfDoesNotExist: true,
         logger,
       }).catch((err) => {
@@ -175,7 +170,7 @@ Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. 
   await executeRemoteTestRun({
     apiToken,
     appUrl,
-    commitSha: head,
+    commitSha: headSha,
     environment: "github-actions",
     onTunnelCreated,
     onTestRunCreated,
