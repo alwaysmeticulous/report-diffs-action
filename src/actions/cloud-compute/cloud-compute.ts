@@ -1,4 +1,4 @@
-import { error, setFailed } from "@actions/core";
+import { setFailed } from "@actions/core";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import { getHeadCommitShaFromRepo } from "../../common/get-base-and-head-commit-shas";
 import { getInCloudActionInputs } from "./get-inputs";
@@ -38,12 +38,11 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
 
   (
     await Promise.allSettled(
-      projectTargetsToRun.map((target, index) =>
+      projectTargetsToRun.map((target) =>
         runOneTestRun({
+          testRunId: target.name,
           apiToken: target.apiToken,
           appUrl: target.apiToken,
-          // TODO: Use the target ID rather than the index.
-          runNumber: index,
           githubToken,
           headSha,
         })
@@ -52,8 +51,10 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   ).forEach((result, index) => {
     if (result.status === "rejected") {
       const message =
-        result.reason instanceof Error ? result.reason.message : `${error}`;
-      failureMessage += `Run #${index + 1} failed: ${message}\n`;
+        result.reason instanceof Error
+          ? result.reason.message
+          : `${result.reason}`;
+      failureMessage += `Tes run ${projectTargetsToRun[index].name} failed: ${message}\n`;
     }
   });
   if (failureMessage) {

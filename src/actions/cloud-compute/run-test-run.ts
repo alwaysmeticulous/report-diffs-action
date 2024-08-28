@@ -17,13 +17,13 @@ import { getCloudComputeBaseTestRun } from "./get-cloud-compute-base-test-run";
 export const runOneTestRun = async ({
   apiToken,
   appUrl,
-  runNumber,
+  testRunId,
   githubToken,
   headSha,
 }: {
   apiToken: string;
   appUrl: string;
-  runNumber: number;
+  testRunId: string;
   githubToken: string;
   headSha: string;
 }) => {
@@ -32,7 +32,7 @@ export const runOneTestRun = async ({
   const { owner, repo } = context.repo;
   const isDebugPRRun = isDebugPullRequestRun(event);
   const octokit = getOctokitOrFail(githubToken);
-  const logger = getPrefixedLogger(`Run #${runNumber}`);
+  const logger = getPrefixedLogger(`Test Run ${testRunId}`);
 
   if (event == null) {
     logger.warn(
