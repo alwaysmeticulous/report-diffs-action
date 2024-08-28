@@ -13,7 +13,11 @@ import { shortCommitSha } from "../../common/environment.utils";
 import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { isDebugPullRequestRun } from "../../common/is-debug-pr-run";
-import { getPrefixedLogger, shortSha } from "../../common/logger.utils";
+import {
+  getPrefixedLogger,
+  initLogger,
+  shortSha,
+} from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { updateStatusComment } from "../../common/update-status-comment";
 import { DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION } from "./consts";
@@ -39,7 +43,9 @@ export const runOneTestRun = async ({
   const { owner, repo } = context.repo;
   const isDebugPRRun = isDebugPullRequestRun(event);
   const octokit = getOctokitOrFail(githubToken);
-  const logger = getPrefixedLogger(`Test Run ${testRunId}`);
+  const logger = isSingleTestRunExecution
+    ? initLogger()
+    : getPrefixedLogger(`Test Run ${testRunId}`);
   const apiClient = createClient({
     apiToken,
   });
