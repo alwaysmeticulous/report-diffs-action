@@ -1,5 +1,10 @@
 import { context } from "@actions/github";
-import { IN_PROGRESS_TEST_RUN_STATUS, TestRun } from "@alwaysmeticulous/client";
+import {
+  createClient,
+  getProject,
+  IN_PROGRESS_TEST_RUN_STATUS,
+  TestRun,
+} from "@alwaysmeticulous/client";
 import { defer } from "@alwaysmeticulous/common";
 import { executeRemoteTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
@@ -20,12 +25,14 @@ export const runOneTestRun = async ({
   testRunId,
   githubToken,
   headSha,
+  isSingleTestRunExecution,
 }: {
   apiToken: string;
   appUrl: string;
   testRunId: string;
   githubToken: string;
   headSha: string;
+  isSingleTestRunExecution: boolean;
 }) => {
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -33,6 +40,26 @@ export const runOneTestRun = async ({
   const isDebugPRRun = isDebugPullRequestRun(event);
   const octokit = getOctokitOrFail(githubToken);
   const logger = getPrefixedLogger(`Test Run ${testRunId}`);
+  const apiClient = createClient({
+    apiToken,
+  });
+  const project = await getProject(apiClient);
+
+  if (!project) {
+    throw new Error(
+      `Could not retrieve project data${
+        isSingleTestRunExecution ? "" : `for project ${testRunId}`
+      }. Is the API token correct?`
+    );
+  }
+
+  logger.info(
+    `Running tests for project ${project.organization.name}/${
+      project.name
+    } against app URL '${appUrl}' ${
+      isSingleTestRunExecution ? "" : ` (test run ID ${testRunId})`
+    }...`
+  );
 
   if (event == null) {
     logger.warn(

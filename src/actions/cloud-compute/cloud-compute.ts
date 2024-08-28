@@ -1,10 +1,12 @@
 import { setFailed } from "@actions/core";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import { getHeadCommitShaFromRepo } from "../../common/get-base-and-head-commit-shas";
+import { initLogger } from "../../common/logger.utils";
 import { getInCloudActionInputs } from "./get-inputs";
 import { runOneTestRun } from "./run-test-run";
 
 export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
+  const logger = initLogger();
   // Init Sentry without sampling traces on the action run.
   // Children processes, (test run executions) will use
   // the global sample rate.
@@ -34,7 +36,25 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   // Our backend is responsible for computing the correct BASE commit to create the test run for.
   const headSha = headShaFromInput || getHeadCommitShaFromRepo();
 
+  const skippedTargets = projectTargets.filter((target) => target.skip);
   const projectTargetsToRun = projectTargets.filter((target) => !target.skip);
+
+  // Single test run execution is a special case where we run a single test run with the "default" name.
+  // This will be the case when the user provides `app-url` and `api-token` inputs directly.
+  // This is used to simplify some of the logging and error handling.
+  const isSingleTestRunExecution =
+    projectTargetsToRun.length === 1 &&
+    projectTargetsToRun[0].name === "default";
+
+  // Log skipped targets, if any
+  if (skippedTargets) {
+    const skippedTargetNames = skippedTargets.map((target) => target.name);
+    logger.info(
+      `Skipping test runs for the following targets: ${skippedTargetNames.join(
+        ", "
+      )}`
+    );
+  }
 
   (
     await Promise.allSettled(
@@ -45,6 +65,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
           appUrl: target.apiToken,
           githubToken,
           headSha,
+          isSingleTestRunExecution,
         })
       )
     )
