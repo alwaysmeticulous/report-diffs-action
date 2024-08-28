@@ -21,20 +21,10 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
 
   let failureMessage = "";
   const {
-    apiToken: apiTokenInput,
-    appUrl: appUrlInput,
+    projectTargets,
     headSha: headShaFromInput,
     githubToken,
   } = getInCloudActionInputs();
-  const apiTokens = apiTokenInput.split(",").map((token) => token.trim());
-  const appUrls = appUrlInput.split(",").map((token) => token.trim());
-  while (appUrls.length < apiTokens.length) {
-    // If the number of app URLs is less than the number of API tokens, the
-    // last URL will be used for all remaining projects. This allow for
-    // more concise inputs when one app URL is to be used many times. In
-    // particular in the common case of one app URL for all projects.
-    appUrls.push(appUrls[appUrls.length - 1]);
-  }
 
   // Compute the HEAD commit SHA to use when creating a test run.
   // In a PR workflow this will by default be process.env.GITHUB_SHA (the temporary merge commit) or
@@ -44,12 +34,15 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   // Our backend is responsible for computing the correct BASE commit to create the test run for.
   const headSha = headShaFromInput || getHeadCommitShaFromRepo();
 
+  const projectTargetsToRun = projectTargets.filter((target) => !target.skip);
+
   (
     await Promise.allSettled(
-      apiTokens.map((token, index) =>
+      projectTargetsToRun.map((target, index) =>
         runOneTestRun({
-          apiToken: token,
-          appUrl: appUrls[index],
+          apiToken: target.apiToken,
+          appUrl: target.apiToken,
+          // TODO: Use the target ID rather than the index.
           runNumber: index,
           githubToken,
           headSha,
