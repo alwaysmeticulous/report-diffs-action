@@ -120,7 +120,7 @@ export const runOneTestRun = async ({
         repo,
         body: `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: \`${basicAuthUser}\` password: \`${basicAuthPassword}\`.\n\n
 Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. Cancel the workflow run to close the tunnel early.`,
-        testSuiteId: "__meticulous_debug__",
+        testSuiteId: `__meticulous_debug_${testRunId}__`,
         shortHeadSha: shortCommitSha(headSha),
         createIfDoesNotExist: true,
         logger,
