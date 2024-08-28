@@ -75,7 +75,12 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
         result.reason instanceof Error
           ? result.reason.message
           : `${result.reason}`;
-      failureMessage += `Tes run ${projectTargetsToRun[index].name} failed: ${message}\n`;
+
+      if (!isSingleTestRunExecution) {
+        failureMessage += `Test run ${projectTargetsToRun[index].name} failed: ${message}\n`;
+      } else {
+        failureMessage = message;
+      }
     }
   });
   if (failureMessage) {
