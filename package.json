@@ -52,7 +52,7 @@
     "//": "Upgrading `replay-orchestrator-launcher`? Consider bumping the environment version `LOGICAL_ENVIRONMENT_VERSION` in `constants.ts` if the new version includes visible changes.",
     "@alwaysmeticulous/replay-orchestrator-launcher": "^2.147.1",
     "@alwaysmeticulous/sentry": "^2.146.1",
-    "@sentry/node": "^7.107.0",
+    "@sentry/node": "^8.27.0",
     "lodash.debounce": "^4.0.8",
     "loglevel": "^1.8.1",
     "luxon": "^3.4.3",
