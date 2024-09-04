@@ -46,7 +46,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     projectTargets.length === 1 && projectTargets[0].name === "default";
 
   // Log skipped targets, if any
-  if (skippedTargets) {
+  if (skippedTargets.length > 0) {
     const skippedTargetNames = skippedTargets.map((target) => target.name);
     logger.info(
       `Skipping test runs for the following targets: ${skippedTargetNames.join(
