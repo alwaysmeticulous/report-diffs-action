@@ -1,6 +1,5 @@
 import { execSync } from "child_process";
 import { context } from "@actions/github";
-import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { CodeChangeEvent } from "../types";
 
@@ -13,7 +12,8 @@ export const getBaseAndHeadCommitShas = async (
   event: CodeChangeEvent,
   options: {
     useDeploymentUrl: boolean;
-  }
+  },
+  logger: log.Logger
 ): Promise<BaseAndHeadCommitShas> => {
   if (event.type === "pull_request") {
     const head = event.payload.pull_request.head.sha;
@@ -24,12 +24,16 @@ export const getBaseAndHeadCommitShas = async (
       // The PR base can sometimes point to a commit ahead of the merge-base of the head commit
       // (I believe it's based on the github temporary merge commit)
       return {
-        base: (await tryGetMergeBaseOfHeadCommit(head, base, baseRef)) ?? base,
+        base:
+          (await tryGetMergeBaseOfHeadCommit(head, base, baseRef, logger)) ??
+          base,
         head,
       };
     }
     return {
-      base: (await tryGetMergeBaseOfTemporaryMergeCommit(head, base)) ?? base,
+      base:
+        (await tryGetMergeBaseOfTemporaryMergeCommit(head, base, logger)) ??
+        base,
       head,
     };
   }
@@ -55,10 +59,9 @@ const assertNever = (event: never): never => {
 const tryGetMergeBaseOfHeadCommit = (
   pullRequestHeadSha: string,
   pullRequestBaseSha: string,
-  baseRef: string
+  baseRef: string,
+  logger: log.Logger
 ): string | null => {
-  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
-
   try {
     markGitDirectoryAsSafe();
     // Only a single commit is fetched by the checkout action by default
@@ -97,10 +100,10 @@ export const getHeadCommitShaFromRepo = (): string => {
 
 const tryGetMergeBaseOfTemporaryMergeCommit = (
   pullRequestHeadSha: string,
-  pullRequestBaseSha: string
+  pullRequestBaseSha: string,
+  logger: log.Logger
 ): string | null => {
   const mergeCommitSha = process.env.GITHUB_SHA;
-  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
   if (mergeCommitSha == null) {
     logger.error(
