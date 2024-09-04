@@ -5,8 +5,9 @@ import {
   IN_PROGRESS_TEST_RUN_STATUS,
   TestRun,
 } from "@alwaysmeticulous/client";
-import { defer } from "@alwaysmeticulous/common";
+import { defer, METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import { executeRemoteTestRun } from "@alwaysmeticulous/remote-replay-launcher";
+import log from "loglevel";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
 import { tryTriggerTestsWorkflowOnBase } from "../../common/ensure-base-exists.utils";
 import { shortCommitSha } from "../../common/environment.utils";
@@ -44,7 +45,7 @@ export const runOneTestRun = async ({
   const isDebugPRRun = isDebugPullRequestRun(event);
   const octokit = getOctokitOrFail(githubToken);
   const logger = isSingleTestRunExecution
-    ? initLogger()
+    ? log.getLogger(METICULOUS_LOGGER_NAME)
     : getPrefixedLogger(`Test Run ${testRunId}`);
   const apiClient = createClient({
     apiToken,
