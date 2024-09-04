@@ -43,8 +43,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   // This will be the case when the user provides `app-url` and `api-token` inputs directly.
   // This is used to simplify some of the logging and error handling.
   const isSingleTestRunExecution =
-    projectTargetsToRun.length === 1 &&
-    projectTargetsToRun[0].name === "default";
+    projectTargets.length === 1 && projectTargets[0].name === "default";
 
   // Log skipped targets, if any
   if (skippedTargets) {

@@ -32,7 +32,7 @@ inputs:
         admin:
           api-token: {{ secrets.METICULOUS_ADMIN_API_TOKEN }}
           app-url: "http://localhost:4000"
-          skip: {{ secrets.METICULOUS_APP_API_TOKEN }}
+          skip: false (optional, default is false)
       ```
     required: false
 

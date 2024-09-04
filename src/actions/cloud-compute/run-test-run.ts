@@ -20,7 +20,7 @@ import {
 } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { updateStatusComment } from "../../common/update-status-comment";
-import { DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION } from "./consts";
+import { DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION } from "./consts";
 import { getCloudComputeBaseTestRun } from "./get-cloud-compute-base-test-run";
 
 export const runOneTestRun = async ({
@@ -54,7 +54,7 @@ export const runOneTestRun = async ({
   if (!project) {
     throw new Error(
       `Could not retrieve project data${
-        isSingleTestRunExecution ? "" : `for project ${testRunId}`
+        isSingleTestRunExecution ? "" : ` for project ${testRunId}`
       }. Is the API token correct?`
     );
   }
@@ -152,7 +152,7 @@ export const runOneTestRun = async ({
         owner,
         repo,
         body: `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: \`${basicAuthUser}\` password: \`${basicAuthPassword}\`.\n\n
-Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. Cancel the workflow run to close the tunnel early.`,
+Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION.toHuman()}. Cancel the workflow run to close the tunnel early.`,
         testSuiteId: `__meticulous_debug_${testRunId}__`,
         shortHeadSha: shortCommitSha(headSha),
         createIfDoesNotExist: true,
@@ -175,11 +175,11 @@ Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. 
       !keepTunnelOpenTimeout
     ) {
       logger.info(
-        `Test run execution completed. Keeping tunnel open for ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}`
+        `Test run execution completed. Keeping tunnel open for ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION.toHuman()}`
       );
       keepTunnelOpenTimeout = setTimeout(() => {
         keepTunnelOpenPromise.resolve();
-      }, DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.as("milliseconds"));
+      }, DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION.as("milliseconds"));
     }
 
     const numTestCases = testRun.configData.testCases?.length || 0;
