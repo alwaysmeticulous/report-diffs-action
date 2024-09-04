@@ -31,9 +31,9 @@ export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
   try {
     return await ensureBaseTestsExists(...params);
   } catch (error) {
-    params.logger.error(error);
+    params[0].logger.error(error);
     const message = `Error while running tests on base ${params[0].base}. No diffs will be reported for this run.`;
-    params.logger.warn(message);
+    params[0].logger.warn(message);
     ghWarning(message);
     return { baseTestRunExists: false };
   }
@@ -229,7 +229,6 @@ const waitForWorkflowCompletionAndThrowIfFailed = async ({
 
 const waitForWorkflowCompletionAndSkipComparisonsIfFailed = async ({
   commitSha,
-  logger,
   ...otherOpts
 }: {
   logger: log.Logger;
@@ -240,6 +239,7 @@ const waitForWorkflowCompletionAndSkipComparisonsIfFailed = async ({
   commitSha: string;
   timeout: Duration;
 }): Promise<{ baseTestRunExists: boolean }> => {
+  const { logger } = otherOpts;
   const finalWorkflowRun = await waitForWorkflowCompletion(otherOpts);
 
   if (finalWorkflowRun == null || isPendingStatus(finalWorkflowRun.status)) {

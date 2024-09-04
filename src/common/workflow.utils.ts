@@ -102,6 +102,7 @@ export const startNewWorkflowRun = async ({
     workflowId,
     commitSha,
     octokit,
+    logger,
   });
   return newRun;
 };
