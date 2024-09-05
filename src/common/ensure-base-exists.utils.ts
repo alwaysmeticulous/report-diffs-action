@@ -2,7 +2,6 @@ import { warning as ghWarning } from "@actions/core";
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
 import { TestRun } from "@alwaysmeticulous/client";
-import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
@@ -29,13 +28,12 @@ const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PUSH_EVENT = Duration.fromObject({
 export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
   ...params
 ) => {
-  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
   try {
     return await ensureBaseTestsExists(...params);
   } catch (error) {
-    logger.error(error);
+    params[0].logger.error(error);
     const message = `Error while running tests on base ${params[0].base}. No diffs will be reported for this run.`;
-    logger.warn(message);
+    params[0].logger.warn(message);
     ghWarning(message);
     return { baseTestRunExists: false };
   }
@@ -47,6 +45,7 @@ export const ensureBaseTestsExists = async ({
   context,
   octokit,
   getBaseTestRun,
+  logger,
 }: {
   event: CodeChangeEvent;
   apiToken: string;
@@ -54,9 +53,8 @@ export const ensureBaseTestsExists = async ({
   context: Context;
   octokit: InstanceType<typeof GitHub>;
   getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
+  logger: log.Logger;
 }): Promise<{ baseTestRunExists: boolean }> => {
-  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
-
   if (!base) {
     return { baseTestRunExists: false };
   }
@@ -98,6 +96,7 @@ export const tryTriggerTestsWorkflowOnBase = async ({
     workflowId,
     commitSha: base,
     octokit,
+    logger,
   });
   if (alreadyPending != null) {
     logger.info(
@@ -112,6 +111,7 @@ export const tryTriggerTestsWorkflowOnBase = async ({
         octokit,
         commitSha: base,
         timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+        logger,
       });
       return { baseTestRunExists: true };
     } else {
@@ -151,6 +151,7 @@ export const tryTriggerTestsWorkflowOnBase = async ({
     repo,
     ref: baseRef,
     octokit,
+    logger,
   });
 
   logger.debug(
@@ -172,6 +173,7 @@ export const tryTriggerTestsWorkflowOnBase = async ({
     ref: baseRef,
     commitSha: base,
     octokit,
+    logger,
   });
 
   if (workflowRun == null) {
@@ -189,6 +191,7 @@ export const tryTriggerTestsWorkflowOnBase = async ({
     octokit,
     commitSha: base,
     timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+    logger,
   });
 
   return { baseTestRunExists: true };
@@ -204,6 +207,7 @@ const waitForWorkflowCompletionAndThrowIfFailed = async ({
   octokit: InstanceType<typeof GitHub>;
   commitSha: string;
   timeout: Duration;
+  logger: log.Logger;
 }) => {
   const finalWorkflowRun = await waitForWorkflowCompletion(otherOpts);
 
@@ -225,7 +229,6 @@ const waitForWorkflowCompletionAndThrowIfFailed = async ({
 
 const waitForWorkflowCompletionAndSkipComparisonsIfFailed = async ({
   commitSha,
-  logger,
   ...otherOpts
 }: {
   logger: log.Logger;
@@ -236,6 +239,7 @@ const waitForWorkflowCompletionAndSkipComparisonsIfFailed = async ({
   commitSha: string;
   timeout: Duration;
 }): Promise<{ baseTestRunExists: boolean }> => {
+  const { logger } = otherOpts;
   const finalWorkflowRun = await waitForWorkflowCompletion(otherOpts);
 
   if (finalWorkflowRun == null || isPendingStatus(finalWorkflowRun.status)) {
@@ -263,11 +267,13 @@ const getHeadCommitForRef = async ({
   repo,
   ref,
   octokit,
+  logger,
 }: {
   owner: string;
   repo: string;
   ref: string;
   octokit: InstanceType<typeof GitHub>;
+  logger: log.Logger;
 }): Promise<string> => {
   try {
     const result = await octokit.rest.repos.getBranch({
@@ -285,7 +291,6 @@ const getHeadCommitForRef = async ({
           ` Please add the 'contents: read' permission to your workflow YAML file: see ${DOCS_URL} for the correct setup.`
       );
     }
-    const logger = log.getLogger(METICULOUS_LOGGER_NAME);
     logger.error(
       `Unable to get head commit of branch '${ref}'. This is required in order to correctly calculate the two commits to compare. ${DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE}`
     );
