@@ -113,6 +113,7 @@ export const waitForWorkflowCompletion = async ({
   workflowRunId,
   octokit,
   timeout,
+  isCancelled,
   logger,
 }: {
   owner: string;
@@ -120,6 +121,7 @@ export const waitForWorkflowCompletion = async ({
   workflowRunId: number;
   octokit: InstanceType<typeof GitHub>;
   timeout: Duration;
+  isCancelled: () => boolean;
   logger: log.Logger;
 }): Promise<{
   id: number;
@@ -140,6 +142,7 @@ export const waitForWorkflowCompletion = async ({
     (workflowRun == null || isPendingStatus(workflowRun.status)) &&
     DateTime.now().diff(start) < timeout
   ) {
+    if (isCancelled()) return null;
     const workflowRunResult = await octokit.rest.actions.getWorkflowRun({
       owner,
       repo,
