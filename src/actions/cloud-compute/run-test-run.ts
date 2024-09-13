@@ -111,6 +111,13 @@ export const runOneTestRun = async ({
         logger,
         event,
         base: codeChangeBase,
+        getBaseTestRun: async () => {
+          const { baseTestRun } = await getCloudComputeBaseTestRun({
+            apiToken,
+            headCommitSha: headSha,
+          });
+          return baseTestRun;
+        },
         context,
         octokit,
       });
@@ -195,6 +202,12 @@ Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION.toHuman()}.
     }
   };
 
+  const onTunnelStillLocked = () => {
+    logger.info(
+      "The test run has completed but additional tasks on the Meticulous platform are using this deployment, please keep this job running..."
+    );
+  };
+
   const onTestRunCreated = (testRun: TestRun) => {
     logger.info(`Test run created: ${testRun.url}`);
   };
@@ -206,9 +219,11 @@ Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION.toHuman()}.
     appUrl,
     commitSha: headSha,
     environment: "github-actions",
+    isLockable: true,
     onTunnelCreated,
     onTestRunCreated,
     onProgressUpdate,
+    onTunnelStillLocked,
     ...(keepTunnelOpenPromise
       ? { keepTunnelOpenPromise: keepTunnelOpenPromise.promise }
       : {}),

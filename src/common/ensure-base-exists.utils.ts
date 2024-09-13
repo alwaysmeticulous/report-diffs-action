@@ -25,6 +25,10 @@ const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PUSH_EVENT = Duration.fromObject({
   minutes: 10,
 });
 
+const POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
+  seconds: 10,
+});
+
 export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
   ...params
 ) => {
@@ -74,19 +78,41 @@ export const ensureBaseTestsExists = async ({
     octokit,
   });
 };
-export const tryTriggerTestsWorkflowOnBase = async ({
-  logger,
-  event,
-  base,
-  context,
-  octokit,
-}: {
+
+export interface TryTriggerTestsWorkflowOnBaseOpts {
   logger: log.Logger;
   event: CodeChangeEvent;
   base: string;
+  getBaseTestRun?: () => Promise<TestRun | null>;
   context: Context;
   octokit: InstanceType<typeof GitHub>;
-}): Promise<{ baseTestRunExists: boolean }> => {
+}
+
+export const tryTriggerTestsWorkflowOnBase = async (
+  opts: TryTriggerTestsWorkflowOnBaseOpts
+): Promise<{ baseTestRunExists: boolean }> => {
+  let isDone = false;
+  const isCancelled = () => {
+    return isDone;
+  };
+  const workflowRunPromise = waitOnWorkflowRun(opts, isCancelled);
+  if (!opts.getBaseTestRun) {
+    return workflowRunPromise;
+  }
+  const baseTestRunPromise = waitOnBaseTestRun(
+    opts.getBaseTestRun,
+    isCancelled
+  );
+  const result = await Promise.race([workflowRunPromise, baseTestRunPromise]);
+  isDone = true;
+  return result;
+};
+
+const waitOnWorkflowRun = async (
+  opts: TryTriggerTestsWorkflowOnBaseOpts,
+  isCancelled: () => boolean
+): Promise<{ baseTestRunExists: boolean }> => {
+  const { logger, event, base, context, octokit } = opts;
   const { owner, repo } = context.repo;
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
 
@@ -111,6 +137,7 @@ export const tryTriggerTestsWorkflowOnBase = async ({
         octokit,
         commitSha: base,
         timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+        isCancelled,
         logger,
       });
       return { baseTestRunExists: true };
@@ -130,6 +157,7 @@ export const tryTriggerTestsWorkflowOnBase = async ({
         octokit,
         commitSha: base,
         timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PUSH_EVENT,
+        isCancelled,
         logger,
       });
     }
@@ -191,9 +219,27 @@ export const tryTriggerTestsWorkflowOnBase = async ({
     octokit,
     commitSha: base,
     timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+    isCancelled,
     logger,
   });
 
+  return { baseTestRunExists: true };
+};
+
+const waitOnBaseTestRun = async (
+  getBaseTestRun: () => Promise<TestRun | null>,
+  isCancelled: () => boolean
+): Promise<{ baseTestRunExists: boolean }> => {
+  let baseTestRun = await getBaseTestRun();
+  while (!baseTestRun) {
+    if (isCancelled()) {
+      return { baseTestRunExists: false };
+    }
+    await new Promise((resolve) =>
+      setTimeout(resolve, POLL_FOR_BASE_TEST_RUN_INTERVAL.as("milliseconds"))
+    );
+    baseTestRun = await getBaseTestRun();
+  }
   return { baseTestRunExists: true };
 };
 
@@ -207,6 +253,7 @@ const waitForWorkflowCompletionAndThrowIfFailed = async ({
   octokit: InstanceType<typeof GitHub>;
   commitSha: string;
   timeout: Duration;
+  isCancelled: () => boolean;
   logger: log.Logger;
 }) => {
   const finalWorkflowRun = await waitForWorkflowCompletion(otherOpts);
@@ -238,6 +285,7 @@ const waitForWorkflowCompletionAndSkipComparisonsIfFailed = async ({
   octokit: InstanceType<typeof GitHub>;
   commitSha: string;
   timeout: Duration;
+  isCancelled: () => boolean;
 }): Promise<{ baseTestRunExists: boolean }> => {
   const { logger } = otherOpts;
   const finalWorkflowRun = await waitForWorkflowCompletion(otherOpts);
