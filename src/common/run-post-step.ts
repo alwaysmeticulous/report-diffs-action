@@ -1,12 +1,14 @@
-import { getInput } from "@actions/core";
 import { context } from "@actions/github";
 import { createClient, emitTelemetry } from "@alwaysmeticulous/client";
-import { getInputFromEnv } from "./get-input-from-env";
 import { getOctokitOrFail } from "./octokit";
 
-export const runPostStep = async (): Promise<void> => {
-  const apiToken = getActionInput("api-token");
-  const githubToken = getActionInput("github-token");
+export const runPostStep = async ({
+  apiToken,
+  githubToken,
+}: {
+  apiToken: string;
+  githubToken: string;
+}): Promise<void> => {
   const octokit = getOctokitOrFail(githubToken);
   const workflow = await octokit.rest.actions.getWorkflowRun({
     owner: context.repo.owner,
@@ -47,19 +49,4 @@ export const runPostStep = async (): Promise<void> => {
 
   const client = createClient({ apiToken });
   await emitTelemetry({ client, values });
-};
-
-/**
- * This method checks the input from the action in two different ways because we don't know if we are the post step
- * for the main action or the cloud-compute one so we need to support both.
- */
-const getActionInput = (name: string) => {
-  return (
-    getInput(name) ||
-    getInputFromEnv({
-      name: name,
-      required: true,
-      type: "string",
-    })
-  );
 };
