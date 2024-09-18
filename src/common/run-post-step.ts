@@ -5,9 +5,14 @@ import { getOctokitOrFail } from "./octokit";
 export const runPostStep = async ({
   apiToken,
   githubToken,
+  testSuiteOrProjectId,
 }: {
   apiToken: string;
   githubToken: string;
+  /**
+   * The test suite or project ID to use find the comment in the PR.
+   */
+  testSuiteOrProjectId: string | null;
 }): Promise<void> => {
   const octokit = getOctokitOrFail(githubToken);
   const workflow = await octokit.rest.actions.getWorkflowRun({
@@ -37,11 +42,12 @@ export const runPostStep = async ({
       issue_number: context.payload.pull_request.number,
       per_page: 1000,
     });
-    values["report_diffs_action.saw_comment"] = prComments.data.some(
-      (c) =>
-        c.body?.includes(
-          "<!--- alwaysmeticulous/report-diffs-action/status-comment"
-        ) && new Date(c.updated_at).getTime() >= workflowStartTime.getTime()
+    values["report_diffs_action.saw_comment"] = prComments.data.some((c) =>
+      isPrCommentFromAction({
+        prComment: c,
+        testSuiteOrProjectId,
+        workflowStartTime,
+      })
     )
       ? 1
       : 0;
@@ -49,4 +55,27 @@ export const runPostStep = async ({
 
   const client = createClient({ apiToken });
   await emitTelemetry({ client, values });
+};
+
+const isPrCommentFromAction = ({
+  prComment,
+  testSuiteOrProjectId,
+  workflowStartTime,
+}: {
+  prComment: { body?: string; updated_at: string };
+  testSuiteOrProjectId: string | null;
+  workflowStartTime: Date;
+}): boolean => {
+  if (!prComment.body) {
+    return false;
+  }
+
+  return (
+    prComment.body?.includes(getCommentIdentifier(testSuiteOrProjectId)) &&
+    new Date(prComment.updated_at).getTime() >= workflowStartTime.getTime()
+  );
+};
+
+const getCommentIdentifier = (testSuiteOrProjectId: string | null) => {
+  return `<!--- alwaysmeticulous/report-diffs-action/status-comment/${testSuiteOrProjectId}`;
 };
