@@ -1,9 +1,30 @@
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
+import prefix from "loglevel-plugin-prefix";
 
-export const initLogger: () => void = () => {
+export const getPrefixedLogger = (logPrefix: string) => {
+  const prefixedLogger = log.getLogger(
+    `${METICULOUS_LOGGER_NAME}/${logPrefix}`
+  );
+  prefixedLogger.setLevel(
+    +(process.env["RUNNER_DEBUG"] ?? "0") ? log.levels.TRACE : log.levels.INFO
+  );
+  prefix.reg(log);
+  prefix.apply(prefixedLogger, {
+    template: `[${logPrefix}] %l:`,
+  });
+  return prefixedLogger;
+};
+
+export const initLogger: () => log.Logger = () => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
   logger.setDefaultLevel(log.levels.INFO);
+
+  if (+(process.env["RUNNER_DEBUG"] ?? "0")) {
+    setLogLevel("trace");
+  }
+
+  return logger;
 };
 
 export const setLogLevel: (logLevel: string | undefined) => void = (

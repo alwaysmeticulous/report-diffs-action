@@ -64,12 +64,14 @@ export class ResultsReporter {
       baseSha: string | null;
       baseRef: string | null;
       testSuiteId: string | null;
+      logger: log.Logger;
     }
   ) {
     this.shortHeadSha = shortCommitSha(this.options.headSha);
   }
 
   async testRunStarted(testRun: RunningTestRunExecution) {
+    const logger = this.options.logger;
     if (!(testRun.project as EnrichedProject).isGitHubIntegrationActive) {
       await this.setCommitStatus({
         state: "pending",
@@ -78,10 +80,12 @@ export class ResultsReporter {
     }
     await this.setStatusComment({
       body: `🤖 Meticulous is replaying ${testRun.progress.runningTestCases} sessions to check for differences...`,
+      logger,
     });
   }
 
   async testFinished(testRun: RunningTestRunExecution) {
+    const logger = this.options.logger;
     const executedTestCases =
       testRun.progress.passedTestCases + testRun.progress.failedTestCases;
     const totalTestCases =
@@ -106,15 +110,18 @@ export class ResultsReporter {
     if (testRun.progress.failedTestCases > 0) {
       await this.setStatusComment({
         body: `🤖 Meticulous is replaying ${totalTestCases} sessions to check for differences. No differences detected so far (${percentComplete}% complete).`,
+        logger,
       });
     } else {
       await this.setStatusComment({
         body: `🤖 Meticulous is replaying ${totalTestCases} sessions to check for differences (${percentComplete}% complete).`,
+        logger,
       });
     }
   }
 
   async testRunFinished(results: ExecuteTestRunResult) {
+    const logger = this.options.logger;
     const { testRun, testCaseResults } = results;
     const screenshotDiffResults = testCaseResults.flatMap(
       (testCase: VersionedDetailedTestCaseResult) => {
@@ -176,12 +183,14 @@ export class ResultsReporter {
         await this.setStatusComment({
           createIfDoesNotExist: true,
           body: `✅ Meticulous spotted zero visual differences across ${totalScreensCompared} screens tested: [view results](${testRun.url}).${coverageLine}`,
+          logger,
         });
       } else {
         if (totalScreenshotsTaken === 0) {
           await this.setStatusComment({
             createIfDoesNotExist: true,
             body: `❌ Meticulous replayed ${testCaseResults.length} user sessions, but no visual snapshots were taken. This likely means there was an error replaying the sessions. Please view the logs of the Github workflow.`,
+            logger,
           });
         } else {
           const baseRefStr = this.options.baseRef
@@ -194,6 +203,7 @@ export class ResultsReporter {
             createIfDoesNotExist: true,
             body: `🤖 Meticulous replayed ${testCaseResults.length} user sessions and [took ${totalScreenshotsTaken} visual snapshots](${testRun.url}). Meticulous did not run on ${this.options.baseSha} of the ${baseRefStr} branch and so there was nothing to compare against.
             \nPlease merge your pull request for setting up Meticulous in CI and ensure that it’s running on push events to the ${baseRefStr} branch.`,
+            logger,
           });
         }
       }
@@ -208,16 +218,19 @@ export class ResultsReporter {
       await this.setStatusComment({
         createIfDoesNotExist: true,
         body: `🤖 Meticulous spotted visual differences in ${screensWithDifferences} of ${totalScreensCompared} screens tested: [view and approve differences detected](${testRun.url}).${coverageLine}`,
+        logger,
       });
     }
   }
 
   async errorRunningTests() {
+    const logger = this.options.logger;
     // We don't want to update the commit status for runs of projects which are GitHub App integrated. Within
     // this failure mode we can't be always sure that the current repo isn't GitHub App-integrated so be defensive and
     // only post a status comment without a Commit status.
     await this.setStatusComment({
       body: `🤖 Meticulous failed to execute, see GitHub job logs for details.`,
+      logger,
     });
   }
 
@@ -265,9 +278,11 @@ export class ResultsReporter {
   private setStatusComment({
     body,
     createIfDoesNotExist,
+    logger,
   }: {
     body: string;
     createIfDoesNotExist?: boolean;
+    logger: log.Logger;
   }) {
     const { octokit, owner, repo, event, testSuiteId } = this.options;
     return updateStatusComment({
@@ -279,6 +294,7 @@ export class ResultsReporter {
       body,
       shortHeadSha: this.shortHeadSha,
       testSuiteId,
+      logger,
     });
   }
 }

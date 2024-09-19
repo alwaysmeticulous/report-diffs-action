@@ -2,8 +2,8 @@ name: "Meticulous - Report Diffs (Cloud Compute)"
 description: "Run automated Meticulous tests in Meticulous' cloud."
 inputs:
   api-token:
-    description: "Meticulous API token"
-    required: true
+    description: "Meticulous API token. This must be provided if `projects_yaml` is not set."
+    required: false
   github-token:
     description: "GITHUB_TOKEN or a repo scoped PAT."
     required: true
@@ -11,10 +11,29 @@ inputs:
   app-url:
     description: |
       The URL to execute the tests against. This URL should serve the code from the current commit (e.g. a localhost URL served up by a local server).
-    required: true
+      This must be provided if `projects_yaml` is not set.
+    required: false
   head-sha:
     description: |
       Override the head commit SHA that we are analysing instead of using the one inferred automatically by Meticulous. This normally should not be set, but is useful in some scenarios.
+    required: false
+  projects-yaml:
+    description: |
+      YAML string that defines the projects to run. This must be provided if `api-token` and `app-url` are not set.
+      This is useful when executing tests for multiple projects in a single job.
+      If `skip` is set to `true`, Meticulous will not run tests for that project.
+      Schema:
+      ```yaml
+      projects-yaml: |
+        app:
+          api-token: {{ secrets.METICULOUS_APP_API_TOKEN }}
+          app-url: "http://localhost:3000"
+          skip: false (optional, default is false)
+        admin:
+          api-token: {{ secrets.METICULOUS_ADMIN_API_TOKEN }}
+          app-url: "http://localhost:4000"
+          skip: false (optional, default is false)
+      ```
     required: false
 
 outputs: {}

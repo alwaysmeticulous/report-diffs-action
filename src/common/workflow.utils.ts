@@ -1,6 +1,5 @@
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
-import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import log from "loglevel";
 import { DateTime, Duration } from "luxon";
 import { DOCS_URL } from "./constants";
@@ -37,6 +36,7 @@ export const startNewWorkflowRun = async ({
   ref,
   commitSha,
   octokit,
+  logger,
 }: {
   owner: string;
   repo: string;
@@ -44,6 +44,7 @@ export const startNewWorkflowRun = async ({
   ref: string;
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
+  logger: log.Logger;
 }): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
   try {
     await octokit.rest.actions.createWorkflowDispatch({
@@ -53,7 +54,6 @@ export const startNewWorkflowRun = async ({
       ref,
     });
   } catch (err: unknown) {
-    const logger = log.getLogger(METICULOUS_LOGGER_NAME);
     const message = (err as { message?: string } | null)?.message ?? "";
     if (
       message.includes("Workflow does not have 'workflow_dispatch' trigger")
@@ -102,6 +102,7 @@ export const startNewWorkflowRun = async ({
     workflowId,
     commitSha,
     octokit,
+    logger,
   });
   return newRun;
 };
@@ -112,20 +113,22 @@ export const waitForWorkflowCompletion = async ({
   workflowRunId,
   octokit,
   timeout,
+  isCancelled,
+  logger,
 }: {
   owner: string;
   repo: string;
   workflowRunId: number;
   octokit: InstanceType<typeof GitHub>;
   timeout: Duration;
+  isCancelled: () => boolean;
+  logger: log.Logger;
 }): Promise<{
   id: number;
   status: string | null;
   conclusion: string | null;
   [key: string]: unknown;
 } | null> => {
-  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
-
   let workflowRun: {
     id: number;
     status: string | null;
@@ -139,6 +142,7 @@ export const waitForWorkflowCompletion = async ({
     (workflowRun == null || isPendingStatus(workflowRun.status)) &&
     DateTime.now().diff(start) < timeout
   ) {
+    if (isCancelled()) return null;
     const workflowRunResult = await octokit.rest.actions.getWorkflowRun({
       owner,
       repo,
@@ -169,14 +173,15 @@ export const getPendingWorkflowRun = async ({
   workflowId,
   commitSha,
   octokit,
+  logger,
 }: {
   owner: string;
   repo: string;
   workflowId: number;
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
+  logger: log.Logger;
 }): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
-  const logger = log.getLogger(METICULOUS_LOGGER_NAME);
   const listRunsResult = await octokit.rest.actions.listWorkflowRuns({
     owner,
     repo,
