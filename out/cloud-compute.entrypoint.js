@@ -84,7 +84,7 @@ ${t.comment}`:t.comment}this.doc.range[2]=t.offset;break}default:this.errors.pus
 
 Tunnel will be live for up to ${rr.toHuman()}. Cancel the workflow run to close the tunnel early.
 
-Please open this tunnel in your browser and enter the username and password when prompted to confirm that you are serving your application correctly.
+Please open this tunnel in your browser (and enter the username and password when prompted) and check that you are serving your application correctly.
 
 If you wish to run Meticulous tests locally against this tunnel using the Meticulous CLI then you can use the environment variables METICULOUS_TUNNEL_USERNAME and METICULOUS_TUNNEL_PASSWORD. For example:
 
