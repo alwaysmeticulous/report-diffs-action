@@ -164,7 +164,7 @@ export const runOneTestRun = async ({
           `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: \`${basicAuthUser}\` password: \`${basicAuthPassword}\`.\n\n` +
           `Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION.toHuman()}. Cancel the workflow run to close the tunnel early.\n\n` +
           `Please open this tunnel in your browser (and enter the username and password when prompted) and check that you are serving your application correctly.\n\n` +
-          `If you wish to run Meticulous tests locally against this tunnel using the Meticulous CLI then you can use the environment variables METICULOUS_TUNNEL_USERNAME and METICULOUS_TUNNEL_PASSWORD. For example:\n\n` +
+          `If you wish to run Meticulous tests locally against this tunnel using the Meticulous CLI then you can use the environment variables `METICULOUS_TUNNEL_USERNAME` and `METICULOUS_TUNNEL_PASSWORD`. For example:\n\n` +
           `\`\`\`bash\n` +
           `METICULOUS_TUNNEL_USERNAME="${basicAuthUser}" METICULOUS_TUNNEL_PASSWORD="${basicAuthPassword}" npx @alwaysmeticulous/cli simulate \\\n` +
           `  --sessionId="<a session id to replay>" \\\n` +
