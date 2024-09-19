@@ -15,11 +15,7 @@ import { shortCommitSha } from "../../common/environment.utils";
 import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { isDebugPullRequestRun } from "../../common/is-debug-pr-run";
-import {
-  getPrefixedLogger,
-  initLogger,
-  shortSha,
-} from "../../common/logger.utils";
+import { getPrefixedLogger, shortSha } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { updateStatusComment } from "../../common/update-status-comment";
 import { DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION } from "./consts";
