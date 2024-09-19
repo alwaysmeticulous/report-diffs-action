@@ -171,7 +171,7 @@ export const runOneTestRun = async ({
           `  --appUrl="${url}" \\\n` +
           `  --apiToken="<your API token>"\n` +
           `\`\`\`\n\n` +
-          `To find a test session to replay and and to find your API token: visit the 'Selected Sessions' tab or 'All Sessions' tab on your [Meticulous project page](${METICULIOUS_APP_URL}), click on a session and select the 'Simulate' tab.`,
+          `To find a test session to replay and to find your API token: visit the 'Selected Sessions' tab or 'All Sessions' tab on your [Meticulous project page](${METICULIOUS_APP_URL}), click on a session and select the 'Simulate' tab.`,
         testSuiteId: `__meticulous_debug_${testRunId}__`,
         shortHeadSha: shortCommitSha(headSha),
         createIfDoesNotExist: true,
