@@ -86,7 +86,7 @@ Tunnel will be live for up to ${rr.toHuman()}. Cancel the workflow run to close 
 
 Please open this tunnel in your browser (and enter the username and password when prompted) and check that you are serving your application correctly.
 
-If you wish to run Meticulous tests locally against this tunnel using the Meticulous CLI then you can use the environment variables METICULOUS_TUNNEL_USERNAME and METICULOUS_TUNNEL_PASSWORD. For example:
+If you wish to run Meticulous tests locally against this tunnel using the Meticulous CLI then you can use the environment variables \`METICULOUS_TUNNEL_USERNAME\` and \`METICULOUS_TUNNEL_PASSWORD\`. For example:
 
 \`\`\`bash
 METICULOUS_TUNNEL_USERNAME="${i}" METICULOUS_TUNNEL_PASSWORD="${n}" npx @alwaysmeticulous/cli simulate \\
