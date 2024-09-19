@@ -7,6 +7,7 @@ import { initSentry } from "@alwaysmeticulous/sentry";
 import log from "loglevel";
 import { Duration } from "luxon";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
+import { APP_URL, METICULIOUS_APP_URL } from "../../common/constants";
 import { tryTriggerTestsWorkflowOnBase } from "../../common/ensure-base-exists.utils";
 import { shortCommitSha } from "../../common/environment.utils";
 import {
@@ -148,8 +149,18 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
           event,
           owner,
           repo,
-          body: `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: \`${basicAuthUser}\` password: \`${basicAuthPassword}\`.\n\n
-Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. Cancel the workflow run to close the tunnel early.`,
+          body:
+            `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: \`${basicAuthUser}\` password: \`${basicAuthPassword}\`.\n\n` +
+            `Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURAION.toHuman()}. Cancel the workflow run to close the tunnel early.\n\n` +
+            `Please open this tunnel in your browser and enter the username and password when prompted to confirm that you are serving your application correctly.\n\n` +
+            `If you wish to run Meticulous tests locally against this tunnel using the Meticulous CLI then you can use the environment variables METICULOUS_TUNNEL_USERNAME and METICULOUS_TUNNEL_PASSWORD. For example:\n\n` +
+            `\`\`\`bash\n` +
+            `METICULOUS_TUNNEL_USERNAME="${basicAuthUser}" METICULOUS_TUNNEL_PASSWORD="${basicAuthPassword}" npx @alwaysmeticulous/cli simulate \\\n` +
+            `  --sessionId="<a session id to replay>" \\\n` +
+            `  --appUrl="${url}" \\\n` +
+            `  --apiToken="<your API token>"\n` +
+            `\`\`\`\n\n` +
+            `Visit the 'Selected Sessions' tab or 'All Sessions' tab on your [Meticulous project page](${METICULIOUS_APP_URL}), click on a session and select the 'Simulate' tab to find a test session to replay and and to find your API token.`,
           testSuiteId: "__meticulous_debug__",
           shortHeadSha: shortCommitSha(head),
           createIfDoesNotExist: true,
