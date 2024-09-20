@@ -13,8 +13,8 @@
       "distDir": "dist",
       "outputFormat": "esmodule"
     },
-    "post": {
-      "source": "src/post-step.entrypoint.ts",
+    "main-post": {
+      "source": "src/main.post-step.entrypoint.ts",
       "includeNodeModules": true,
       "distDir": "out",
       "sourceMap": false,
@@ -22,6 +22,13 @@
     },
     "cloud-compute": {
       "source": "src/cloud-compute.entrypoint.ts",
+      "includeNodeModules": true,
+      "distDir": "out",
+      "sourceMap": false,
+      "outputFormat": "commonjs"
+    },
+    "cloud-compute-post": {
+      "source": "src/cloud-compute.post-step.entrypoint.ts",
       "includeNodeModules": true,
       "distDir": "out",
       "sourceMap": false,
