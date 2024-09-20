@@ -9,16 +9,13 @@ import { defer, METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import { executeRemoteTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import log from "loglevel";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
+import { METICULIOUS_APP_URL } from "../../common/constants";
 import { tryTriggerTestsWorkflowOnBase } from "../../common/ensure-base-exists.utils";
 import { shortCommitSha } from "../../common/environment.utils";
 import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { isDebugPullRequestRun } from "../../common/is-debug-pr-run";
-import {
-  getPrefixedLogger,
-  initLogger,
-  shortSha,
-} from "../../common/logger.utils";
+import { getPrefixedLogger, shortSha } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { updateStatusComment } from "../../common/update-status-comment";
 import { DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION } from "./consts";
@@ -159,8 +156,18 @@ export const runOneTestRun = async ({
         event,
         owner,
         repo,
-        body: `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: \`${basicAuthUser}\` password: \`${basicAuthPassword}\`.\n\n
-Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION.toHuman()}. Cancel the workflow run to close the tunnel early.`,
+        body:
+          `🤖 Meticulous is running in debug mode. Secure tunnel to ${appUrl} created: ${url} user: \`${basicAuthUser}\` password: \`${basicAuthPassword}\`.\n\n` +
+          `Tunnel will be live for up to ${DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION.toHuman()}. Cancel the workflow run to close the tunnel early.\n\n` +
+          `Please open this tunnel in your browser (and enter the username and password when prompted) and check that you are serving your application correctly.\n\n` +
+          `If you wish to run Meticulous tests locally against this tunnel using the Meticulous CLI then you can use the environment variables \`METICULOUS_TUNNEL_USERNAME\` and \`METICULOUS_TUNNEL_PASSWORD\`. For example:\n\n` +
+          `\`\`\`bash\n` +
+          `METICULOUS_TUNNEL_USERNAME="${basicAuthUser}" METICULOUS_TUNNEL_PASSWORD="${basicAuthPassword}" npx @alwaysmeticulous/cli simulate \\\n` +
+          `  --sessionId="<a session id to replay>" \\\n` +
+          `  --appUrl="${url}" \\\n` +
+          `  --apiToken="<your API token>"\n` +
+          `\`\`\`\n\n` +
+          `To find a test session to replay and to find your API token: visit the 'Selected Sessions' tab or 'All Sessions' tab on your [Meticulous project page](${METICULIOUS_APP_URL}), click on a session and select the 'Simulate' tab.`,
         testSuiteId: `__meticulous_debug_${testRunId}__`,
         shortHeadSha: shortCommitSha(headSha),
         createIfDoesNotExist: true,
