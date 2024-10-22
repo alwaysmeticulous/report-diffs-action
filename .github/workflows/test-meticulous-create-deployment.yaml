@@ -42,7 +42,7 @@ jobs:
           echo "Preview URL: $PREVIEW_URL"
 
           # Set it as an output for the next step
-          echo "::set-output name=preview_url::$PREVIEW_URL"
+          echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
       - name: Create Deployment
         env:
