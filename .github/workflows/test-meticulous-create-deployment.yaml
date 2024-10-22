@@ -34,13 +34,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Create Preview URL
+        id: create-url
+        run: |
+          # Generate the preview URL (you can modify this logic to suit your needs)
+          PREVIEW_URL="https://example.org/example/preview/url/for/$GITHUB_SHA"
+          echo "Preview URL: $PREVIEW_URL"
+
+          # Set it as an output for the next step
+          echo "::set-output name=preview_url::$PREVIEW_URL"
+
       - name: Create Deployment
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_SHA: ${{ github.sha }}
           GITHUB_REF: ${{ github.ref }}
-          PREVIEW_URL: "https://www.add-your-preview-url-for-the-commit-here.com"
+          PREVIEW_URL: ${{ steps.create-url.outputs.preview_url }}
           ENVIRONMENT_NAME: "preview"
         run: |
           OWNER=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
