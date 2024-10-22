@@ -64,7 +64,7 @@ jobs:
           # at the head of the pull request branch.
           # COMMIT_SHA: ${{ github.sha }}
           PREVIEW_URL: ${{ steps.create-url.outputs.preview_url }}
-          ENVIRONMENT_NAME: "preview"
+          ENVIRONMENT_NAME: "meticulous-preview"
         run: |
           OWNER=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
           REPO=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
