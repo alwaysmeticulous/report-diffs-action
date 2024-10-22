@@ -58,6 +58,9 @@ jobs:
           DESCRIPTION="Deployment of $GITHUB_SHA"
           LOG_URL="https://github.com/$OWNER/$REPO/commit/$GITHUB_SHA/checks"
 
+          echo "$GITHUB_REPOSITORY"
+          echo "Curling https://api.github.com/repos/$OWNER/$REPO/deployments"
+
           # Create deployment
           DEPLOYMENT_ID=$(curl -s -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
