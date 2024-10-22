@@ -40,8 +40,11 @@ jobs:
           # Set it as an output for the next step
           echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
-      # We can't just use $GITHUB_SHA because in the case of pull requests this is the SHA of the temporary merge commit,
-      # but we want to tag the actual triggering commit
+      # In the case of CI runs for commits on pull requests GitHub creates a temporary merge commit, merging in the current
+      # head of the main/master/develop branch, and then runs the workflow on that commit, ${{ github.sha }}. However
+      # if our $PREVIEW_URL points to a deployment of the commit at the head of the pull request, rather than a deployment
+      # of the temporary merge commit then we want to tag the commit at the head of the pull request with our deployment.
+      # We call this the 'triggering commit SHA'.
       - name: Get triggering commit SHA
         id: get_sha
         run: |
@@ -55,6 +58,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          COMMIT_SHA: ${{ env.TRIGGERING_COMMIT_SHA }}
+          # TODO: Comment out the above line and uncommment the below line if your deployment is a deployment
+          # of the temporary merge commit (i.e. the code checked out in this workflow) rather than the commit
+          # at the head of the pull request branch.
+          # COMMIT_SHA: ${{ github.sha }}
           PREVIEW_URL: ${{ steps.create-url.outputs.preview_url }}
           ENVIRONMENT_NAME: "preview"
         run: |
