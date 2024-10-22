@@ -30,16 +30,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create Preview URL
-        id: create-url
-        run: |
-          # Generate the preview URL (you can modify this logic to suit your needs)
-          PREVIEW_URL="https://example.org/example/preview/url/for/$GITHUB_SHA"
-          echo "Preview URL: $PREVIEW_URL"
-
-          # Set it as an output for the next step
-          echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
-
       # In the case of CI runs for commits on pull requests GitHub creates a temporary merge commit, merging in the current
       # head of the main/master/develop branch, and then runs the workflow on that commit, ${{ github.sha }}. However
       # if our $PREVIEW_URL points to a deployment of the commit at the head of the pull request, rather than a deployment
@@ -53,6 +43,16 @@ jobs:
           elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
             echo "TRIGGERING_COMMIT_SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
           fi
+
+      - name: Create Preview URL
+        id: create-url
+        run: |
+          # Generate the preview URL (you can modify this logic to suit your needs)
+          PREVIEW_URL="https://example.org/example/preview/url/for/$TRIGGERING_COMMIT_SHA"
+          echo "Preview URL: $PREVIEW_URL"
+
+          # Set it as an output for the next step
+          echo "preview_url=$PREVIEW_URL" >> $GITHUB_OUTPUT
 
       - name: Create Deployment
         env:
@@ -68,8 +68,8 @@ jobs:
         run: |
           OWNER=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
           REPO=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
-          DESCRIPTION="Deployment of $GITHUB_SHA"
-          LOG_URL="https://github.com/$OWNER/$REPO/commit/$GITHUB_SHA/checks"
+          DESCRIPTION="Deployment of $COMMIT_SHA"
+          LOG_URL="https://github.com/$OWNER/$REPO/commit/$COMMIT_SHA/checks"
 
           echo "$GITHUB_REPOSITORY"
           echo "Curling https://api.github.com/repos/$OWNER/$REPO/deployments"
