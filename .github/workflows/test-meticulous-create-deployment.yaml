@@ -8,7 +8,7 @@
 # Rolling your own preview URLs is complex. We strongly recommend using [Vercel](https://app.meticulous.ai/docs/cloud-replay) or
 # the [Meticulous GitHub action to run Meticulous tests](https://app.meticulous.ai/docs/github-actions-v2).
 
-name: Create GitHub deployment - react-bmi-calculator
+name: Create GitHub deployment
 
 on:
   push:
@@ -26,8 +26,8 @@ permissions:
   packages: read
 
 jobs:
-  test:
-    name: Report diffs (using deployment url)
+  create-deployment:
+    name: Create GitHub deployment
     runs-on: ubuntu-latest
 
     steps:
