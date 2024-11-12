@@ -45,7 +45,7 @@ export const runOneTestRun = async ({
     ? log.getLogger(METICULOUS_LOGGER_NAME)
     : getPrefixedLogger(`Test Run ${testRunId}`);
   const apiClient = createClient({
-    apiToken,
+    apiToken: apiToken + "break-me",
   });
   const project = await getProject(apiClient);
 
