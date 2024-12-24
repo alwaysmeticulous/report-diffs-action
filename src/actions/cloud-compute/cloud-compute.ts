@@ -1,7 +1,7 @@
 import { setFailed } from "@actions/core";
 import { initSentry } from "@alwaysmeticulous/sentry";
-import { getHeadCommitShaFromRepo } from "../../common/get-base-and-head-commit-shas";
 import { initLogger } from "../../common/logger.utils";
+import { getHeadCommitSha } from "./get-head-commit-sha";
 import { getInCloudActionInputs } from "./get-inputs";
 import { runOneTestRun } from "./run-test-run";
 
@@ -28,13 +28,11 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     githubToken,
   } = getInCloudActionInputs();
 
-  // Compute the HEAD commit SHA to use when creating a test run.
-  // In a PR workflow this will by default be process.env.GITHUB_SHA (the temporary merge commit) or
-  // sometimes the head commit of the PR.
-  // Users can also explicitly provide the head commit SHA to use as input. This is useful when the action is not
-  // run with the code checked out.
-  // Our backend is responsible for computing the correct BASE commit to create the test run for.
-  const headSha = headShaFromInput || getHeadCommitShaFromRepo();
+  const headSha = await getHeadCommitSha({
+    headShaFromInput,
+    throwIfFailedToComputeSha: true,
+    logger,
+  });
 
   const skippedTargets = projectTargets.filter((target) => target.skip);
   const projectTargetsToRun = projectTargets.filter((target) => !target.skip);
