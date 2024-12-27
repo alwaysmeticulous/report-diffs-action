@@ -56,7 +56,11 @@ export const runPostStep = async ({
   }
 
   const client = createClient({ apiToken });
-  await emitTelemetry({ client, values, commitSha: headSha });
+  await emitTelemetry({
+    client,
+    values,
+    ...(headSha ? { commitSha: headSha } : {}),
+  });
 };
 
 const isPrCommentFromAction = ({
