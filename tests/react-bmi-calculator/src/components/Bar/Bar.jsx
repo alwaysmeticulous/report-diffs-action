@@ -7,7 +7,7 @@ const Bar = ({ labelData, bmiData }) => {
     const ctx = canvas.getContext('2d');
     const gradient = ctx.createLinearGradient(63, 81, 181, 700);
     gradient.addColorStop(0, '#929dd9');
-    gradient.addColorStop(1, '#172b4d');
+    gradient.addColorStop(1, '#872b4d');
 
     return {
       labels: labelData,
