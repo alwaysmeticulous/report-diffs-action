@@ -19,6 +19,7 @@ export const getHeadCommitSha = async ({
 }): Promise<
   { type: "success"; sha: string } | { type: "error"; error: unknown }
 > => {
+  // TODO: && headShaFromInput.length > 0
   if (headShaFromInput != null) {
     return { type: "success", sha: headShaFromInput };
   }
