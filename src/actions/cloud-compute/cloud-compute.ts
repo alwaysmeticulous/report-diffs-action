@@ -73,7 +73,9 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
           } else {
             logger.error(e);
           }
+          logger.error(JSON.stringify(e));
           if ((e as AxiosError).isAxiosError) {
+            logger.error("Is axios error");
             const axoisError = e as AxiosError;
             if (axoisError.request && axoisError.response) {
               logger.error(
