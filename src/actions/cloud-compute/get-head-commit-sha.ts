@@ -12,28 +12,23 @@ import { getHeadCommitShaFromRepo } from "../../common/get-base-and-head-commit-
  */
 export const getHeadCommitSha = async ({
   headShaFromInput,
-  throwIfFailedToComputeSha,
   logger,
 }: {
   headShaFromInput: string | null;
-  throwIfFailedToComputeSha: boolean;
   logger: Logger;
-}): Promise<string | null> => {
+}): Promise<
+  { type: "success"; sha: string } | { type: "error"; error: unknown }
+> => {
   if (headShaFromInput != null) {
-    return headShaFromInput;
+    return { type: "success", sha: headShaFromInput };
   }
 
   try {
-    return getHeadCommitShaFromRepo();
+    return { type: "success", sha: await getHeadCommitShaFromRepo() };
   } catch (error) {
-    if (throwIfFailedToComputeSha) {
-      throw error;
-    } else {
-      logger.error(
-        `Failed to get HEAD commit SHA from repo. Error: ${error}. Reporting telemetry without a HEAD commit SHA.`
-      );
-    }
+    logger.error(
+      `Failed to get HEAD commit SHA from repo. Error: ${error}. Reporting telemetry without a HEAD commit SHA.`
+    );
+    return { type: "error", error };
   }
-
-  return null;
 };

@@ -30,9 +30,12 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
 
   const headSha = await getHeadCommitSha({
     headShaFromInput,
-    throwIfFailedToComputeSha: true,
     logger,
   });
+  if (headSha.type === "error") {
+    // We can't proceed if we don't know the commit SHA
+    throw headSha.error;
+  }
 
   const skippedTargets = projectTargets.filter((target) => target.skip);
   const projectTargetsToRun = projectTargets.filter((target) => !target.skip);
@@ -61,7 +64,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
           apiToken: target.apiToken,
           appUrl: target.appUrl,
           githubToken,
-          headSha,
+          headSha: headSha.sha,
           isSingleTestRunExecution,
         })
       )

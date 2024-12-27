@@ -14,7 +14,6 @@ export const runCloudComputePostStep = async (): Promise<void> => {
 
   const headSha = await getHeadCommitSha({
     headShaFromInput,
-    throwIfFailedToComputeSha: false,
     logger,
   });
 
@@ -34,7 +33,7 @@ export const runCloudComputePostStep = async (): Promise<void> => {
         apiToken: target.apiToken,
         githubToken,
         testSuiteOrProjectId: project.id,
-        ...(headSha ? { headSha } : {}),
+        ...(headSha.type === "success" ? { headSha: headSha.sha } : {}),
       });
     })
   );
