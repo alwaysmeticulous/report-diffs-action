@@ -66,6 +66,9 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
           githubToken,
           headSha: headSha.sha,
           isSingleTestRunExecution,
+        }).catch((e) => {
+          logger.error(`Failed to execute tests for ${target.name}: ${e}`);
+          throw e;
         })
       )
     )
