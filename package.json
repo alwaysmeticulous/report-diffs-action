@@ -59,6 +59,7 @@
     "@alwaysmeticulous/remote-replay-launcher": "^2.189.0",
     "@alwaysmeticulous/replay-orchestrator-launcher": "^2.189.0",
     "@alwaysmeticulous/sentry": "^2.189.0",
+    "axios": "^1.2.6",
     "@sentry/node": "^7.107.0",
     "joi": "^17.13.3",
     "lodash.debounce": "^4.0.8",

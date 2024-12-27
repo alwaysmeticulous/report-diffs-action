@@ -1,5 +1,6 @@
 import { setFailed } from "@actions/core";
 import { initSentry } from "@alwaysmeticulous/sentry";
+import { AxiosError } from "axios";
 import { initLogger } from "../../common/logger.utils";
 import { getHeadCommitSha } from "./get-head-commit-sha";
 import { getInCloudActionInputs } from "./get-inputs";
@@ -67,7 +68,20 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
           headSha: headSha.sha,
           isSingleTestRunExecution,
         }).catch((e) => {
-          logger.error(`Failed to execute tests for ${target.name}`, e);
+          if (projectTargets.length > 1) {
+            logger.error(`Failed to execute tests for ${target.name}`, e);
+          } else {
+            logger.error(e);
+          }
+          if ((e as AxiosError).isAxiosError) {
+            const axoisError = e as AxiosError;
+            if (axoisError.request && axoisError.response) {
+              logger.error(
+                `${axoisError.request.method} ${axoisError.request.path} returned ` +
+                  `${axoisError.response.status} ${axoisError.response.statusText} (${axoisError.response.data})`
+              );
+            }
+          }
           throw e;
         })
       )
