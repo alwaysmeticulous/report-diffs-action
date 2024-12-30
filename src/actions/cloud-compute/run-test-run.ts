@@ -74,6 +74,9 @@ export const runOneTestRun = async ({
     return;
   }
 
+  // TODO: Remove me
+  logger.warn("Head commit SHA: ", headSha);
+
   // Compute the base commit SHA to compare to for the HEAD commit.
   // This will usually be the merge base of the PR head and base commit. In some cases it can be an older main branch commit,
   // for example when running in a monorepo setup.

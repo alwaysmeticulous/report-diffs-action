@@ -6,6 +6,7 @@ export const runPostStep = async ({
   apiToken,
   githubToken,
   testSuiteOrProjectId,
+  headSha,
 }: {
   apiToken: string;
   githubToken: string;
@@ -13,6 +14,7 @@ export const runPostStep = async ({
    * The test suite or project ID to use find the comment in the PR.
    */
   testSuiteOrProjectId: string | null;
+  headSha?: string;
 }): Promise<void> => {
   const octokit = getOctokitOrFail(githubToken);
   const workflow = await octokit.rest.actions.getWorkflowRun({
@@ -54,7 +56,11 @@ export const runPostStep = async ({
   }
 
   const client = createClient({ apiToken });
-  await emitTelemetry({ client, values });
+  await emitTelemetry({
+    client,
+    values,
+    ...(headSha ? { commitSha: headSha } : {}),
+  });
 };
 
 const isPrCommentFromAction = ({

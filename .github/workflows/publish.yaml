@@ -62,7 +62,7 @@ jobs:
             echo "Detected uncommitted changes after build. See status below:"
             git diff --ignore-space-at-eol --text out/
             echo ""
-            echo "Run 'yarn build' locally and commit the changes. If this doesn't work then delete your `.parcel-cache` directory before running 'yarn build'."
+            echo "Run 'yarn build' locally and commit the changes. If this doesn't work then delete your \`.parcel-cache\` directory before running 'yarn build'."
             echo ""
             exit 1
           fi
