@@ -1,9 +1,21 @@
 import { createClient, getProject } from "@alwaysmeticulous/client";
+import { initLogger } from "../../common/logger.utils";
 import { runPostStep } from "../../common/run-post-step";
+import { getHeadCommitSha } from "./get-head-commit-sha";
 import { getInCloudActionInputs } from "./get-inputs";
 
 export const runCloudComputePostStep = async (): Promise<void> => {
-  const { projectTargets, githubToken } = getInCloudActionInputs();
+  const logger = initLogger();
+  const {
+    projectTargets,
+    githubToken,
+    headSha: headShaFromInput,
+  } = getInCloudActionInputs();
+
+  const headSha = await getHeadCommitSha({
+    headShaFromInput,
+    logger,
+  });
 
   const projectTargetsToRun = projectTargets.filter((target) => !target.skip);
 
@@ -21,6 +33,7 @@ export const runCloudComputePostStep = async (): Promise<void> => {
         apiToken: target.apiToken,
         githubToken,
         testSuiteOrProjectId: project.id,
+        ...(headSha.type === "success" ? { headSha: headSha.sha } : {}),
       });
     })
   );

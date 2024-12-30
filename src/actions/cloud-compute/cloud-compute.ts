@@ -1,7 +1,8 @@
 import { setFailed } from "@actions/core";
 import { initSentry } from "@alwaysmeticulous/sentry";
-import { getHeadCommitShaFromRepo } from "../../common/get-base-and-head-commit-shas";
+import { AxiosError } from "axios";
 import { initLogger } from "../../common/logger.utils";
+import { getHeadCommitSha } from "./get-head-commit-sha";
 import { getInCloudActionInputs } from "./get-inputs";
 import { runOneTestRun } from "./run-test-run";
 
@@ -28,13 +29,14 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
     githubToken,
   } = getInCloudActionInputs();
 
-  // Compute the HEAD commit SHA to use when creating a test run.
-  // In a PR workflow this will by default be process.env.GITHUB_SHA (the temporary merge commit) or
-  // sometimes the head commit of the PR.
-  // Users can also explicitly provide the head commit SHA to use as input. This is useful when the action is not
-  // run with the code checked out.
-  // Our backend is responsible for computing the correct BASE commit to create the test run for.
-  const headSha = headShaFromInput || getHeadCommitShaFromRepo();
+  const headSha = await getHeadCommitSha({
+    headShaFromInput,
+    logger,
+  });
+  if (headSha.type === "error") {
+    // We can't proceed if we don't know the commit SHA
+    throw headSha.error;
+  }
 
   const skippedTargets = projectTargets.filter((target) => target.skip);
   const projectTargetsToRun = projectTargets.filter((target) => !target.skip);
@@ -63,8 +65,15 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
           apiToken: target.apiToken,
           appUrl: target.appUrl,
           githubToken,
-          headSha,
+          headSha: headSha.sha,
           isSingleTestRunExecution,
+        }).catch((e) => {
+          if (projectTargets.length > 1) {
+            logger.error(`Failed to execute tests for ${target.name}`, e);
+          } else {
+            logger.error(e);
+          }
+          throw e;
         })
       )
     )
