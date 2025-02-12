@@ -20,6 +20,7 @@ import { getOctokitOrFail } from "../../common/octokit";
 import { updateStatusComment } from "../../common/update-status-comment";
 import { DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION } from "./consts";
 import { getCloudComputeBaseTestRun } from "./get-cloud-compute-base-test-run";
+import { getPullRequestId } from "./get-pull-request-id";
 
 export const runOneTestRun = async ({
   apiToken,
@@ -39,6 +40,7 @@ export const runOneTestRun = async ({
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
   const { owner, repo } = context.repo;
+  const pullRequestId = getPullRequestId(event);
   const isDebugPRRun = isDebugPullRequestRun(event);
   const octokit = getOctokitOrFail(githubToken);
   const logger = isSingleTestRunExecution
@@ -237,5 +239,6 @@ export const runOneTestRun = async ({
     ...(keepTunnelOpenPromise
       ? { keepTunnelOpenPromise: keepTunnelOpenPromise.promise }
       : {}),
+    ...(pullRequestId ? { pullRequestHostingProviderId: pullRequestId } : {}),
   });
 };
