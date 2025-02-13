@@ -32,38 +32,38 @@
   dependencies:
     tunnel "^0.0.6"
 
-"@alwaysmeticulous/api@^2.189.0":
-  version "2.189.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.189.0.tgz#1c2a93ea936127528be1b7b5f393ed81620f3f7c"
-  integrity sha512-vvxx9jcmNoRfaQcVH+LxtQbtctHnt4RuYe9dWM7aFVCG2CMykaOrDnC09HWS/NvfRRTV6JMPQyDpfK6ZWBdOPQ==
+"@alwaysmeticulous/api@^2.194.1":
+  version "2.194.1"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.194.1.tgz#c0975aab77058296d8b12fd45ac040782b3105c0"
+  integrity sha512-qvryd9h92LW+bzFFoeLU72piysoVqSPS/MoJyufGxN2vcxi2/XbM+MsLxqZScegwUBNy44mwvkWeeESwTsiPTQ==
 
-"@alwaysmeticulous/client@^2.190.0":
-  version "2.190.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.190.0.tgz#4d2dca08405e0d72c9e1dfd5823c1a67a0466947"
-  integrity sha512-lSaXv5vvDIxrk9UqbGC/mOfUytUE1Mbx+4kF9GgGb1miniqp7ttm6Kma+T66CSxFh+uhtW4FwDzTPcCMu7TRlA==
+"@alwaysmeticulous/client@^2.199.0":
+  version "2.199.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.199.0.tgz#98b2601051307ff35e7e378a57573995dfab5b7e"
+  integrity sha512-HKCJrBPHm6yk8jt8tPpoJC/EN70bK3AddRy4TW8bz+h8rzTHDw+3yvEFuvVG1ilCfGkVNAlSrby4rNUXWhhB7g==
   dependencies:
-    "@alwaysmeticulous/api" "^2.189.0"
-    "@alwaysmeticulous/common" "^2.189.0"
+    "@alwaysmeticulous/api" "^2.194.1"
+    "@alwaysmeticulous/common" "^2.198.0"
     axios "^1.2.6"
     axios-retry "^4.1.0"
     loglevel "^1.8.0"
 
-"@alwaysmeticulous/common@^2.189.0":
-  version "2.189.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.189.0.tgz#6ed96ca65b980d17a18b655faf03f57142f79188"
-  integrity sha512-kLnfrsN+54jlAIRlezUEwTLne3A4Cqv9b64CtoVkkj/0/HxPY51YgWp4wUjJHf08BNQumAC4LTdz2rsWl+sl3w==
+"@alwaysmeticulous/common@^2.198.0":
+  version "2.198.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/common/-/common-2.198.0.tgz#244d3bdc77c632d5c91ce96e19709f23a3dc891e"
+  integrity sha512-fXrvoqwsiIED3kazSke8pCBSE7lZNpzIxLu6BOBhcuVCypfsVFZG/zFSmiLOW815EKPdE3S27aGrNPOOo96Qyw==
   dependencies:
     loglevel "^1.8.0"
     luxon "^3.2.1"
 
-"@alwaysmeticulous/downloading-helpers@^2.190.0":
-  version "2.190.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.190.0.tgz#3498c3dfc009bb16680f2118d785ab51c1859e3e"
-  integrity sha512-Qz7X8qefOL1wTmIEBWNkHbKWuN1UvKkRno2KG4tfEOoLrI08OYF9XJMmu7rEa3jqOst9QnQ6eUsjwVTqXJaKSQ==
+"@alwaysmeticulous/downloading-helpers@^2.199.0":
+  version "2.199.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.199.0.tgz#18a65f3df3668eb45bdeed1bae5969035498980a"
+  integrity sha512-HRtRYp6am5xSC5nEofetomiVuqwxo6QhPqwTsWlRscJuvrcTgPYY88rq3d5OFfLRrzdjKb1aeFxGFAZnIpbIeg==
   dependencies:
-    "@alwaysmeticulous/api" "^2.189.0"
-    "@alwaysmeticulous/client" "^2.190.0"
-    "@alwaysmeticulous/common" "^2.189.0"
+    "@alwaysmeticulous/api" "^2.194.1"
+    "@alwaysmeticulous/client" "^2.199.0"
+    "@alwaysmeticulous/common" "^2.198.0"
     axios "^1.2.6"
     axios-retry "^4.1.0"
     extract-zip "^2.0.1"
@@ -72,46 +72,48 @@
     p-limit "^3.1.0"
     proper-lockfile "^4.1.2"
 
-"@alwaysmeticulous/remote-replay-launcher@^2.190.0":
-  version "2.190.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/remote-replay-launcher/-/remote-replay-launcher-2.190.0.tgz#5394108321a6b64a73b85365f6b608dc23bf6388"
-  integrity sha512-hylFIrW27teyszxucS+7076zXZm1Dnt30qh21Lq2zGC0AJSkHISfC07BOVfQmgl0VJDKY/bgE67Rh+jJL/JBlg==
+"@alwaysmeticulous/remote-replay-launcher@^2.199.0":
+  version "2.199.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/remote-replay-launcher/-/remote-replay-launcher-2.199.0.tgz#17079452332818e044a7d3c025cd60fc098761bf"
+  integrity sha512-ffGVDGF/cNg68wCA+ZqRjvvAy/twzWW+HIUT64mWjLYVUc6lpNUKAVytMmOX1nKlb9nVAcN/pVNQZVolBTyD1A==
   dependencies:
-    "@alwaysmeticulous/client" "^2.190.0"
-    "@alwaysmeticulous/common" "^2.189.0"
-    "@alwaysmeticulous/tunnels-client" "^2.188.0"
+    "@alwaysmeticulous/client" "^2.199.0"
+    "@alwaysmeticulous/common" "^2.198.0"
+    "@alwaysmeticulous/tunnels-client" "^2.197.0"
     loglevel "^1.8.0"
 
-"@alwaysmeticulous/replay-orchestrator-launcher@^2.190.0":
-  version "2.190.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.190.0.tgz#bc133d629b5858c16e5bc967bd9b3c57965527e1"
-  integrity sha512-b2cvv7VTDPKajYekWTf5nG08rUDUpDw37YiAFlbTc+gVoqf5Be50ypI3ObzR6gtbd33QaOnd1xBzxbCDuNAmFQ==
+"@alwaysmeticulous/replay-orchestrator-launcher@^2.199.0":
+  version "2.199.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.199.0.tgz#dcc1b4f9d12274a7f4bebcabf34359e99d67500b"
+  integrity sha512-K1bedzLVP1MojfCJmDjROpYUViaZorCTP5aMkuwmSezVJTjb38OALdkzZ2F4COvKhi91ENiLONBIjLdo4nW83A==
   dependencies:
-    "@alwaysmeticulous/common" "^2.189.0"
-    "@alwaysmeticulous/downloading-helpers" "^2.190.0"
-    "@alwaysmeticulous/sdk-bundles-api" "^2.189.0"
+    "@alwaysmeticulous/common" "^2.198.0"
+    "@alwaysmeticulous/downloading-helpers" "^2.199.0"
+    "@alwaysmeticulous/sdk-bundles-api" "^2.198.0"
     loglevel "^1.8.0"
     puppeteer "23.5.0"
 
-"@alwaysmeticulous/sdk-bundles-api@^2.189.0":
-  version "2.189.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.189.0.tgz#15f75f2c845fd66abe995ada82cf009b3ca03f20"
-  integrity sha512-uEfGykhJNbfJ6oj6lRGQJ0/D4PseaYwAUBlXNZxK7v94z4hbdDAKw19O2bik7lQW45oQ5scgEIUye1Eo5dYdsg==
-
-"@alwaysmeticulous/sentry@^2.189.0":
-  version "2.189.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sentry/-/sentry-2.189.0.tgz#f78cf76f1ec5c08f0e55093ad43f40609d7f4a89"
-  integrity sha512-WvGeq97O651XpmnXMWModROIKdhkm/IK58gYwYVee/cDRk3WLv23NNkAPgRAjFoOq3kE9GZmZbsowwWaKaYhBA==
+"@alwaysmeticulous/sdk-bundles-api@^2.198.0":
+  version "2.198.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sdk-bundles-api/-/sdk-bundles-api-2.198.0.tgz#1ec8b6070f1d882d55ff39833585c0c2037a7263"
+  integrity sha512-kRiNsuXtaSr/i2V9VzuMROf2tMm0SZ86sItcKx8+tgUhyfqunOnwYEvpyRyx2v/bDXgtISa+Kvnq783VMT7nvQ==
   dependencies:
-    "@alwaysmeticulous/common" "^2.189.0"
+    "@alwaysmeticulous/api" "^2.194.1"
+
+"@alwaysmeticulous/sentry@^2.198.0":
+  version "2.198.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/sentry/-/sentry-2.198.0.tgz#edbb88220b07ff98fa8f9f87179cff4681fe157c"
+  integrity sha512-SJd02+RIW2CX+cCE6ra/6GIe3Y2l3pSSzkEw6qO4BsuhB9A7Wn2XiL+xksHxvdYt6/TnY6Q6jJ6A0ha3/F8lQw==
+  dependencies:
+    "@alwaysmeticulous/common" "^2.198.0"
     "@sentry/node" "^7.107.0"
     "@sentry/tracing" "^7.107.0"
     luxon "^3.2.1"
 
-"@alwaysmeticulous/tunnels-client@^2.188.0":
-  version "2.188.0"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/tunnels-client/-/tunnels-client-2.188.0.tgz#e67b0bc9f5c460f4e7a9b9ca9ce8e2767a2a5698"
-  integrity sha512-6RCL3DitXFzoTWmNluAYzJvy7R2QO2nJq/1e0v9/QaEEh91Kw9eAFufQwRVtRA6pWk6X6hUd78eYBY447DBoGw==
+"@alwaysmeticulous/tunnels-client@^2.197.0":
+  version "2.197.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/tunnels-client/-/tunnels-client-2.197.0.tgz#c23afa5acbfd976b050b4d9bd14eb4c0eb44bfd8"
+  integrity sha512-mP6XVFnboF4K0y8xEbjr8ykdFYyDD9j/H/fusYlpdh25c7bqxlw2IWuGiSXECMVot/wQMLKdCP8EBpObcpu1WA==
   dependencies:
     agentkeepalive "^4.5.0"
     axios "^1.2.6"
@@ -5778,7 +5780,16 @@ string-length@^4.0.1:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+"string-width-cjs@npm:string-width@^4.2.0":
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
+  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
+  dependencies:
+    emoji-regex "^8.0.0"
+    is-fullwidth-code-point "^3.0.0"
+    strip-ansi "^6.0.1"
+
+string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -5823,7 +5834,14 @@ string.prototype.trimstart@^1.0.7:
     define-properties "^1.2.0"
     es-abstract "^1.22.1"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
+  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
+  dependencies:
+    ansi-regex "^5.0.1"
+
+strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -6369,7 +6387,16 @@ word-wrap@~1.2.3:
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.4.tgz#cb4b50ec9aca570abd1f52f33cd45b6c61739a9f"
   integrity sha512-2V81OA4ugVo5pRo46hAoD2ivUJx8jXmWXfUkY4KFNw0hEptvN0QfH3K4nHiwzGeKl5rFKedV48QVoqYavy4YpA==
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
+  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
+  dependencies:
+    ansi-styles "^4.0.0"
+    string-width "^4.1.0"
+    strip-ansi "^6.0.0"
+
+wrap-ansi@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
