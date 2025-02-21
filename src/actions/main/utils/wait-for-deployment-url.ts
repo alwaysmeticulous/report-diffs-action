@@ -1,8 +1,7 @@
 import { getOctokit } from "@actions/github";
 import { GitHub } from "@actions/github/lib/utils";
 import { METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
-import { Hub } from "@sentry/node";
-import { Transaction } from "@sentry/types";
+import * as Sentry from "@sentry/node";
 import log from "loglevel";
 import { DOCS_URL } from "../../../common/constants";
 import { isGithubPermissionsError } from "../../../common/error.utils";
@@ -17,58 +16,56 @@ export const waitForDeploymentUrl = async ({
   repo,
   commitSha,
   octokit,
-  sentryHub,
-  transaction,
   allowedEnvironments,
 }: {
   owner: string;
   repo: string;
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
-  sentryHub: Hub;
-  transaction: Transaction;
   allowedEnvironments: string[] | null;
 }): Promise<string> => {
   const logger = log.getLogger(METICULOUS_LOGGER_NAME);
 
-  const waitForDeploymentSpan = transaction.startChild({
-    op: "waitForDeployment",
-  });
-  const startTime = Date.now();
-  let pollFrequency = MIN_POLL_FREQUENCY;
-  let deploymentsFound: DeploymentsArray | null = null;
-  while (Date.now() - startTime < TIMEOUT_MS) {
-    const { deploymentUrl, availableDeployments } = await getDeploymentUrl({
-      owner,
-      repo,
-      commitSha,
-      octokit,
-      sentryHub,
-      allowedEnvironments,
-    });
-    deploymentsFound = availableDeployments;
-    if (deploymentUrl != null) {
-      logger.info(`Testing against deployment URL '${deploymentUrl}'`);
-      return deploymentUrl;
-    }
-    await new Promise((resolve) => setTimeout(resolve, pollFrequency));
-    pollFrequency = Math.min(
-      MAX_POLL_FREQUENCY,
-      pollFrequency + MIN_POLL_FREQUENCY
-    );
-  }
-  waitForDeploymentSpan.finish();
+  return Sentry.startSpan(
+    {
+      name: "waitForDeployment",
+    },
+    async () => {
+      const startTime = Date.now();
+      let pollFrequency = MIN_POLL_FREQUENCY;
+      let deploymentsFound: DeploymentsArray | null = null;
+      while (Date.now() - startTime < TIMEOUT_MS) {
+        const { deploymentUrl, availableDeployments } = await getDeploymentUrl({
+          owner,
+          repo,
+          commitSha,
+          octokit,
+          allowedEnvironments,
+        });
+        deploymentsFound = availableDeployments;
+        if (deploymentUrl != null) {
+          logger.info(`Testing against deployment URL '${deploymentUrl}'`);
+          return deploymentUrl;
+        }
+        await new Promise((resolve) => setTimeout(resolve, pollFrequency));
+        pollFrequency = Math.min(
+          MAX_POLL_FREQUENCY,
+          pollFrequency + MIN_POLL_FREQUENCY
+        );
+      }
 
-  const timeoutInSeconds = (TIMEOUT_MS / 1000).toFixed(0);
-  const environmentFilter =
-    allowedEnvironments != null
-      ? ` for an environment named ${joinWithOr(
-          allowedEnvironments.map((e) => `'${e}'`)
-        )}`
-      : "";
-  throw new Error(
-    `Timed out after waiting ${timeoutInSeconds} seconds for a successful deployment URL for commit ${commitSha}${environmentFilter}. ` +
-      `Available deployments: ${describeDeployments(deploymentsFound)}.`
+      const timeoutInSeconds = (TIMEOUT_MS / 1000).toFixed(0);
+      const environmentFilter =
+        allowedEnvironments != null
+          ? ` for an environment named ${joinWithOr(
+              allowedEnvironments.map((e) => `'${e}'`)
+            )}`
+          : "";
+      throw new Error(
+        `Timed out after waiting ${timeoutInSeconds} seconds for a successful deployment URL for commit ${commitSha}${environmentFilter}. ` +
+          `Available deployments: ${describeDeployments(deploymentsFound)}.`
+      );
+    }
   );
 };
 
@@ -83,14 +80,12 @@ const getDeploymentUrl = async ({
   repo,
   commitSha,
   octokit,
-  sentryHub,
   allowedEnvironments,
 }: {
   owner: string;
   repo: string;
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
-  sentryHub: Hub;
   allowedEnvironments: string[] | null;
 }): Promise<{
   deploymentUrl: string | null;
@@ -135,7 +130,7 @@ const getDeploymentUrl = async ({
     );
   }
 
-  sentryHub.captureEvent({
+  Sentry.captureEvent({
     message: "Found deployments",
     level: "debug",
     extra: {
