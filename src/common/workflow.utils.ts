@@ -182,18 +182,20 @@ export const getPendingWorkflowRun = async ({
   octokit: InstanceType<typeof GitHub>;
   logger: log.Logger;
 }): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
-  const listRunsResult = await octokit.rest.actions.listWorkflowRuns({
-    owner,
-    repo,
-    workflow_id: workflowId,
-    head_sha: commitSha,
-  });
-  logger.debug(
-    `Workflow runs list: ${JSON.stringify(listRunsResult.data, null, 2)}`
+  // The paginate method automatically handles pagination to get all the runs, see more information here:
+  // https://github.com/octokit/octokit.js?tab=readme-ov-file#pagination
+  const workflowRuns = await octokit.paginate(
+    octokit.rest.actions.listWorkflowRuns,
+    {
+      owner,
+      repo,
+      workflow_id: workflowId,
+      head_sha: commitSha,
+      per_page: 100,
+    }
   );
-  const workflowRun = listRunsResult.data.workflow_runs.find((run) =>
-    isPendingStatus(run.status)
-  );
+  logger.debug(`Workflow runs list: ${JSON.stringify(workflowRuns, null, 2)}`);
+  const workflowRun = workflowRuns.find((run) => isPendingStatus(run.status));
   if (workflowRun == null) {
     return undefined;
   }
