@@ -182,6 +182,41 @@ export const getPendingWorkflowRun = async ({
   octokit: InstanceType<typeof GitHub>;
   logger: log.Logger;
 }): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
+  // Search through original commit and then parents if needed
+  return await searchForPendingWorkflowRun({
+    owner,
+    repo,
+    workflowId,
+    commitSha,
+    octokit,
+    logger,
+  });
+};
+
+/**
+ * Searches for a pending workflow run on the specified commit.
+ * If none is found, searches through parent commits until either:
+ * - we get to a commit that we ran on (regardless of whether it is pending)
+ * - we've looked at 20 commits
+ * - we get to a commit older than 1 hour
+ */
+export const searchForPendingWorkflowRun = async ({
+  owner,
+  repo,
+  workflowId,
+  commitSha,
+  octokit,
+  logger,
+  depth = 0,
+}: {
+  owner: string;
+  repo: string;
+  workflowId: number;
+  commitSha: string;
+  octokit: InstanceType<typeof GitHub>;
+  logger: log.Logger;
+  depth?: number;
+}): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
   // The paginate method automatically handles pagination to get all the runs, see more information here:
   // https://github.com/octokit/octokit.js?tab=readme-ov-file#pagination
   const workflowRuns = await octokit.paginate(
@@ -194,15 +229,83 @@ export const getPendingWorkflowRun = async ({
       per_page: 100,
     }
   );
-  logger.debug(`Workflow runs list: ${JSON.stringify(workflowRuns, null, 2)}`);
-  const workflowRun = workflowRuns.find((run) => isPendingStatus(run.status));
-  if (workflowRun == null) {
+
+  if (workflowRuns.length > 0) {
+    logger.debug(`Found workflow runs on commit ${shortSha(commitSha)}`);
+    const workflowRun = workflowRuns.find((run) => isPendingStatus(run.status));
+    if (workflowRun != null) {
+      return {
+        ...workflowRun,
+        workflowRunId: workflowRun.id,
+      };
+    }
     return undefined;
   }
-  return {
-    ...workflowRun,
-    workflowRunId: workflowRun.id,
-  };
+
+  // If we've looked at 20 commits, stop searching
+  if (depth >= 20) {
+    logger.debug(`Reached maximum depth of 20 commits, stopping search`);
+    return undefined;
+  }
+
+  try {
+    // Get the commit to find its parent and timestamp
+    const { data: commit } = await octokit.rest.repos.getCommit({
+      owner,
+      repo,
+      ref: commitSha,
+    });
+
+    // Check if the commit is more than one hour old
+    const commitDate = DateTime.fromISO(
+      commit.commit.author?.date || commit.commit.committer?.date || ""
+    );
+    const ageInHours = DateTime.now().diff(commitDate, "hours").hours;
+
+    if (ageInHours > 1) {
+      logger.debug(
+        `Commit ${shortSha(
+          commitSha
+        )} is more than one hour old (${ageInHours.toFixed(
+          2
+        )} hours), stopping search`
+      );
+      return undefined;
+    }
+
+    // If no parents, or no first parent, stop the search
+    if (!commit.parents || commit.parents.length === 0) {
+      logger.debug(
+        `Commit ${shortSha(commitSha)} has no parents, stopping search`
+      );
+      return undefined;
+    }
+
+    // Get the first parent commit SHA
+    const parentSha = commit.parents[0].sha;
+    logger.debug(
+      `No pending workflow run found on commit ${shortSha(
+        commitSha
+      )}, checking parent ${shortSha(parentSha)}`
+    );
+
+    // Recursively search for pending workflow runs on the parent commit
+    return await searchForPendingWorkflowRun({
+      owner,
+      repo,
+      workflowId,
+      commitSha: parentSha,
+      octokit,
+      logger,
+      depth: depth + 1,
+    });
+  } catch (error) {
+    logger.error(
+      `Error while retrieving parent commit for ${shortSha(commitSha)}:`,
+      error
+    );
+    return undefined;
+  }
 };
 
 export const isPendingStatus = (status: string | null): boolean => {
