@@ -11,6 +11,10 @@ const LISTING_AFTER_DISPATCH_DELAY = Duration.fromObject({ seconds: 10 });
 
 const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL = Duration.fromObject({ seconds: 5 });
 
+const WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL = Duration.fromObject({ hours: 1 });
+
+const GITHUB_DATE_FORMAT = "yyyy-MM-ddTHH:mm:ssZ";
+
 export const getCurrentWorkflowId = async ({
   context,
   octokit,
@@ -167,6 +171,10 @@ export const waitForWorkflowCompletion = async ({
   return workflowRun;
 };
 
+/**
+ * Searches for a pending workflow in the commit passed in or one of it's parents
+ * within the last hour.
+ */
 export const getPendingWorkflowRun = async ({
   owner,
   repo,
@@ -182,27 +190,64 @@ export const getPendingWorkflowRun = async ({
   octokit: InstanceType<typeof GitHub>;
   logger: log.Logger;
 }): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
-  // The paginate method automatically handles pagination to get all the runs, see more information here:
-  // https://github.com/octokit/octokit.js?tab=readme-ov-file#pagination
-  const workflowRuns = await octokit.paginate(
-    octokit.rest.actions.listWorkflowRuns,
-    {
+  try {
+    const since = DateTime.utc()
+      .minus(WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL)
+      .toFormat(GITHUB_DATE_FORMAT);
+    const commits = await octokit.paginate(octokit.rest.repos.listCommits, {
       owner,
       repo,
-      workflow_id: workflowId,
-      head_sha: commitSha,
       per_page: 100,
+      sha: commitSha,
+      since,
+    });
+    const workflowRuns = await octokit.paginate(
+      octokit.rest.actions.listWorkflowRuns,
+      {
+        owner,
+        repo,
+        workflow_id: workflowId,
+        per_page: 100,
+        created: `>${since}`,
+      }
+    );
+    let shaToCheck = commitSha;
+    while (shaToCheck) {
+      const commit = commits.find((c) => c.sha === shaToCheck);
+      if (!commit) {
+        // This must mean the commit is older than an hour ago, so we can stop searching.
+        return undefined;
+      }
+      const workflowRunsForCommit = workflowRuns.filter(
+        (run) => run.head_sha === shaToCheck
+      );
+      if (workflowRunsForCommit.length > 0) {
+        // We've found a commit that we ran on. If there's a pending run, return it.
+        // In any case we can stop searching.
+        const pendingRun = workflowRunsForCommit.find((run) =>
+          isPendingStatus(run.status)
+        );
+        if (pendingRun) {
+          return {
+            ...pendingRun,
+            workflowRunId: pendingRun.id,
+          };
+        }
+        return undefined;
+      }
+      if (commit.parents.length === 0) {
+        // We've reached the root commit, so we can stop searching.
+        return undefined;
+      }
+      shaToCheck = commit.parents[0].sha;
     }
-  );
-  logger.debug(`Workflow runs list: ${JSON.stringify(workflowRuns, null, 2)}`);
-  const workflowRun = workflowRuns.find((run) => isPendingStatus(run.status));
-  if (workflowRun == null) {
+    return undefined;
+  } catch (err) {
+    logger.warn(
+      `Encountered an error while searching for a pending workflow run: ${err}`
+    );
     return undefined;
   }
-  return {
-    ...workflowRun,
-    workflowRunId: workflowRun.id,
-  };
 };
 
 export const isPendingStatus = (status: string | null): boolean => {
