@@ -13,7 +13,11 @@ const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL = Duration.fromObject({ seconds: 5 });
 
 const WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL = Duration.fromObject({ hours: 1 });
 
-const GITHUB_DATE_FORMAT = "yyyy-MM-ddTHH:mm:ssZ";
+const GITHUB_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+const MAX_COMMITS_TO_SEARCH = 500;
+
+const MAX_WORKFLOW_RUNS_TO_SEARCH = 500;
 
 export const getCurrentWorkflowId = async ({
   context,
@@ -194,14 +198,24 @@ export const getPendingWorkflowRun = async ({
     const since = DateTime.utc()
       .minus(WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL)
       .toFormat(GITHUB_DATE_FORMAT);
-    const commits = await octokit.paginate(octokit.rest.repos.listCommits, {
-      owner,
-      repo,
-      per_page: 100,
-      sha: commitSha,
-      since,
-    });
-    const workflowRuns = await octokit.paginate(
+    const commitResponses = octokit.paginate.iterator(
+      octokit.rest.repos.listCommits,
+      {
+        owner,
+        repo,
+        per_page: 100,
+        sha: commitSha,
+        since,
+      }
+    );
+    const commits: Awaited<
+      ReturnType<typeof octokit.rest.repos.listCommits>
+    >["data"] = [];
+    for await (const commitResponse of commitResponses) {
+      commits.push(...commitResponse.data);
+      if (commits.length >= MAX_COMMITS_TO_SEARCH) break;
+    }
+    const workflowRunsResponses = octokit.paginate.iterator(
       octokit.rest.actions.listWorkflowRuns,
       {
         owner,
@@ -211,6 +225,13 @@ export const getPendingWorkflowRun = async ({
         created: `>${since}`,
       }
     );
+    const workflowRuns: Awaited<
+      ReturnType<typeof octokit.rest.actions.listWorkflowRuns>
+    >["data"]["workflow_runs"] = [];
+    for await (const workflowRunResponse of workflowRunsResponses) {
+      workflowRuns.push(...workflowRunResponse.data);
+      if (workflowRuns.length >= MAX_WORKFLOW_RUNS_TO_SEARCH) break;
+    }
     let shaToCheck = commitSha;
     while (shaToCheck) {
       const commit = commits.find((c) => c.sha === shaToCheck);
