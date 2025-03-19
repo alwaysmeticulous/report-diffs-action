@@ -234,11 +234,6 @@ export const getPendingWorkflowRun = async ({
     }
     let shaToCheck = commitSha;
     while (shaToCheck) {
-      const commit = commits.find((c) => c.sha === shaToCheck);
-      if (!commit) {
-        // This must mean the commit is older than an hour ago, so we can stop searching.
-        return undefined;
-      }
       const workflowRunsForCommit = workflowRuns.filter(
         (run) => run.head_sha === shaToCheck
       );
@@ -254,6 +249,14 @@ export const getPendingWorkflowRun = async ({
             workflowRunId: pendingRun.id,
           };
         }
+        return undefined;
+      }
+      // If we don't find a workflow on the commit passed in, we search through the parents as the
+      // workflow may be selectively executed. Note we _always_ check the commit passed in first,
+      // which may be one that's older than an hour ago but that we just triggered a workflow on.
+      const commit = commits.find((c) => c.sha === shaToCheck);
+      if (!commit) {
+        // This must mean the commit is older than an hour ago, so we can stop searching.
         return undefined;
       }
       if (commit.parents.length === 0) {
