@@ -29,6 +29,7 @@ export const runOneTestRun = async ({
   githubToken,
   headSha,
   isSingleTestRunExecution,
+  secureTunnelHost,
 }: {
   apiToken: string;
   appUrl: string;
@@ -36,6 +37,7 @@ export const runOneTestRun = async ({
   githubToken: string;
   headSha: string;
   isSingleTestRunExecution: boolean;
+  secureTunnelHost?: string;
 }) => {
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -236,6 +238,7 @@ export const runOneTestRun = async ({
     onTestRunCreated,
     onProgressUpdate,
     onTunnelStillLocked,
+    ...(secureTunnelHost ? { secureTunnelHost } : {}),
     ...(keepTunnelOpenPromise
       ? { keepTunnelOpenPromise: keepTunnelOpenPromise.promise }
       : {}),
