@@ -6,12 +6,14 @@ export const getInCloudActionInputs = (): {
   githubToken: string;
   headSha: string;
   projectTargets: ProjectTarget[];
+  secureTunnelHost?: string;
 } => {
   // The names, required value, and types should match that in action.yml
   const apiToken = getInput("api-token", { required: false });
   const githubToken = getInput("github-token", { required: true });
   const appUrl = getInput("app-url", { required: false });
   const headSha = getInput("head-sha");
+  const secureTunnelHost = getInput("secure-tunnel-host", { required: false });
 
   const projectsYaml = getInput("projects-yaml", { required: false });
 
@@ -28,6 +30,7 @@ export const getInCloudActionInputs = (): {
       githubToken,
       headSha,
       projectTargets,
+      secureTunnelHost,
     };
   }
 
@@ -48,5 +51,6 @@ export const getInCloudActionInputs = (): {
         skip: false,
       },
     ],
+    secureTunnelHost,
   };
 };

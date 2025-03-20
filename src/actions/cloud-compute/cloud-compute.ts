@@ -24,6 +24,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
         projectTargets,
         headSha: headShaFromInput,
         githubToken,
+        secureTunnelHost,
       } = getInCloudActionInputs();
 
       const headSha = await getHeadCommitSha({
@@ -66,6 +67,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
               githubToken,
               headSha: headSha.sha,
               isSingleTestRunExecution,
+              ...(secureTunnelHost ? { secureTunnelHost } : {}),
             }).catch((e) => {
               if (projectTargets.length > 1) {
                 logger.error(`Failed to execute tests for ${target.name}`, e);
