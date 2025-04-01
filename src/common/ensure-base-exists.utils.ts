@@ -141,26 +141,11 @@ const waitOnWorkflowRun = async (
         logger,
       });
       return { baseTestRunExists: true };
-    } else {
-      // If it's a push event to the main branch then the comparisons aren't as essential
-      // (it's unlikely anyone will be looking at the comparison results). However we do want to
-      // perform comparisons _if possible_ since we want to detect any flakes, so that we can determine
-      // the most common variant, and future runs comparing against us as a base can compare against the most
-      // common variant, reducing the chance of an undetected flake.
-      //
-      // So we wait for a shorter amount of time, and if we timeout or fail then we just disable comparisons,
-      // rather than disabling the whole run.
-      return await waitForWorkflowCompletionAndSkipComparisonsIfFailed({
-        owner,
-        repo,
-        workflowRunId: alreadyPending.workflowRunId,
-        octokit,
-        commitSha: base,
-        timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PUSH_EVENT,
-        isCancelled,
-        logger,
-      });
     }
+    // If we are not a PR event, then it's unlikely anyone will be looking at the comparisons. However,
+    // it is very possible that someone is waiting for _us_ to complete. So let's not delay the workflow
+    // and let's proceed without a base test run, skipping comparisons.
+    return { baseTestRunExists: false };
   }
 
   // Running missing tests on base is only supported for Pull Request events
@@ -272,42 +257,6 @@ const waitForWorkflowCompletionAndThrowIfFailed = async ({
       `Comparing against visual snapshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
     );
   }
-};
-
-const waitForWorkflowCompletionAndSkipComparisonsIfFailed = async ({
-  commitSha,
-  ...otherOpts
-}: {
-  logger: log.Logger;
-  owner: string;
-  repo: string;
-  workflowRunId: number;
-  octokit: InstanceType<typeof GitHub>;
-  commitSha: string;
-  timeout: Duration;
-  isCancelled: () => boolean;
-}): Promise<{ baseTestRunExists: boolean }> => {
-  const { logger } = otherOpts;
-  const finalWorkflowRun = await waitForWorkflowCompletion(otherOpts);
-
-  if (finalWorkflowRun == null || isPendingStatus(finalWorkflowRun.status)) {
-    logger.warn(
-      `Timed out while waiting for workflow run (${otherOpts.workflowRunId}) to complete. Running without comparisons.`
-    );
-    return { baseTestRunExists: false };
-  }
-
-  if (
-    finalWorkflowRun.status !== "completed" ||
-    finalWorkflowRun.conclusion !== "success"
-  ) {
-    logger.warn(
-      `Comparing against visual snapshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}. Running without comparisons.`
-    );
-    return { baseTestRunExists: false };
-  }
-
-  return { baseTestRunExists: true };
 };
 
 const getHeadCommitForRef = async ({
