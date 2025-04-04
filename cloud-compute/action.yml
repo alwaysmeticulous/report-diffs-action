@@ -35,6 +35,10 @@ inputs:
           skip: false (optional, default is false)
       ```
     required: false
+  secure-tunnel-host:
+    description: |
+      The host to use for the secure tunnel server. This is an advanced option that is only intended for use by the Meticulous team.
+    required: false
 
 outputs: {}
 runs:
