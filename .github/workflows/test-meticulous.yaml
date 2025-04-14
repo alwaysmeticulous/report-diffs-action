@@ -2,6 +2,9 @@
 
 name: Tests - react-bmi-calculator
 
+env:
+  METICULOUS_API_URL: https://meticulous.eu.ngrok.io/api
+
 on:
   push:
     branches:
