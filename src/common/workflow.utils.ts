@@ -235,7 +235,9 @@ export const getPendingWorkflowRun = async ({
     let shaToCheck = commitSha;
     while (shaToCheck) {
       const workflowRunsForCommit = workflowRuns.filter(
-        (run) => run.head_sha === shaToCheck
+        // Note we ignore runs on PR events because these are actually running on the temporary
+        // merge commit created by GitHub so they are not useable for comparisons.
+        (run) => run.head_sha === shaToCheck && run.event !== "pull_request"
       );
       if (workflowRunsForCommit.length > 0) {
         // We've found a commit that we ran on. If there's a pending run, return it.
