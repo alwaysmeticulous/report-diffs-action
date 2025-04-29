@@ -8,5 +8,6 @@ export const runMainActionPostStep = async (): Promise<void> => {
     apiToken,
     githubToken,
     testSuiteOrProjectId: testSuiteId,
+    shouldHaveComment: true,
   });
 };
