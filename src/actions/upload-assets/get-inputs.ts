@@ -12,7 +12,7 @@ export const getUploadAssetsInputs = (): UploadAssetsInputs => {
   const apiToken = getInput("api-token", { required: true });
   const githubToken = getInput("github-token", { required: true });
   const appDirectory = getInput("app-directory", { required: true });
-  const rewrites = JSON.parse(getInput("rewrites") ?? "[]");
+  const rewrites = JSON.parse(getInput("rewrites") || "[]");
 
   if (!Array.isArray(rewrites)) {
     throw new Error("Rewrites must be an array");
