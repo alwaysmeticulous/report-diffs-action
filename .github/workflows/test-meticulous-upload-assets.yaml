@@ -55,4 +55,4 @@ jobs:
         with:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
           app-directory: ./tests/react-bmi-calculator/build
-          rewrites: '[{"source": "/", "destination": "/index.html"}]'
+          rewrites: '[{"source": "**", "destination": "/index.html"}]'
