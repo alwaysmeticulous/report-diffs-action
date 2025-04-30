@@ -54,5 +54,5 @@ jobs:
         uses: ./upload-assets
         with:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
-          app-directory: ./tests/react-bmi-calculator/dist
+          app-directory: ./tests/react-bmi-calculator/build
           rewrites: '[{"source": "/", "destination": "/index.html"}]'
