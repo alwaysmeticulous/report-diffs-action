@@ -17,6 +17,7 @@ inputs:
       A JSON array of rewrites to apply to the assets. Each of these should be an object with a "source" and "destination" property.
       For more details on the syntax see https://github.com/vercel/serve-handler?tab=readme-ov-file#rewrites-array.
     required: false
+    default: "[]"
 
 outputs: {}
 runs:
