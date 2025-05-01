@@ -1,9 +1,17 @@
 import { setFailed } from "@actions/core";
 import { context } from "@actions/github";
+import {
+  createClient,
+  getLatestTestRunResults,
+} from "@alwaysmeticulous/client";
 import { uploadAssetsAndTriggerTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import * as Sentry from "@sentry/node";
+import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
+import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
+import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
+import { getOctokitOrFail } from "../../common/octokit";
 import { getUploadAssetsInputs } from "./get-inputs";
 
 export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
@@ -16,8 +24,43 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
       op: "report-diffs-action.runMeticulousUploadAssetsAction",
     },
     async (span) => {
-      const { apiToken, appDirectory, rewrites } = getUploadAssetsInputs();
       try {
+        const { apiToken, githubToken, appDirectory, rewrites } =
+          getUploadAssetsInputs();
+        const event = getCodeChangeEvent(context.eventName, context.payload);
+        const octokit = getOctokitOrFail(githubToken);
+
+        if (event == null) {
+          logger.error(
+            `Running this Action is only supported for 'push', \
+            'pull_request' and 'workflow_dispatch' events, but was triggered \
+            on a '${context.eventName}' event. Skipping execution.`
+          );
+          return;
+        }
+
+        const { base } = await getBaseAndHeadCommitShas(
+          event,
+          { useDeploymentUrl: false },
+          logger
+        );
+        await safeEnsureBaseTestsExists({
+          event,
+          apiToken,
+          base,
+          context,
+          octokit,
+          getBaseTestRun: async ({ baseSha }) =>
+            await getLatestTestRunResults({
+              client: createClient({ apiToken }),
+              commitSha: baseSha,
+              // We deliberately don't filter by environment version here because when static assets are uploaded,
+              // the backend can trigger a re-run. So we don't care whether we have a valid base now,
+              // just whether the commit was tested at some point which means we have the assets.
+            }),
+          logger,
+        });
+
         logger.info(`Uploading assets from directory: ${appDirectory}`);
 
         const commitSha = context.sha;
