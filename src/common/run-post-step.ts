@@ -6,6 +6,7 @@ export const runPostStep = async ({
   apiToken,
   githubToken,
   testSuiteOrProjectId,
+  shouldHaveComment,
   headSha,
 }: {
   apiToken: string;
@@ -14,6 +15,7 @@ export const runPostStep = async ({
    * The test suite or project ID to use find the comment in the PR.
    */
   testSuiteOrProjectId: string | null;
+  shouldHaveComment: boolean;
   headSha?: string;
 }): Promise<void> => {
   const octokit = getOctokitOrFail(githubToken);
@@ -37,7 +39,7 @@ export const runPostStep = async ({
     values["report_diffs_action.job_duration_seconds"] = timeSinceStart / 1000;
   }
 
-  if (context.payload.pull_request?.number) {
+  if (context.payload.pull_request?.number && shouldHaveComment) {
     const prComments = await octokit.rest.issues.listComments({
       owner: context.repo.owner,
       repo: context.repo.repo,

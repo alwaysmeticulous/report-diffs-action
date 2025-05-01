@@ -1,0 +1,29 @@
+name: "Meticulous - Upload Assets"
+description: "Upload assets to Meticulous for testing."
+inputs:
+  api-token:
+    description: "Meticulous API token."
+    required: true
+  github-token:
+    description: "GITHUB_TOKEN or a repo scoped PAT."
+    required: true
+    default: ${{ github.token }}
+  app-directory:
+    description: |
+      The directory containing the built assets to upload to Meticulous for testing.
+    required: true
+  rewrites:
+    description: |
+      A JSON array of rewrites to apply to the assets. Each of these should be an object with a "source" and "destination" property.
+      For more details on the syntax see https://github.com/vercel/serve-handler?tab=readme-ov-file#rewrites-array.
+    required: false
+    default: "[]"
+
+outputs: {}
+runs:
+  using: node20
+  main: "../out/upload-assets.entrypoint.js"
+  post: "../out/upload-assets.post-step.entrypoint.js"
+branding:
+  color: purple
+  icon: camera

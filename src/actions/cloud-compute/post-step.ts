@@ -33,6 +33,7 @@ export const runCloudComputePostStep = async (): Promise<void> => {
         apiToken: target.apiToken,
         githubToken,
         testSuiteOrProjectId: project.id,
+        shouldHaveComment: true,
         ...(headSha.type === "success" ? { headSha: headSha.sha } : {}),
       });
     })
