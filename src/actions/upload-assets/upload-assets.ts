@@ -73,6 +73,7 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           appDirectory,
           commitSha,
           rewrites,
+          waitForBase: false,
         });
         span.setStatus({ code: 1, message: "ok" });
         return 0;
