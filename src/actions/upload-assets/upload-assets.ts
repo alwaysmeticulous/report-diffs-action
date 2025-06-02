@@ -39,7 +39,7 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           return;
         }
 
-        const { base } = await getBaseAndHeadCommitShas(
+        const { head, base } = await getBaseAndHeadCommitShas(
           event,
           { useDeploymentUrl: false },
           logger
@@ -63,15 +63,10 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
 
         logger.info(`Uploading assets from directory: ${appDirectory}`);
 
-        const commitSha = context.sha;
-        if (!commitSha) {
-          throw new Error("Could not determine the commit SHA");
-        }
-
         await uploadAssetsAndTriggerTestRun({
           apiToken,
           appDirectory,
-          commitSha,
+          commitSha: head,
           rewrites,
           waitForBase: false,
         });

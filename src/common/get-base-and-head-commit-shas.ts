@@ -32,8 +32,12 @@ export const getBaseAndHeadCommitShas = async (
     }
     return {
       base:
-        (await tryGetMergeBaseOfTemporaryMergeCommit(head, base, logger)) ??
-        base,
+        (await tryGetMergeBaseOfTemporaryMergeCommit(
+          head,
+          base,
+          baseRef,
+          logger
+        )) ?? base,
       head,
     };
   }
@@ -66,8 +70,8 @@ const tryGetMergeBaseOfHeadCommit = (
     markGitDirectoryAsSafe();
     // Only a single commit is fetched by the checkout action by default
     // (https://github.com/actions/checkout#checkout-v3)
-    // We therefore run fetch without a `--depth` param to fetch the whole branch/commit ancestor chains, which merge-base needs
-    execSync(`git fetch origin ${pullRequestHeadSha}`);
+    // We therefore run fetch with the `--unshallow` param to fetch the whole branch/commit ancestor chains, which merge-base needs
+    execSync(`git fetch origin ${pullRequestHeadSha} --unshallow`);
     execSync(`git fetch origin ${baseRef}`);
     const mergeBase = execSync(
       `git merge-base ${pullRequestHeadSha} origin/${baseRef}`
@@ -101,6 +105,7 @@ export const getHeadCommitShaFromRepo = (): string => {
 const tryGetMergeBaseOfTemporaryMergeCommit = (
   pullRequestHeadSha: string,
   pullRequestBaseSha: string,
+  pullRequestBaseRef: string,
   logger: log.Logger
 ): string | null => {
   const mergeCommitSha = process.env.GITHUB_SHA;
@@ -120,10 +125,15 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
         `The head commit SHA (${headCommitSha}) does not equal GITHUB_SHA environment variable (${mergeCommitSha}).
           This is likely because a custom ref has been passed to the 'actions/checkout' action. We're assuming therefore
           that the head commit SHA is not a temporary merge commit, but rather the head of the branch. Therefore we're
-          using the base of the pull request (${pullRequestBaseSha}) to compare the visual snapshots against, and not the base
+          using the branching point of the PR branch to compare the visual snapshots against, and not the base
           of GitHub's temporary merge commit.`
       );
-      return null;
+      return tryGetMergeBaseOfHeadCommit(
+        headCommitSha,
+        pullRequestBaseSha,
+        pullRequestBaseRef,
+        logger
+      );
     }
 
     // The GITHUB_SHA is always a merge commit for PRs
