@@ -8,7 +8,10 @@ import { uploadAssetsAndTriggerTestRun } from "@alwaysmeticulous/remote-replay-l
 import { initSentry } from "@alwaysmeticulous/sentry";
 import * as Sentry from "@sentry/node";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
-import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
+import {
+  getBaseAndHeadCommitShas,
+  getActualCommitShaFromRepo,
+} from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
@@ -39,7 +42,7 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           return;
         }
 
-        const { head, base } = await getBaseAndHeadCommitShas(
+        const { base } = await getBaseAndHeadCommitShas(
           event,
           { useDeploymentUrl: false },
           logger
@@ -66,7 +69,7 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
         await uploadAssetsAndTriggerTestRun({
           apiToken,
           appDirectory,
-          commitSha: head,
+          commitSha: getActualCommitShaFromRepo(),
           rewrites,
           waitForBase: false,
         });
