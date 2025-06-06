@@ -8,6 +8,15 @@ interface BaseAndHeadCommitShas {
   head: string;
 }
 
+/**
+ * Get the base commit that we should compare the visual snapshots against, and the head commit to associate
+ * the status check with.
+ *
+ * WARNING: The head commit here is _not_ guaranteed to be the one we have the code for! For a PR checked out
+ * in the default way it will be the head of the PR branch, but the code checked out will be the temporary
+ * merge commit. If you need the actual commit that we have the code for, use the `getActualCommitShaFromRepo`
+ * function.
+ */
 export const getBaseAndHeadCommitShas = async (
   event: CodeChangeEvent,
   options: {
@@ -98,7 +107,10 @@ const tryGetMergeBaseOfHeadCommit = (
   }
 };
 
-export const getHeadCommitShaFromRepo = (): string => {
+/**
+ * Get the actual commit SHA that we have the code for.
+ */
+export const getActualCommitShaFromRepo = (): string => {
   return execSync("git rev-list --max-count=1 HEAD").toString().trim();
 };
 
@@ -119,7 +131,7 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
   try {
     markGitDirectoryAsSafe();
 
-    const headCommitSha = getHeadCommitShaFromRepo();
+    const headCommitSha = getActualCommitShaFromRepo();
     if (headCommitSha !== mergeCommitSha) {
       logger.info(
         `The head commit SHA (${headCommitSha}) does not equal GITHUB_SHA environment variable (${mergeCommitSha}).
