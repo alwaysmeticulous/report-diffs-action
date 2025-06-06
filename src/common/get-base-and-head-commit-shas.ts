@@ -8,6 +8,15 @@ interface BaseAndHeadCommitShas {
   head: string;
 }
 
+/**
+ * Get the base commit that we should compare the visual snapshots against, and the head commit to associate
+ * the status check with.
+ *
+ * WARNING: The head commit here is _not_ guaranteed to be the one we have the code for! For a PR checked out
+ * in the default way it will be the head of the PR branch, but the code checked out will be the temporary
+ * merge commit. If you need the actual commit that we have the code for, use the `getHeadCommitShaFromRepo`
+ * function.
+ */
 export const getBaseAndHeadCommitShas = async (
   event: CodeChangeEvent,
   options: {
