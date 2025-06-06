@@ -1,5 +1,5 @@
 import { Logger } from "loglevel";
-import { getHeadCommitShaFromRepo } from "../../common/get-base-and-head-commit-shas";
+import { getActualCommitShaFromRepo } from "../../common/get-base-and-head-commit-shas";
 
 /*
  * Computes the HEAD commit SHA to use when creating a test run.
@@ -24,7 +24,7 @@ export const getHeadCommitSha = async ({
   }
 
   try {
-    return { type: "success", sha: await getHeadCommitShaFromRepo() };
+    return { type: "success", sha: await getActualCommitShaFromRepo() };
   } catch (error) {
     logger.error(
       `Failed to get HEAD commit SHA from repo. Error: ${error}. Reporting telemetry without a HEAD commit SHA.`

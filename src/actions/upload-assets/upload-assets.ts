@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/node";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import {
   getBaseAndHeadCommitShas,
-  getHeadCommitShaFromRepo,
+  getActualCommitShaFromRepo,
 } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
@@ -69,7 +69,7 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
         await uploadAssetsAndTriggerTestRun({
           apiToken,
           appDirectory,
-          commitSha: getHeadCommitShaFromRepo(),
+          commitSha: getActualCommitShaFromRepo(),
           rewrites,
           waitForBase: false,
         });
