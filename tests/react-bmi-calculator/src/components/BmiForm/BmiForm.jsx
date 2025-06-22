@@ -33,7 +33,7 @@ const BmiForm = ({ change }) => {
 		<>
 			<div className="row">
 				<div className="col m6 s12">
-					<label htmlFor="weight">Weight (in kg)</label>
+					<label htmlFor="weight">Weight (in lb)</label>
 					<input
 						id="weight"
 						name="weight"
@@ -47,7 +47,7 @@ const BmiForm = ({ change }) => {
 				</div>
 
 				<div className="col m6 s12">
-					<label htmlFor="height">Height (in cm)</label>
+					<label htmlFor="height">Height (in kilometers)</label>
 					<input
 						id="height"
 						name="height"
@@ -55,7 +55,7 @@ const BmiForm = ({ change }) => {
 						min="1"
 						max="999"
 						placeholder="176"
-						value={state.height}
+						value={state.height / 1000}
 						onChange={handleChange}
 					/>
 				</div>
