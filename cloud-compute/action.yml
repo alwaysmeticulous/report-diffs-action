@@ -39,6 +39,12 @@ inputs:
     description: |
       The host to use for the secure tunnel server. This is an advanced option that is only intended for use by the Meticulous team.
     required: false
+  proxy-all-urls:
+    description: |
+      Whether to all proxying to an arbitrary URL through the secure tunnel. Otherwise only the app-url is proxied. This setting is not
+      typically needed, but is useful in some scenarios such as if your app is being served by two different servers.
+    required: false
+    default: "false"
 
 outputs: {}
 runs:
