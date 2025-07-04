@@ -25,6 +25,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
         headSha: headShaFromInput,
         githubToken,
         secureTunnelHost,
+        proxyAllUrls,
       } = getInCloudActionInputs();
 
       const headSha = await getHeadCommitSha({
@@ -67,6 +68,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
               githubToken,
               headSha: headSha.sha,
               isSingleTestRunExecution,
+              proxyAllUrls,
               ...(secureTunnelHost ? { secureTunnelHost } : {}),
             }).catch((e) => {
               if (projectTargets.length > 1) {

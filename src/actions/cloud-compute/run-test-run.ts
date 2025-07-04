@@ -30,6 +30,7 @@ export const runOneTestRun = async ({
   headSha,
   isSingleTestRunExecution,
   secureTunnelHost,
+  proxyAllUrls,
 }: {
   apiToken: string;
   appUrl: string;
@@ -38,6 +39,7 @@ export const runOneTestRun = async ({
   headSha: string;
   isSingleTestRunExecution: boolean;
   secureTunnelHost?: string;
+  proxyAllUrls: boolean;
 }) => {
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -234,6 +236,7 @@ export const runOneTestRun = async ({
     commitSha: headSha,
     environment: "github-actions",
     isLockable: true,
+    proxyAllUrls,
     onTunnelCreated,
     onTestRunCreated,
     onProgressUpdate,
