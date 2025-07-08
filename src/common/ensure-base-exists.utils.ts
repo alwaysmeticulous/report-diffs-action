@@ -21,9 +21,6 @@ import {
 const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST = Duration.fromObject({
   minutes: 30,
 });
-const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PUSH_EVENT = Duration.fromObject({
-  minutes: 10,
-});
 
 const POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
   seconds: 10,
@@ -56,14 +53,14 @@ export const ensureBaseTestsExists = async ({
   base: string | null;
   context: Context;
   octokit: InstanceType<typeof GitHub>;
-  getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
+  getBaseTestRun: () => Promise<TestRun | null>;
   logger: log.Logger;
 }): Promise<{ baseTestRunExists: boolean }> => {
   if (!base) {
     return { baseTestRunExists: false };
   }
 
-  const testRun = await getBaseTestRun({ baseSha: base });
+  const testRun = await getBaseTestRun();
 
   if (testRun != null) {
     logger.info(`Tests already exist for commit ${base} (${testRun.id})`);
@@ -76,6 +73,7 @@ export const ensureBaseTestsExists = async ({
     base,
     context,
     octokit,
+    getBaseTestRun,
   });
 };
 
@@ -83,7 +81,7 @@ export interface TryTriggerTestsWorkflowOnBaseOpts {
   logger: log.Logger;
   event: CodeChangeEvent;
   base: string;
-  getBaseTestRun?: () => Promise<TestRun | null>;
+  getBaseTestRun: () => Promise<TestRun | null>;
   context: Context;
   octokit: InstanceType<typeof GitHub>;
 }
@@ -96,9 +94,6 @@ export const tryTriggerTestsWorkflowOnBase = async (
     return isDone;
   };
   const workflowRunPromise = waitOnWorkflowRun(opts, isCancelled);
-  if (!opts.getBaseTestRun) {
-    return workflowRunPromise;
-  }
   const baseTestRunPromise = waitOnBaseTestRun(
     opts.getBaseTestRun,
     isCancelled
@@ -140,12 +135,20 @@ const waitOnWorkflowRun = async (
         isCancelled,
         logger,
       });
-      return { baseTestRunExists: true };
+      // At this point it's possible we have a base test run, but it's not guaranteed. This is because
+      // getPendingWorkflowRun can return a run on an older commit, which often is usable as a base for
+      // comparisons, but is not guaranteed to be. So we check for a base test run and fall-through to
+      // doing a workflow_dispatch if we don't have one.
+      const baseTestRun = await opts.getBaseTestRun();
+      if (baseTestRun) {
+        return { baseTestRunExists: true };
+      }
+    } else {
+      // If we are not a PR event, then it's unlikely anyone will be looking at the comparisons. However,
+      // it is very possible that someone is waiting for _us_ to complete. So let's not delay the workflow
+      // and let's proceed without a base test run, skipping comparisons.
+      return { baseTestRunExists: false };
     }
-    // If we are not a PR event, then it's unlikely anyone will be looking at the comparisons. However,
-    // it is very possible that someone is waiting for _us_ to complete. So let's not delay the workflow
-    // and let's proceed without a base test run, skipping comparisons.
-    return { baseTestRunExists: false };
   }
 
   // Running missing tests on base is only supported for Pull Request events

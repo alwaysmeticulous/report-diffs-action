@@ -15,6 +15,7 @@ import {
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
+import { getCloudComputeBaseTestRun } from "../cloud-compute/get-cloud-compute-base-test-run";
 import { getUploadAssetsInputs } from "./get-inputs";
 
 export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
@@ -53,14 +54,18 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           base,
           context,
           octokit,
-          getBaseTestRun: async ({ baseSha }) =>
-            await getLatestTestRunResults({
+          getBaseTestRun: async () => {
+            if (base == null) {
+              return null;
+            }
+            return await getLatestTestRunResults({
               client: createClient({ apiToken }),
-              commitSha: baseSha,
+              commitSha: base,
               // We deliberately don't filter by environment version here because when static assets are uploaded,
               // the backend can trigger a re-run. So we don't care whether we have a valid base now,
               // just whether the commit was tested at some point which means we have the assets.
-            }),
+            });
+          },
           logger,
         });
 
