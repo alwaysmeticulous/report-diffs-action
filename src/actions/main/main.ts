@@ -90,12 +90,16 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         base,
         context,
         octokit,
-        getBaseTestRun: async ({ baseSha }) =>
-          await getLatestTestRunResults({
+        getBaseTestRun: async () => {
+          if (base == null) {
+            return null;
+          }
+          return await getLatestTestRunResults({
             client: createClient({ apiToken }),
-            commitSha: baseSha,
+            commitSha: base,
             logicalEnvironmentVersion: LOGICAL_ENVIRONMENT_VERSION,
-          }),
+          });
+        },
         logger,
       });
 
