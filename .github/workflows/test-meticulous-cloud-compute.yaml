@@ -1,0 +1,63 @@
+# Workflow for automated Meticulous tests in Meticulous' cloud.
+
+name: Tests - react-bmi-calculator
+
+on:
+  push:
+    branches:
+      - main
+      - releases/*
+  pull_request: {}
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: read
+  statuses: write
+  pull-requests: write
+  packages: read
+
+jobs:
+  test:
+    name: Report diffs (in cloud)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js LTS
+        id: nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: yarn
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            tests/react-bmi-calculator/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}
+      - name: Install react-bmi-calculator dependencies
+        working-directory: ./tests/react-bmi-calculator
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Build react-bmi-calculator
+        working-directory: ./tests/react-bmi-calculator
+        run: yarn build
+
+      - name: Serve react-bmi-calculator
+        working-directory: ./tests/react-bmi-calculator
+        run: |
+          yarn serve &
+          sleep 4
+      - name: Run report-diffs-action
+        id: test
+        uses: ./cloud-compute
+        with:
+          api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
+          app-url: http://localhost:3000

@@ -33,26 +33,18 @@ export const getBaseAndHeadCommitShas = async (
       // The PR base can sometimes point to a commit ahead of the merge-base of the head commit
       // (I believe it's based on the github temporary merge commit)
       return {
-        base:
-          (await tryGetMergeBaseOfHeadCommit(head, base, baseRef, logger)) ??
-          base,
+        base: "e072cdce7e9b1f67107729be39b617f3c8174eb2",
         head,
       };
     }
     return {
-      base:
-        (await tryGetMergeBaseOfTemporaryMergeCommit(
-          head,
-          base,
-          baseRef,
-          logger
-        )) ?? base,
+      base: "e072cdce7e9b1f67107729be39b617f3c8174eb2",
       head,
     };
   }
   if (event.type === "push") {
     return {
-      base: event.payload.before,
+      base: "e072cdce7e9b1f67107729be39b617f3c8174eb2",
       head: event.payload.after,
     };
   }

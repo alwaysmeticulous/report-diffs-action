@@ -124,7 +124,7 @@ const waitOnWorkflowRun = async (
     octokit,
     logger,
   });
-  if (alreadyPending != null) {
+  if (alreadyPending != null && false) {
     logger.info(
       `Waiting on workflow run on base commit (${base}) to compare against: ${alreadyPending.html_url}`
     );
@@ -155,9 +155,9 @@ const waitOnWorkflowRun = async (
 
   // We can only trigger a workflow_run against the head of the base branch
   // This will give some spurious diffs if it's different from `base`, but it's the best we can do
-  const baseRef = event.payload.pull_request.base.ref;
+  const baseRef = "nick-tests-workflows";
 
-  logger.debug(JSON.stringify({ base, baseRef }, null, 2));
+  logger.log(JSON.stringify({ base, baseRef }, null, 2));
 
   const currentBaseSha = await getHeadCommitForRef({
     owner,
@@ -167,7 +167,7 @@ const waitOnWorkflowRun = async (
     logger,
   });
 
-  logger.debug(
+  logger.log(
     JSON.stringify({ owner, repo, base, baseRef, currentBaseSha }, null, 2)
   );
   if (base !== currentBaseSha) {
