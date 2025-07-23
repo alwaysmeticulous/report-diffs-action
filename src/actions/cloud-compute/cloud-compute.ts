@@ -2,6 +2,7 @@ import { setFailed } from "@actions/core";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import * as Sentry from "@sentry/node";
 import { initLogger } from "../../common/logger.utils";
+import { enrichSentryContextWithGitHubActionsContext } from "../../common/sentry.utils";
 import { getHeadCommitSha } from "./get-head-commit-sha";
 import { getInCloudActionInputs } from "./get-inputs";
 import { runOneTestRun } from "./run-test-run";
@@ -12,6 +13,7 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
   // Children processes, (test run executions) will use
   // the global sample rate.
   await initSentry("report-diffs-action-cloud-compute-v1", 1.0);
+  enrichSentryContextWithGitHubActionsContext();
 
   const failureMessage = await Sentry.startSpan(
     {

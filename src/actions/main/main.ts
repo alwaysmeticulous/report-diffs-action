@@ -20,6 +20,7 @@ import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger, shortSha } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
+import { enrichSentryContextWithGitHubActionsContext } from "../../common/sentry.utils";
 import { getMainActionInputs } from "./get-inputs";
 import { addLocalhostAliases } from "./utils/add-localhost-aliases";
 import { LOGICAL_ENVIRONMENT_VERSION } from "./utils/constants";
@@ -39,6 +40,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
   // Children processes, (test run executions) will use
   // the global sample rate.
   await initSentry("report-diffs-action-v1", 1.0);
+  enrichSentryContextWithGitHubActionsContext();
 
   const exitCode = await Sentry.startSpan(
     {
