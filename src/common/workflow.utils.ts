@@ -22,9 +22,11 @@ const MAX_WORKFLOW_RUNS_TO_SEARCH = 500;
 export const getCurrentWorkflowId = async ({
   context,
   octokit,
+  logger,
 }: {
   context: Context;
   octokit: InstanceType<typeof GitHub>;
+  logger: log.Logger;
 }): Promise<{ workflowId: number }> => {
   const { owner, repo } = context.repo;
   const workflowRunId = context.runId;
@@ -33,6 +35,7 @@ export const getCurrentWorkflowId = async ({
     repo,
     run_id: workflowRunId,
   });
+  console.log(JSON.stringify(data, null, 2));
   const workflowId = data.workflow_id;
   return { workflowId };
 };

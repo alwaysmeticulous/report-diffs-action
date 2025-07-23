@@ -10,13 +10,6 @@ on:
   pull_request: {}
   workflow_dispatch: {}
 
-permissions:
-  actions: write
-  contents: read
-  statuses: write
-  pull-requests: write
-  packages: read
-
 jobs:
   test:
     name: Report diffs (in cloud)
