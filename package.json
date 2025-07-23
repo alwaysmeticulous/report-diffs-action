@@ -57,14 +57,14 @@
   "scripts": {
     "clean": "rimraf dist tsconfig.tsbuildinfo .parcel-cache",
     "dev": "parcel watch",
-    "build": "parcel build && yarn sentry:sourcemaps",
+    "build": "parcel build",
     "format": "prettier --write src",
     "format:check": "prettier --check src",
     "lint": "eslint src --ext=ts,tsx,js --cache",
     "lint:commit": "eslint --cache $(git diff --relative --name-only --diff-filter=ACMRTUXB master | grep  -E \"(.js$|.ts$|.tsx$)\")",
     "lint:fix": "eslint src --ext=ts,tsx,js --cache --fix",
     "test": "jest",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org meticulous --project sdk ./out && sentry-cli sourcemaps upload --org meticulous --project sdk ./out"
+    "sentry:sourcemaps": "./scripts/upload-sentry-sourcemaps.sh"
   },
   "dependencies": {
     "//": "Upgrading `replay-orchestrator-launcher`? Consider bumping the environment version `LOGICAL_ENVIRONMENT_VERSION` in `constants.ts` if the new version includes visible changes.",
