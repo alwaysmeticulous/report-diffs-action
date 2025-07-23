@@ -1,4 +1,3 @@
-import "source-map-support/register";
 import { setFailed } from "@actions/core";
 import * as Sentry from "@sentry/node";
 import { runMeticulousTestsAction } from "./actions/main/main";
