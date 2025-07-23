@@ -21,7 +21,8 @@ jobs:
   test:
     name: Report diffs (in cloud)
     runs-on: ubuntu-latest
-
+    env:
+      ACTIONS_RUNNER_DEBUG: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
