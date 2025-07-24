@@ -67,6 +67,11 @@ jobs:
             exit 1
           fi
 
+      - name: Upload sourcemaps to Sentry
+        run: yarn sentry:sourcemaps
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
   publish:
     name: Publish
     runs-on: ubuntu-latest

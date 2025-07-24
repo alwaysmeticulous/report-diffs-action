@@ -18,35 +18,35 @@
       "source": "src/main.post-step.entrypoint.ts",
       "includeNodeModules": true,
       "distDir": "out",
-      "sourceMap": false,
+      "sourceMap": true,
       "outputFormat": "commonjs"
     },
     "cloud-compute": {
       "source": "src/cloud-compute.entrypoint.ts",
       "includeNodeModules": true,
       "distDir": "out",
-      "sourceMap": false,
+      "sourceMap": true,
       "outputFormat": "commonjs"
     },
     "cloud-compute-post": {
       "source": "src/cloud-compute.post-step.entrypoint.ts",
       "includeNodeModules": true,
       "distDir": "out",
-      "sourceMap": false,
+      "sourceMap": true,
       "outputFormat": "commonjs"
     },
     "upload-assets": {
       "source": "src/upload-assets.entrypoint.ts",
       "includeNodeModules": true,
       "distDir": "out",
-      "sourceMap": false,
+      "sourceMap": true,
       "outputFormat": "commonjs"
     },
     "upload-assets-post": {
       "source": "src/upload-assets.post-step.entrypoint.ts",
       "includeNodeModules": true,
       "distDir": "out",
-      "sourceMap": false,
+      "sourceMap": true,
       "outputFormat": "commonjs"
     }
   },
@@ -63,7 +63,8 @@
     "lint": "eslint src --ext=ts,tsx,js --cache",
     "lint:commit": "eslint --cache $(git diff --relative --name-only --diff-filter=ACMRTUXB master | grep  -E \"(.js$|.ts$|.tsx$)\")",
     "lint:fix": "eslint src --ext=ts,tsx,js --cache --fix",
-    "test": "jest"
+    "test": "jest",
+    "sentry:sourcemaps": "./scripts/upload-sentry-sourcemaps.sh"
   },
   "dependencies": {
     "//": "Upgrading `replay-orchestrator-launcher`? Consider bumping the environment version `LOGICAL_ENVIRONMENT_VERSION` in `constants.ts` if the new version includes visible changes.",
@@ -74,6 +75,7 @@
     "@alwaysmeticulous/remote-replay-launcher": "^2.222.1",
     "@alwaysmeticulous/replay-orchestrator-launcher": "^2.221.3",
     "@alwaysmeticulous/sentry": "^2.221.2",
+    "@sentry/cli": "^2.50.2",
     "@sentry/node": "^9.1.0",
     "axios": "^1.2.6",
     "joi": "^17.13.3",
@@ -82,6 +84,7 @@
     "loglevel-plugin-prefix": "^0.8.4",
     "luxon": "^3.4.3",
     "retry": "^0.13.1",
+    "source-map-support": "^0.5.21",
     "yaml": "^2.5.0"
   },
   "devDependencies": {

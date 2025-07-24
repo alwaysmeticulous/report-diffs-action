@@ -245,3 +245,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/git,linux,osx,windows,node,visualstudiocode
+
+# Sentry Config File
+.sentryclirc

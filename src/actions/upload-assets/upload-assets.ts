@@ -15,11 +15,13 @@ import {
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
+import { enrichSentryContextWithGitHubActionsContext } from "../../common/sentry.utils";
 import { getUploadAssetsInputs } from "./get-inputs";
 
 export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
   const logger = initLogger();
   await initSentry("report-diffs-action-upload-assets-v1", 1.0);
+  enrichSentryContextWithGitHubActionsContext();
 
   const exitCode = await Sentry.startSpan(
     {
