@@ -8,7 +8,6 @@ on:
       - main
       - releases/*
   pull_request: {}
-  workflow_dispatch: {}
 
 permissions:
   actions: write
@@ -57,7 +56,7 @@ jobs:
           yarn serve &
           sleep 4
 
-      - name: Run report-diffs-action
+      - name: Run report-diffs-action (should fail)
         id: test
         uses: ./cloud-compute
         with:
