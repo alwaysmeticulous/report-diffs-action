@@ -3,7 +3,10 @@ import { GitHub } from "@actions/github/lib/utils";
 import log from "loglevel";
 import { DateTime, Duration } from "luxon";
 import { DOCS_URL } from "./constants";
-import { isGithubPermissionsError } from "./error.utils";
+import {
+  isGithubPermissionsError,
+  getDetailedGitHubPermissionsError,
+} from "./error.utils";
 import { shortSha } from "./logger.utils";
 
 // The GitHub REST API will not list a workflow run immediately after it has been dispatched
@@ -28,13 +31,25 @@ export const getCurrentWorkflowId = async ({
 }): Promise<{ workflowId: number }> => {
   const { owner, repo } = context.repo;
   const workflowRunId = context.runId;
-  const { data } = await octokit.rest.actions.getWorkflowRun({
-    owner,
-    repo,
-    run_id: workflowRunId,
-  });
-  const workflowId = data.workflow_id;
-  return { workflowId };
+
+  try {
+    const { data } = await octokit.rest.actions.getWorkflowRun({
+      owner,
+      repo,
+      run_id: workflowRunId,
+    });
+    const workflowId = data.workflow_id;
+    return { workflowId };
+  } catch (err: unknown) {
+    if (isGithubPermissionsError(err)) {
+      const detailedError = getDetailedGitHubPermissionsError(err, {
+        operation: "get_workflow_run",
+        requiredPermissions: ["actions: read"],
+      });
+      throw new Error(detailedError);
+    }
+    throw err;
+  }
 };
 
 export const startNewWorkflowRun = async ({
@@ -80,10 +95,13 @@ export const startNewWorkflowRun = async ({
     }
     if (isGithubPermissionsError(err)) {
       // https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-actions
+      const detailedError = getDetailedGitHubPermissionsError(err, {
+        operation: "trigger_workflow",
+        requiredPermissions: ["actions: write"],
+      });
       logger.error(
         `Missing permission to trigger a workflow run on the base branch (${ref}).` +
-          ` Visual snapshots of the new flows will be taken, but no comparisons will be made.` +
-          ` Please add the 'actions: write' permission to your workflow YAML file: see ${DOCS_URL} for the correct setup.`
+          ` Visual snapshots of the new flows will be taken, but no comparisons will be made.\n\n${detailedError}`
       );
       logger.debug(err);
       return undefined;

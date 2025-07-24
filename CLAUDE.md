@@ -70,3 +70,18 @@ The project includes multiple test workflows in `.github/workflows/` for differe
 - All other entrypoints use CommonJS with sourcemaps
 - The action runs in a Docker container with Chrome installed for visual testing
 - Error tracking is configured through Sentry - ensure proper error handling in all code paths
+
+### Error Handling Patterns
+
+The codebase includes enhanced error handling for GitHub API permission issues:
+
+- Use `getDetailedGitHubPermissionsError()` from `error.utils.ts` for GitHub 403 errors
+- Use `createPermissionsValidationError()` for proactive permission validation
+- Always provide specific remediation steps in error messages
+- Include required permissions and workflow_dispatch configuration in error messages
+
+Common GitHub permissions required:
+- `actions: read/write` - For workflow operations
+- `contents: read` - For repository access
+- `pull-requests: write` - For PR comments
+- `issues: write` - For PR status updates

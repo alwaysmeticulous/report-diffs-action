@@ -1,10 +1,10 @@
 import { getOctokit } from "@actions/github";
 import log from "loglevel";
 import { CodeChangeEvent } from "../types";
-import { DOCS_URL } from "./constants";
 import {
   DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
   isGithubPermissionsError,
+  getDetailedGitHubPermissionsError,
 } from "./error.utils";
 
 const getMeticulousCommentIdentifier = (testSuiteId: string | null) =>
@@ -74,8 +74,12 @@ export const updateStatusComment = async ({
   } catch (err) {
     if (isGithubPermissionsError(err)) {
       // https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-pull-requests
+      const detailedError = getDetailedGitHubPermissionsError(err, {
+        operation: "comment",
+        requiredPermissions: ["pull-requests: write"],
+      });
       throw new Error(
-        `Missing permission to list and post comments to the pull request #${event.payload.pull_request.number}. Please add the 'pull-requests: write' permission to your workflow YAML file: see ${DOCS_URL} for the correct setup.`
+        `Missing permission to list and post comments to the pull request #${event.payload.pull_request.number}.\n\n${detailedError}`
       );
     }
     logger.error(
