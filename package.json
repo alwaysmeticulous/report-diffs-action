@@ -64,6 +64,13 @@
     "lint:commit": "eslint --cache $(git diff --relative --name-only --diff-filter=ACMRTUXB master | grep  -E \"(.js$|.ts$|.tsx$)\")",
     "lint:fix": "eslint src --ext=ts,tsx,js --cache --fix",
     "test": "jest",
+    "test:unit": "jest --testPathPattern='.*\\.spec\\.ts$' --testPathIgnorePatterns='integration'",
+    "test:integration": "jest --testPathPattern='integration.*\\.spec\\.ts$' --detectOpenHandles --forceExit",
+    "test:integration:enhanced": "jest --testPathPattern='enhanced-integration\\.spec\\.ts$' --detectOpenHandles --forceExit --verbose",
+    "test:integration:comprehensive": "jest --testPathPattern='comprehensive-scenarios\\.spec\\.ts$' --detectOpenHandles --forceExit --verbose",
+    "test:integration:multi-action": "jest --testPathPattern='multi-action\\.spec\\.ts$' --detectOpenHandles --forceExit --verbose",
+    "test:integration:real-api": "jest --testPathPattern='comprehensive-real-api\\.spec\\.ts$' --detectOpenHandles --forceExit --verbose",
+    "test:performance": "jest --testPathPattern='performance.*\\.spec\\.ts$' --detectOpenHandles --forceExit --verbose",
     "sentry:sourcemaps": "./scripts/upload-sentry-sourcemaps.sh"
   },
   "dependencies": {
@@ -147,6 +154,10 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testTimeout": 30000,
+    "maxWorkers": 1,
+    "setupFilesAfterEnv": ["<rootDir>/testing/setup.ts"],
+    "globalTeardown": "<rootDir>/testing/teardown.ts"
   }
 }
