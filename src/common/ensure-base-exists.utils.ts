@@ -5,10 +5,10 @@ import { TestRun } from "@alwaysmeticulous/client";
 import log from "loglevel";
 import { Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
-import { DOCS_URL } from "./constants";
 import {
   DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
   isGithubPermissionsError,
+  getDetailedGitHubPermissionsError,
 } from "./error.utils";
 import {
   getCurrentWorkflowId,
@@ -283,9 +283,12 @@ const getHeadCommitForRef = async ({
   } catch (err: unknown) {
     if (isGithubPermissionsError(err)) {
       // https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-contents
+      const detailedError = getDetailedGitHubPermissionsError(err, {
+        operation: "get_branch",
+        requiredPermissions: ["contents: read"],
+      });
       throw new Error(
-        `Missing permission to get the head commit of the branch '${ref}'. This is required in order to correctly calculate the two commits to compare.` +
-          ` Please add the 'contents: read' permission to your workflow YAML file: see ${DOCS_URL} for the correct setup.`
+        `Missing permission to get the head commit of the branch '${ref}'. This is required in order to correctly calculate the two commits to compare.\n\n${detailedError}`
       );
     }
     logger.error(
