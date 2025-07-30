@@ -31,6 +31,7 @@ export const runOneTestRun = async ({
   isSingleTestRunExecution,
   secureTunnelHost,
   proxyAllUrls,
+  rewriteHostnameToAppUrl,
 }: {
   apiToken: string;
   appUrl: string;
@@ -40,6 +41,7 @@ export const runOneTestRun = async ({
   isSingleTestRunExecution: boolean;
   secureTunnelHost?: string;
   proxyAllUrls: boolean;
+  rewriteHostnameToAppUrl: boolean;
 }) => {
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -237,6 +239,7 @@ export const runOneTestRun = async ({
     environment: "github-actions",
     isLockable: true,
     proxyAllUrls,
+    rewriteHostnameToAppUrl,
     onTunnelCreated,
     onTestRunCreated,
     onProgressUpdate,
