@@ -8,6 +8,7 @@ export const getInCloudActionInputs = (): {
   projectTargets: ProjectTarget[];
   secureTunnelHost?: string;
   proxyAllUrls: boolean;
+  rewriteHostnameToAppUrl: boolean;
 } => {
   // The names, required value, and types should match that in action.yml
   const apiToken = getInput("api-token", { required: false });
@@ -16,6 +17,10 @@ export const getInCloudActionInputs = (): {
   const headSha = getInput("head-sha");
   const secureTunnelHost = getInput("secure-tunnel-host", { required: false });
   const proxyAllUrls = getBooleanInput("proxy-all-urls", { required: false });
+  const rewriteHostnameToAppUrl = getBooleanInput(
+    "rewrite-hostname-to-app-url",
+    { required: false }
+  );
 
   const projectsYaml = getInput("projects-yaml", { required: false });
 
@@ -34,6 +39,7 @@ export const getInCloudActionInputs = (): {
       projectTargets,
       secureTunnelHost,
       proxyAllUrls,
+      rewriteHostnameToAppUrl,
     };
   }
 
@@ -56,5 +62,6 @@ export const getInCloudActionInputs = (): {
     ],
     secureTunnelHost,
     proxyAllUrls,
+    rewriteHostnameToAppUrl,
   };
 };

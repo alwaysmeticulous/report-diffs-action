@@ -37,16 +37,17 @@
   resolved "https://registry.yarnpkg.com/@alwaysmeticulous/api/-/api-2.227.1.tgz#135257c972ba55898296ef891c0a5156dcb43dd5"
   integrity sha512-YBo7wua9dHPGjl1Vc02eQ74dgJ8TilDU88RWBWVKKHiAFnG+A26/FgScH10m8lrXHC7cmsNMEsWGj+Ibaj7uaw==
 
-"@alwaysmeticulous/client@^2.227.1":
-  version "2.227.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.227.1.tgz#26e1a9ccd8b5f22fb47abe5d667c481906e043e9"
-  integrity sha512-sOioVOp9R2EHLtNYHRJ27yKhVixMZuwabNJgEa19MIOHxBk2BBxX6Aoh0xf2PgnxGIXuBruUWdq3Ls0HUVG1lQ==
+"@alwaysmeticulous/client@^2.228.0":
+  version "2.228.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/client/-/client-2.228.0.tgz#6e8468191d543528d5c8574c43c67d773a3e0c6c"
+  integrity sha512-MW6U9RhNkJWOkPLXb26AcT/9rhqJC+fiX6P/FVqxtDHZoDagFgrRJvKMeMY11Zpw3pBXqjeU8bSUxk+ts3Fj/w==
   dependencies:
     "@alwaysmeticulous/api" "^2.227.1"
     "@alwaysmeticulous/common" "^2.227.1"
     axios "^1.7.9"
     axios-retry "^4.5.0"
     loglevel "^1.8.0"
+    proxy-agent "^6.4.0"
 
 "@alwaysmeticulous/common@^2.227.1":
   version "2.227.1"
@@ -56,13 +57,13 @@
     loglevel "^1.8.0"
     luxon "^3.2.1"
 
-"@alwaysmeticulous/downloading-helpers@^2.227.1":
-  version "2.227.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.227.1.tgz#52ed7959a2c2e53286dd6590a9659c6546eb30fb"
-  integrity sha512-W7wPrHnD4TaJp4KSPRmwHXf0Y9uXuTNkQYVUsnn7K3buox/BkE6UEGjSO90IeYjE9DewxjgWCVGINtUsMCKyvA==
+"@alwaysmeticulous/downloading-helpers@^2.228.0":
+  version "2.228.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/downloading-helpers/-/downloading-helpers-2.228.0.tgz#8da6bb88e764b38502ae2d62e6dff16b5b7959bf"
+  integrity sha512-LvNQqorImc/WnR3sSJkOIgT7UafK/vvjlWRGA1VkY7yVhh0VVnxG/PAqZ3K3I2x7dbRdNV3GV6/nLBPL5JEZVw==
   dependencies:
     "@alwaysmeticulous/api" "^2.227.1"
-    "@alwaysmeticulous/client" "^2.227.1"
+    "@alwaysmeticulous/client" "^2.228.0"
     "@alwaysmeticulous/common" "^2.227.1"
     axios "^1.7.9"
     axios-retry "^4.5.0"
@@ -72,27 +73,27 @@
     p-limit "^3.1.0"
     proper-lockfile "^4.1.2"
 
-"@alwaysmeticulous/remote-replay-launcher@^2.227.1":
-  version "2.227.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/remote-replay-launcher/-/remote-replay-launcher-2.227.1.tgz#7aaa8173bce73b58fa1c2413df5c2bb1212a47a4"
-  integrity sha512-WCHxoPRTaoZQO3+DyTeEy2GH+N/bRSx59CPB4krZrQPCdd+oNvD+t9wn1wg0EvpXdGQuTHF+loT2GOoXQ7RHQA==
+"@alwaysmeticulous/remote-replay-launcher@^2.228.0":
+  version "2.228.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/remote-replay-launcher/-/remote-replay-launcher-2.228.0.tgz#cdc22561c2e0a58963e78a54d1298968ef8b3fdf"
+  integrity sha512-oK4em1eLtM4U7+MtAJqEX2prTWHDant/+t/Z6TC0lpHg1jFmjBdQBm2UhV6VPh3Iu2shWwCFPHAIgCkFEBx4SQ==
   dependencies:
     "@alwaysmeticulous/api" "^2.227.1"
-    "@alwaysmeticulous/client" "^2.227.1"
+    "@alwaysmeticulous/client" "^2.228.0"
     "@alwaysmeticulous/common" "^2.227.1"
-    "@alwaysmeticulous/tunnels-client" "^2.225.1"
+    "@alwaysmeticulous/tunnels-client" "^2.228.0"
     "@sentry/node" "^9.1.0"
     archiver "^7.0.0"
     loglevel "^1.8.0"
     systeminformation "^5.25.11"
 
-"@alwaysmeticulous/replay-orchestrator-launcher@^2.227.1":
-  version "2.227.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.227.1.tgz#e6c31de832c4589a90fe68451dc3249d2e4f457d"
-  integrity sha512-b7xz8uHML3bE5u96L9EjTS+GNiWvvC/p+/6gEesok0KBzOtV5WpQknoOgr+Tl3UtuLlQj7tf+DabJIaYAIrD/g==
+"@alwaysmeticulous/replay-orchestrator-launcher@^2.228.0":
+  version "2.228.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/replay-orchestrator-launcher/-/replay-orchestrator-launcher-2.228.0.tgz#b16e54a4c764db71c59233492d56af4b2b61fdb2"
+  integrity sha512-AThwoAWRjydDa3AhaYGSv1DhkX5IbD1geou9+DjxgeTM1ZRqrDm4muGJ1kWzBnGttuilBl9IlCFaKGhSnhDFZw==
   dependencies:
     "@alwaysmeticulous/common" "^2.227.1"
-    "@alwaysmeticulous/downloading-helpers" "^2.227.1"
+    "@alwaysmeticulous/downloading-helpers" "^2.228.0"
     "@alwaysmeticulous/sdk-bundles-api" "^2.227.1"
     loglevel "^1.8.0"
     puppeteer "24.14.0"
@@ -113,16 +114,16 @@
     "@sentry/node" "^9.1.0"
     luxon "^3.2.1"
 
-"@alwaysmeticulous/tunnels-client@^2.225.1":
-  version "2.225.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/tunnels-client/-/tunnels-client-2.225.1.tgz#74cb565e4d27c053c4c3c40bdac90038f1213cbc"
-  integrity sha512-3fT6uOzP8GPlG9w2CyQRzGLj6sBPemx/fAmh1b2zklHNO9wrMDJ5+NrpfX5wnfY1haG6/LjNQbeZrgLnco4EEA==
+"@alwaysmeticulous/tunnels-client@^2.228.0":
+  version "2.228.0"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/tunnels-client/-/tunnels-client-2.228.0.tgz#51a16edadf1cf51793ad35cfa0510c239c3a16e9"
+  integrity sha512-xKNft/H+EPqBYZ2v7ySzNwkhhYA91Md5gJ7U2Z48ahKJ3MqhHSZbKHi1ZD6sCLaqpwKJP1UxQw9mC9Nf6hV/IA==
   dependencies:
     agentkeepalive "^4.5.0"
-    axios "^1.7.9"
-    axios-retry "^4.5.0"
     cacheable-lookup "^6.1.0"
     loglevel "^1.8.0"
+    node-fetch "^2.6.9"
+    proxy-agent "^6.4.0"
 
 "@ampproject/remapping@^2.2.0":
   version "2.2.0"
@@ -5593,6 +5594,13 @@ node-fetch@^2.6.7:
   dependencies:
     whatwg-url "^5.0.0"
 
+node-fetch@^2.6.9:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
+  integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
+  dependencies:
+    whatwg-url "^5.0.0"
+
 node-gyp-build-optional-packages@5.0.7:
   version "5.0.7"
   resolved "https://registry.yarnpkg.com/node-gyp-build-optional-packages/-/node-gyp-build-optional-packages-5.0.7.tgz#5d2632bbde0ab2f6e22f1bbac2199b07244ae0b3"
@@ -6089,7 +6097,7 @@ proper-lockfile@^4.1.2:
     retry "^0.12.0"
     signal-exit "^3.0.2"
 
-proxy-agent@^6.5.0:
+proxy-agent@^6.4.0, proxy-agent@^6.5.0:
   version "6.5.0"
   resolved "https://registry.yarnpkg.com/proxy-agent/-/proxy-agent-6.5.0.tgz#9e49acba8e4ee234aacb539f89ed9c23d02f232d"
   integrity sha512-TmatMXdr2KlRiA2CyDu8GqR8EjahTG3aY3nXjdzFyoZbmB8hrBsTyMezhULIXKnC0jpfjlmiZ3+EaCzoInSu/A==
