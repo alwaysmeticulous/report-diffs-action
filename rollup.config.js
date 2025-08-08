@@ -16,31 +16,31 @@ const entrypoints = [
   // All other entrypoints - CommonJS format
   {
     input: 'src/main.post-step.entrypoint.ts',
-    output: 'out/main.post-step.entrypoint.js',
+    output: 'out/main.post-step.entrypoint.cjs',
     format: 'cjs',
     banner: true
   },
   {
     input: 'src/cloud-compute.entrypoint.ts', 
-    output: 'out/cloud-compute.entrypoint.js',
+    output: 'out/cloud-compute.entrypoint.cjs',
     format: 'cjs',
     banner: true
   },
   {
     input: 'src/cloud-compute.post-step.entrypoint.ts',
-    output: 'out/cloud-compute.post-step.entrypoint.js',
+    output: 'out/cloud-compute.post-step.entrypoint.cjs',
     format: 'cjs',
     banner: true
   },
   {
     input: 'src/upload-assets.entrypoint.ts',
-    output: 'out/upload-assets.entrypoint.js',
+    output: 'out/upload-assets.entrypoint.cjs',
     format: 'cjs',
     banner: true
   },
   {
     input: 'src/upload-assets.post-step.entrypoint.ts',
-    output: 'out/upload-assets.post-step.entrypoint.js',
+    output: 'out/upload-assets.post-step.entrypoint.cjs',
     format: 'cjs',
     banner: true
   }
@@ -52,7 +52,7 @@ export default entrypoints.map(({ input, output, format, banner }) => ({
   output: {
     file: output,
     format: format,
-    sourcemap: format === 'cjs', // Only CommonJS gets sourcemaps
+    sourcemap: false, // No sourcemaps in final build
     banner: banner ? '#!/usr/bin/env node' : undefined,
     inlineDynamicImports: true // Ensure single file output
   },
@@ -71,12 +71,12 @@ export default entrypoints.map(({ input, output, format, banner }) => ({
     // Compile TypeScript
     typescript({
       tsconfig: 'tsconfig.json',
-      sourceMap: format === 'cjs', // Only CommonJS gets sourcemaps
+      sourceMap: false, // No sourcemaps in final build
       inlineSources: false,
       declaration: false,
       outDir: undefined
     }),
-    // Upload sourcemaps to Sentry (only when SENTRY_AUTH_TOKEN is provided)
+    // Create Sentry release (only when SENTRY_AUTH_TOKEN is provided)
     // Set SENTRY_ORG, SENTRY_PROJECT, and SENTRY_RELEASE environment variables to customize
     process.env.SENTRY_AUTH_TOKEN && sentryRollupPlugin({
       authToken: process.env.SENTRY_AUTH_TOKEN,
@@ -84,15 +84,7 @@ export default entrypoints.map(({ input, output, format, banner }) => ({
       project: process.env.SENTRY_PROJECT || 'report-diffs-action',
       release: {
         name: process.env.SENTRY_RELEASE || 'report-diffs-action@latest',
-        create: true,
-        uploadLegacySourcemaps: {
-          paths: ['out'],
-          rewrite: false
-        }
-      },
-      sourcemaps: {
-        assets: ['out/**/*.map'],
-        filesToDeleteAfterUpload: ['out/**/*.map']
+        create: true
       },
       telemetry: false,
       silent: false
@@ -105,8 +97,8 @@ export default entrypoints.map(({ input, output, format, banner }) => ({
     'child_process', 'net', 'tls', 'http', 'https', 'url', 'dns', 'zlib',
     'perf_hooks', 'worker_threads', 'diagnostics_channel', 'tty', 'module',
     'assert', 'node:util', 'node:child_process', 'node:fs', 'node:os',
-    'source-map-support/register',
     // Native modules and optional dependencies that may not be available
+    'osx-temperature-sensor',
     './getMachineId-darwin',
     './getMachineId-linux',  
     './getMachineId-win32'

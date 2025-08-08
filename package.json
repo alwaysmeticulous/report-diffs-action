@@ -6,9 +6,9 @@
   "private": true,
   "type": "module",
   "main": "dist/main.entrypoint.mjs",
-  "post-step": "out/post-step.entrypoint.js",
-  "cloud-compute": "out/cloud-compute.entrypoint.js",
-  "upload-assets": "out/upload-assets.entrypoint.js",
+  "post-step": "out/main.post-step.entrypoint.cjs",
+  "cloud-compute": "out/cloud-compute.entrypoint.cjs",
+  "upload-assets": "out/upload-assets.entrypoint.cjs",
   "files": [
     "dist",
     "out"
@@ -41,7 +41,6 @@
     "loglevel-plugin-prefix": "^0.8.4",
     "luxon": "^3.4.3",
     "retry": "^0.13.1",
-    "source-map-support": "^0.5.21",
     "yaml": "^2.5.0"
   },
   "devDependencies": {
