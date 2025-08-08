@@ -107,7 +107,6 @@ export default entrypoints.map(({ input, output, format, banner }) => ({
     'assert', 'node:util', 'node:child_process', 'node:fs', 'node:os',
     'source-map-support/register',
     // Native modules and optional dependencies that may not be available
-    'osx-temperature-sensor',
     './getMachineId-darwin',
     './getMachineId-linux',  
     './getMachineId-win32'

@@ -5118,11 +5118,6 @@ optionator@^0.9.3:
     prelude-ls "^1.2.1"
     type-check "^0.4.0"
 
-osx-temperature-sensor@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/osx-temperature-sensor/-/osx-temperature-sensor-1.0.8.tgz#14665adefb85d5a1e752e755eeb7ce9708d67c49"
-  integrity sha512-Gl3b+bn7+oDDnqPa+4v/cg3yg9lnE8ppS7ivL3opBZh4i7h99JNmkm6zWmo0m2a83UUJu+C9D7lGP0OS8IlehA==
-
 p-limit@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/p-limit/-/p-limit-2.3.0.tgz#3dd33c647a214fdfffd835933eb086da0dc21db1"
