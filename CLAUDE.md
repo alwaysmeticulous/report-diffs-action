@@ -13,7 +13,7 @@ This is the Meticulous Report Diffs Action - a GitHub Action that performs visua
 yarn install
 
 # Development
-yarn dev                    # Run parcel in watch mode
+yarn dev                    # Run rollup in watch mode
 yarn build                  # Build all targets
 
 # Code quality
@@ -26,7 +26,7 @@ yarn format:check          # Check formatting
 yarn test                   # Run Jest tests
 
 # Deployment
-yarn sentry:sourcemaps      # Upload sourcemaps to Sentry (requires SENTRY_AUTH_TOKEN)
+# Sourcemaps are automatically uploaded to Sentry during build when SENTRY_AUTH_TOKEN is set
 ```
 
 ## Architecture
@@ -46,11 +46,11 @@ The project contains three separate GitHub Actions:
 
 ### Build Configuration
 
-- Uses Parcel bundler with different targets:
+- Uses Rollup bundler with different targets:
   - Main action: ESModule format without sourcemaps (due to GitHub Actions limitations)
   - Other actions: CommonJS with sourcemaps for better debugging
 - TypeScript with strict configuration
-- Sentry integration for error tracking
+- Sentry integration for error tracking via Rollup plugin
 
 ### Key Directories
 

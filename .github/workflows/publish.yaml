@@ -54,6 +54,10 @@ jobs:
       - name: Build actions
         id: build
         run: yarn build
+        env:
+          SENTRY_ORG: meticulous
+          SENTRY_PROJECT: sdk
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Check JS Transpile
         id: diff
@@ -62,15 +66,11 @@ jobs:
             echo "Detected uncommitted changes after build. See status below:"
             git diff --ignore-space-at-eol --text out/
             echo ""
-            echo "Run 'yarn build' locally and commit the changes. If this doesn't work then delete your \`.parcel-cache\` directory before running 'yarn build'."
+            echo "Run 'yarn build' locally and commit the changes."
             echo ""
             exit 1
           fi
 
-      - name: Upload sourcemaps to Sentry
-        run: yarn sentry:sourcemaps
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
   publish:
     name: Publish

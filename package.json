@@ -4,67 +4,25 @@
   "description": "Run Meticulous tests",
   "license": "Unliscensed",
   "private": true,
+  "type": "module",
   "main": "dist/main.entrypoint.mjs",
   "post-step": "out/post-step.entrypoint.js",
   "cloud-compute": "out/cloud-compute.entrypoint.js",
   "upload-assets": "out/upload-assets.entrypoint.js",
-  "targets": {
-    "main": {
-      "source": "src/main.entrypoint.ts",
-      "distDir": "dist",
-      "outputFormat": "esmodule"
-    },
-    "main-post": {
-      "source": "src/main.post-step.entrypoint.ts",
-      "includeNodeModules": true,
-      "distDir": "out",
-      "sourceMap": true,
-      "outputFormat": "commonjs"
-    },
-    "cloud-compute": {
-      "source": "src/cloud-compute.entrypoint.ts",
-      "includeNodeModules": true,
-      "distDir": "out",
-      "sourceMap": true,
-      "outputFormat": "commonjs"
-    },
-    "cloud-compute-post": {
-      "source": "src/cloud-compute.post-step.entrypoint.ts",
-      "includeNodeModules": true,
-      "distDir": "out",
-      "sourceMap": true,
-      "outputFormat": "commonjs"
-    },
-    "upload-assets": {
-      "source": "src/upload-assets.entrypoint.ts",
-      "includeNodeModules": true,
-      "distDir": "out",
-      "sourceMap": true,
-      "outputFormat": "commonjs"
-    },
-    "upload-assets-post": {
-      "source": "src/upload-assets.post-step.entrypoint.ts",
-      "includeNodeModules": true,
-      "distDir": "out",
-      "sourceMap": true,
-      "outputFormat": "commonjs"
-    }
-  },
   "files": [
     "dist",
     "out"
   ],
   "scripts": {
-    "clean": "rimraf dist tsconfig.tsbuildinfo .parcel-cache",
-    "dev": "parcel watch",
-    "build": "parcel build",
+    "clean": "rimraf dist out tsconfig.tsbuildinfo",
+    "dev": "rollup -c --watch",
+    "build": "node --max-old-space-size=8192 node_modules/.bin/rollup -c",
     "format": "prettier --write src",
     "format:check": "prettier --check src",
     "lint": "eslint src --ext=ts,tsx,js --cache",
     "lint:commit": "eslint --cache $(git diff --relative --name-only --diff-filter=ACMRTUXB master | grep  -E \"(.js$|.ts$|.tsx$)\")",
     "lint:fix": "eslint src --ext=ts,tsx,js --cache --fix",
-    "test": "jest",
-    "sentry:sourcemaps": "./scripts/upload-sentry-sourcemaps.sh"
+    "test": "jest"
   },
   "dependencies": {
     "//": "Upgrading `replay-orchestrator-launcher`? Consider bumping the environment version `LOGICAL_ENVIRONMENT_VERSION` in `constants.ts` if the new version includes visible changes.",
@@ -75,7 +33,6 @@
     "@alwaysmeticulous/remote-replay-launcher": "^2.228.0",
     "@alwaysmeticulous/replay-orchestrator-launcher": "^2.228.0",
     "@alwaysmeticulous/sentry": "^2.227.1",
-    "@sentry/cli": "^2.50.2",
     "@sentry/node": "^9.1.0",
     "axios": "^1.2.6",
     "joi": "^17.13.3",
@@ -90,8 +47,11 @@
   "devDependencies": {
     "@alwaysmeticulous/api": "^2.227.1",
     "@alwaysmeticulous/sdk-bundles-api": "^2.227.1",
-    "@parcel/packager-ts": "^2.12.0",
-    "@parcel/transformer-typescript-types": "^2.12.0",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@sentry/rollup-plugin": "^4.0.2",
     "@types/jest": "^27.0.3",
     "@types/lodash.debounce": "^4.0.9",
     "@types/luxon": "^3.3.2",
@@ -103,9 +63,11 @@
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
     "jest": "^27.4.5",
-    "parcel": "^2.12.0",
+    "osx-temperature-sensor": "^1.0.8",
     "prettier": "^2.8.7",
     "rimraf": "^5.0.7",
+    "rollup": "^4.46.2",
+    "rollup-plugin-node-externals": "^8.0.1",
     "ts-jest": "^27.1.1",
     "ts-node": "^10.9.2",
     "typescript": "^4.9.5"
@@ -113,7 +75,8 @@
   "resolutions": {
     "//": "newer versions have an import for the NodeJS path module that breaks parcel",
     "json5": "^2.2.2",
-    "@opentelemetry/instrumentation": "^0.46.0"
+    "@opentelemetry/instrumentation": "^0.46.0",
+    "proxy-agent": "^6.5.0"
   },
   "engines": {
     "node": ">= 20"
