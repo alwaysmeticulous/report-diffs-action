@@ -4,6 +4,33 @@ import typescript from "@rollup/plugin-typescript";
 import json from "@rollup/plugin-json";
 import { sentryRollupPlugin } from "@sentry/rollup-plugin";
 
+// Plugin to handle optional dependencies gracefully
+function optionalDependencies(optionalDeps = []) {
+  return {
+    name: "optional-dependencies",
+    resolveId(id) {
+      if (optionalDeps.includes(id)) {
+        return { id, external: false, moduleSideEffects: false };
+      }
+      return null;
+    },
+    load(id) {
+      if (optionalDeps.includes(id)) {
+        return `
+let optionalModule = null;
+try {
+  optionalModule = require('${id}');
+} catch (e) {
+  // Optional dependency '${id}' is not available
+}
+export default optionalModule;
+`;
+      }
+      return null;
+    },
+  };
+}
+
 // Define the entrypoints that should be built with Rollup
 const entrypoints = [
   // Main entrypoint - ESModule format for GitHub Actions
@@ -11,38 +38,32 @@ const entrypoints = [
     input: "src/main.entrypoint.ts",
     output: "dist/main.entrypoint.mjs",
     format: "es",
-    banner: false, // No shebang for ESModule
   },
   // All other entrypoints - CommonJS format
   {
     input: "src/main.post-step.entrypoint.ts",
     output: "out/main.post-step.entrypoint.cjs",
     format: "cjs",
-    banner: true,
   },
   {
     input: "src/cloud-compute.entrypoint.ts",
     output: "out/cloud-compute.entrypoint.cjs",
     format: "cjs",
-    banner: true,
   },
   {
     input: "src/cloud-compute.post-step.entrypoint.ts",
     output: "out/cloud-compute.post-step.entrypoint.cjs",
     format: "cjs",
-    banner: true,
   },
   {
     input: "src/upload-assets.entrypoint.ts",
     output: "out/upload-assets.entrypoint.cjs",
     format: "cjs",
-    banner: true,
   },
   {
     input: "src/upload-assets.post-step.entrypoint.ts",
     output: "out/upload-assets.post-step.entrypoint.cjs",
     format: "cjs",
-    banner: true,
   },
 ];
 
@@ -53,10 +74,11 @@ export default entrypoints.map(({ input, output, format, banner }) => ({
     file: output,
     format: format,
     sourcemap: false, // No sourcemaps in final build
-    banner: banner ? "#!/usr/bin/env node" : undefined,
     inlineDynamicImports: true, // Ensure single file output
   },
   plugins: [
+    // Handle optional dependencies gracefully
+    optionalDependencies(["osx-temperature-sensor"]),
     // Resolve node modules
     nodeResolve({
       preferBuiltins: true,
@@ -76,93 +98,23 @@ export default entrypoints.map(({ input, output, format, banner }) => ({
       declaration: false,
       outDir: undefined,
     }),
-    // Create Sentry release (only when SENTRY_AUTH_TOKEN is provided)
-    // Set SENTRY_ORG, SENTRY_PROJECT, and SENTRY_RELEASE environment variables to customize
-    process.env.SENTRY_AUTH_TOKEN &&
-      sentryRollupPlugin({
-        authToken: process.env.SENTRY_AUTH_TOKEN,
-        org: process.env.SENTRY_ORG || "alwaysmeticulous",
-        project: process.env.SENTRY_PROJECT || "report-diffs-action",
-        release: {
-          name: process.env.SENTRY_RELEASE || "report-diffs-action@latest",
-          create: true,
-        },
-        telemetry: false,
-        silent: false,
-      }),
+    // // Create Sentry release (only when SENTRY_AUTH_TOKEN is provided)
+    // // Set SENTRY_ORG, SENTRY_PROJECT, and SENTRY_RELEASE environment variables to customize
+    // process.env.SENTRY_AUTH_TOKEN &&
+    //   sentryRollupPlugin({
+    //     authToken: process.env.SENTRY_AUTH_TOKEN,
+    //     org: process.env.SENTRY_ORG || "alwaysmeticulous",
+    //     project: process.env.SENTRY_PROJECT || "report-diffs-action",
+    //     release: {
+    //       name: process.env.SENTRY_RELEASE || "report-diffs-action@latest",
+    //       create: true,
+    //     },
+    //     telemetry: false,
+    //     silent: false,
+    //   }),
   ].filter(Boolean),
-  // Externalize only Node.js built-ins and problematic native modules
+  // Externalize only platform-specific machine ID modules
   external: [
-    // Node.js built-ins
-    "fs",
-    "path",
-    "os",
-    "crypto",
-    "events",
-    "stream",
-    "util",
-    "buffer",
-    "child_process",
-    "net",
-    "tls",
-    "http",
-    "https",
-    "url",
-    "dns",
-    "zlib",
-    "perf_hooks",
-    "worker_threads",
-    "diagnostics_channel",
-    "tty",
-    "module",
-    "assert",
-    "punycode",
-    "querystring",
-    "readline",
-    "repl",
-    "string_decoder",
-    "timers",
-    "v8",
-    "vm",
-    "cluster",
-    "domain",
-    "constants",
-    // Node.js prefixed built-ins
-    "node:fs",
-    "node:path",
-    "node:os",
-    "node:crypto",
-    "node:events",
-    "node:stream",
-    "node:util",
-    "node:buffer",
-    "node:child_process",
-    "node:net",
-    "node:tls",
-    "node:http",
-    "node:https",
-    "node:url",
-    "node:dns",
-    "node:zlib",
-    "node:perf_hooks",
-    "node:worker_threads",
-    "node:diagnostics_channel",
-    "node:tty",
-    "node:module",
-    "node:assert",
-    "node:punycode",
-    "node:querystring",
-    "node:readline",
-    "node:repl",
-    "node:string_decoder",
-    "node:timers",
-    "node:v8",
-    "node:vm",
-    // Optional native modules that may not be available on all platforms
-    "osx-temperature-sensor",
-    "bufferutil",
-    "utf-8-validate",
-    // Platform-specific machine ID modules
     "./getMachineId-darwin",
     "./getMachineId-linux",
     "./getMachineId-win32",

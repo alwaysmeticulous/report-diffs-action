@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 'use strict';
 
 var require$$1$1 = require('path');
