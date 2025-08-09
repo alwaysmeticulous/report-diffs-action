@@ -1,3 +1,3 @@
 #! /bin/bash
 
-node /app/out/main.post-step.entrypoint.js
+node /app/out/main.post-step.entrypoint.cjs
