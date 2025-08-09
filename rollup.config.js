@@ -3,7 +3,6 @@ import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
 import json from "@rollup/plugin-json";
 import { sentryRollupPlugin } from "@sentry/rollup-plugin";
-import nodeExternals from "rollup-plugin-node-externals";
 
 // Define the entrypoints that should be built with Rollup
 const entrypoints = [
@@ -58,8 +57,6 @@ export default entrypoints.map(({ input, output, format, banner }) => ({
     inlineDynamicImports: true, // Ensure single file output
   },
   plugins: [
-    // Externalize all dependencies that are not explicitly bundled
-    nodeExternals(),
     // Resolve node modules
     nodeResolve({
       preferBuiltins: true,
@@ -94,4 +91,80 @@ export default entrypoints.map(({ input, output, format, banner }) => ({
         silent: false,
       }),
   ].filter(Boolean),
+  // Externalize only Node.js built-ins and problematic native modules
+  external: [
+    // Node.js built-ins
+    "fs",
+    "path",
+    "os",
+    "crypto",
+    "events",
+    "stream",
+    "util",
+    "buffer",
+    "child_process",
+    "net",
+    "tls",
+    "http",
+    "https",
+    "url",
+    "dns",
+    "zlib",
+    "perf_hooks",
+    "worker_threads",
+    "diagnostics_channel",
+    "tty",
+    "module",
+    "assert",
+    "punycode",
+    "querystring",
+    "readline",
+    "repl",
+    "string_decoder",
+    "timers",
+    "v8",
+    "vm",
+    "cluster",
+    "domain",
+    "constants",
+    // Node.js prefixed built-ins
+    "node:fs",
+    "node:path",
+    "node:os",
+    "node:crypto",
+    "node:events",
+    "node:stream",
+    "node:util",
+    "node:buffer",
+    "node:child_process",
+    "node:net",
+    "node:tls",
+    "node:http",
+    "node:https",
+    "node:url",
+    "node:dns",
+    "node:zlib",
+    "node:perf_hooks",
+    "node:worker_threads",
+    "node:diagnostics_channel",
+    "node:tty",
+    "node:module",
+    "node:assert",
+    "node:punycode",
+    "node:querystring",
+    "node:readline",
+    "node:repl",
+    "node:string_decoder",
+    "node:timers",
+    "node:v8",
+    "node:vm",
+    // Optional native modules that may not be available on all platforms
+    "osx-temperature-sensor",
+    "bufferutil",
+    "utf-8-validate",
+    // Platform-specific machine ID modules
+    "./getMachineId-darwin",
+    "./getMachineId-linux",
+    "./getMachineId-win32",
+  ],
 }));

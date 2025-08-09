@@ -15,7 +15,7 @@ RUN apt-get update \
   --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock rollup.config.js ./
 
 ENV PUPPETEER_CACHE_DIR /app/.cache/puppeteer
 
