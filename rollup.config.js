@@ -74,7 +74,7 @@ export default entrypoints.map(({ input, output, format }) => ({
   plugins: [
     nodeExternals({
       builtins: true,
-      deps: true,
+      deps: false,
       devDeps: false,
       peerDeps: true,
       optDeps: true,
