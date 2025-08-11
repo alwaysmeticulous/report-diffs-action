@@ -89,6 +89,7 @@ export default entrypoints.map(({ input, output, format, banner }) => ({
     // Convert CommonJS modules to ES6
     commonjs({
       ignoreTryCatch: false,
+      ignoreDynamicRequires: true,
     }),
     // Handle JSON imports
     json(),
