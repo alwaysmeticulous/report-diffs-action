@@ -1,41 +1,41 @@
 'use strict';
 
-const require$$1 = require('node:path');
-const require$$2 = require('node:fs');
-const core = require('@actions/core');
-const Sentry = require('@sentry/node');
-const sentry = require('@alwaysmeticulous/sentry');
-const common = require('@alwaysmeticulous/common');
-const log = require('loglevel');
-const prefix = require('loglevel-plugin-prefix');
-const node_child_process = require('node:child_process');
-const github = require('@actions/github');
-const Joi = require('joi');
-const YAML = require('yaml');
-const client = require('@alwaysmeticulous/client');
-const remoteReplayLauncher = require('@alwaysmeticulous/remote-replay-launcher');
-const retry = require('retry');
-const luxon = require('luxon');
+var require$$1 = require('node:path');
+var require$$2 = require('node:fs');
+var core = require('@actions/core');
+var Sentry = require('@sentry/node');
+var sentry = require('@alwaysmeticulous/sentry');
+var common = require('@alwaysmeticulous/common');
+var log = require('loglevel');
+var prefix = require('loglevel-plugin-prefix');
+var node_child_process = require('node:child_process');
+var github = require('@actions/github');
+var Joi = require('joi');
+var YAML = require('yaml');
+var client = require('@alwaysmeticulous/client');
+var remoteReplayLauncher = require('@alwaysmeticulous/remote-replay-launcher');
+var retry = require('retry');
+var luxon = require('luxon');
 
 function _interopNamespaceDefault(e) {
-  const n = Object.create(null);
+  var n = Object.create(null);
   if (e) {
-    for (const k in e) {
+    Object.keys(e).forEach(function (k) {
       if (k !== 'default') {
-        const d = Object.getOwnPropertyDescriptor(e, k);
+        var d = Object.getOwnPropertyDescriptor(e, k);
         Object.defineProperty(n, k, d.get ? d : {
           enumerable: true,
           get: function () { return e[k]; }
         });
       }
-    }
+    });
   }
   n.default = e;
   return Object.freeze(n);
 }
 
-const Sentry__namespace = /*#__PURE__*/_interopNamespaceDefault(Sentry);
-const retry__namespace = /*#__PURE__*/_interopNamespaceDefault(retry);
+var Sentry__namespace = /*#__PURE__*/_interopNamespaceDefault(Sentry);
+var retry__namespace = /*#__PURE__*/_interopNamespaceDefault(retry);
 
 var register = {};
 

@@ -1,37 +1,37 @@
 'use strict';
 
-const require$$1 = require('node:path');
-const require$$2 = require('node:fs');
-const core = require('@actions/core');
-const Sentry = require('@sentry/node');
-const github = require('@actions/github');
-const client = require('@alwaysmeticulous/client');
-const remoteReplayLauncher = require('@alwaysmeticulous/remote-replay-launcher');
-const sentry = require('@alwaysmeticulous/sentry');
-const luxon = require('luxon');
-const common = require('@alwaysmeticulous/common');
-const log = require('loglevel');
+var require$$1 = require('node:path');
+var require$$2 = require('node:fs');
+var core = require('@actions/core');
+var Sentry = require('@sentry/node');
+var github = require('@actions/github');
+var client = require('@alwaysmeticulous/client');
+var remoteReplayLauncher = require('@alwaysmeticulous/remote-replay-launcher');
+var sentry = require('@alwaysmeticulous/sentry');
+var luxon = require('luxon');
+var common = require('@alwaysmeticulous/common');
+var log = require('loglevel');
 require('loglevel-plugin-prefix');
-const node_child_process = require('node:child_process');
+var node_child_process = require('node:child_process');
 
 function _interopNamespaceDefault(e) {
-  const n = Object.create(null);
+  var n = Object.create(null);
   if (e) {
-    for (const k in e) {
+    Object.keys(e).forEach(function (k) {
       if (k !== 'default') {
-        const d = Object.getOwnPropertyDescriptor(e, k);
+        var d = Object.getOwnPropertyDescriptor(e, k);
         Object.defineProperty(n, k, d.get ? d : {
           enumerable: true,
           get: function () { return e[k]; }
         });
       }
-    }
+    });
   }
   n.default = e;
   return Object.freeze(n);
 }
 
-const Sentry__namespace = /*#__PURE__*/_interopNamespaceDefault(Sentry);
+var Sentry__namespace = /*#__PURE__*/_interopNamespaceDefault(Sentry);
 
 var register = {};
 

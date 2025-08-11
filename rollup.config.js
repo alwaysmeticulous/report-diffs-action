@@ -70,9 +70,6 @@ export default entrypoints.map(({ input, output, format }) => ({
     format: format,
     sourcemap: false,
     inlineDynamicImports: true,
-    generatedCode: {
-      constBindings: true,
-    },
   },
   plugins: [
     nodeExternals({
@@ -94,7 +91,6 @@ export default entrypoints.map(({ input, output, format }) => ({
     commonjs({
       ignoreTryCatch: false,
       ignoreDynamicRequires: true,
-      strictRequires: true,
     }),
     json(),
     typescript({
