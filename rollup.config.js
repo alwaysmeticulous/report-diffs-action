@@ -1,7 +1,7 @@
-import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript from "@rollup/plugin-typescript";
 import json from "@rollup/plugin-json";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import typescript from "@rollup/plugin-typescript";
 import { sentryRollupPlugin } from "@sentry/rollup-plugin";
 
 // Plugin to handle optional dependencies gracefully
@@ -78,7 +78,11 @@ export default entrypoints.map(({ input, output, format, banner }) => ({
   },
   plugins: [
     // Handle optional dependencies gracefully
-    optionalDependencies(["osx-temperature-sensor"]),
+    optionalDependencies([
+      "osx-temperature-sensor",
+      "bufferutil",
+      "utf-8-validate",
+    ]),
     // Resolve node modules
     nodeResolve({
       preferBuiltins: true,
