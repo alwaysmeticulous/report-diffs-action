@@ -72,7 +72,9 @@ export default entrypoints.map(({ input, output, format }) => ({
     inlineDynamicImports: true,
   },
   plugins: [
-    nodeExternals(),
+    nodeExternals({
+      deps: false,
+    }),
     optionalDependencies([
       "osx-temperature-sensor",
       "bufferutil",
