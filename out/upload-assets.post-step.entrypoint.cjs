@@ -6558,23 +6558,16 @@ function requireSupportsColor () {
  *
  * ATTENTION: This constant must never cross package boundaries (i.e. be exported) to guarantee that it can be used for tree shaking.
  */
-const DEBUG_BUILD$1 = (typeof __SENTRY_DEBUG__ === 'undefined' || __SENTRY_DEBUG__);
+const DEBUG_BUILD = (typeof __SENTRY_DEBUG__ === 'undefined' || __SENTRY_DEBUG__);
 
 /** Internal global with common properties and Sentry extensions  */
 
 /** Get's the global object for the current JavaScript runtime */
 const GLOBAL_OBJ = globalThis ;
 
-/**
- * This serves as a build time flag that will be true by default, but false in non-debug builds or if users replace `__SENTRY_DEBUG__` in their generated code.
- *
- * ATTENTION: This constant must never cross package boundaries (i.e. be exported) to guarantee that it can be used for tree shaking.
- */
-const DEBUG_BUILD = (typeof __SENTRY_DEBUG__ === 'undefined' || __SENTRY_DEBUG__);
-
 // This is a magic string replaced by rollup
 
-const SDK_VERSION = "9.1.0" ;
+const SDK_VERSION = "10.3.0" ;
 
 /**
  * An object that contains globally accessible properties and maintains a scope stack.
@@ -6631,22 +6624,10 @@ function getGlobalSingleton(
 /** Prefix for logging strings */
 const PREFIX = 'Sentry Logger ';
 
-const CONSOLE_LEVELS = [
-  'debug',
-  'info',
-  'warn',
-  'error',
-  'log',
-  'assert',
-  'trace',
-] ;
-
 /** This may be mutated by the console instrumentation. */
 const originalConsoleMethods
 
  = {};
-
-/** A Sentry Logger instance. */
 
 /**
  * Temporarily disable sentry console instrumentations.
@@ -6666,9 +6647,9 @@ function consoleSandbox(callback) {
 
   // Restore all wrapped console methods
   wrappedLevels.forEach(level => {
-    const originalConsoleMethod = originalConsoleMethods[level] ;
+    const originalConsoleMethod = originalConsoleMethods[level];
     wrappedFuncs[level] = console[level] ;
-    console[level] = originalConsoleMethod;
+    console[level] = originalConsoleMethod ;
   });
 
   try {
@@ -6681,42 +6662,67 @@ function consoleSandbox(callback) {
   }
 }
 
-function makeLogger() {
-  let enabled = false;
-  const logger = {
-    enable: () => {
-      enabled = true;
-    },
-    disable: () => {
-      enabled = false;
-    },
-    isEnabled: () => enabled,
-  };
+function enable() {
+  _getLoggerSettings().enabled = true;
+}
 
-  if (DEBUG_BUILD) {
-    CONSOLE_LEVELS.forEach(name => {
-      logger[name] = (...args) => {
-        if (enabled) {
-          consoleSandbox(() => {
-            GLOBAL_OBJ.console[name](`${PREFIX}[${name}]:`, ...args);
-          });
-        }
-      };
-    });
-  } else {
-    CONSOLE_LEVELS.forEach(name => {
-      logger[name] = () => undefined;
-    });
+function disable() {
+  _getLoggerSettings().enabled = false;
+}
+
+function isEnabled() {
+  return _getLoggerSettings().enabled;
+}
+
+function log$1(...args) {
+  _maybeLog('log', ...args);
+}
+
+function warn(...args) {
+  _maybeLog('warn', ...args);
+}
+
+function error(...args) {
+  _maybeLog('error', ...args);
+}
+
+function _maybeLog(level, ...args) {
+  if (!DEBUG_BUILD) {
+    return;
   }
 
-  return logger ;
+  if (isEnabled()) {
+    consoleSandbox(() => {
+      GLOBAL_OBJ.console[level](`${PREFIX}[${level}]:`, ...args);
+    });
+  }
+}
+
+function _getLoggerSettings() {
+  if (!DEBUG_BUILD) {
+    return { enabled: false };
+  }
+
+  return getGlobalSingleton('loggerSettings', () => ({ enabled: false }));
 }
 
 /**
  * This is a logger singleton which either logs things or no-ops if logging is not enabled.
- * The logger is a singleton on the carrier, to ensure that a consistent logger is used throughout the SDK.
  */
-const logger = getGlobalSingleton('logger', makeLogger);
+const debug$1 = {
+  /** Enable logging. */
+  enable,
+  /** Disable logging. */
+  disable,
+  /** Check if logging is enabled. */
+  isEnabled,
+  /** Log a message. */
+  log: log$1,
+  /** Log a warning. */
+  warn,
+  /** Log an error. */
+  error,
+} ;
 
 // eslint-disable-next-line @typescript-eslint/unbound-method
 const objectToString = Object.prototype.toString;
@@ -6752,6 +6758,20 @@ function isThenable(wat) {
 }
 
 /**
+ * Truncates given string to the maximum characters count
+ *
+ * @param str An object that contains serializable values
+ * @param max Maximum number of characters in truncated string (0 = unlimited)
+ * @returns string Encoded
+ */
+function truncate(str, max = 0) {
+  if (typeof str !== 'string' || max === 0) {
+    return str;
+  }
+  return str.length <= max ? str : `${str.slice(0, max)}...`;
+}
+
+/**
  * Defines a non-enumerable property on the given object.
  *
  * @param obj The object on which to set the property
@@ -6766,9 +6786,50 @@ function addNonEnumerableProperty(obj, name, value) {
       writable: true,
       configurable: true,
     });
-  } catch (o_O) {
-    DEBUG_BUILD && logger.log(`Failed to add non-enumerable property "${name}" to object`, obj);
+  } catch {
+    DEBUG_BUILD && debug$1.log(`Failed to add non-enumerable property "${name}" to object`, obj);
   }
+}
+
+function getCrypto() {
+  const gbl = GLOBAL_OBJ ;
+  return gbl.crypto || gbl.msCrypto;
+}
+
+/**
+ * UUID4 generator
+ * @param crypto Object that provides the crypto API.
+ * @returns string Generated UUID4.
+ */
+function uuid4(crypto = getCrypto()) {
+  let getRandomByte = () => Math.random() * 16;
+  try {
+    if (crypto?.randomUUID) {
+      return crypto.randomUUID().replace(/-/g, '');
+    }
+    if (crypto?.getRandomValues) {
+      getRandomByte = () => {
+        // crypto.getRandomValues might return undefined instead of the typed array
+        // in old Chromium versions (e.g. 23.0.1235.0 (151422))
+        // However, `typedArray` is still filled in-place.
+        // @see https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues#typedarray
+        const typedArray = new Uint8Array(1);
+        crypto.getRandomValues(typedArray);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return typedArray[0];
+      };
+    }
+  } catch {
+    // some runtimes can crash invoking crypto
+    // https://github.com/getsentry/sentry-javascript/issues/8935
+  }
+
+  // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript/2117523#2117523
+  // Concatenating the following numbers as strings results in '10000000100040008000100000000000'
+  return (([1e7] ) + 1e3 + 4e3 + 8e3 + 1e11).replace(/[018]/g, c =>
+    // eslint-disable-next-line no-bitwise
+    ((c ) ^ ((getRandomByte() & 15) >> ((c ) / 4))).toString(16),
+  );
 }
 
 const ONE_SECOND_IN_MS = 1000;
@@ -6793,14 +6854,13 @@ function dateTimestampInSeconds() {
  */
 function createUnixTimestampInSecondsFunc() {
   const { performance } = GLOBAL_OBJ ;
-  if (!performance?.now) {
+  // Some browser and environments don't have a performance or timeOrigin, so we fallback to
+  // using Date.now() to compute the starting time.
+  if (!performance?.now || !performance.timeOrigin) {
     return dateTimestampInSeconds;
   }
 
-  // Some browser and environments don't have a timeOrigin, so we fallback to
-  // using Date.now() to compute the starting time.
-  const approxStartingTimeOrigin = Date.now() - performance.now();
-  const timeOrigin = performance.timeOrigin == undefined ? approxStartingTimeOrigin : performance.timeOrigin;
+  const timeOrigin = performance.timeOrigin;
 
   // performance.now() is a monotonic clock, which means it starts at 0 when the process begins. To get the current
   // wall clock time (actual UNIX timestamp), we need to add the starting time origin and the current time elapsed.
@@ -6816,6 +6876,8 @@ function createUnixTimestampInSecondsFunc() {
   };
 }
 
+let _cachedTimestampInSeconds;
+
 /**
  * Returns a timestamp in seconds since the UNIX epoch using either the Performance or Date APIs, depending on the
  * availability of the Performance API.
@@ -6825,45 +6887,10 @@ function createUnixTimestampInSecondsFunc() {
  * skew can grow to arbitrary amounts like days, weeks or months.
  * See https://github.com/getsentry/sentry-javascript/issues/2590.
  */
-const timestampInSeconds = createUnixTimestampInSecondsFunc();
-
-/**
- * UUID4 generator
- *
- * @returns string Generated UUID4.
- */
-function uuid4() {
-  const gbl = GLOBAL_OBJ ;
-  const crypto = gbl.crypto || gbl.msCrypto;
-
-  let getRandomByte = () => Math.random() * 16;
-  try {
-    if (crypto?.randomUUID) {
-      return crypto.randomUUID().replace(/-/g, '');
-    }
-    if (crypto?.getRandomValues) {
-      getRandomByte = () => {
-        // crypto.getRandomValues might return undefined instead of the typed array
-        // in old Chromium versions (e.g. 23.0.1235.0 (151422))
-        // However, `typedArray` is still filled in-place.
-        // @see https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues#typedarray
-        const typedArray = new Uint8Array(1);
-        crypto.getRandomValues(typedArray);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return typedArray[0];
-      };
-    }
-  } catch (_) {
-    // some runtimes can crash invoking crypto
-    // https://github.com/getsentry/sentry-javascript/issues/8935
-  }
-
-  // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript/2117523#2117523
-  // Concatenating the following numbers as strings results in '10000000100040008000100000000000'
-  return (([1e7] ) + 1e3 + 4e3 + 8e3 + 1e11).replace(/[018]/g, c =>
-    // eslint-disable-next-line no-bitwise
-    ((c ) ^ ((getRandomByte() & 15) >> ((c ) / 4))).toString(16),
-  );
+function timestampInSeconds() {
+  // We store this in a closure so that we don't have to create a new function every time this is called.
+  const func = _cachedTimestampInSeconds ?? (_cachedTimestampInSeconds = createUnixTimestampInSecondsFunc());
+  return func();
 }
 
 /**
@@ -6940,13 +6967,6 @@ function updateSession(session, context = {}) {
 }
 
 /**
- * Generate a random, valid trace ID.
- */
-function generateTraceId() {
-  return uuid4();
-}
-
-/**
  * Shallow merge two objects.
  * Does not mutate the passed in objects.
  * Undefined/empty values in the merge object will overwrite existing values.
@@ -6976,6 +6996,13 @@ function merge$1(initialObj, mergeObj, levels = 2) {
   }
 
   return output;
+}
+
+/**
+ * Generate a random, valid trace ID.
+ */
+function generateTraceId() {
+  return uuid4();
 }
 
 const SCOPE_SPAN_FIELD = '_sentrySpan';
@@ -7387,6 +7414,8 @@ class Scope {
     const mergedBreadcrumb = {
       timestamp: dateTimestampInSeconds(),
       ...breadcrumb,
+      // Breadcrumb messages can theoretically be infinitely large and they're held in memory so we truncate them not to leak (too much) memory
+      message: breadcrumb.message ? truncate(breadcrumb.message, 2048) : breadcrumb.message,
     };
 
     this._breadcrumbs.push(mergedBreadcrumb);
@@ -7485,7 +7514,7 @@ class Scope {
     const eventId = hint?.event_id || uuid4();
 
     if (!this._client) {
-      logger.warn('No client configured on scope - will not capture exception!');
+      DEBUG_BUILD && debug$1.warn('No client configured on scope - will not capture exception!');
       return eventId;
     }
 
@@ -7514,7 +7543,7 @@ class Scope {
     const eventId = hint?.event_id || uuid4();
 
     if (!this._client) {
-      logger.warn('No client configured on scope - will not capture message!');
+      DEBUG_BUILD && debug$1.warn('No client configured on scope - will not capture message!');
       return eventId;
     }
 
@@ -7544,7 +7573,7 @@ class Scope {
     const eventId = hint?.event_id || uuid4();
 
     if (!this._client) {
-      logger.warn('No client configured on scope - will not capture event!');
+      DEBUG_BUILD && debug$1.warn('No client configured on scope - will not capture event!');
       return eventId;
     }
 
@@ -7799,7 +7828,7 @@ async function flush(timeout) {
   if (client) {
     return client.flush(timeout);
   }
-  DEBUG_BUILD$1 && logger.warn('Cannot flush events. No client defined.');
+  DEBUG_BUILD && debug$1.warn('Cannot flush events. No client defined.');
   return Promise.resolve(false);
 }
 
