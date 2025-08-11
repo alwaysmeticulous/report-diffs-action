@@ -1,4 +1,3 @@
-import "source-map-support/register";
 import { warning } from "@actions/core";
 import * as Sentry from "@sentry/node";
 import { runUploadAssetsPostStep } from "./actions/upload-assets/post-step";

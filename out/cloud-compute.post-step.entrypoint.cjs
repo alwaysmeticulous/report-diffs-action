@@ -8,7 +8,7 @@ var common = require('@alwaysmeticulous/common');
 var log = require('loglevel');
 require('loglevel-plugin-prefix');
 var github = require('@actions/github');
-var child_process = require('child_process');
+var node_child_process = require('node:child_process');
 var Joi = require('joi');
 var YAML = require('yaml');
 
@@ -131,7 +131,7 @@ const getCommentIdentifier = (testSuiteOrProjectId) => {
  * Get the actual commit SHA that we have the code for.
  */
 const getActualCommitShaFromRepo = () => {
-    return child_process.execSync("git rev-list --max-count=1 HEAD").toString().trim();
+    return node_child_process.execSync("git rev-list --max-count=1 HEAD").toString().trim();
 };
 
 /*

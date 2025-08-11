@@ -1,4 +1,3 @@
-import "source-map-support/register";
 import { setFailed } from "@actions/core";
 import * as Sentry from "@sentry/node";
 import { runMeticulousUploadAssetsAction } from "./actions/upload-assets/upload-assets";

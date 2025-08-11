@@ -11,7 +11,7 @@ var luxon = require('luxon');
 var common = require('@alwaysmeticulous/common');
 var log = require('loglevel');
 require('loglevel-plugin-prefix');
-var child_process = require('child_process');
+var node_child_process = require('node:child_process');
 
 function _interopNamespaceDefault(e) {
   var n = Object.create(null);
@@ -583,9 +583,9 @@ const tryGetMergeBaseOfHeadCommit = (pullRequestHeadSha, pullRequestBaseSha, bas
         // Only a single commit is fetched by the checkout action by default
         // (https://github.com/actions/checkout#checkout-v3)
         // We therefore run fetch with the `--unshallow` param to fetch the whole branch/commit ancestor chains, which merge-base needs
-        child_process.execSync(`git fetch origin ${pullRequestHeadSha} --unshallow`);
-        child_process.execSync(`git fetch origin ${baseRef}`);
-        const mergeBase = child_process.execSync(`git merge-base ${pullRequestHeadSha} origin/${baseRef}`)
+        node_child_process.execSync(`git fetch origin ${pullRequestHeadSha} --unshallow`);
+        node_child_process.execSync(`git fetch origin ${baseRef}`);
+        const mergeBase = node_child_process.execSync(`git merge-base ${pullRequestHeadSha} origin/${baseRef}`)
             .toString()
             .trim();
         if (!isValidGitSha(mergeBase)) {
@@ -606,7 +606,7 @@ const tryGetMergeBaseOfHeadCommit = (pullRequestHeadSha, pullRequestBaseSha, bas
  * Get the actual commit SHA that we have the code for.
  */
 const getActualCommitShaFromRepo = () => {
-    return child_process.execSync("git rev-list --max-count=1 HEAD").toString().trim();
+    return node_child_process.execSync("git rev-list --max-count=1 HEAD").toString().trim();
 };
 const tryGetMergeBaseOfTemporaryMergeCommit = (pullRequestHeadSha, pullRequestBaseSha, pullRequestBaseRef, logger) => {
     const mergeCommitSha = process.env.GITHUB_SHA;
@@ -626,7 +626,7 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (pullRequestHeadSha, pullRequestBa
             return tryGetMergeBaseOfHeadCommit(headCommitSha, pullRequestBaseSha, pullRequestBaseRef, logger);
         }
         // The GITHUB_SHA is always a merge commit for PRs
-        const parents = child_process.execSync(`git cat-file -p ${mergeCommitSha}`)
+        const parents = node_child_process.execSync(`git cat-file -p ${mergeCommitSha}`)
             .toString()
             .split("\n")
             .filter((line) => line.startsWith("parent "))
@@ -658,7 +658,7 @@ const markGitDirectoryAsSafe = () => {
     // which gets executed when we run a git command. However we trust github to not do that, so can
     // mark this directory as safe.
     // See https://medium.com/@thecodinganalyst/git-detect-dubious-ownership-in-repository-e7f33037a8f for more details
-    child_process.execSync(`git config --global --add safe.directory "${process.cwd()}"`);
+    node_child_process.execSync(`git config --global --add safe.directory "${process.cwd()}"`);
 };
 const isValidGitSha = (sha) => {
     return /^[a-f0-9]{40}$/.test(sha);
