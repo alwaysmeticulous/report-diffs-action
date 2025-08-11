@@ -1,10 +1,10 @@
+import process from "process";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import { sentryRollupPlugin } from "@sentry/rollup-plugin";
 
-// Plugin to handle optional dependencies gracefully
 function optionalDependencies(optionalDeps = []) {
   return {
     name: "optional-dependencies",
@@ -31,7 +31,6 @@ export default optionalModule;
   };
 }
 
-// Define the entrypoints that should be built with Rollup
 const entrypoints = [
   {
     input: "src/main.entrypoint.ts",
@@ -65,58 +64,53 @@ const entrypoints = [
   },
 ];
 
-// Create Rollup configuration for each entrypoint
-export default entrypoints.map(({ input, output, format, banner }) => ({
+export default entrypoints.map(({ input, output, format }) => ({
   input,
   output: {
     file: output,
     format: format,
-    sourcemap: false, // No sourcemaps in final build
-    inlineDynamicImports: true, // Ensure single file output
+    sourcemap: false,
+    inlineDynamicImports: true,
+    generatedCode: {
+      constBindings: true,
+    },
   },
   plugins: [
-    // Handle optional dependencies gracefully
     optionalDependencies([
       "osx-temperature-sensor",
       "bufferutil",
       "utf-8-validate",
     ]),
-    // Resolve node modules
     nodeResolve({
       preferBuiltins: true,
       exportConditions: ["node"],
     }),
-    // Convert CommonJS modules to ES6
     commonjs({
       ignoreTryCatch: false,
       ignoreDynamicRequires: true,
+      strictRequires: true,
     }),
-    // Handle JSON imports
     json(),
-    // Compile TypeScript
     typescript({
       tsconfig: "tsconfig.json",
-      sourceMap: false, // No sourcemaps in final build
+      sourceMap: false,
       inlineSources: false,
       declaration: false,
       outDir: undefined,
     }),
-    // // Create Sentry release (only when SENTRY_AUTH_TOKEN is provided)
-    // // Set SENTRY_ORG, SENTRY_PROJECT, and SENTRY_RELEASE environment variables to customize
-    // process.env.SENTRY_AUTH_TOKEN &&
-    //   sentryRollupPlugin({
-    //     authToken: process.env.SENTRY_AUTH_TOKEN,
-    //     org: process.env.SENTRY_ORG || "alwaysmeticulous",
-    //     project: process.env.SENTRY_PROJECT || "report-diffs-action",
-    //     release: {
-    //       name: process.env.SENTRY_RELEASE || "report-diffs-action@latest",
-    //       create: true,
-    //     },
-    //     telemetry: false,
-    //     silent: false,
-    //   }),
+    process.env.SENTRY_AUTH_TOKEN &&
+      sentryRollupPlugin({
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        org: process.env.SENTRY_ORG || "alwaysmeticulous",
+        project: process.env.SENTRY_PROJECT || "report-diffs-action",
+        release: {
+          name: process.env.SENTRY_RELEASE || "report-diffs-action@latest",
+          create: true,
+        },
+        telemetry: false,
+        silent: false,
+      }),
   ].filter(Boolean),
-  // Externalize only platform-specific machine ID modules
   external: [
     "./getMachineId-darwin",
     "./getMachineId-linux",
