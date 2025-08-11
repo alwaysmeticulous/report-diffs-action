@@ -33,13 +33,11 @@ export default optionalModule;
 
 // Define the entrypoints that should be built with Rollup
 const entrypoints = [
-  // Main entrypoint - ESModule format for GitHub Actions
   {
     input: "src/main.entrypoint.ts",
-    output: "dist/main.entrypoint.mjs",
-    format: "es",
+    output: "dist/main.entrypoint.cjs",
+    format: "cjs",
   },
-  // All other entrypoints - CommonJS format
   {
     input: "src/main.post-step.entrypoint.ts",
     output: "out/main.post-step.entrypoint.cjs",

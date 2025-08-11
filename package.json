@@ -5,7 +5,7 @@
   "license": "Unliscensed",
   "private": true,
   "type": "module",
-  "main": "dist/main.entrypoint.mjs",
+  "main": "dist/main.entrypoint.cjs",
   "post-step": "out/main.post-step.entrypoint.cjs",
   "cloud-compute": "out/cloud-compute.entrypoint.cjs",
   "upload-assets": "out/upload-assets.entrypoint.cjs",
