@@ -1,6 +1,5 @@
 'use strict';
 
-require('source-map-support/register');
 var core = require('@actions/core');
 var Sentry = require('@sentry/node');
 var github = require('@actions/github');
