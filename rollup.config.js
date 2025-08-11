@@ -1,9 +1,7 @@
-import process from "process";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
-import { sentryRollupPlugin } from "@sentry/rollup-plugin";
 import { nodeExternals } from "rollup-plugin-node-externals";
 
 function optionalDependencies(optionalDeps = []) {
@@ -106,18 +104,6 @@ export default entrypoints.map(({ input, output, format }) => ({
       declaration: false,
       outDir: undefined,
     }),
-    process.env.SENTRY_AUTH_TOKEN &&
-      sentryRollupPlugin({
-        authToken: process.env.SENTRY_AUTH_TOKEN,
-        org: process.env.SENTRY_ORG || "alwaysmeticulous",
-        project: process.env.SENTRY_PROJECT || "report-diffs-action",
-        release: {
-          name: process.env.SENTRY_RELEASE || "report-diffs-action@latest",
-          create: true,
-        },
-        telemetry: false,
-        silent: false,
-      }),
   ].filter(Boolean),
   external: [
     "./getMachineId-darwin",
