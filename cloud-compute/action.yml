@@ -54,8 +54,8 @@ inputs:
 outputs: {}
 runs:
   using: node20
-  main: "../out/cloud-compute.entrypoint.mjs"
-  post: "../out/cloud-compute.post-step.entrypoint.mjs"
+  main: "../out/cloud-compute.entrypoint.cjs"
+  post: "../out/cloud-compute.post-step.entrypoint.cjs"
 branding:
   color: purple
   icon: camera
