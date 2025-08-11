@@ -73,6 +73,8 @@ export default entrypoints.map(({ input, output, format }) => ({
   },
   plugins: [
     nodeExternals({
+      builtins: true,
+      builtinsPrefix: "ignore",
       deps: false,
     }),
     optionalDependencies([
@@ -80,10 +82,6 @@ export default entrypoints.map(({ input, output, format }) => ({
       "bufferutil",
       "utf-8-validate",
     ]),
-    nodeResolve({
-      preferBuiltins: true,
-      exportConditions: ["node"],
-    }),
     commonjs({
       ignoreTryCatch: false,
       ignoreDynamicRequires: true,
