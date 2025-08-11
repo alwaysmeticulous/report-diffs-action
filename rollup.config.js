@@ -1,7 +1,7 @@
-import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript from "@rollup/plugin-typescript";
 import json from "@rollup/plugin-json";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import typescript from "@rollup/plugin-typescript";
 import { sentryRollupPlugin } from "@sentry/rollup-plugin";
 
 // Plugin to handle optional dependencies gracefully
@@ -33,37 +33,35 @@ export default optionalModule;
 
 // Define the entrypoints that should be built with Rollup
 const entrypoints = [
-  // Main entrypoint - ESModule format for GitHub Actions
   {
     input: "src/main.entrypoint.ts",
     output: "dist/main.entrypoint.mjs",
     format: "es",
   },
-  // All other entrypoints - CommonJS format
   {
     input: "src/main.post-step.entrypoint.ts",
-    output: "out/main.post-step.entrypoint.cjs",
-    format: "cjs",
+    output: "out/main.post-step.entrypoint.mjs",
+    format: "es",
   },
   {
     input: "src/cloud-compute.entrypoint.ts",
-    output: "out/cloud-compute.entrypoint.cjs",
-    format: "cjs",
+    output: "out/cloud-compute.entrypoint.mjs",
+    format: "es",
   },
   {
     input: "src/cloud-compute.post-step.entrypoint.ts",
-    output: "out/cloud-compute.post-step.entrypoint.cjs",
-    format: "cjs",
+    output: "out/cloud-compute.post-step.entrypoint.mjs",
+    format: "es",
   },
   {
     input: "src/upload-assets.entrypoint.ts",
-    output: "out/upload-assets.entrypoint.cjs",
-    format: "cjs",
+    output: "out/upload-assets.entrypoint.mjs",
+    format: "es",
   },
   {
     input: "src/upload-assets.post-step.entrypoint.ts",
-    output: "out/upload-assets.post-step.entrypoint.cjs",
-    format: "cjs",
+    output: "out/upload-assets.post-step.entrypoint.mjs",
+    format: "es",
   },
 ];
 

@@ -6,9 +6,9 @@
   "private": true,
   "type": "module",
   "main": "dist/main.entrypoint.mjs",
-  "post-step": "out/main.post-step.entrypoint.cjs",
-  "cloud-compute": "out/cloud-compute.entrypoint.cjs",
-  "upload-assets": "out/upload-assets.entrypoint.cjs",
+  "post-step": "out/main.post-step.entrypoint.mjs",
+  "cloud-compute": "out/cloud-compute.entrypoint.mjs",
+  "upload-assets": "out/upload-assets.entrypoint.mjs",
   "files": [
     "dist",
     "out"
@@ -35,6 +35,7 @@
     "@alwaysmeticulous/sentry": "^2.227.1",
     "@sentry/node": "^9.1.0",
     "axios": "^1.2.6",
+    "bufferutil": "^4.0.9",
     "joi": "^17.13.3",
     "lodash.debounce": "^4.0.8",
     "loglevel": "^1.8.1",
