@@ -4,6 +4,7 @@ import json from "@rollup/plugin-json";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import { sentryRollupPlugin } from "@sentry/rollup-plugin";
+import { nodeExternals } from "rollup-plugin-node-externals";
 
 function optionalDependencies(optionalDeps = []) {
   return {
@@ -76,6 +77,13 @@ export default entrypoints.map(({ input, output, format }) => ({
     },
   },
   plugins: [
+    nodeExternals({
+      builtins: true,
+      deps: true,
+      devDeps: false,
+      peerDeps: true,
+      optDeps: true,
+    }),
     optionalDependencies([
       "osx-temperature-sensor",
       "bufferutil",
