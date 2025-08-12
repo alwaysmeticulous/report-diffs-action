@@ -4,7 +4,7 @@
   "description": "Run Meticulous tests",
   "license": "Unliscensed",
   "private": true,
-  "main": "dist/main.entrypoint.mjs",
+  "main": "dist/main.entrypoint.js",
   "post-step": "out/post-step.entrypoint.js",
   "cloud-compute": "out/cloud-compute.entrypoint.js",
   "upload-assets": "out/upload-assets.entrypoint.js",
@@ -64,11 +64,6 @@
     "ts-jest": "^27.1.1",
     "ts-node": "^10.9.2",
     "typescript": "^4.9.5"
-  },
-  "resolutions": {
-    "//": "newer versions have an import for the NodeJS path module that breaks parcel",
-    "json5": "^2.2.2",
-    "@opentelemetry/instrumentation": "^0.46.0"
   },
   "engines": {
     "node": ">= 20"

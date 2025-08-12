@@ -2,7 +2,7 @@ const baseConfig = {
   bundle: true,
   platform: "node",
   target: "node20",
-  sourcemap: false,
+  sourcemap: true,
   treeShaking: true,
   external: [],
   splitting: false,
@@ -15,6 +15,9 @@ const targets = [
     entryPoints: ["src/main.entrypoint.ts"],
     outfile: "dist/main.entrypoint.mjs",
     format: "esm",
+    banner: {
+      js: 'import { createRequire } from "module"; const require = createRequire(import.meta.url);',
+    },
   },
   {
     ...baseConfig,
