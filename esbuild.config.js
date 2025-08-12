@@ -16,7 +16,7 @@ const targets = [
     outfile: "dist/main.entrypoint.js",
     format: "esm",
     banner: {
-      js: 'import { createRequire } from "module"; import { fileURLToPath } from "url"; import { dirname as pathDirname } from "path"; const require = createRequire(import.meta.url); const __filename = fileURLToPath(import.meta.url); const __dirname = pathDirname(__filename);',
+      js: 'import { createRequire as __esmCreateRequire } from "module"; import { fileURLToPath as __esmFileURLToPath } from "url"; import { dirname as __esmDirname } from "path"; const require = __esmCreateRequire(import.meta.url); const __filename = __esmFileURLToPath(import.meta.url); const __dirname = __esmDirname(__filename);',
     },
   },
   {
