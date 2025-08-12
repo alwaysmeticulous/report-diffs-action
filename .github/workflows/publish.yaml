@@ -63,7 +63,7 @@ jobs:
         id: diff
         run: |
           # Filter out auto-generated rollup variable names like require$$1$e
-          FILTERED_DIFF=$(git diff --ignore-space-at-eol --text out/ | grep -v -E 'require\$\$[0-9]+\$[a-zA-Z0-9]+')
+          FILTERED_DIFF=$(git diff --unified=0 --ignore-space-at-eol --text out/ | grep -v -E '(@@|require\$\$[0-9]+\$[a-zA-Z0-9]+)')
           if [ "$(echo "$FILTERED_DIFF" | wc -l)" -gt "1" ] && [ -n "$(echo "$FILTERED_DIFF" | tr -d '[:space:]')" ]; then
             echo "Detected uncommitted changes after build. See status below:"
             echo "$FILTERED_DIFF"
