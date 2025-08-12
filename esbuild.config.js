@@ -15,6 +15,9 @@ const targets = [
     entryPoints: ["src/main.entrypoint.ts"],
     outfile: "dist/main.entrypoint.js",
     format: "esm",
+    banner: {
+      js: 'import { createRequire } from "module"; const require = createRequire(import.meta.url);',
+    },
   },
   {
     ...baseConfig,
