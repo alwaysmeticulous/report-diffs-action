@@ -15,7 +15,7 @@ RUN apt-get update \
   --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock rollup.config.js ./
 
 ENV PUPPETEER_CACHE_DIR /app/.cache/puppeteer
 
@@ -29,4 +29,4 @@ COPY src src
 
 RUN yarn build
 
-CMD ["/app/dist/main.entrypoint.mjs"]
+CMD ["node", "/app/dist/main.entrypoint.cjs"]

@@ -54,23 +54,23 @@ jobs:
       - name: Build actions
         id: build
         run: yarn build
+        env:
+          SENTRY_ORG: meticulous
+          SENTRY_PROJECT: sdk
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Check JS Transpile
         id: diff
         run: |
-          if [ "$(git diff --ignore-space-at-eol --text out/ | wc -l)" -gt "0" ]; then
+          FILTERED_DIFF=$(git diff --unified=0 --ignore-space-at-eol --text out/ | grep -v -E '(\+\+\+|---|index [0-9a-f]{7}\.\.[0-9a-f]{7})' | grep -v -E '(require\$\$[0-9]+\$[a-zA-Z0-9]+|[a-zA-Z_][a-zA-Z0-9_]*\$[a-zA-Z0-9]+)')
+          if [ "$(echo "$FILTERED_DIFF" | wc -l)" -gt "1" ] && [ -n "$(echo "$FILTERED_DIFF" | tr -d '[:space:]')" ]; then
             echo "Detected uncommitted changes after build. See status below:"
-            git diff --ignore-space-at-eol --text out/
+            echo "$FILTERED_DIFF"
             echo ""
-            echo "Run 'yarn build' locally and commit the changes. If this doesn't work then delete your \`.parcel-cache\` directory before running 'yarn build'."
+            echo "Run 'yarn build' locally and commit the changes."
             echo ""
             exit 1
           fi
-
-      - name: Upload sourcemaps to Sentry
-        run: yarn sentry:sourcemaps
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
   publish:
     name: Publish

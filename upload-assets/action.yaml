@@ -22,8 +22,8 @@ inputs:
 outputs: {}
 runs:
   using: node20
-  main: "../out/upload-assets.entrypoint.js"
-  post: "../out/upload-assets.post-step.entrypoint.js"
+  main: "../out/upload-assets.entrypoint.cjs"
+  post: "../out/upload-assets.post-step.entrypoint.cjs"
 branding:
   color: purple
   icon: camera

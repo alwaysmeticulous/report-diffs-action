@@ -248,3 +248,7 @@ $RECYCLE.BIN/
 
 # Sentry Config File
 .sentryclirc
+
+# Rollup cache
+.rollup.cache
+
