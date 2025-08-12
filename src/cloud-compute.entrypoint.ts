@@ -1,3 +1,4 @@
+import "source-map-support/register";
 import { setFailed } from "@actions/core";
 import * as Sentry from "@sentry/node";
 import { runMeticulousTestsCloudComputeAction } from "./actions/cloud-compute/cloud-compute";

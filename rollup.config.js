@@ -2,7 +2,6 @@ import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
-import { nodeExternals } from "rollup-plugin-node-externals";
 
 function optionalDependencies(optionalDeps = []) {
   return {
@@ -72,12 +71,15 @@ export default entrypoints.map(({ input, output, format }) => ({
     inlineDynamicImports: true,
   },
   plugins: [
-    nodeExternals(),
     optionalDependencies([
       "osx-temperature-sensor",
       "bufferutil",
       "utf-8-validate",
     ]),
+    nodeResolve({
+      preferBuiltins: true,
+      exportConditions: ["node"],
+    }),
     commonjs({
       ignoreTryCatch: false,
       ignoreDynamicRequires: true,

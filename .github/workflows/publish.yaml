@@ -62,15 +62,16 @@ jobs:
       - name: Check JS Transpile
         id: diff
         run: |
-          if [ "$(git diff --ignore-space-at-eol --text out/ | wc -l)" -gt "0" ]; then
+          # Filter out auto-generated rollup variable names like require$$1$e
+          FILTERED_DIFF=$(git diff --ignore-space-at-eol --text out/ | grep -v -E 'require\$\$[0-9]+\$[a-zA-Z0-9]+')
+          if [ "$(echo "$FILTERED_DIFF" | wc -l)" -gt "1" ] && [ -n "$(echo "$FILTERED_DIFF" | tr -d '[:space:]')" ]; then
             echo "Detected uncommitted changes after build. See status below:"
-            git diff --ignore-space-at-eol --text out/
+            echo "$FILTERED_DIFF"
             echo ""
             echo "Run 'yarn build' locally and commit the changes."
             echo ""
             exit 1
           fi
-
 
   publish:
     name: Publish
