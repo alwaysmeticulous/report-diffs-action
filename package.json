@@ -19,35 +19,45 @@
       "includeNodeModules": true,
       "distDir": "out",
       "sourceMap": true,
-      "outputFormat": "commonjs"
+      "outputFormat": "commonjs",
+      "optimize": false,
+      "scopeHoist": false
     },
     "cloud-compute": {
       "source": "src/cloud-compute.entrypoint.ts",
       "includeNodeModules": true,
       "distDir": "out",
       "sourceMap": true,
-      "outputFormat": "commonjs"
+      "outputFormat": "commonjs",
+      "optimize": false,
+      "scopeHoist": false
     },
     "cloud-compute-post": {
       "source": "src/cloud-compute.post-step.entrypoint.ts",
       "includeNodeModules": true,
       "distDir": "out",
       "sourceMap": true,
-      "outputFormat": "commonjs"
+      "outputFormat": "commonjs",
+      "optimize": false,
+      "scopeHoist": false
     },
     "upload-assets": {
       "source": "src/upload-assets.entrypoint.ts",
       "includeNodeModules": true,
       "distDir": "out",
       "sourceMap": true,
-      "outputFormat": "commonjs"
+      "outputFormat": "commonjs",
+      "optimize": false,
+      "scopeHoist": false
     },
     "upload-assets-post": {
       "source": "src/upload-assets.post-step.entrypoint.ts",
       "includeNodeModules": true,
       "distDir": "out",
       "sourceMap": true,
-      "outputFormat": "commonjs"
+      "outputFormat": "commonjs",
+      "optimize": false,
+      "scopeHoist": false
     }
   },
   "files": [
@@ -90,6 +100,7 @@
   "devDependencies": {
     "@alwaysmeticulous/api": "^2.227.1",
     "@alwaysmeticulous/sdk-bundles-api": "^2.227.1",
+    "@parcel/optimizer-terser": "^2.15.4",
     "@parcel/packager-ts": "^2.12.0",
     "@parcel/transformer-typescript-types": "^2.12.0",
     "@types/jest": "^27.0.3",
@@ -103,7 +114,7 @@
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
     "jest": "^27.4.5",
-    "parcel": "^2.12.0",
+    "parcel": "^2.15.4",
     "prettier": "^2.8.7",
     "rimraf": "^5.0.7",
     "ts-jest": "^27.1.1",
