@@ -14,10 +14,7 @@ const targets = [
     ...baseConfig,
     entryPoints: ["src/main.entrypoint.ts"],
     outfile: "dist/main.entrypoint.js",
-    format: "esm",
-    banner: {
-      js: 'import { createRequire as __esmCreateRequire } from "module"; import { fileURLToPath as __esmFileURLToPath } from "url"; import { dirname as __esmDirname } from "path"; const require = __esmCreateRequire(import.meta.url); const __filename = __esmFileURLToPath(import.meta.url); const __dirname = __esmDirname(__filename);',
-    },
+    format: "cjs",
   },
   {
     ...baseConfig,
