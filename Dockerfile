@@ -21,7 +21,7 @@ ENV PUPPETEER_CACHE_DIR /app/.cache/puppeteer
 
 RUN yarn --frozen-lockfile
 
-COPY tsconfig.base.json tsconfig.json ./
+COPY tsconfig.base.json tsconfig.json esbuild.config.js build.js ./
 
 COPY scripts/main-post-step.sh /app
 
@@ -29,4 +29,4 @@ COPY src src
 
 RUN yarn build
 
-CMD ["/app/dist/main.entrypoint.mjs"]
+CMD ["/app/dist/main.entrypoint.js"]

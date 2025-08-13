@@ -39,6 +39,11 @@ inputs:
     description: |
       The host to use for the secure tunnel server. This is an advanced option that is only intended for use by the Meticulous team.
     required: false
+  rewrite-hostname-to-app-url:
+    description: |
+      Whether to rewrite the hostname to the app URL. This setting is not typically needed, but might be useful in some complex scenarios.
+    required: false
+    default: "false"
   proxy-all-urls:
     description: |
       Whether to all proxying to an arbitrary URL through the secure tunnel. Otherwise only the app-url is proxied. This setting is not
