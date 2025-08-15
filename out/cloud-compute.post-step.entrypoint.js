@@ -958,7 +958,7 @@ var require_source_map_consumer = __commonJS({
     SourceMapConsumer.GREATEST_LOWER_BOUND = 1;
     SourceMapConsumer.LEAST_UPPER_BOUND = 2;
     SourceMapConsumer.prototype.eachMapping = function SourceMapConsumer_eachMapping(aCallback, aContext, aOrder) {
-      var context3 = aContext || null;
+      var context4 = aContext || null;
       var order = aOrder || SourceMapConsumer.GENERATED_ORDER;
       var mappings;
       switch (order) {
@@ -983,7 +983,7 @@ var require_source_map_consumer = __commonJS({
           originalColumn: mapping.originalColumn,
           name: mapping.name === null ? null : this._names.at(mapping.name)
         };
-      }, this).forEach(aCallback, context3);
+      }, this).forEach(aCallback, context4);
     };
     SourceMapConsumer.prototype.allGeneratedPositionsFor = function SourceMapConsumer_allGeneratedPositionsFor(aArgs) {
       var line = util.getArg(aArgs, "line");
@@ -15348,7 +15348,7 @@ var require_axios = __commonJS({
         return globalThis;
       return typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : global;
     })();
-    var isContextDefined = (context3) => !isUndefined(context3) && context3 !== _global;
+    var isContextDefined = (context4) => !isUndefined(context4) && context4 !== _global;
     function merge2() {
       const { caseless } = isContextDefined(this) && this || {};
       const result = {};
@@ -16211,7 +16211,7 @@ var require_axios = __commonJS({
       return tokens;
     }
     var isValidHeaderName = (str) => /^[-_a-zA-Z0-9^`|~,!#$%&'*+.]+$/.test(str.trim());
-    function matchHeaderValue(context3, value, header, filter, isHeaderNameFilter) {
+    function matchHeaderValue(context4, value, header, filter, isHeaderNameFilter) {
       if (utils$1.isFunction(filter)) {
         return filter.call(this, value, header);
       }
@@ -16413,9 +16413,9 @@ var require_axios = __commonJS({
     var AxiosHeaders$1 = AxiosHeaders;
     function transformData(fns, response) {
       const config = this || defaults$1;
-      const context3 = response || config;
-      const headers = AxiosHeaders$1.from(context3.headers);
-      let data = context3.data;
+      const context4 = response || config;
+      const headers = AxiosHeaders$1.from(context4.headers);
+      let data = context4.data;
       utils$1.forEach(fns, function transform(fn) {
         data = fn.call(config, data, headers.normalize(), response ? response.status : void 0);
       });
@@ -18365,10 +18365,10 @@ var require_axios = __commonJS({
     });
     var HttpStatusCode$1 = HttpStatusCode;
     function createInstance(defaultConfig) {
-      const context3 = new Axios$1(defaultConfig);
-      const instance = bind(Axios$1.prototype.request, context3);
-      utils$1.extend(instance, Axios$1.prototype, context3, { allOwnKeys: true });
-      utils$1.extend(instance, context3, null, { allOwnKeys: true });
+      const context4 = new Axios$1(defaultConfig);
+      const instance = bind(Axios$1.prototype.request, context4);
+      utils$1.extend(instance, Axios$1.prototype, context4, { allOwnKeys: true });
+      utils$1.extend(instance, context4, null, { allOwnKeys: true });
       instance.create = function create(instanceConfig) {
         return createInstance(mergeConfig(defaultConfig, instanceConfig));
       };
@@ -26475,7 +26475,7 @@ var require_lru_cache = __commonJS({
           return this.isBackgroundFetch(v) ? v.__staleWhileFetching : v;
         }
       }
-      backgroundFetch(k, index, options, context3) {
+      backgroundFetch(k, index, options, context4) {
         const v = index === void 0 ? void 0 : this.valList[index];
         if (this.isBackgroundFetch(v)) {
           return v;
@@ -26490,7 +26490,7 @@ var require_lru_cache = __commonJS({
         const fetchOpts = {
           signal: ac.signal,
           options,
-          context: context3
+          context: context4
         };
         const cb = (v2, updateCache = false) => {
           const { aborted } = ac.signal;
@@ -33857,8 +33857,8 @@ var require_graceful_fs = __commonJS({
     }
     function noop() {
     }
-    function publishQueue(context3, queue2) {
-      Object.defineProperty(context3, gracefulQueue, {
+    function publishQueue(context4, queue2) {
+      Object.defineProperty(context4, gracefulQueue, {
         get: function() {
           return queue2;
         }
@@ -36217,8 +36217,8 @@ var require_graceful_fs2 = __commonJS({
     }
     function noop() {
     }
-    function publishQueue(context3, queue2) {
-      Object.defineProperty(context3, gracefulQueue, {
+    function publishQueue(context4, queue2) {
+      Object.defineProperty(context4, gracefulQueue, {
         get: function() {
           return queue2;
         }
@@ -48767,17 +48767,17 @@ function __esDecorate(ctor, descriptorIn, decorators, contextIn, initializers, e
   var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
   var _, done = false;
   for (var i = decorators.length - 1; i >= 0; i--) {
-    var context3 = {};
+    var context4 = {};
     for (var p in contextIn)
-      context3[p] = p === "access" ? {} : contextIn[p];
+      context4[p] = p === "access" ? {} : contextIn[p];
     for (var p in contextIn.access)
-      context3.access[p] = contextIn.access[p];
-    context3.addInitializer = function(f) {
+      context4.access[p] = contextIn.access[p];
+    context4.addInitializer = function(f) {
       if (done)
         throw new TypeError("Cannot add initializers after decoration has completed");
       extraInitializers.push(accept(f || null));
     };
-    var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context3);
+    var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context4);
     if (kind === "accessor") {
       if (result === void 0)
         continue;
@@ -49827,15 +49827,15 @@ var require_types = __commonJS({
         }
         return object && object[fieldName];
       }
-      function eachField(object, callback, context3) {
+      function eachField(object, callback, context4) {
         getFieldNames(object).forEach(function(name) {
           callback.call(this, name, getFieldValue(object, name));
-        }, context3);
+        }, context4);
       }
-      function someField(object, callback, context3) {
+      function someField(object, callback, context4) {
         return getFieldNames(object).some(function(name) {
           return callback.call(this, name, getFieldValue(object, name));
-        }, context3);
+        }, context4);
       }
       function wrapExpressionBuilderWithStatement(typeName) {
         var wrapperName = getStatementBuilderName(typeName);
@@ -49974,7 +49974,7 @@ var require_path = __commonJS({
         }
         return path;
       };
-      Pp.each = function each(callback, context3) {
+      Pp.each = function each(callback, context4) {
         var childPaths = [];
         var len = this.value.length;
         var i = 0;
@@ -49983,27 +49983,27 @@ var require_path = __commonJS({
             childPaths[i] = this.get(i);
           }
         }
-        context3 = context3 || this;
+        context4 = context4 || this;
         for (i = 0; i < len; ++i) {
           if (hasOwn.call(childPaths, i)) {
-            callback.call(context3, childPaths[i]);
+            callback.call(context4, childPaths[i]);
           }
         }
       };
-      Pp.map = function map(callback, context3) {
+      Pp.map = function map(callback, context4) {
         var result = [];
         this.each(function(childPath) {
           result.push(callback.call(this, childPath));
-        }, context3);
+        }, context4);
         return result;
       };
-      Pp.filter = function filter(callback, context3) {
+      Pp.filter = function filter(callback, context4) {
         var result = [];
         this.each(function(childPath) {
           if (callback.call(this, childPath)) {
             result.push(childPath);
           }
-        }, context3);
+        }, context4);
         return result;
       };
       function emptyMoves() {
@@ -50966,11 +50966,11 @@ var require_path_visitor = __commonJS({
         var value = path.value;
         var methodName = value && typeof value === "object" && typeof value.type === "string" && this._methodNameTable[value.type];
         if (methodName) {
-          var context3 = this.acquireContext(path);
+          var context4 = this.acquireContext(path);
           try {
-            return context3.invokeVisitorMethod(methodName);
+            return context4.invokeVisitorMethod(methodName);
           } finally {
-            this.releaseContext(context3);
+            this.releaseContext(context4);
           }
         } else {
           return visitChildren(path, this);
@@ -51013,12 +51013,12 @@ var require_path_visitor = __commonJS({
         }
         return this._reusableContextStack.pop().reset(path);
       };
-      PVp.releaseContext = function(context3) {
-        if (!(context3 instanceof this.Context)) {
+      PVp.releaseContext = function(context4) {
+        if (!(context4 instanceof this.Context)) {
           throw new Error("");
         }
-        this._reusableContextStack.push(context3);
-        context3.currentPath = null;
+        this._reusableContextStack.push(context4);
+        context4.currentPath = null;
       };
       PVp.reportChanged = function() {
         this._changeReported = true;
@@ -53128,16 +53128,16 @@ var require_dist11 = __commonJS({
     var weekdayRange_1 = __importDefault2(require_weekdayRange());
     function createPacResolver(qjs, _str, _opts = {}) {
       const str = Buffer.isBuffer(_str) ? _str.toString("utf8") : _str;
-      const context3 = {
+      const context4 = {
         ...exports2.sandbox,
         ..._opts.sandbox
       };
-      const names = Object.keys(context3).filter((k) => isAsyncFunction(context3[k]));
+      const names = Object.keys(context4).filter((k) => isAsyncFunction(context4[k]));
       const opts = {
         filename: "proxy.pac",
         names,
         ..._opts,
-        sandbox: context3
+        sandbox: context4
       };
       const resolver = (0, degenerator_1.compile)(qjs, str, "FindProxyForURL", opts);
       function FindProxyForURL(url, _host) {
@@ -53219,10 +53219,10 @@ var require_errors2 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.QuickJSMemoryLeakDetected = exports2.QuickJSAsyncifySuspended = exports2.QuickJSAsyncifyError = exports2.QuickJSNotImplemented = exports2.QuickJSUseAfterFree = exports2.QuickJSWrongOwner = exports2.QuickJSUnwrapError = void 0;
     var QuickJSUnwrapError = class extends Error {
-      constructor(cause, context3) {
+      constructor(cause, context4) {
         super(String(cause));
         this.cause = cause;
-        this.context = context3;
+        this.context = context4;
         this.name = "QuickJSUnwrapError";
       }
     };
@@ -54262,7 +54262,7 @@ var require_context = __commonJS({
        */
       unwrapResult(result) {
         if (result.error) {
-          const context3 = "context" in result.error ? result.error.context : this;
+          const context4 = "context" in result.error ? result.error.context : this;
           const cause = result.error.consume((error) => this.dump(error));
           if (cause && typeof cause === "object" && typeof cause.message === "string") {
             const { message, name, stack } = cause;
@@ -54275,10 +54275,10 @@ var require_context = __commonJS({
               exception.stack = `${name}: ${message}
 ${cause.stack}Host: ${hostStack}`;
             }
-            Object.assign(exception, { cause, context: context3, message });
+            Object.assign(exception, { cause, context: context4, message });
             throw exception;
           }
-          throw new errors_1.QuickJSUnwrapError(cause, context3);
+          throw new errors_1.QuickJSUnwrapError(cause, context4);
         }
         return result.value;
       }
@@ -54349,11 +54349,11 @@ var require_runtime = __commonJS({
             if (rt !== this.rt.value) {
               throw new Error("Runtime pointer mismatch");
             }
-            const context3 = this.contextMap.get(ctx) ?? this.newContext({
+            const context4 = this.contextMap.get(ctx) ?? this.newContext({
               contextPointer: ctx
             });
             try {
-              const result = yield* awaited(moduleLoader(moduleName, context3));
+              const result = yield* awaited(moduleLoader(moduleName, context4));
               if (typeof result === "object" && "error" in result && result.error) {
                 (0, debug_1.debugLog)("cToHostLoadModule: loader returned error", result.error);
                 throw result.error;
@@ -54362,7 +54362,7 @@ var require_runtime = __commonJS({
               return this.memory.newHeapCharPointer(moduleSource).value;
             } catch (error) {
               (0, debug_1.debugLog)("cToHostLoadModule: caught error", error);
-              context3.throw(error);
+              context4.throw(error);
               return 0;
             }
           }),
@@ -54374,21 +54374,21 @@ var require_runtime = __commonJS({
             if (rt !== this.rt.value) {
               throw new Error("Runtime pointer mismatch");
             }
-            const context3 = this.contextMap.get(ctx) ?? this.newContext({
+            const context4 = this.contextMap.get(ctx) ?? this.newContext({
               /* TODO: Does this happen? Are we responsible for disposing? I don't think so */
               contextPointer: ctx
             });
             try {
-              const result = yield* awaited(moduleNormalizer(baseModuleName, moduleNameRequest, context3));
+              const result = yield* awaited(moduleNormalizer(baseModuleName, moduleNameRequest, context4));
               if (typeof result === "object" && "error" in result && result.error) {
                 (0, debug_1.debugLog)("cToHostNormalizeModule: normalizer returned error", result.error);
                 throw result.error;
               }
               const name = typeof result === "string" ? result : result.value;
-              return context3.getMemory(this.rt.value).newHeapCharPointer(name).value;
+              return context4.getMemory(this.rt.value).newHeapCharPointer(name).value;
             } catch (error) {
               (0, debug_1.debugLog)("normalizeModule: caught error", error);
-              context3.throw(error);
+              context4.throw(error);
               return 0;
             }
           })
@@ -54418,7 +54418,7 @@ var require_runtime = __commonJS({
           this.callbacks.deleteContext(ctx_ptr);
           this.ffi.QTS_FreeContext(ctx_ptr);
         });
-        const context3 = new context_1.QuickJSContext({
+        const context4 = new context_1.QuickJSContext({
           module: this.module,
           ctx,
           ffi: this.ffi,
@@ -54427,8 +54427,8 @@ var require_runtime = __commonJS({
           runtime: this,
           callbacks: this.callbacks
         });
-        this.contextMap.set(ctx.value, context3);
-        return context3;
+        this.contextMap.set(ctx.value, context4);
+        return context4;
       }
       /**
        * Set the loader for EcmaScript modules requested by any context in this
@@ -54508,17 +54508,17 @@ var require_runtime = __commonJS({
           this.ffi.QTS_FreeValuePointerRuntime(this.rt.value, valuePtr);
           return { value: 0 };
         }
-        const context3 = this.contextMap.get(ctxPtr) ?? this.newContext({
+        const context4 = this.contextMap.get(ctxPtr) ?? this.newContext({
           contextPointer: ctxPtr
         });
-        const resultValue = context3.getMemory(this.rt.value).heapValueHandle(valuePtr);
-        const typeOfRet = context3.typeof(resultValue);
+        const resultValue = context4.getMemory(this.rt.value).heapValueHandle(valuePtr);
+        const typeOfRet = context4.typeof(resultValue);
         if (typeOfRet === "number") {
-          const executedJobs = context3.getNumber(resultValue);
+          const executedJobs = context4.getNumber(resultValue);
           resultValue.dispose();
           return { value: executedJobs };
         } else {
-          const error = Object.assign(resultValue, { context: context3 });
+          const error = Object.assign(resultValue, { context: context4 });
           return {
             error
           };
@@ -54783,12 +54783,12 @@ Attempted to suspend at:`);
        */
       newContext(options = {}) {
         const runtime = this.newRuntime();
-        const context3 = runtime.newContext({
+        const context4 = runtime.newContext({
           ...options,
           ownedLifetimes: (0, types_1.concat)(runtime, options.ownedLifetimes)
         });
-        runtime.context = context3;
-        return context3;
+        runtime.context = context4;
+        return context4;
       }
       /**
        * One-off evaluate code without needing to create a [[QuickJSRuntime]] or
@@ -54921,7 +54921,7 @@ var require_runtime_asyncify = __commonJS({
           this.callbacks.deleteContext(ctx_ptr);
           this.ffi.QTS_FreeContext(ctx_ptr);
         });
-        const context3 = new context_asyncify_1.QuickJSAsyncContext({
+        const context4 = new context_asyncify_1.QuickJSAsyncContext({
           module: this.module,
           ctx,
           ffi: this.ffi,
@@ -54930,8 +54930,8 @@ var require_runtime_asyncify = __commonJS({
           runtime: this,
           callbacks: this.callbacks
         });
-        this.contextMap.set(ctx.value, context3);
-        return context3;
+        this.contextMap.set(ctx.value, context4);
+        return context4;
       }
       setModuleLoader(moduleLoader, moduleNormalizer) {
         super.setModuleLoader(moduleLoader, moduleNormalizer);
@@ -54998,9 +54998,9 @@ var require_module_asyncify = __commonJS({
       newContext(options = {}) {
         const runtime = this.newRuntime();
         const lifetimes = options.ownedLifetimes ? options.ownedLifetimes.concat([runtime]) : [runtime];
-        const context3 = runtime.newContext({ ...options, ownedLifetimes: lifetimes });
-        runtime.context = context3;
-        return context3;
+        const context4 = runtime.newContext({ ...options, ownedLifetimes: lifetimes });
+        runtime.context = context4;
+        return context4;
       }
       /** Synchronous evalCode is not supported. */
       evalCode() {
@@ -55998,15 +55998,15 @@ var require_module_test = __commonJS({
         return runtime;
       }
       newContext(options) {
-        const context3 = this.parent.newContext({
+        const context4 = this.parent.newContext({
           ...options,
           ownedLifetimes: [
-            new lifetime_1.Lifetime(void 0, void 0, () => this.contexts.delete(context3)),
+            new lifetime_1.Lifetime(void 0, void 0, () => this.contexts.delete(context4)),
             ...options?.ownedLifetimes ?? []
           ]
         });
-        this.contexts.add(context3);
-        return context3;
+        this.contexts.add(context4);
+        return context4;
       }
       evalCode(code, options) {
         return this.parent.evalCode(code, options);
@@ -57795,8 +57795,8 @@ var require_dist_node2 = __commonJS({
     function isKeyOperator(operator) {
       return operator === ";" || operator === "&" || operator === "?";
     }
-    function getValues(context3, operator, key, modifier) {
-      var value = context3[key], result = [];
+    function getValues(context4, operator, key, modifier) {
+      var value = context4[key], result = [];
       if (isDefined(value) && value !== "") {
         if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
           value = value.toString();
@@ -57856,7 +57856,7 @@ var require_dist_node2 = __commonJS({
         expand: expand.bind(null, template)
       };
     }
-    function expand(template, context3) {
+    function expand(template, context4) {
       var operators = ["+", "#", ".", "/", ";", "?", "&"];
       return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function(_, expression, literal) {
         if (expression) {
@@ -57868,7 +57868,7 @@ var require_dist_node2 = __commonJS({
           }
           expression.split(/,/g).forEach(function(variable) {
             var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-            values.push(getValues(context3, operator, tmp[1], tmp[2] || tmp[3]));
+            values.push(getValues(context4, operator, tmp[1], tmp[2] || tmp[3]));
           });
           if (operator && operator !== "+") {
             var separator = ",";
@@ -63722,22 +63722,22 @@ var require_lib5 = __commonJS({
           flush2();
         }
         args = args.map((arg) => new exports2.Parser(arg, this.settings));
-        return function(context3) {
+        return function(context4) {
           const innerValues = [];
           for (const arg of args) {
-            innerValues.push(arg.evaluate(context3));
+            innerValues.push(arg.evaluate(context4));
           }
-          return method.call(context3, ...innerValues);
+          return method.call(context4, ...innerValues);
         };
       }
-      evaluate(context3) {
+      evaluate(context4) {
         const parts = this._parts.slice();
         for (let i = parts.length - 2; i >= 0; --i) {
           const part = parts[i];
           if (part && part.type === "operator") {
             const current = parts[i + 1];
             parts.splice(i + 1, 1);
-            const value = internals.evaluate(current, context3);
+            const value = internals.evaluate(current, context4);
             parts[i] = internals.single(part.value, value);
           }
         }
@@ -63745,8 +63745,8 @@ var require_lib5 = __commonJS({
           for (let i = 1; i < parts.length - 1; ) {
             if (set.includes(parts[i])) {
               const operator = parts[i];
-              const left = internals.evaluate(parts[i - 1], context3);
-              const right = internals.evaluate(parts[i + 1], context3);
+              const left = internals.evaluate(parts[i - 1], context4);
+              const right = internals.evaluate(parts[i + 1], context4);
               parts.splice(i, 2);
               const result = internals.calculate(operator, left, right);
               parts[i - 1] = result === 0 ? 0 : result;
@@ -63755,24 +63755,24 @@ var require_lib5 = __commonJS({
             }
           }
         });
-        return internals.evaluate(parts[0], context3);
+        return internals.evaluate(parts[0], context4);
       }
     };
     exports2.Parser.prototype[internals.symbol] = true;
     internals.reference = function(name) {
-      return function(context3) {
-        return context3 && context3[name] !== void 0 ? context3[name] : null;
+      return function(context4) {
+        return context4 && context4[name] !== void 0 ? context4[name] : null;
       };
     };
-    internals.evaluate = function(part, context3) {
+    internals.evaluate = function(part, context4) {
       if (part === null) {
         return null;
       }
       if (typeof part === "function") {
-        return part(context3);
+        return part(context4);
       }
       if (part[internals.symbol]) {
-        return part.evaluate(context3);
+        return part.evaluate(context4);
       }
       return part;
     };
@@ -64172,11 +64172,11 @@ var require_ref = __commonJS({
       const ref = Object.assign({}, internals.defaults, options);
       delete ref.prefix;
       const separator = ref.separator;
-      const context3 = internals.context(key, separator, options.prefix);
-      ref.type = context3.type;
-      key = context3.key;
+      const context4 = internals.context(key, separator, options.prefix);
+      ref.type = context4.type;
+      key = context4.key;
       if (ref.type === "value") {
-        if (context3.root) {
+        if (context4.root) {
           Assert(!separator || key[0] !== separator, "Cannot specify relative path with root prefix");
           ref.ancestor = "root";
           if (!key) {
@@ -64612,8 +64612,8 @@ var require_template = __commonJS({
         const reference = (variable) => {
           const ref = Ref.create(variable, this._settings);
           refs.push(ref);
-          return (context3) => {
-            const resolved = ref.resolve(...context3);
+          return (context4) => {
+            const resolved = ref.resolve(...context4);
             return resolved !== void 0 ? resolved : null;
           };
         };
@@ -68276,19 +68276,19 @@ var require_alternatives = __commonJS({
             }
           }
           if (matched.length === 0) {
-            const context3 = {
+            const context4 = {
               details: failed.map((f) => Errors.details(f, { override: false }))
             };
-            return { errors: error("alternatives.any", context3) };
+            return { errors: error("alternatives.any", context4) };
           }
           if (schema._flags.match === "one") {
             return matched.length === 1 ? { value: matched[0] } : { errors: error("alternatives.one") };
           }
           if (matched.length !== schema.$_terms.matches.length) {
-            const context3 = {
+            const context4 = {
               details: failed.map((f) => Errors.details(f, { override: false }))
             };
-            return { errors: error("alternatives.all", context3) };
+            return { errors: error("alternatives.all", context4) };
           }
           const isAnyObj = (alternative) => {
             return alternative.$_terms.matches.some((v) => {
@@ -68848,32 +68848,32 @@ var require_array = __commonJS({
                 while (!(current = entries.next()).done) {
                   if (compare(current.value[0], item)) {
                     const localState = state.localize([...state.path, i], [value, ...state.ancestors]);
-                    const context3 = {
+                    const context4 = {
                       pos: i,
                       value: value[i],
                       dupePos: current.value[1],
                       dupeValue: value[current.value[1]]
                     };
                     if (path) {
-                      context3.path = raw;
+                      context4.path = raw;
                     }
-                    return error("array.unique", context3, localState);
+                    return error("array.unique", context4, localState);
                   }
                 }
                 records.set(item, i);
               } else {
                 if ((!ignoreUndefined || item !== void 0) && records[item] !== void 0) {
-                  const context3 = {
+                  const context4 = {
                     pos: i,
                     value: value[i],
                     dupePos: records[item],
                     dupeValue: value[records[item]]
                   };
                   if (path) {
-                    context3.path = raw;
+                    context4.path = raw;
                   }
                   const localState = state.localize([...state.path, i], [value, ...state.ancestors]);
-                  return error("array.unique", context3, localState);
+                  return error("array.unique", context4, localState);
                 }
                 records[item] = i;
               }
@@ -70069,10 +70069,10 @@ var require_keys = __commonJS({
         if (!present.length || present.length === 1) {
           return;
         }
-        const context3 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
-        context3.present = present;
-        context3.presentWithLabels = internals.keysToLabels(schema, present);
-        return { code: "object.oxor", context: context3 };
+        const context4 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
+        context4.present = present;
+        context4.presentWithLabels = internals.keysToLabels(schema, present);
+        return { code: "object.oxor", context: context4 };
       },
       with(schema, dep, value, state, prefs) {
         const isPresent = internals.isPresent(dep.options);
@@ -70117,13 +70117,13 @@ var require_keys = __commonJS({
         if (present.length === 1) {
           return;
         }
-        const context3 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
+        const context4 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
         if (present.length === 0) {
-          return { code: "object.missing", context: context3 };
+          return { code: "object.missing", context: context4 };
         }
-        context3.present = present;
-        context3.presentWithLabels = internals.keysToLabels(schema, present);
-        return { code: "object.xor", context: context3 };
+        context4.present = present;
+        context4.presentWithLabels = internals.keysToLabels(schema, present);
+        return { code: "object.xor", context: context4 };
       }
     };
     internals.keysToLabels = function(schema, keys) {
@@ -78790,15 +78790,15 @@ var require_cst_scalar = __commonJS({
       }
       return null;
     }
-    function createScalarToken(value, context3) {
-      const { implicitKey = false, indent, inFlow = false, offset = -1, type = "PLAIN" } = context3;
+    function createScalarToken(value, context4) {
+      const { implicitKey = false, indent, inFlow = false, offset = -1, type = "PLAIN" } = context4;
       const source = stringifyString.stringifyString({ type, value }, {
         implicitKey,
         indent: indent > 0 ? " ".repeat(indent) : "",
         inFlow,
         options: { blockQuote: true, lineWidth: -1 }
       });
-      const end = context3.end ?? [
+      const end = context4.end ?? [
         { type: "newline", offset: -1, indent, source: "\n" }
       ];
       switch (source[0]) {
@@ -78822,8 +78822,8 @@ var require_cst_scalar = __commonJS({
           return { type: "scalar", offset, indent, source, end };
       }
     }
-    function setScalarValue(token, value, context3 = {}) {
-      let { afterKey = false, implicitKey = false, inFlow = false, type } = context3;
+    function setScalarValue(token, value, context4 = {}) {
+      let { afterKey = false, implicitKey = false, inFlow = false, type } = context4;
       let indent = "indent" in token ? token.indent : null;
       if (afterKey && typeof indent === "number")
         indent += 2;
@@ -80944,59 +80944,59 @@ function uuid4() {
 }
 
 // node_modules/@sentry/core/build/esm/session.js
-function updateSession(session, context3 = {}) {
-  if (context3.user) {
-    if (!session.ipAddress && context3.user.ip_address) {
-      session.ipAddress = context3.user.ip_address;
+function updateSession(session, context4 = {}) {
+  if (context4.user) {
+    if (!session.ipAddress && context4.user.ip_address) {
+      session.ipAddress = context4.user.ip_address;
     }
-    if (!session.did && !context3.did) {
-      session.did = context3.user.id || context3.user.email || context3.user.username;
+    if (!session.did && !context4.did) {
+      session.did = context4.user.id || context4.user.email || context4.user.username;
     }
   }
-  session.timestamp = context3.timestamp || timestampInSeconds();
-  if (context3.abnormal_mechanism) {
-    session.abnormal_mechanism = context3.abnormal_mechanism;
+  session.timestamp = context4.timestamp || timestampInSeconds();
+  if (context4.abnormal_mechanism) {
+    session.abnormal_mechanism = context4.abnormal_mechanism;
   }
-  if (context3.ignoreDuration) {
-    session.ignoreDuration = context3.ignoreDuration;
+  if (context4.ignoreDuration) {
+    session.ignoreDuration = context4.ignoreDuration;
   }
-  if (context3.sid) {
-    session.sid = context3.sid.length === 32 ? context3.sid : uuid4();
+  if (context4.sid) {
+    session.sid = context4.sid.length === 32 ? context4.sid : uuid4();
   }
-  if (context3.init !== void 0) {
-    session.init = context3.init;
+  if (context4.init !== void 0) {
+    session.init = context4.init;
   }
-  if (!session.did && context3.did) {
-    session.did = `${context3.did}`;
+  if (!session.did && context4.did) {
+    session.did = `${context4.did}`;
   }
-  if (typeof context3.started === "number") {
-    session.started = context3.started;
+  if (typeof context4.started === "number") {
+    session.started = context4.started;
   }
   if (session.ignoreDuration) {
     session.duration = void 0;
-  } else if (typeof context3.duration === "number") {
-    session.duration = context3.duration;
+  } else if (typeof context4.duration === "number") {
+    session.duration = context4.duration;
   } else {
     const duration = session.timestamp - session.started;
     session.duration = duration >= 0 ? duration : 0;
   }
-  if (context3.release) {
-    session.release = context3.release;
+  if (context4.release) {
+    session.release = context4.release;
   }
-  if (context3.environment) {
-    session.environment = context3.environment;
+  if (context4.environment) {
+    session.environment = context4.environment;
   }
-  if (!session.ipAddress && context3.ipAddress) {
-    session.ipAddress = context3.ipAddress;
+  if (!session.ipAddress && context4.ipAddress) {
+    session.ipAddress = context4.ipAddress;
   }
-  if (!session.userAgent && context3.userAgent) {
-    session.userAgent = context3.userAgent;
+  if (!session.userAgent && context4.userAgent) {
+    session.userAgent = context4.userAgent;
   }
-  if (typeof context3.errors === "number") {
-    session.errors = context3.errors;
+  if (typeof context4.errors === "number") {
+    session.errors = context4.errors;
   }
-  if (context3.status) {
-    session.status = context3.status;
+  if (context4.status) {
+    session.status = context4.status;
   }
 }
 
@@ -81250,11 +81250,11 @@ var Scope = class _Scope {
    * Data passed as context will be normalized. You can also pass `null` to unset the context.
    * Note that context data will not be merged - calling `setContext` will overwrite an existing context with the same key.
    */
-  setContext(key, context3) {
-    if (context3 === null) {
+  setContext(key, context4) {
+    if (context4 === null) {
       delete this._contexts[key];
     } else {
-      this._contexts[key] = context3;
+      this._contexts[key] = context4;
     }
     this._notifyScopeListeners();
     return this;
@@ -81406,8 +81406,8 @@ var Scope = class _Scope {
   /**
    * Add propagation context to the scope, used for distributed tracing
    */
-  setPropagationContext(context3) {
-    this._propagationContext = context3;
+  setPropagationContext(context4) {
+    this._propagationContext = context4;
     return this;
   }
   /**
@@ -81728,7 +81728,7 @@ var setLogLevel = (logLevel) => {
 };
 
 // src/common/run-post-step.ts
-var import_github2 = __toESM(require_github());
+var import_github3 = __toESM(require_github());
 var import_client = __toESM(require_dist18());
 
 // src/common/octokit.ts
@@ -81750,6 +81750,24 @@ var getOctokitOrFail = (githubToken) => {
   }
 };
 
+// src/common/utils/is-last-commit.ts
+var import_github2 = __toESM(require_github());
+var isLastCommit = async (octokit) => {
+  if (!import_github2.context.payload.pull_request) {
+    return true;
+  }
+  const pullRequest = import_github2.context.payload.pull_request;
+  const currentCommit = pullRequest.head.sha;
+  const headRef = pullRequest.head.ref;
+  const commits = await octokit.rest.repos.listCommits({
+    owner: import_github2.context.repo.owner,
+    repo: import_github2.context.repo.repo,
+    sha: headRef,
+    per_page: 1
+  });
+  return commits.data[0].sha === currentCommit;
+};
+
 // src/common/run-post-step.ts
 var runPostStep = async ({
   apiToken,
@@ -81760,9 +81778,9 @@ var runPostStep = async ({
 }) => {
   const octokit = getOctokitOrFail(githubToken);
   const workflow = await octokit.rest.actions.getWorkflowRun({
-    owner: import_github2.context.repo.owner,
-    repo: import_github2.context.repo.repo,
-    run_id: import_github2.context.runId
+    owner: import_github3.context.repo.owner,
+    repo: import_github3.context.repo.repo,
+    run_id: import_github3.context.runId
   });
   const values = {
     "report_diffs_action.was_cancelled": workflow.data.status === "cancelled" ? 1 : 0
@@ -81773,11 +81791,11 @@ var runPostStep = async ({
     const timeSinceStart = (/* @__PURE__ */ new Date()).getTime() - new Date(workflow.data.run_started_at).getTime();
     values["report_diffs_action.job_duration_seconds"] = timeSinceStart / 1e3;
   }
-  if (import_github2.context.payload.pull_request?.number && shouldHaveComment) {
+  if (import_github3.context.payload.pull_request?.number && shouldHaveComment && await isLastCommit(octokit)) {
     const prComments = await octokit.rest.issues.listComments({
-      owner: import_github2.context.repo.owner,
-      repo: import_github2.context.repo.repo,
-      issue_number: import_github2.context.payload.pull_request.number,
+      owner: import_github3.context.repo.owner,
+      repo: import_github3.context.repo.repo,
+      issue_number: import_github3.context.payload.pull_request.number,
       per_page: 1e3
     });
     values["report_diffs_action.saw_comment"] = prComments.data.some(
@@ -81811,7 +81829,7 @@ var getCommentIdentifier = (testSuiteOrProjectId) => {
 
 // src/common/get-base-and-head-commit-shas.ts
 var import_child_process = require("child_process");
-var import_github3 = __toESM(require_github());
+var import_github4 = __toESM(require_github());
 var getActualCommitShaFromRepo = () => {
   return (0, import_child_process.execSync)("git rev-list --max-count=1 HEAD").toString().trim();
 };

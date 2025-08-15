@@ -1,6 +1,7 @@
 import { context } from "@actions/github";
 import { createClient, emitTelemetry } from "@alwaysmeticulous/client";
 import { getOctokitOrFail } from "./octokit";
+import { isLastCommit } from "./utils/is-last-commit";
 
 export const runPostStep = async ({
   apiToken,
@@ -39,7 +40,11 @@ export const runPostStep = async ({
     values["report_diffs_action.job_duration_seconds"] = timeSinceStart / 1000;
   }
 
-  if (context.payload.pull_request?.number && shouldHaveComment) {
+  if (
+    context.payload.pull_request?.number &&
+    shouldHaveComment &&
+    (await isLastCommit(octokit))
+  ) {
     const prComments = await octokit.rest.issues.listComments({
       owner: context.repo.owner,
       repo: context.repo.repo,

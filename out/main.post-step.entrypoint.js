@@ -958,7 +958,7 @@ var require_source_map_consumer = __commonJS({
     SourceMapConsumer.GREATEST_LOWER_BOUND = 1;
     SourceMapConsumer.LEAST_UPPER_BOUND = 2;
     SourceMapConsumer.prototype.eachMapping = function SourceMapConsumer_eachMapping(aCallback, aContext, aOrder) {
-      var context2 = aContext || null;
+      var context3 = aContext || null;
       var order = aOrder || SourceMapConsumer.GENERATED_ORDER;
       var mappings;
       switch (order) {
@@ -983,7 +983,7 @@ var require_source_map_consumer = __commonJS({
           originalColumn: mapping.originalColumn,
           name: mapping.name === null ? null : this._names.at(mapping.name)
         };
-      }, this).forEach(aCallback, context2);
+      }, this).forEach(aCallback, context3);
     };
     SourceMapConsumer.prototype.allGeneratedPositionsFor = function SourceMapConsumer_allGeneratedPositionsFor(aArgs) {
       var line = util.getArg(aArgs, "line");
@@ -4893,8 +4893,8 @@ var require_dist_node2 = __commonJS({
     function isKeyOperator(operator) {
       return operator === ";" || operator === "&" || operator === "?";
     }
-    function getValues(context2, operator, key, modifier) {
-      var value = context2[key], result = [];
+    function getValues(context3, operator, key, modifier) {
+      var value = context3[key], result = [];
       if (isDefined(value) && value !== "") {
         if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
           value = value.toString();
@@ -4954,7 +4954,7 @@ var require_dist_node2 = __commonJS({
         expand: expand.bind(null, template)
       };
     }
-    function expand(template, context2) {
+    function expand(template, context3) {
       var operators = ["+", "#", ".", "/", ";", "?", "&"];
       return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function(_, expression, literal) {
         if (expression) {
@@ -4966,7 +4966,7 @@ var require_dist_node2 = __commonJS({
           }
           expression.split(/,/g).forEach(function(variable) {
             var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-            values.push(getValues(context2, operator, tmp[1], tmp[2] || tmp[3]));
+            values.push(getValues(context3, operator, tmp[1], tmp[2] || tmp[3]));
           });
           if (operator && operator !== "+") {
             var separator = ",";
@@ -20842,7 +20842,7 @@ var require_axios = __commonJS({
         return globalThis;
       return typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : global;
     })();
-    var isContextDefined = (context2) => !isUndefined(context2) && context2 !== _global;
+    var isContextDefined = (context3) => !isUndefined(context3) && context3 !== _global;
     function merge2() {
       const { caseless } = isContextDefined(this) && this || {};
       const result = {};
@@ -21705,7 +21705,7 @@ var require_axios = __commonJS({
       return tokens;
     }
     var isValidHeaderName = (str) => /^[-_a-zA-Z0-9^`|~,!#$%&'*+.]+$/.test(str.trim());
-    function matchHeaderValue(context2, value, header, filter, isHeaderNameFilter) {
+    function matchHeaderValue(context3, value, header, filter, isHeaderNameFilter) {
       if (utils$1.isFunction(filter)) {
         return filter.call(this, value, header);
       }
@@ -21907,9 +21907,9 @@ var require_axios = __commonJS({
     var AxiosHeaders$1 = AxiosHeaders;
     function transformData(fns, response) {
       const config = this || defaults$1;
-      const context2 = response || config;
-      const headers = AxiosHeaders$1.from(context2.headers);
-      let data = context2.data;
+      const context3 = response || config;
+      const headers = AxiosHeaders$1.from(context3.headers);
+      let data = context3.data;
       utils$1.forEach(fns, function transform(fn) {
         data = fn.call(config, data, headers.normalize(), response ? response.status : void 0);
       });
@@ -23859,10 +23859,10 @@ var require_axios = __commonJS({
     });
     var HttpStatusCode$1 = HttpStatusCode;
     function createInstance(defaultConfig) {
-      const context2 = new Axios$1(defaultConfig);
-      const instance = bind(Axios$1.prototype.request, context2);
-      utils$1.extend(instance, Axios$1.prototype, context2, { allOwnKeys: true });
-      utils$1.extend(instance, context2, null, { allOwnKeys: true });
+      const context3 = new Axios$1(defaultConfig);
+      const instance = bind(Axios$1.prototype.request, context3);
+      utils$1.extend(instance, Axios$1.prototype, context3, { allOwnKeys: true });
+      utils$1.extend(instance, context3, null, { allOwnKeys: true });
       instance.create = function create(instanceConfig) {
         return createInstance(mergeConfig(defaultConfig, instanceConfig));
       };
@@ -31969,7 +31969,7 @@ var require_lru_cache = __commonJS({
           return this.isBackgroundFetch(v) ? v.__staleWhileFetching : v;
         }
       }
-      backgroundFetch(k, index, options, context2) {
+      backgroundFetch(k, index, options, context3) {
         const v = index === void 0 ? void 0 : this.valList[index];
         if (this.isBackgroundFetch(v)) {
           return v;
@@ -31984,7 +31984,7 @@ var require_lru_cache = __commonJS({
         const fetchOpts = {
           signal: ac.signal,
           options,
-          context: context2
+          context: context3
         };
         const cb = (v2, updateCache = false) => {
           const { aborted } = ac.signal;
@@ -39351,8 +39351,8 @@ var require_graceful_fs = __commonJS({
     }
     function noop() {
     }
-    function publishQueue(context2, queue2) {
-      Object.defineProperty(context2, gracefulQueue, {
+    function publishQueue(context3, queue2) {
+      Object.defineProperty(context3, gracefulQueue, {
         get: function() {
           return queue2;
         }
@@ -41711,8 +41711,8 @@ var require_graceful_fs2 = __commonJS({
     }
     function noop() {
     }
-    function publishQueue(context2, queue2) {
-      Object.defineProperty(context2, gracefulQueue, {
+    function publishQueue(context3, queue2) {
+      Object.defineProperty(context3, gracefulQueue, {
         get: function() {
           return queue2;
         }
@@ -54261,17 +54261,17 @@ function __esDecorate(ctor, descriptorIn, decorators, contextIn, initializers, e
   var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
   var _, done = false;
   for (var i = decorators.length - 1; i >= 0; i--) {
-    var context2 = {};
+    var context3 = {};
     for (var p in contextIn)
-      context2[p] = p === "access" ? {} : contextIn[p];
+      context3[p] = p === "access" ? {} : contextIn[p];
     for (var p in contextIn.access)
-      context2.access[p] = contextIn.access[p];
-    context2.addInitializer = function(f) {
+      context3.access[p] = contextIn.access[p];
+    context3.addInitializer = function(f) {
       if (done)
         throw new TypeError("Cannot add initializers after decoration has completed");
       extraInitializers.push(accept(f || null));
     };
-    var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context2);
+    var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context3);
     if (kind === "accessor") {
       if (result === void 0)
         continue;
@@ -55321,15 +55321,15 @@ var require_types = __commonJS({
         }
         return object && object[fieldName];
       }
-      function eachField(object, callback, context2) {
+      function eachField(object, callback, context3) {
         getFieldNames(object).forEach(function(name) {
           callback.call(this, name, getFieldValue(object, name));
-        }, context2);
+        }, context3);
       }
-      function someField(object, callback, context2) {
+      function someField(object, callback, context3) {
         return getFieldNames(object).some(function(name) {
           return callback.call(this, name, getFieldValue(object, name));
-        }, context2);
+        }, context3);
       }
       function wrapExpressionBuilderWithStatement(typeName) {
         var wrapperName = getStatementBuilderName(typeName);
@@ -55468,7 +55468,7 @@ var require_path = __commonJS({
         }
         return path;
       };
-      Pp.each = function each(callback, context2) {
+      Pp.each = function each(callback, context3) {
         var childPaths = [];
         var len = this.value.length;
         var i = 0;
@@ -55477,27 +55477,27 @@ var require_path = __commonJS({
             childPaths[i] = this.get(i);
           }
         }
-        context2 = context2 || this;
+        context3 = context3 || this;
         for (i = 0; i < len; ++i) {
           if (hasOwn.call(childPaths, i)) {
-            callback.call(context2, childPaths[i]);
+            callback.call(context3, childPaths[i]);
           }
         }
       };
-      Pp.map = function map(callback, context2) {
+      Pp.map = function map(callback, context3) {
         var result = [];
         this.each(function(childPath) {
           result.push(callback.call(this, childPath));
-        }, context2);
+        }, context3);
         return result;
       };
-      Pp.filter = function filter(callback, context2) {
+      Pp.filter = function filter(callback, context3) {
         var result = [];
         this.each(function(childPath) {
           if (callback.call(this, childPath)) {
             result.push(childPath);
           }
-        }, context2);
+        }, context3);
         return result;
       };
       function emptyMoves() {
@@ -56460,11 +56460,11 @@ var require_path_visitor = __commonJS({
         var value = path.value;
         var methodName = value && typeof value === "object" && typeof value.type === "string" && this._methodNameTable[value.type];
         if (methodName) {
-          var context2 = this.acquireContext(path);
+          var context3 = this.acquireContext(path);
           try {
-            return context2.invokeVisitorMethod(methodName);
+            return context3.invokeVisitorMethod(methodName);
           } finally {
-            this.releaseContext(context2);
+            this.releaseContext(context3);
           }
         } else {
           return visitChildren(path, this);
@@ -56507,12 +56507,12 @@ var require_path_visitor = __commonJS({
         }
         return this._reusableContextStack.pop().reset(path);
       };
-      PVp.releaseContext = function(context2) {
-        if (!(context2 instanceof this.Context)) {
+      PVp.releaseContext = function(context3) {
+        if (!(context3 instanceof this.Context)) {
           throw new Error("");
         }
-        this._reusableContextStack.push(context2);
-        context2.currentPath = null;
+        this._reusableContextStack.push(context3);
+        context3.currentPath = null;
       };
       PVp.reportChanged = function() {
         this._changeReported = true;
@@ -58622,16 +58622,16 @@ var require_dist11 = __commonJS({
     var weekdayRange_1 = __importDefault2(require_weekdayRange());
     function createPacResolver(qjs, _str, _opts = {}) {
       const str = Buffer.isBuffer(_str) ? _str.toString("utf8") : _str;
-      const context2 = {
+      const context3 = {
         ...exports2.sandbox,
         ..._opts.sandbox
       };
-      const names = Object.keys(context2).filter((k) => isAsyncFunction(context2[k]));
+      const names = Object.keys(context3).filter((k) => isAsyncFunction(context3[k]));
       const opts = {
         filename: "proxy.pac",
         names,
         ..._opts,
-        sandbox: context2
+        sandbox: context3
       };
       const resolver = (0, degenerator_1.compile)(qjs, str, "FindProxyForURL", opts);
       function FindProxyForURL(url, _host) {
@@ -58713,10 +58713,10 @@ var require_errors2 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.QuickJSMemoryLeakDetected = exports2.QuickJSAsyncifySuspended = exports2.QuickJSAsyncifyError = exports2.QuickJSNotImplemented = exports2.QuickJSUseAfterFree = exports2.QuickJSWrongOwner = exports2.QuickJSUnwrapError = void 0;
     var QuickJSUnwrapError = class extends Error {
-      constructor(cause, context2) {
+      constructor(cause, context3) {
         super(String(cause));
         this.cause = cause;
-        this.context = context2;
+        this.context = context3;
         this.name = "QuickJSUnwrapError";
       }
     };
@@ -59756,7 +59756,7 @@ var require_context2 = __commonJS({
        */
       unwrapResult(result) {
         if (result.error) {
-          const context2 = "context" in result.error ? result.error.context : this;
+          const context3 = "context" in result.error ? result.error.context : this;
           const cause = result.error.consume((error) => this.dump(error));
           if (cause && typeof cause === "object" && typeof cause.message === "string") {
             const { message, name, stack } = cause;
@@ -59769,10 +59769,10 @@ var require_context2 = __commonJS({
               exception.stack = `${name}: ${message}
 ${cause.stack}Host: ${hostStack}`;
             }
-            Object.assign(exception, { cause, context: context2, message });
+            Object.assign(exception, { cause, context: context3, message });
             throw exception;
           }
-          throw new errors_1.QuickJSUnwrapError(cause, context2);
+          throw new errors_1.QuickJSUnwrapError(cause, context3);
         }
         return result.value;
       }
@@ -59843,11 +59843,11 @@ var require_runtime = __commonJS({
             if (rt !== this.rt.value) {
               throw new Error("Runtime pointer mismatch");
             }
-            const context2 = this.contextMap.get(ctx) ?? this.newContext({
+            const context3 = this.contextMap.get(ctx) ?? this.newContext({
               contextPointer: ctx
             });
             try {
-              const result = yield* awaited(moduleLoader(moduleName, context2));
+              const result = yield* awaited(moduleLoader(moduleName, context3));
               if (typeof result === "object" && "error" in result && result.error) {
                 (0, debug_1.debugLog)("cToHostLoadModule: loader returned error", result.error);
                 throw result.error;
@@ -59856,7 +59856,7 @@ var require_runtime = __commonJS({
               return this.memory.newHeapCharPointer(moduleSource).value;
             } catch (error) {
               (0, debug_1.debugLog)("cToHostLoadModule: caught error", error);
-              context2.throw(error);
+              context3.throw(error);
               return 0;
             }
           }),
@@ -59868,21 +59868,21 @@ var require_runtime = __commonJS({
             if (rt !== this.rt.value) {
               throw new Error("Runtime pointer mismatch");
             }
-            const context2 = this.contextMap.get(ctx) ?? this.newContext({
+            const context3 = this.contextMap.get(ctx) ?? this.newContext({
               /* TODO: Does this happen? Are we responsible for disposing? I don't think so */
               contextPointer: ctx
             });
             try {
-              const result = yield* awaited(moduleNormalizer(baseModuleName, moduleNameRequest, context2));
+              const result = yield* awaited(moduleNormalizer(baseModuleName, moduleNameRequest, context3));
               if (typeof result === "object" && "error" in result && result.error) {
                 (0, debug_1.debugLog)("cToHostNormalizeModule: normalizer returned error", result.error);
                 throw result.error;
               }
               const name = typeof result === "string" ? result : result.value;
-              return context2.getMemory(this.rt.value).newHeapCharPointer(name).value;
+              return context3.getMemory(this.rt.value).newHeapCharPointer(name).value;
             } catch (error) {
               (0, debug_1.debugLog)("normalizeModule: caught error", error);
-              context2.throw(error);
+              context3.throw(error);
               return 0;
             }
           })
@@ -59912,7 +59912,7 @@ var require_runtime = __commonJS({
           this.callbacks.deleteContext(ctx_ptr);
           this.ffi.QTS_FreeContext(ctx_ptr);
         });
-        const context2 = new context_1.QuickJSContext({
+        const context3 = new context_1.QuickJSContext({
           module: this.module,
           ctx,
           ffi: this.ffi,
@@ -59921,8 +59921,8 @@ var require_runtime = __commonJS({
           runtime: this,
           callbacks: this.callbacks
         });
-        this.contextMap.set(ctx.value, context2);
-        return context2;
+        this.contextMap.set(ctx.value, context3);
+        return context3;
       }
       /**
        * Set the loader for EcmaScript modules requested by any context in this
@@ -60002,17 +60002,17 @@ var require_runtime = __commonJS({
           this.ffi.QTS_FreeValuePointerRuntime(this.rt.value, valuePtr);
           return { value: 0 };
         }
-        const context2 = this.contextMap.get(ctxPtr) ?? this.newContext({
+        const context3 = this.contextMap.get(ctxPtr) ?? this.newContext({
           contextPointer: ctxPtr
         });
-        const resultValue = context2.getMemory(this.rt.value).heapValueHandle(valuePtr);
-        const typeOfRet = context2.typeof(resultValue);
+        const resultValue = context3.getMemory(this.rt.value).heapValueHandle(valuePtr);
+        const typeOfRet = context3.typeof(resultValue);
         if (typeOfRet === "number") {
-          const executedJobs = context2.getNumber(resultValue);
+          const executedJobs = context3.getNumber(resultValue);
           resultValue.dispose();
           return { value: executedJobs };
         } else {
-          const error = Object.assign(resultValue, { context: context2 });
+          const error = Object.assign(resultValue, { context: context3 });
           return {
             error
           };
@@ -60277,12 +60277,12 @@ Attempted to suspend at:`);
        */
       newContext(options = {}) {
         const runtime = this.newRuntime();
-        const context2 = runtime.newContext({
+        const context3 = runtime.newContext({
           ...options,
           ownedLifetimes: (0, types_1.concat)(runtime, options.ownedLifetimes)
         });
-        runtime.context = context2;
-        return context2;
+        runtime.context = context3;
+        return context3;
       }
       /**
        * One-off evaluate code without needing to create a [[QuickJSRuntime]] or
@@ -60415,7 +60415,7 @@ var require_runtime_asyncify = __commonJS({
           this.callbacks.deleteContext(ctx_ptr);
           this.ffi.QTS_FreeContext(ctx_ptr);
         });
-        const context2 = new context_asyncify_1.QuickJSAsyncContext({
+        const context3 = new context_asyncify_1.QuickJSAsyncContext({
           module: this.module,
           ctx,
           ffi: this.ffi,
@@ -60424,8 +60424,8 @@ var require_runtime_asyncify = __commonJS({
           runtime: this,
           callbacks: this.callbacks
         });
-        this.contextMap.set(ctx.value, context2);
-        return context2;
+        this.contextMap.set(ctx.value, context3);
+        return context3;
       }
       setModuleLoader(moduleLoader, moduleNormalizer) {
         super.setModuleLoader(moduleLoader, moduleNormalizer);
@@ -60492,9 +60492,9 @@ var require_module_asyncify = __commonJS({
       newContext(options = {}) {
         const runtime = this.newRuntime();
         const lifetimes = options.ownedLifetimes ? options.ownedLifetimes.concat([runtime]) : [runtime];
-        const context2 = runtime.newContext({ ...options, ownedLifetimes: lifetimes });
-        runtime.context = context2;
-        return context2;
+        const context3 = runtime.newContext({ ...options, ownedLifetimes: lifetimes });
+        runtime.context = context3;
+        return context3;
       }
       /** Synchronous evalCode is not supported. */
       evalCode() {
@@ -61492,15 +61492,15 @@ var require_module_test = __commonJS({
         return runtime;
       }
       newContext(options) {
-        const context2 = this.parent.newContext({
+        const context3 = this.parent.newContext({
           ...options,
           ownedLifetimes: [
-            new lifetime_1.Lifetime(void 0, void 0, () => this.contexts.delete(context2)),
+            new lifetime_1.Lifetime(void 0, void 0, () => this.contexts.delete(context3)),
             ...options?.ownedLifetimes ?? []
           ]
         });
-        this.contexts.add(context2);
-        return context2;
+        this.contexts.add(context3);
+        return context3;
       }
       evalCode(code, options) {
         return this.parent.evalCode(code, options);
@@ -62907,59 +62907,59 @@ function uuid4() {
 }
 
 // node_modules/@sentry/core/build/esm/session.js
-function updateSession(session, context2 = {}) {
-  if (context2.user) {
-    if (!session.ipAddress && context2.user.ip_address) {
-      session.ipAddress = context2.user.ip_address;
+function updateSession(session, context3 = {}) {
+  if (context3.user) {
+    if (!session.ipAddress && context3.user.ip_address) {
+      session.ipAddress = context3.user.ip_address;
     }
-    if (!session.did && !context2.did) {
-      session.did = context2.user.id || context2.user.email || context2.user.username;
+    if (!session.did && !context3.did) {
+      session.did = context3.user.id || context3.user.email || context3.user.username;
     }
   }
-  session.timestamp = context2.timestamp || timestampInSeconds();
-  if (context2.abnormal_mechanism) {
-    session.abnormal_mechanism = context2.abnormal_mechanism;
+  session.timestamp = context3.timestamp || timestampInSeconds();
+  if (context3.abnormal_mechanism) {
+    session.abnormal_mechanism = context3.abnormal_mechanism;
   }
-  if (context2.ignoreDuration) {
-    session.ignoreDuration = context2.ignoreDuration;
+  if (context3.ignoreDuration) {
+    session.ignoreDuration = context3.ignoreDuration;
   }
-  if (context2.sid) {
-    session.sid = context2.sid.length === 32 ? context2.sid : uuid4();
+  if (context3.sid) {
+    session.sid = context3.sid.length === 32 ? context3.sid : uuid4();
   }
-  if (context2.init !== void 0) {
-    session.init = context2.init;
+  if (context3.init !== void 0) {
+    session.init = context3.init;
   }
-  if (!session.did && context2.did) {
-    session.did = `${context2.did}`;
+  if (!session.did && context3.did) {
+    session.did = `${context3.did}`;
   }
-  if (typeof context2.started === "number") {
-    session.started = context2.started;
+  if (typeof context3.started === "number") {
+    session.started = context3.started;
   }
   if (session.ignoreDuration) {
     session.duration = void 0;
-  } else if (typeof context2.duration === "number") {
-    session.duration = context2.duration;
+  } else if (typeof context3.duration === "number") {
+    session.duration = context3.duration;
   } else {
     const duration = session.timestamp - session.started;
     session.duration = duration >= 0 ? duration : 0;
   }
-  if (context2.release) {
-    session.release = context2.release;
+  if (context3.release) {
+    session.release = context3.release;
   }
-  if (context2.environment) {
-    session.environment = context2.environment;
+  if (context3.environment) {
+    session.environment = context3.environment;
   }
-  if (!session.ipAddress && context2.ipAddress) {
-    session.ipAddress = context2.ipAddress;
+  if (!session.ipAddress && context3.ipAddress) {
+    session.ipAddress = context3.ipAddress;
   }
-  if (!session.userAgent && context2.userAgent) {
-    session.userAgent = context2.userAgent;
+  if (!session.userAgent && context3.userAgent) {
+    session.userAgent = context3.userAgent;
   }
-  if (typeof context2.errors === "number") {
-    session.errors = context2.errors;
+  if (typeof context3.errors === "number") {
+    session.errors = context3.errors;
   }
-  if (context2.status) {
-    session.status = context2.status;
+  if (context3.status) {
+    session.status = context3.status;
   }
 }
 
@@ -63213,11 +63213,11 @@ var Scope = class _Scope {
    * Data passed as context will be normalized. You can also pass `null` to unset the context.
    * Note that context data will not be merged - calling `setContext` will overwrite an existing context with the same key.
    */
-  setContext(key, context2) {
-    if (context2 === null) {
+  setContext(key, context3) {
+    if (context3 === null) {
       delete this._contexts[key];
     } else {
-      this._contexts[key] = context2;
+      this._contexts[key] = context3;
     }
     this._notifyScopeListeners();
     return this;
@@ -63369,8 +63369,8 @@ var Scope = class _Scope {
   /**
    * Add propagation context to the scope, used for distributed tracing
    */
-  setPropagationContext(context2) {
-    this._propagationContext = context2;
+  setPropagationContext(context3) {
+    this._propagationContext = context3;
     return this;
   }
   /**
@@ -63650,7 +63650,7 @@ async function flush(timeout) {
 }
 
 // src/common/run-post-step.ts
-var import_github2 = __toESM(require_github());
+var import_github3 = __toESM(require_github());
 var import_client = __toESM(require_dist18());
 
 // src/common/octokit.ts
@@ -63672,6 +63672,24 @@ var getOctokitOrFail = (githubToken) => {
   }
 };
 
+// src/common/utils/is-last-commit.ts
+var import_github2 = __toESM(require_github());
+var isLastCommit = async (octokit) => {
+  if (!import_github2.context.payload.pull_request) {
+    return true;
+  }
+  const pullRequest = import_github2.context.payload.pull_request;
+  const currentCommit = pullRequest.head.sha;
+  const headRef = pullRequest.head.ref;
+  const commits = await octokit.rest.repos.listCommits({
+    owner: import_github2.context.repo.owner,
+    repo: import_github2.context.repo.repo,
+    sha: headRef,
+    per_page: 1
+  });
+  return commits.data[0].sha === currentCommit;
+};
+
 // src/common/run-post-step.ts
 var runPostStep = async ({
   apiToken,
@@ -63682,9 +63700,9 @@ var runPostStep = async ({
 }) => {
   const octokit = getOctokitOrFail(githubToken);
   const workflow = await octokit.rest.actions.getWorkflowRun({
-    owner: import_github2.context.repo.owner,
-    repo: import_github2.context.repo.repo,
-    run_id: import_github2.context.runId
+    owner: import_github3.context.repo.owner,
+    repo: import_github3.context.repo.repo,
+    run_id: import_github3.context.runId
   });
   const values = {
     "report_diffs_action.was_cancelled": workflow.data.status === "cancelled" ? 1 : 0
@@ -63695,11 +63713,11 @@ var runPostStep = async ({
     const timeSinceStart = (/* @__PURE__ */ new Date()).getTime() - new Date(workflow.data.run_started_at).getTime();
     values["report_diffs_action.job_duration_seconds"] = timeSinceStart / 1e3;
   }
-  if (import_github2.context.payload.pull_request?.number && shouldHaveComment) {
+  if (import_github3.context.payload.pull_request?.number && shouldHaveComment && await isLastCommit(octokit)) {
     const prComments = await octokit.rest.issues.listComments({
-      owner: import_github2.context.repo.owner,
-      repo: import_github2.context.repo.repo,
-      issue_number: import_github2.context.payload.pull_request.number,
+      owner: import_github3.context.repo.owner,
+      repo: import_github3.context.repo.repo,
+      issue_number: import_github3.context.payload.pull_request.number,
       per_page: 1e3
     });
     values["report_diffs_action.saw_comment"] = prComments.data.some(
