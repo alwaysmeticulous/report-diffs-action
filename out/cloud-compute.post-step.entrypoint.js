@@ -4757,7 +4757,7 @@ var require_deployment_lock_api = __commonJS({
       }).catch((error) => {
         throw (0, errors_1.maybeEnrichFetchError)(error);
       });
-      return data;
+      return data === "true";
     };
     exports2.getIsLocked = getIsLocked;
   }
