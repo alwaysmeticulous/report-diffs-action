@@ -46861,13 +46861,21 @@ var require_client = __commonJS({
         get: (url, config) => {
           return makeRequestWithToken(url, { method: "GET" }, config);
         },
-        post: (url, data) => {
+        post: (url, data, config) => {
           const body = data !== void 0 ? JSON.stringify(data) : void 0;
           const requestOptions = { method: "POST" };
           if (body !== void 0) {
             requestOptions.body = body;
           }
-          return makeRequestWithToken(url, requestOptions);
+          return makeRequestWithToken(url, requestOptions, config);
+        },
+        put: (url, data, config) => {
+          const body = data !== void 0 ? JSON.stringify(data) : void 0;
+          const requestOptions = { method: "PUT" };
+          if (body !== void 0) {
+            requestOptions.body = body;
+          }
+          return makeRequestWithToken(url, requestOptions, config);
         }
       };
     };
