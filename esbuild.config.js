@@ -46,6 +46,14 @@ const targets = [
     outfile: "out/upload-assets.post-step.entrypoint.js",
     format: "cjs",
   },
+  {
+    ...baseConfig,
+    entryPoints: [
+      "node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js",
+    ],
+    outfile: "out/tunnel-worker.entrypoint.js",
+    format: "cjs",
+  },
 ];
 
 export { targets, baseConfig };
