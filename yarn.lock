@@ -80,15 +80,15 @@
     p-limit "^3.1.0"
     proper-lockfile "^4.1.2"
 
-"@alwaysmeticulous/remote-replay-launcher@^2.234.1":
-  version "2.234.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/remote-replay-launcher/-/remote-replay-launcher-2.234.1.tgz#93116e8c0b32b66b2f73905e3bf2498731714935"
-  integrity sha512-+IRfo6su0vlnozxb6kEKfwiUG/ek4CesCmoOLqoxVTF1Dn7o+qRjlK+kapr2U/IyeIHxMfYdnatxGfOVmoC2Zg==
+"@alwaysmeticulous/remote-replay-launcher@^2.234.2":
+  version "2.234.2"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/remote-replay-launcher/-/remote-replay-launcher-2.234.2.tgz#37a0389b44be88cd85401bbbad11b3d4f7bd37a8"
+  integrity sha512-8OE0oO1vpN/RI0/V+qzb8ZaRegndqzQHyHPvvke3rv/S+/4xFZC8irTHv9UJD+3Ef80F6u0y3V0VoMrAT3sWiw==
   dependencies:
     "@alwaysmeticulous/api" "^2.233.0"
     "@alwaysmeticulous/client" "^2.233.0"
     "@alwaysmeticulous/common" "^2.233.0"
-    "@alwaysmeticulous/tunnels-client" "^2.234.1"
+    "@alwaysmeticulous/tunnels-client" "^2.234.2"
     "@sentry/node" "^10.3.0"
     archiver "^7.0.0"
     loglevel "^1.8.0"
@@ -121,10 +121,10 @@
     "@sentry/node" "^10.3.0"
     luxon "^3.2.1"
 
-"@alwaysmeticulous/tunnels-client@^2.234.1":
-  version "2.234.1"
-  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/tunnels-client/-/tunnels-client-2.234.1.tgz#5b3e32a1db447bddfa42c25d7570aaa72198c474"
-  integrity sha512-jXQv/h0cDJqOSJ7QKFQLLoOoA0o5/4DfWnMlNu4RWNDy8cBnbi7YbNcsqs2owxQRzsqC7QjTOjn+A/zzbTdCSg==
+"@alwaysmeticulous/tunnels-client@^2.234.2":
+  version "2.234.2"
+  resolved "https://registry.yarnpkg.com/@alwaysmeticulous/tunnels-client/-/tunnels-client-2.234.2.tgz#1fb5fb3e4ebf939729592d343601c1253298e0fc"
+  integrity sha512-SlDguWHC4QDP2YOZY+RTm4a/8zwJHoCmBKJjPO2u4GiHHWfWqd4XXytfY3SE8z72gW1cwH68mpA7WhkTXw5vig==
   dependencies:
     "@alwaysmeticulous/common" "^2.229.0"
     agentkeepalive "^4.5.0"
