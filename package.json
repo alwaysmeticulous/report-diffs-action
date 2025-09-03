@@ -29,7 +29,7 @@
     "@actions/github": "^5.1.1",
     "@alwaysmeticulous/client": "^2.233.0",
     "@alwaysmeticulous/common": "^2.233.0",
-    "@alwaysmeticulous/remote-replay-launcher": "^2.234.1",
+    "@alwaysmeticulous/remote-replay-launcher": "^2.234.2",
     "@alwaysmeticulous/replay-orchestrator-launcher": "^2.233.0",
     "@alwaysmeticulous/sentry": "^2.233.0",
     "@sentry/cli": "^2.50.2",
