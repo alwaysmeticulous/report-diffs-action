@@ -29,6 +29,8 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
         secureTunnelHost,
         proxyAllUrls,
         rewriteHostnameToAppUrl,
+        companionAssetsFolder,
+        companionAssetsRegex,
       } = getInCloudActionInputs();
 
       const headSha = await getHeadCommitSha({
@@ -74,6 +76,8 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
               proxyAllUrls,
               rewriteHostnameToAppUrl,
               ...(secureTunnelHost ? { secureTunnelHost } : {}),
+              ...(companionAssetsFolder ? { companionAssetsFolder } : {}),
+              ...(companionAssetsRegex ? { companionAssetsRegex } : {}),
             }).catch((e) => {
               if (projectTargets.length > 1) {
                 logger.error(`Failed to execute tests for ${target.name}`, e);

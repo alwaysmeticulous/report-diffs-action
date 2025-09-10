@@ -4692,7 +4692,7 @@ var require_test_run_api = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = void 0;
     var errors_1 = require_errors();
-    var executeSecureTunnelTestRun = async ({ client, headSha, tunnelUrl, basicAuthUser, basicAuthPassword, environment, isLockable, pullRequestHostingProviderId }) => {
+    var executeSecureTunnelTestRun = async ({ client, headSha, tunnelUrl, basicAuthUser, basicAuthPassword, environment, isLockable, companionAssetsInfo, pullRequestHostingProviderId }) => {
       const { data } = await client.post("test-runs/trigger-secure-tunnel-test-run-v2", {
         headSha,
         tunnelUrl,
@@ -4700,6 +4700,7 @@ var require_test_run_api = __commonJS({
         basicAuthPassword,
         environment,
         isLockable,
+        ...companionAssetsInfo ? { companionAssetsInfo } : {},
         ...pullRequestHostingProviderId ? { pullRequestHostingProviderId } : {}
       }).catch((error) => {
         throw (0, errors_1.maybeEnrichFetchError)(error);
@@ -69902,11 +69903,22 @@ var getInCloudActionInputs = () => {
   const headSha = (0, import_core2.getInput)("head-sha");
   const secureTunnelHost = (0, import_core2.getInput)("secure-tunnel-host", { required: false });
   const proxyAllUrls = (0, import_core2.getBooleanInput)("proxy-all-urls", { required: false });
+  const companionAssetsFolder = (0, import_core2.getInput)("companion-assets-folder", {
+    required: false
+  });
+  const companionAssetsRegex = (0, import_core2.getInput)("companion-assets-regex", {
+    required: false
+  });
   const rewriteHostnameToAppUrl = (0, import_core2.getBooleanInput)(
     "rewrite-hostname-to-app-url",
     { required: false }
   );
   const projectsYaml = (0, import_core2.getInput)("projects-yaml", { required: false });
+  if (!!companionAssetsFolder !== !!companionAssetsRegex) {
+    throw new Error(
+      "Must provide both 'companion-assets-folder' and 'companion-assets-regex', or neither"
+    );
+  }
   if (projectsYaml) {
     if (apiToken || appUrl) {
       throw new Error(
@@ -69920,7 +69932,9 @@ var getInCloudActionInputs = () => {
       projectTargets,
       secureTunnelHost,
       proxyAllUrls,
-      rewriteHostnameToAppUrl
+      rewriteHostnameToAppUrl,
+      companionAssetsFolder,
+      companionAssetsRegex
     };
   }
   if (!apiToken || !appUrl) {
