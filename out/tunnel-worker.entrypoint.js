@@ -4,9 +4,9 @@ var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 
-// node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/defer.js
+// node_modules/@alwaysmeticulous/common/dist/defer.js
 var require_defer = __commonJS({
-  "node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
+  "node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defer = void 0;
@@ -264,9 +264,9 @@ var require_loglevel = __commonJS({
   }
 });
 
-// node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
+// node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
 var require_console_logger = __commonJS({
-  "node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
+  "node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
     "use strict";
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -310,9 +310,9 @@ var require_console_logger = __commonJS({
   }
 });
 
-// node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
+// node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
 var require_local_data = __commonJS({
-  "node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
+  "node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
     "use strict";
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -6477,9 +6477,9 @@ var require_luxon = __commonJS({
   }
 });
 
-// node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
+// node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
 var require_logs = __commonJS({
-  "node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
+  "node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getLogFile = void 0;
@@ -6496,9 +6496,9 @@ var require_logs = __commonJS({
   }
 });
 
-// node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
+// node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
 var require_debug_logger = __commonJS({
-  "node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
+  "node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DebugLogger = void 0;
@@ -6587,9 +6587,9 @@ var require_debug_logger = __commonJS({
   }
 });
 
-// node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/constants.js
+// node_modules/@alwaysmeticulous/common/dist/constants.js
 var require_constants = __commonJS({
-  "node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
+  "node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.COMMON_CHROMIUM_FLAGS = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = void 0;
@@ -6670,9 +6670,9 @@ var require_constants = __commonJS({
   }
 });
 
-// node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/version.utils.js
+// node_modules/@alwaysmeticulous/common/dist/version.utils.js
 var require_version_utils = __commonJS({
-  "node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
+  "node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getMeticulousVersion = void 0;
@@ -6691,9 +6691,9 @@ var require_version_utils = __commonJS({
   }
 });
 
-// node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
+// node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
 var require_commit_sha_utils = __commonJS({
-  "node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
+  "node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -6737,9 +6737,9 @@ var require_commit_sha_utils = __commonJS({
   }
 });
 
-// node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
+// node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
 var require_http_retry_utils = __commonJS({
-  "node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
+  "node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.executeWithRetry = exports2.defaultShouldRetry = void 0;
@@ -6781,9 +6781,9 @@ var require_http_retry_utils = __commonJS({
   }
 });
 
-// node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/index.js
+// node_modules/@alwaysmeticulous/common/dist/index.js
 var require_dist = __commonJS({
-  "node_modules/@alwaysmeticulous/tunnels-client/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
+  "node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
