@@ -69954,7 +69954,9 @@ var getInCloudActionInputs = () => {
     ],
     secureTunnelHost,
     proxyAllUrls,
-    rewriteHostnameToAppUrl
+    rewriteHostnameToAppUrl,
+    companionAssetsFolder,
+    companionAssetsRegex
   };
 };
 
