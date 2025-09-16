@@ -9,6 +9,8 @@ export const getInCloudActionInputs = (): {
   secureTunnelHost?: string;
   proxyAllUrls: boolean;
   rewriteHostnameToAppUrl: boolean;
+  companionAssetsFolder?: string;
+  companionAssetsRegex?: string;
 } => {
   // The names, required value, and types should match that in action.yml
   const apiToken = getInput("api-token", { required: false });
@@ -17,12 +19,24 @@ export const getInCloudActionInputs = (): {
   const headSha = getInput("head-sha");
   const secureTunnelHost = getInput("secure-tunnel-host", { required: false });
   const proxyAllUrls = getBooleanInput("proxy-all-urls", { required: false });
+  const companionAssetsFolder = getInput("companion-assets-folder", {
+    required: false,
+  });
+  const companionAssetsRegex = getInput("companion-assets-regex", {
+    required: false,
+  });
   const rewriteHostnameToAppUrl = getBooleanInput(
     "rewrite-hostname-to-app-url",
     { required: false }
   );
 
   const projectsYaml = getInput("projects-yaml", { required: false });
+
+  if (!!companionAssetsFolder !== !!companionAssetsRegex) {
+    throw new Error(
+      "Must provide both 'companion-assets-folder' and 'companion-assets-regex', or neither"
+    );
+  }
 
   if (projectsYaml) {
     if (apiToken || appUrl) {
@@ -40,6 +54,8 @@ export const getInCloudActionInputs = (): {
       secureTunnelHost,
       proxyAllUrls,
       rewriteHostnameToAppUrl,
+      companionAssetsFolder,
+      companionAssetsRegex,
     };
   }
 

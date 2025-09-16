@@ -50,6 +50,16 @@ inputs:
       typically needed, but is useful in some scenarios such as if your app is being served by two different servers.
     required: false
     default: "false"
+  companion-assets-folder:
+    description: |
+      The folder to upload companion assets from. This is typically not needed.
+    required: false
+    default: ""
+  companion-assets-regex:
+    description: |
+      The regex to check when deciding if a request should be served from the companion assets. This is typically not needed.
+    required: false
+    default: ""
 
 outputs: {}
 runs:

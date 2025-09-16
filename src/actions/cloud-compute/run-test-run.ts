@@ -32,6 +32,8 @@ export const runOneTestRun = async ({
   secureTunnelHost,
   proxyAllUrls,
   rewriteHostnameToAppUrl,
+  companionAssetsFolder,
+  companionAssetsRegex,
 }: {
   apiToken: string;
   appUrl: string;
@@ -42,6 +44,8 @@ export const runOneTestRun = async ({
   secureTunnelHost?: string;
   proxyAllUrls: boolean;
   rewriteHostnameToAppUrl: boolean;
+  companionAssetsFolder?: string;
+  companionAssetsRegex?: string;
 }) => {
   const { payload } = context;
   const event = getCodeChangeEvent(context.eventName, payload);
@@ -249,5 +253,13 @@ export const runOneTestRun = async ({
       ? { keepTunnelOpenPromise: keepTunnelOpenPromise.promise }
       : {}),
     ...(pullRequestId ? { pullRequestHostingProviderId: pullRequestId } : {}),
+    ...(companionAssetsFolder && companionAssetsRegex
+      ? {
+          companionAssets: {
+            folder: companionAssetsFolder,
+            regex: companionAssetsRegex,
+          },
+        }
+      : {}),
   });
 };
