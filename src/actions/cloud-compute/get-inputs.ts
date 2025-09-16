@@ -79,5 +79,7 @@ export const getInCloudActionInputs = (): {
     secureTunnelHost,
     proxyAllUrls,
     rewriteHostnameToAppUrl,
+    companionAssetsFolder,
+    companionAssetsRegex,
   };
 };
