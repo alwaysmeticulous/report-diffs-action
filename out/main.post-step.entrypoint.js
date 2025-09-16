@@ -10542,9 +10542,21 @@ var require_console_logger = __commonJS({
     exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = void 0;
     var loglevel_1 = __importDefault2(require_loglevel());
     exports2.METICULOUS_LOGGER_NAME = "@alwaysmeticulous";
+    var timestampsApplied = false;
     var initLogger = () => {
       const logger2 = loglevel_1.default.getLogger(exports2.METICULOUS_LOGGER_NAME);
       logger2.setDefaultLevel(loglevel_1.default.levels.INFO);
+      if (process.env.METICULOUS_TIMESTAMP_LOGS === "true" && !timestampsApplied) {
+        const originalFactory = logger2.methodFactory;
+        logger2.methodFactory = (methodName, logLevel, loggerName) => {
+          const rawMethod = originalFactory(methodName, logLevel, loggerName);
+          return (...args) => {
+            const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+            rawMethod(`[${timestamp}]`, ...args);
+          };
+        };
+        timestampsApplied = true;
+      }
       return logger2;
     };
     exports2.initLogger = initLogger;
@@ -10581,17 +10593,13 @@ var require_console_logger = __commonJS({
 var require_local_data = __commonJS({
   "node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
     "use strict";
-    var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
-      return mod && mod.__esModule ? mod : { "default": mod };
-    };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = void 0;
     var path_1 = require("path");
-    var loglevel_1 = __importDefault2(require_loglevel());
     var console_logger_1 = require_console_logger();
     var _localDataDir = "";
     var getMeticulousLocalDataDir = () => {
-      const logger2 = loglevel_1.default.getLogger(console_logger_1.METICULOUS_LOGGER_NAME);
+      const logger2 = (0, console_logger_1.initLogger)();
       if (!_localDataDir) {
         (0, exports2.setMeticulousLocalDataDir)();
         logger2.debug(`Local data dir has not been set explictly, so defaulting to ${_localDataDir}`);
@@ -10602,7 +10610,7 @@ var require_local_data = __commonJS({
     };
     exports2.getMeticulousLocalDataDir = getMeticulousLocalDataDir;
     var setMeticulousLocalDataDir = (localDataDir) => {
-      const logger2 = loglevel_1.default.getLogger(console_logger_1.METICULOUS_LOGGER_NAME);
+      const logger2 = (0, console_logger_1.initLogger)();
       if (_localDataDir) {
         logger2.warn("Meticulous local data dir has already been set by a prior call to setMeticulousLocalDataDir()");
       }
@@ -16962,13 +16970,9 @@ var require_version_utils = __commonJS({
 var require_commit_sha_utils = __commonJS({
   "node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
-    var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
-      return mod && mod.__esModule ? mod : { "default": mod };
-    };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getCommitSha = void 0;
     var child_process_1 = require("child_process");
-    var loglevel_1 = __importDefault2(require_loglevel());
     var console_logger_1 = require_console_logger();
     var getGitRevParseHead = () => {
       return new Promise((resolve, reject) => {
@@ -16985,7 +16989,7 @@ var require_commit_sha_utils = __commonJS({
       if (commitSha_) {
         return commitSha_;
       }
-      const logger2 = loglevel_1.default.getLogger(console_logger_1.METICULOUS_LOGGER_NAME);
+      const logger2 = (0, console_logger_1.initLogger)();
       try {
         const gitCommitSha = (await getGitRevParseHead()).trim();
         return gitCommitSha;
@@ -17117,19 +17121,15 @@ var require_dist = __commonJS({
 var require_api_token_utils = __commonJS({
   "node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
     "use strict";
-    var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
-      return mod && mod.__esModule ? mod : { "default": mod };
-    };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getApiToken = void 0;
     var fs_1 = require("fs");
     var os_1 = require("os");
     var path_1 = require("path");
     var common_1 = require_dist();
-    var loglevel_1 = __importDefault2(require_loglevel());
     var PERSONAL_CONFIG_FILE_PATH = ".meticulous/config.json";
     var getApiToken = (apiToken) => {
-      const logger2 = loglevel_1.default.getLogger(common_1.METICULOUS_LOGGER_NAME);
+      const logger2 = (0, common_1.initLogger)();
       if (apiToken) {
         return apiToken;
       }
@@ -50479,7 +50479,6 @@ var require_client = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createClient = exports2.makeRequest = void 0;
     var common_1 = require_dist();
-    var loglevel_1 = __importDefault2(require_loglevel());
     var node_fetch_1 = __importDefault2(require_lib4());
     var api_token_utils_1 = require_api_token_utils();
     var get_proxy_agent_1 = require_get_proxy_agent();
@@ -50559,7 +50558,7 @@ var require_client = __commonJS({
     };
     exports2.makeRequest = makeRequest;
     var createClient2 = ({ apiToken: apiToken_ }) => {
-      const logger2 = loglevel_1.default.getLogger(common_1.METICULOUS_LOGGER_NAME);
+      const logger2 = (0, common_1.initLogger)();
       const apiToken = (0, api_token_utils_1.getApiToken)(apiToken_);
       if (!apiToken) {
         logger2.error("You must provide an API token by using the --apiToken parameter");

@@ -255,8 +255,8 @@ export const runOneTestRun = async ({
     ...(pullRequestId ? { pullRequestHostingProviderId: pullRequestId } : {}),
     ...(companionAssetsFolder && companionAssetsRegex
       ? {
-          companionAssetsInfo: {
-            deploymentUploadId: companionAssetsFolder,
+          companionAssets: {
+            folder: companionAssetsFolder,
             regex: companionAssetsRegex,
           },
         }
