@@ -11479,7 +11479,7 @@ var require_commit_sha_utils = __commonJS({
   "node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getCommitSha = void 0;
+    exports2.getCommitDate = exports2.getCommitSha = void 0;
     var child_process_1 = require("child_process");
     var console_logger_1 = require_console_logger();
     var getGitRevParseHead = () => {
@@ -11513,6 +11513,37 @@ var require_commit_sha_utils = __commonJS({
       }
     };
     exports2.getCommitSha = getCommitSha;
+    var getGitCommitDate = (commitSha) => {
+      return new Promise((resolve5, reject) => {
+        (0, child_process_1.execFile)("git", ["show", "-s", "--format=%cI", commitSha], { encoding: "utf-8" }, (error, output) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+          resolve5(output);
+        });
+      });
+    };
+    var getCommitDate = async (commitDate_, commitSha) => {
+      if (commitDate_) {
+        return commitDate_;
+      }
+      const logger2 = (0, console_logger_1.initLogger)();
+      try {
+        const gitCommitDate = (await getGitCommitDate(commitSha)).trim();
+        return gitCommitDate;
+      } catch (error) {
+        if (error instanceof Error) {
+          if (error.message.startsWith("Command failed")) {
+            logger2.debug("Notice: not running in a git repository (cannot get commit date)");
+            return "";
+          }
+        }
+        logger2.error(error);
+        return "";
+      }
+    };
+    exports2.getCommitDate = getCommitDate;
   }
 });
 
@@ -59827,7 +59858,7 @@ var require_dist17 = __commonJS({
   "node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ensureBrowser = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
+    exports2.ensureBrowser = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
     var defer_1 = require_defer();
     Object.defineProperty(exports2, "defer", { enumerable: true, get: function() {
       return defer_1.defer;
@@ -59876,6 +59907,9 @@ var require_dist17 = __commonJS({
     var commit_sha_utils_1 = require_commit_sha_utils();
     Object.defineProperty(exports2, "getCommitSha", { enumerable: true, get: function() {
       return commit_sha_utils_1.getCommitSha;
+    } });
+    Object.defineProperty(exports2, "getCommitDate", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getCommitDate;
     } });
     var http_retry_utils_1 = require_http_retry_utils();
     Object.defineProperty(exports2, "executeWithRetry", { enumerable: true, get: function() {
