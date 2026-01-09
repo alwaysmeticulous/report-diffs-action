@@ -29,31 +29,35 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: yarn
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.27.0
 
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
           path: node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             node-modules-${{ runner.os }}
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile --non-interactive
+        run: pnpm install --frozen-lockfile
 
       - name: Format
-        run: yarn format:check
+        run: pnpm format:check
 
       - name: Lint
-        run: yarn lint
+        run: pnpm lint
 
       - name: Test
-        run: yarn test
+        run: pnpm test
 
       - name: Build actions
         id: build
-        run: yarn build
+        run: pnpm build
 
       - name: Check JS Transpile
         id: diff
@@ -62,13 +66,13 @@ jobs:
             echo "Detected uncommitted changes after build. See status below:"
             git diff --ignore-space-at-eol --text out/
             echo ""
-            echo "Run 'yarn build' locally and commit the changes. If this doesn't work then delete your \`.parcel-cache\` directory before running 'yarn build'."
+            echo "Run 'pnpm build' locally and commit the changes. If this doesn't work then delete your \`.parcel-cache\` directory before running 'pnpm build'."
             echo ""
             exit 1
           fi
 
       - name: Upload sourcemaps to Sentry
-        run: yarn sentry:sourcemaps
+        run: pnpm sentry:sourcemaps
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 

@@ -15,11 +15,11 @@ RUN apt-get update \
   --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
-COPY package.json yarn.lock ./
+COPY package.json pnpm-lock.yaml ./
 
 ENV PUPPETEER_CACHE_DIR /app/.cache/puppeteer
 
-RUN yarn --frozen-lockfile
+RUN corepack enable && pnpm install --frozen-lockfile
 
 COPY tsconfig.base.json tsconfig.json esbuild.config.js build.js ./
 
@@ -27,6 +27,6 @@ COPY scripts/main-post-step.sh /app
 
 COPY src src
 
-RUN yarn build
+RUN pnpm build
 
 CMD ["/app/dist/main.entrypoint.js"]
