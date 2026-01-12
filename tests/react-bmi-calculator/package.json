@@ -14,9 +14,13 @@
 		"react-scripts": "^5.0.1",
 		"uuid": "3.3.3"
 	},
-	"resolutions": {
-		"//": "https://nvd.nist.gov/vuln/detail/CVE-2023-44270",
-		"postcss": "^8.4.31"
+	"pnpm": {
+		"overrides": {
+			"postcss": "^8.4.31"
+		},
+		"overrideNotes": {
+			"postcss": "https://nvd.nist.gov/vuln/detail/CVE-2023-44270"
+		}
 	},
 	"scripts": {
 		"start": "react-scripts start",
@@ -42,6 +46,8 @@
 		]
 	},
 	"devDependencies": {
+		"eslint": "^8.56.0",
+		"eslint-config-react-app": "^7.0.1",
 		"serve": "^14.1.2"
 	}
 }
