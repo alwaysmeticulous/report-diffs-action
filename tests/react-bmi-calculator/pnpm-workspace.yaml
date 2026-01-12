@@ -1,0 +1,7 @@
+packages: []
+blockExoticSubdeps: true
+minimumReleaseAge: 10800 # 7 days
+trustPolicy: no-downgrade
+trustPolicyExclude:
+  - "semver@6.3.1" # has attestation from >7.5.1
+  - "css-declaration-sorter@6.4.1" # has attestation from >7.0.0
