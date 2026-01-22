@@ -20,7 +20,7 @@
     "lint": "eslint src --ext=ts,tsx,js --cache",
     "lint:commit": "eslint --cache $(git diff --relative --name-only --diff-filter=ACMRTUXB master | grep  -E \"(.js$|.ts$|.tsx$)\")",
     "lint:fix": "eslint src --ext=ts,tsx,js --cache --fix",
-    "test": "jest",
+    "test": "vitest run",
     "sentry:sourcemaps": "./scripts/upload-sentry-sourcemaps.sh"
   },
   "//": "Upgrading `replay-orchestrator-launcher`? Consider bumping the environment version `LOGICAL_ENVIRONMENT_VERSION` in `constants.ts` if the new version includes visible changes.",
@@ -47,7 +47,6 @@
     "@alwaysmeticulous/api": "^2.248.0",
     "@alwaysmeticulous/sdk-bundles-api": "^2.248.0",
     "@alwaysmeticulous/tunnels-client": "^2.248.0",
-    "@types/jest": "^27.0.3",
     "@types/lodash.debounce": "^4.0.9",
     "@types/luxon": "^3.3.2",
     "@types/node": "^20.11.28",
@@ -58,12 +57,11 @@
     "eslint": "^8.56.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
-    "jest": "^27.4.5",
     "prettier": "^2.8.7",
     "rimraf": "^5.0.7",
-    "ts-jest": "^27.1.1",
     "ts-node": "^10.9.2",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "vitest": "^4.0.17"
   },
   "engines": {
     "node": ">= 20"
@@ -82,22 +80,5 @@
   "bugs": {
     "url": "https://github.com/alwaysmeticulous/action-meticulous-run/issues"
   },
-  "homepage": "https://github.com/alwaysmeticulous/action-meticulous-run",
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
-  }
+  "homepage": "https://github.com/alwaysmeticulous/action-meticulous-run"
 }
