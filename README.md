@@ -1,27 +1,83 @@
-# Report Diffs Action
+# Meticulous Report Diffs Action
 
-A Github action that reports visual differences between the base and head commit of pull requests by comparing user sessions replayed before and after the change.
+A GitHub Action that performs visual regression testing by comparing screenshots between base and head commits in pull requests.
 
-Follow the instructions at https://app.meticulous.ai/docs to set this up on your repo.
+**[Full setup guide and documentation →](https://app.meticulous.ai/docs/github-actions-v2)**
 
-## How to make a new `v1` release
+## Available Actions
 
-1. Create a pull request to merge `main` into `releases/v1` -> [Click here to do so](https://github.com/alwaysmeticulous/report-diffs-action/compare/releases/v1...main)
+| Action | Use Case |
+|--------|----------|
+| `upload-assets` | Upload static assets for testing **(recommended for static sites)** |
+| `cloud-compute` | Test via secure tunnel to your locally-served app |
+| `report-diffs-action` | Run tests in GitHub Actions runner (legacy) |
 
-2. Merge it as a `merge` commit (not `squashed` nor `rebased`)
+> **Recommendation:** If your app can be built as static assets (HTML/JS/CSS), use `upload-assets`. It's simpler and more reliable than running a server in CI.
 
-3. [Draft a new release](https://github.com/alwaysmeticulous/report-diffs-action/releases/new)
+## Quick Start
 
-   1. Set the next `v1.x.y` as a new tag
-   2. Set `releases/v1` as the target
-   3. Write release notes
+### Static Sites (Recommended)
 
-4. Once the build completes the @v1 tag will automatically be pointed to the new head of the releases/v1 branch
-
-## Building the docker image on a MacBook with Apple silicon
-
-To build run:
-
-```bash
-docker build . --platform=linux/amd64
+```yaml
+- uses: alwaysmeticulous/report-diffs-action/upload-assets@v1
+  with:
+    api-token: ${{ secrets.METICULOUS_API_TOKEN }}
+    app-directory: "dist"  # Your build output directory
 ```
+
+### Apps Requiring a Server
+
+```yaml
+- name: Serve app
+  run: |
+    npm run build && npm run serve &
+    sleep 5
+
+- uses: alwaysmeticulous/report-diffs-action/cloud-compute@v1
+  with:
+    api-token: ${{ secrets.METICULOUS_API_TOKEN }}
+    app-url: "http://localhost:3000/"
+```
+
+## Configuration Reference
+
+All inputs are documented in the `action.yml` files:
+
+- [`upload-assets/action.yaml`](./upload-assets/action.yaml)
+- [`cloud-compute/action.yml`](./cloud-compute/action.yml)
+- [`action.yml`](./action.yml) (legacy)
+
+## Required Workflow Setup
+
+```yaml
+on:
+  push:
+    branches: [main]
+  pull_request: {}
+  workflow_dispatch: {}  # Required for base commit comparison
+
+permissions:
+  actions: write
+  contents: read
+  issues: write
+  pull-requests: write
+  statuses: read
+```
+
+## Documentation
+
+- **[Setup Guide](https://app.meticulous.ai/docs/github-actions-v2)** - Complete CI setup instructions
+- **[Troubleshooting](https://app.meticulous.ai/docs/how-to/record-and-replay-on-different-environments)** - Cross-environment issues
+- **[FAQ](https://app.meticulous.ai/docs/faq-and-troubleshooting)** - Common questions
+
+## Releases
+
+1. Create PR to merge `main` into `releases/v1` → [Create PR](https://github.com/alwaysmeticulous/report-diffs-action/compare/releases/v1...main)
+2. Merge as a **merge commit** (not squash/rebase)
+3. [Draft a new release](https://github.com/alwaysmeticulous/report-diffs-action/releases/new) with tag `v1.x.y` targeting `releases/v1`
+4. The `@v1` tag auto-updates after build completes
+
+## Support
+
+- [Documentation](https://app.meticulous.ai/docs)
+- [GitHub Issues](https://github.com/alwaysmeticulous/report-diffs-action/issues)
