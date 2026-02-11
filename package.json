@@ -8,6 +8,7 @@
   "post-step": "out/post-step.entrypoint.js",
   "cloud-compute": "out/cloud-compute.entrypoint.js",
   "upload-assets": "out/upload-assets.entrypoint.js",
+  "upload-container": "out/upload-container.entrypoint.js",
   "files": [
     "dist",
     "out"
