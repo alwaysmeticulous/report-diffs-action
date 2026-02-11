@@ -1,0 +1,29 @@
+name: "Meticulous - Upload Container"
+description: "Upload a Docker container to Meticulous for testing."
+inputs:
+  api-token:
+    description: "Meticulous API token."
+    required: true
+  github-token:
+    description: "GITHUB_TOKEN or a repo scoped PAT."
+    required: true
+    default: ${{ github.token }}
+  image-tag:
+    description: |
+      The local Docker image tag to upload to Meticulous for testing (e.g., 'myapp:latest' or 'myapp:abc123').
+    required: true
+  wait-for-base:
+    description: |
+      If true, the action will wait for a base test run to be created before triggering a test run.
+      If that is not found, it will trigger a test run without waiting for a base test run.
+    required: false
+    default: "true"
+
+outputs: {}
+runs:
+  using: node20
+  main: "../out/upload-container.entrypoint.js"
+  post: "../out/upload-container.post-step.entrypoint.js"
+branding:
+  color: purple
+  icon: camera
