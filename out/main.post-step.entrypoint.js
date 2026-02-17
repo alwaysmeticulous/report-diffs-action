@@ -27705,9 +27705,9 @@ var require_github = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/errors.js
 var require_errors2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.maybeEnrichFetchError = exports2.isFetchError = void 0;
@@ -27781,9 +27781,9 @@ ${requestAndResponse}`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
 var require_github_cloud_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getGitHubCloudReplayBaseTestRun = void 0;
@@ -27800,9 +27800,9 @@ var require_github_cloud_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
 var require_project_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRepoUrl = exports2.getProject = void 0;
@@ -27835,9 +27835,9 @@ var require_project_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
 var require_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = void 0;
@@ -27878,9 +27878,9 @@ var require_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
 var require_session_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getRecordedSessionData = exports2.getRecordedSession = void 0;
@@ -27920,9 +27920,9 @@ var require_session_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
 var require_test_run_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = void 0;
@@ -27981,9 +27981,9 @@ var require_test_run_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
 var require_deployment_lock_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getIsLocked = void 0;
@@ -28000,9 +28000,9 @@ var require_deployment_lock_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
 var require_test_run_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.IN_PROGRESS_TEST_RUN_STATUS = void 0;
@@ -28014,9 +28014,9 @@ var require_test_run_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/defer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/defer.js
 var require_defer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defer = void 0;
@@ -28301,9 +28301,9 @@ var require_loglevel = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
 var require_console_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
     "use strict";
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -28359,9 +28359,9 @@ var require_console_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
 var require_local_data = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = void 0;
@@ -35195,9 +35195,9 @@ var require_luxon = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
 var require_logs = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getLogFile = void 0;
@@ -35214,9 +35214,9 @@ var require_logs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
 var require_debug_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DebugLogger = void 0;
@@ -35305,9 +35305,9 @@ var require_debug_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/constants.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/constants.js
 var require_constants6 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.COMMON_CHROMIUM_FLAGS = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = void 0;
@@ -35388,9 +35388,9 @@ var require_constants6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/version.utils.js
 var require_version_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getMeticulousVersion = void 0;
@@ -35409,9 +35409,9 @@ var require_version_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
 var require_commit_sha_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getCommitDate = exports2.getCommitSha = void 0;
@@ -35482,9 +35482,9 @@ var require_commit_sha_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
 var require_http_retry_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.executeWithRetry = exports2.defaultShouldRetry = void 0;
@@ -35570,9 +35570,9 @@ var require_types = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/constants.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/constants.js
 var require_constants7 = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/constants.js"(exports2, module2) {
     "use strict";
     var SEMVER_SPEC_VERSION = "2.0.0";
     var MAX_LENGTH = 256;
@@ -35602,9 +35602,9 @@ var require_constants7 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/debug.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/debug.js
 var require_debug = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/debug.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/debug.js"(exports2, module2) {
     "use strict";
     var debug2 = typeof process === "object" && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG) ? (...args) => console.error("SEMVER", ...args) : () => {
     };
@@ -35612,9 +35612,9 @@ var require_debug = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/re.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/re.js
 var require_re = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/re.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/re.js"(exports2, module2) {
     "use strict";
     var {
       MAX_SAFE_COMPONENT_LENGTH,
@@ -35700,9 +35700,9 @@ var require_re = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/parse-options.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/parse-options.js
 var require_parse_options = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/parse-options.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/parse-options.js"(exports2, module2) {
     "use strict";
     var looseOption = Object.freeze({ loose: true });
     var emptyOpts = Object.freeze({});
@@ -35719,9 +35719,9 @@ var require_parse_options = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/identifiers.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/identifiers.js
 var require_identifiers = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/identifiers.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/identifiers.js"(exports2, module2) {
     "use strict";
     var numeric = /^[0-9]+$/;
     var compareIdentifiers = (a, b) => {
@@ -35744,9 +35744,9 @@ var require_identifiers = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/classes/semver.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/semver.js
 var require_semver = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/classes/semver.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/semver.js"(exports2, module2) {
     "use strict";
     var debug2 = require_debug();
     var { MAX_LENGTH, MAX_SAFE_INTEGER } = require_constants7();
@@ -36019,9 +36019,9 @@ var require_semver = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/parse.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/parse.js
 var require_parse2 = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/parse.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/parse.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var parse = (version, options, throwErrors = false) => {
@@ -36041,9 +36041,9 @@ var require_parse2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/valid.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/valid.js
 var require_valid = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/valid.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/valid.js"(exports2, module2) {
     "use strict";
     var parse = require_parse2();
     var valid = (version, options) => {
@@ -36054,9 +36054,9 @@ var require_valid = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/clean.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/clean.js
 var require_clean = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/clean.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/clean.js"(exports2, module2) {
     "use strict";
     var parse = require_parse2();
     var clean = (version, options) => {
@@ -36067,9 +36067,9 @@ var require_clean = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/inc.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/inc.js
 var require_inc = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/inc.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/inc.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var inc = (version, release, options, identifier, identifierBase) => {
@@ -36091,9 +36091,9 @@ var require_inc = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/diff.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/diff.js
 var require_diff = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/diff.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/diff.js"(exports2, module2) {
     "use strict";
     var parse = require_parse2();
     var diff = (version1, version2) => {
@@ -36135,9 +36135,9 @@ var require_diff = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/major.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/major.js
 var require_major = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/major.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/major.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var major = (a, loose) => new SemVer(a, loose).major;
@@ -36145,9 +36145,9 @@ var require_major = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/minor.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/minor.js
 var require_minor = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/minor.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/minor.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var minor = (a, loose) => new SemVer(a, loose).minor;
@@ -36155,9 +36155,9 @@ var require_minor = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/patch.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/patch.js
 var require_patch = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/patch.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/patch.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var patch = (a, loose) => new SemVer(a, loose).patch;
@@ -36165,9 +36165,9 @@ var require_patch = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/prerelease.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/prerelease.js
 var require_prerelease = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/prerelease.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/prerelease.js"(exports2, module2) {
     "use strict";
     var parse = require_parse2();
     var prerelease = (version, options) => {
@@ -36178,9 +36178,9 @@ var require_prerelease = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/compare.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare.js
 var require_compare = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/compare.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var compare = (a, b, loose) => new SemVer(a, loose).compare(new SemVer(b, loose));
@@ -36188,9 +36188,9 @@ var require_compare = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/rcompare.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/rcompare.js
 var require_rcompare = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/rcompare.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/rcompare.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var rcompare = (a, b, loose) => compare(b, a, loose);
@@ -36198,9 +36198,9 @@ var require_rcompare = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/compare-loose.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare-loose.js
 var require_compare_loose = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/compare-loose.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare-loose.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var compareLoose = (a, b) => compare(a, b, true);
@@ -36208,9 +36208,9 @@ var require_compare_loose = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/compare-build.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare-build.js
 var require_compare_build = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/compare-build.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare-build.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var compareBuild = (a, b, loose) => {
@@ -36222,9 +36222,9 @@ var require_compare_build = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/sort.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/sort.js
 var require_sort = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/sort.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/sort.js"(exports2, module2) {
     "use strict";
     var compareBuild = require_compare_build();
     var sort = (list, loose) => list.sort((a, b) => compareBuild(a, b, loose));
@@ -36232,9 +36232,9 @@ var require_sort = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/rsort.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/rsort.js
 var require_rsort = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/rsort.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/rsort.js"(exports2, module2) {
     "use strict";
     var compareBuild = require_compare_build();
     var rsort = (list, loose) => list.sort((a, b) => compareBuild(b, a, loose));
@@ -36242,9 +36242,9 @@ var require_rsort = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/gt.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/gt.js
 var require_gt = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/gt.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/gt.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var gt = (a, b, loose) => compare(a, b, loose) > 0;
@@ -36252,9 +36252,9 @@ var require_gt = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/lt.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/lt.js
 var require_lt = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/lt.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/lt.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var lt = (a, b, loose) => compare(a, b, loose) < 0;
@@ -36262,9 +36262,9 @@ var require_lt = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/eq.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/eq.js
 var require_eq = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/eq.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/eq.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var eq = (a, b, loose) => compare(a, b, loose) === 0;
@@ -36272,9 +36272,9 @@ var require_eq = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/neq.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/neq.js
 var require_neq = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/neq.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/neq.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var neq = (a, b, loose) => compare(a, b, loose) !== 0;
@@ -36282,9 +36282,9 @@ var require_neq = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/gte.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/gte.js
 var require_gte = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/gte.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/gte.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var gte = (a, b, loose) => compare(a, b, loose) >= 0;
@@ -36292,9 +36292,9 @@ var require_gte = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/lte.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/lte.js
 var require_lte = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/lte.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/lte.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var lte = (a, b, loose) => compare(a, b, loose) <= 0;
@@ -36302,9 +36302,9 @@ var require_lte = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/cmp.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/cmp.js
 var require_cmp = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/cmp.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/cmp.js"(exports2, module2) {
     "use strict";
     var eq = require_eq();
     var neq = require_neq();
@@ -36352,9 +36352,9 @@ var require_cmp = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/coerce.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/coerce.js
 var require_coerce = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/coerce.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/coerce.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var parse = require_parse2();
@@ -36398,9 +36398,9 @@ var require_coerce = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/lrucache.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/lrucache.js
 var require_lrucache = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/internal/lrucache.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/lrucache.js"(exports2, module2) {
     "use strict";
     var LRUCache = class {
       constructor() {
@@ -36436,9 +36436,9 @@ var require_lrucache = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/classes/range.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/range.js
 var require_range = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/classes/range.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/range.js"(exports2, module2) {
     "use strict";
     var SPACE_CHARACTERS = /\s+/g;
     var Range = class _Range {
@@ -36813,9 +36813,9 @@ var require_range = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/classes/comparator.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/comparator.js
 var require_comparator = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/classes/comparator.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/comparator.js"(exports2, module2) {
     "use strict";
     var ANY = Symbol("SemVer ANY");
     var Comparator = class _Comparator {
@@ -36926,9 +36926,9 @@ var require_comparator = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/satisfies.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/satisfies.js
 var require_satisfies = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/functions/satisfies.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/satisfies.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var satisfies = (version, range, options) => {
@@ -36943,9 +36943,9 @@ var require_satisfies = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/to-comparators.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/to-comparators.js
 var require_to_comparators = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/to-comparators.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/to-comparators.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var toComparators = (range, options) => new Range(range, options).set.map((comp) => comp.map((c) => c.value).join(" ").trim().split(" "));
@@ -36953,9 +36953,9 @@ var require_to_comparators = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/max-satisfying.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/max-satisfying.js
 var require_max_satisfying = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/max-satisfying.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/max-satisfying.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Range = require_range();
@@ -36982,9 +36982,9 @@ var require_max_satisfying = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/min-satisfying.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/min-satisfying.js
 var require_min_satisfying = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/min-satisfying.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/min-satisfying.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Range = require_range();
@@ -37011,9 +37011,9 @@ var require_min_satisfying = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/min-version.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/min-version.js
 var require_min_version = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/min-version.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/min-version.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Range = require_range();
@@ -37068,9 +37068,9 @@ var require_min_version = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/valid.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/valid.js
 var require_valid2 = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/valid.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/valid.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var validRange = (range, options) => {
@@ -37084,9 +37084,9 @@ var require_valid2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/outside.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/outside.js
 var require_outside = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/outside.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/outside.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Comparator = require_comparator();
@@ -37153,9 +37153,9 @@ var require_outside = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/gtr.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/gtr.js
 var require_gtr = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/gtr.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/gtr.js"(exports2, module2) {
     "use strict";
     var outside = require_outside();
     var gtr = (version, range, options) => outside(version, range, ">", options);
@@ -37163,9 +37163,9 @@ var require_gtr = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/ltr.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/ltr.js
 var require_ltr = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/ltr.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/ltr.js"(exports2, module2) {
     "use strict";
     var outside = require_outside();
     var ltr = (version, range, options) => outside(version, range, "<", options);
@@ -37173,9 +37173,9 @@ var require_ltr = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/intersects.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/intersects.js
 var require_intersects = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/intersects.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/intersects.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var intersects = (r1, r2, options) => {
@@ -37187,9 +37187,9 @@ var require_intersects = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/simplify.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/simplify.js
 var require_simplify = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/simplify.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/simplify.js"(exports2, module2) {
     "use strict";
     var satisfies = require_satisfies();
     var compare = require_compare();
@@ -37237,9 +37237,9 @@ var require_simplify = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/subset.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/subset.js
 var require_subset = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/ranges/subset.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/subset.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var Comparator = require_comparator();
@@ -37400,9 +37400,9 @@ var require_subset = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.3/node_modules/semver/index.js
+// node_modules/.pnpm/semver@7.7.4/node_modules/semver/index.js
 var require_semver2 = __commonJS({
-  "node_modules/.pnpm/semver@7.7.3/node_modules/semver/index.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/index.js"(exports2, module2) {
     "use strict";
     var internalRe = require_re();
     var constants = require_constants7();
@@ -77327,9 +77327,9 @@ var init_revisions = __esm({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
 var require_browser_installer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -77504,9 +77504,9 @@ For more help, see: https://pptr.dev/troubleshooting`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/index.js
 var require_dist12 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ensureBrowser = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
@@ -77576,9 +77576,9 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
 var require_api_token_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getApiToken = void 0;
@@ -77609,9 +77609,9 @@ var require_api_token_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
 var require_get_proxy_agent = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getProxyAgent = void 0;
@@ -77625,9 +77625,9 @@ var require_get_proxy_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/client.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/client.js
 var require_client2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
     "use strict";
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -77764,17 +77764,27 @@ var require_client2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
 var require_project_deployments_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.downloadProjectDeployment = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.requestAssetUpload = void 0;
+    exports2.downloadProjectDeployment = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = void 0;
     var requestAssetUpload = async ({ client, ...params }) => {
       const { data } = await client.post("project-deployments/request-asset-upload", params);
       return data;
     };
     exports2.requestAssetUpload = requestAssetUpload;
+    var requestMultipartAssetUpload = async ({ client }) => {
+      const { data } = await client.post("project-deployments/request-multipart-asset-upload", {});
+      return data;
+    };
+    exports2.requestMultipartAssetUpload = requestMultipartAssetUpload;
+    var requestUploadPart = async ({ client, ...params }) => {
+      const { data } = await client.post("project-deployments/request-upload-part", params);
+      return data;
+    };
+    exports2.requestUploadPart = requestUploadPart;
     var triggerRunOnDeployment = async ({ client, ...params }) => {
       const { data } = await client.post("project-deployments/trigger-run", params);
       return data;
@@ -77793,9 +77803,9 @@ var require_project_deployments_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/index.js
 var require_dist13 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.2/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -77818,7 +77828,7 @@ var require_dist13 = __commonJS({
           __createBinding2(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.isFetchError = exports2.downloadProjectDeployment = exports2.completeAssetUpload = exports2.requestAssetUpload = exports2.getProxyAgent = exports2.makeRequest = exports2.createClient = exports2.getApiToken = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.getIsLocked = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.getRepoUrl = exports2.getProject = void 0;
+    exports2.isFetchError = exports2.downloadProjectDeployment = exports2.completeAssetUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.getProxyAgent = exports2.makeRequest = exports2.createClient = exports2.getApiToken = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.getIsLocked = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.getRepoUrl = exports2.getProject = void 0;
     __exportStar2(require_github_cloud_replay_api(), exports2);
     var project_api_1 = require_project_api();
     Object.defineProperty(exports2, "getProject", { enumerable: true, get: function() {
@@ -77892,6 +77902,12 @@ var require_dist13 = __commonJS({
     var project_deployments_api_1 = require_project_deployments_api();
     Object.defineProperty(exports2, "requestAssetUpload", { enumerable: true, get: function() {
       return project_deployments_api_1.requestAssetUpload;
+    } });
+    Object.defineProperty(exports2, "requestMultipartAssetUpload", { enumerable: true, get: function() {
+      return project_deployments_api_1.requestMultipartAssetUpload;
+    } });
+    Object.defineProperty(exports2, "requestUploadPart", { enumerable: true, get: function() {
+      return project_deployments_api_1.requestUploadPart;
     } });
     Object.defineProperty(exports2, "completeAssetUpload", { enumerable: true, get: function() {
       return project_deployments_api_1.completeAssetUpload;
