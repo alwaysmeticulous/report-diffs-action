@@ -10,23 +10,23 @@ This is the Meticulous Report Diffs Action - a GitHub Action that performs visua
 
 ```bash
 # Install dependencies
-yarn install
+pnpm install
 
 # Development
-yarn dev                    # Run parcel in watch mode
-yarn build                  # Build all targets
+pnpm dev                    # Run parcel in watch mode
+pnpm build                  # Build all targets
 
 # Code quality
-yarn lint                   # Run ESLint
-yarn lint:fix              # Fix linting issues
-yarn format                # Format code with Prettier
-yarn format:check          # Check formatting
+pnpm lint                   # Run ESLint
+pnpm lint:fix              # Fix linting issues
+pnpm format                # Format code with Prettier
+pnpm format:check          # Check formatting
 
 # Testing
-yarn test                   # Run Jest tests
+pnpm test                   # Run Jest tests
 
 # Deployment
-yarn sentry:sourcemaps      # Upload sourcemaps to Sentry (requires SENTRY_AUTH_TOKEN)
+pnpm sentry:sourcemaps      # Upload sourcemaps to Sentry (requires SENTRY_AUTH_TOKEN)
 ```
 
 ## Architecture

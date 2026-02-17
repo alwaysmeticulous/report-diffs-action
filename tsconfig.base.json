@@ -9,7 +9,7 @@
     /* Modules */
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "types": ["node", "jest"],
+    "types": ["node"],
     /* Emit */
     "declaration": true,
     "newLine": "lf",
