@@ -1,0 +1,65 @@
+name: Tests - react-bmi-calculator (container)
+
+on:
+  push:
+    branches:
+      - main
+      - releases/*
+  pull_request: {}
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: read
+  statuses: write
+  pull-requests: write
+  packages: read
+
+jobs:
+  test:
+    name: Report diffs (uploading container)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js LTS
+        id: nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.27.0
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            tests/react-bmi-calculator/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}
+
+      - name: Install react-bmi-calculator dependencies
+        working-directory: ./tests/react-bmi-calculator
+        run: pnpm install --frozen-lockfile
+
+      - name: Build react-bmi-calculator
+        working-directory: ./tests/react-bmi-calculator
+        run: pnpm build
+
+      - name: Build Docker image
+        working-directory: ./tests/react-bmi-calculator
+        run: docker build -t react-bmi-calculator:${{ github.sha }} .
+
+      - name: Run report-diffs-action (container upload)
+        id: test
+        uses: ./upload-container
+        with:
+          api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
+          image-tag: react-bmi-calculator:${{ github.sha }}

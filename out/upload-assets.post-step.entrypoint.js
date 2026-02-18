@@ -22152,9 +22152,9 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/errors.js
 var require_errors2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.maybeEnrichFetchError = exports2.isFetchError = void 0;
@@ -22228,9 +22228,9 @@ ${requestAndResponse}`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
 var require_github_cloud_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getGitHubCloudReplayBaseTestRun = void 0;
@@ -22247,9 +22247,9 @@ var require_github_cloud_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
 var require_project_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRepoUrl = exports2.getProject = void 0;
@@ -22282,9 +22282,9 @@ var require_project_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
 var require_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = void 0;
@@ -22325,9 +22325,9 @@ var require_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
 var require_session_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getRecordedSessionData = exports2.getRecordedSession = void 0;
@@ -22367,9 +22367,9 @@ var require_session_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
 var require_test_run_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = void 0;
@@ -22428,9 +22428,9 @@ var require_test_run_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
 var require_deployment_lock_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getIsLocked = void 0;
@@ -22447,9 +22447,9 @@ var require_deployment_lock_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
 var require_test_run_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.IN_PROGRESS_TEST_RUN_STATUS = void 0;
@@ -72099,9 +72099,9 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
 var require_api_token_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getApiToken = void 0;
@@ -75154,9 +75154,9 @@ var require_lib3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
 var require_get_proxy_agent = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getProxyAgent = void 0;
@@ -75170,9 +75170,9 @@ var require_get_proxy_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/client.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/client.js
 var require_client2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
     "use strict";
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -75309,12 +75309,12 @@ var require_client2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
 var require_project_deployments_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.downloadProjectDeployment = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = void 0;
+    exports2.downloadProjectDeployment = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = void 0;
     var requestAssetUpload = async ({ client, ...params }) => {
       const { data } = await client.post("project-deployments/request-asset-upload", params);
       return data;
@@ -75340,6 +75340,11 @@ var require_project_deployments_api = __commonJS({
       return data;
     };
     exports2.completeAssetUpload = completeAssetUpload;
+    var completeContainerUpload = async ({ client, ...params }) => {
+      const { data } = await client.post("project-deployments/complete-container-upload", params);
+      return data;
+    };
+    exports2.completeContainerUpload = completeContainerUpload;
     var downloadProjectDeployment = async ({ client, deploymentUploadId }) => {
       const { data } = await client.get(`project-deployments/${deploymentUploadId}`);
       return data;
@@ -75348,9 +75353,23 @@ var require_project_deployments_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
+var require_registry_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getRegistryAuth = void 0;
+    var getRegistryAuth = async ({ client }) => {
+      const { data } = await client.get("registry/auth");
+      return data;
+    };
+    exports2.getRegistryAuth = getRegistryAuth;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/index.js
 var require_dist13 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.248.15/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.249.0/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -75373,7 +75392,7 @@ var require_dist13 = __commonJS({
           __createBinding2(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.isFetchError = exports2.downloadProjectDeployment = exports2.completeAssetUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.getProxyAgent = exports2.makeRequest = exports2.createClient = exports2.getApiToken = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.getIsLocked = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.getRepoUrl = exports2.getProject = void 0;
+    exports2.isFetchError = exports2.getRegistryAuth = exports2.downloadProjectDeployment = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.getProxyAgent = exports2.makeRequest = exports2.createClient = exports2.getApiToken = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.getIsLocked = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.getRepoUrl = exports2.getProject = void 0;
     __exportStar2(require_github_cloud_replay_api(), exports2);
     var project_api_1 = require_project_api();
     Object.defineProperty(exports2, "getProject", { enumerable: true, get: function() {
@@ -75457,8 +75476,15 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "completeAssetUpload", { enumerable: true, get: function() {
       return project_deployments_api_1.completeAssetUpload;
     } });
+    Object.defineProperty(exports2, "completeContainerUpload", { enumerable: true, get: function() {
+      return project_deployments_api_1.completeContainerUpload;
+    } });
     Object.defineProperty(exports2, "downloadProjectDeployment", { enumerable: true, get: function() {
       return project_deployments_api_1.downloadProjectDeployment;
+    } });
+    var registry_api_1 = require_registry_api();
+    Object.defineProperty(exports2, "getRegistryAuth", { enumerable: true, get: function() {
+      return registry_api_1.getRegistryAuth;
     } });
     var errors_1 = require_errors2();
     Object.defineProperty(exports2, "isFetchError", { enumerable: true, get: function() {
