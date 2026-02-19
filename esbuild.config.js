@@ -48,6 +48,18 @@ const targets = [
   },
   {
     ...baseConfig,
+    entryPoints: ["src/upload-container.entrypoint.ts"],
+    outfile: "out/upload-container.entrypoint.js",
+    format: "cjs",
+  },
+  {
+    ...baseConfig,
+    entryPoints: ["src/upload-container.post-step.entrypoint.ts"],
+    outfile: "out/upload-container.post-step.entrypoint.js",
+    format: "cjs",
+  },
+  {
+    ...baseConfig,
     entryPoints: [
       "node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js",
     ],
