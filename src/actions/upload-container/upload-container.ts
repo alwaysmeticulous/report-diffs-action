@@ -30,8 +30,14 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
     },
     async (span) => {
       try {
-        const { apiToken, githubToken, imageTag, waitForBase, containerPort, containerEnv } =
-          getUploadContainerInputs();
+        const {
+          apiToken,
+          githubToken,
+          imageTag,
+          waitForBase,
+          containerPort,
+          containerEnv,
+        } = getUploadContainerInputs();
         const event = getCodeChangeEvent(context.eventName, context.payload);
         const octokit = getOctokitOrFail(githubToken);
 
