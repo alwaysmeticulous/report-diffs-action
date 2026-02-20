@@ -5,5 +5,5 @@ updates:
     schedule:
       interval: "weekly"
     ignore:
-     # Parcel deps must be bumped in sync, which Dependabot isn't good at
-     - dependency-name: "@parcel/*"
+      # Parcel deps must be bumped in sync, which Dependabot isn't good at
+      - dependency-name: "@parcel/*"

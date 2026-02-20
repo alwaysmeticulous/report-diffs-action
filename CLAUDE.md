@@ -34,11 +34,14 @@ pnpm sentry:sourcemaps      # Upload sourcemaps to Sentry (requires SENTRY_AUTH_
 ### Multiple Actions & Entrypoints
 
 The project contains three separate GitHub Actions:
+
 1. **Main Action** (`action.yml`) - Primary visual testing action
+
    - Entry: `src/main.entrypoint.ts` → `dist/main.entrypoint.mjs` (ESModule)
    - Post-step: `src/main.post-step.entrypoint.ts` → `out/post-step.entrypoint.js` (CommonJS)
 
 2. **Cloud Compute Action** (`cloud-compute/action.yml`) - Runs tests in Meticulous cloud
+
    - Entry: `src/cloud-compute.entrypoint.ts` → `out/cloud-compute.entrypoint.js`
 
 3. **Upload Assets Action** (`upload-assets/action.yml`) - Uploads test assets
@@ -81,6 +84,7 @@ The codebase includes enhanced error handling for GitHub API permission issues:
 - Include required permissions and workflow_dispatch configuration in error messages
 
 Common GitHub permissions required:
+
 - `actions: read/write` - For workflow operations
 - `contents: read` - For repository access
 - `pull-requests: write` - For PR comments
