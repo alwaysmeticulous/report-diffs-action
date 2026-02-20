@@ -18,6 +18,17 @@ inputs:
       If that is not found, it will trigger a test run without waiting for a base test run.
     required: false
     default: "true"
+  container-port:
+    description: |
+      The port the container listens on. If not provided, Meticulous will inject a PORT
+      environment variable and expect the container to listen on that port.
+    required: false
+  container-env:
+    description: |
+      Environment variables to pass to the container, one per line in KEY=VALUE format. Example:
+        FOO=bar
+        BAZ=qux
+    required: false
 
 outputs: {}
 runs:
