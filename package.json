@@ -27,7 +27,7 @@
   "//": "Upgrading `replay-orchestrator-launcher`? Consider bumping the environment version `LOGICAL_ENVIRONMENT_VERSION` in `constants.ts` if the new version includes visible changes.",
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/github": "^5.1.1",
+    "@actions/github": "^9.0.0",
     "@alwaysmeticulous/client": "^2.250.4",
     "@alwaysmeticulous/common": "^2.250.4",
     "@alwaysmeticulous/remote-replay-launcher": "^2.250.4",
