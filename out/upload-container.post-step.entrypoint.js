@@ -22152,9 +22152,9 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/errors.js
 var require_errors2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.maybeEnrichFetchError = exports2.isFetchError = void 0;
@@ -22228,9 +22228,9 @@ ${requestAndResponse}`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
 var require_github_cloud_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getGitHubCloudReplayBaseTestRun = void 0;
@@ -22247,9 +22247,23 @@ var require_github_cloud_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
+var require_oauth_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getWhoami = void 0;
+    var getWhoami = async (client) => {
+      const { data } = await client.get("oauth/whoami");
+      return data;
+    };
+    exports2.getWhoami = getWhoami;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
 var require_project_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRepoUrl = exports2.getProject = void 0;
@@ -22282,9 +22296,9 @@ var require_project_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
 var require_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = void 0;
@@ -22325,9 +22339,9 @@ var require_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
 var require_session_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getRecordedSessionData = exports2.getRecordedSession = void 0;
@@ -22367,9 +22381,9 @@ var require_session_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
 var require_test_run_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = void 0;
@@ -22428,9 +22442,9 @@ var require_test_run_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
 var require_deployment_lock_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getIsLocked = void 0;
@@ -22447,9 +22461,9 @@ var require_deployment_lock_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
 var require_test_run_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.IN_PROGRESS_TEST_RUN_STATUS = void 0;
@@ -22461,9 +22475,9 @@ var require_test_run_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/defer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/defer.js
 var require_defer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defer = void 0;
@@ -22748,9 +22762,9 @@ var require_loglevel = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
 var require_console_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
     "use strict";
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -22806,16 +22820,22 @@ var require_console_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
 var require_local_data = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = void 0;
+    exports2.runWithLocalDataDir = exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = void 0;
+    var async_hooks_1 = require("async_hooks");
     var path_1 = require("path");
     var console_logger_1 = require_console_logger();
+    var asyncLocalDataDir = new async_hooks_1.AsyncLocalStorage();
     var _localDataDir = "";
     var getMeticulousLocalDataDir = () => {
+      const asyncDir = asyncLocalDataDir.getStore();
+      if (asyncDir) {
+        return asyncDir;
+      }
       const logger = (0, console_logger_1.initLogger)();
       if (!_localDataDir) {
         (0, exports2.setMeticulousLocalDataDir)();
@@ -22834,6 +22854,10 @@ var require_local_data = __commonJS({
       _localDataDir = localDataDir || process.env["METICULOUS_DIR"] || (0, path_1.normalize)((0, path_1.join)(process.env["HOME"] || process.cwd(), ".meticulous"));
     };
     exports2.setMeticulousLocalDataDir = setMeticulousLocalDataDir;
+    var runWithLocalDataDir = (dataDir, fn) => {
+      return asyncLocalDataDir.run(dataDir, fn);
+    };
+    exports2.runWithLocalDataDir = runWithLocalDataDir;
   }
 });
 
@@ -29642,9 +29666,9 @@ var require_luxon = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
 var require_logs = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getLogFile = void 0;
@@ -29661,9 +29685,9 @@ var require_logs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
 var require_debug_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DebugLogger = void 0;
@@ -29752,9 +29776,9 @@ var require_debug_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/constants.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/constants.js
 var require_constants6 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.COMMON_CHROMIUM_FLAGS = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = void 0;
@@ -29835,9 +29859,9 @@ var require_constants6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/version.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
 var require_version_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getMeticulousVersion = void 0;
@@ -29856,9 +29880,9 @@ var require_version_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
 var require_commit_sha_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getCommitDate = exports2.getCommitSha = void 0;
@@ -29929,9 +29953,9 @@ var require_commit_sha_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
 var require_http_retry_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.executeWithRetry = exports2.defaultShouldRetry = void 0;
@@ -71850,9 +71874,9 @@ var init_revisions = __esm({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
 var require_browser_installer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -72027,12 +72051,12 @@ For more help, see: https://pptr.dev/troubleshooting`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/index.js
 var require_dist12 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.250.4/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ensureBrowser = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
+    exports2.ensureBrowser = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
     var defer_1 = require_defer();
     Object.defineProperty(exports2, "defer", { enumerable: true, get: function() {
       return defer_1.defer;
@@ -72040,6 +72064,9 @@ var require_dist12 = __commonJS({
     var local_data_1 = require_local_data();
     Object.defineProperty(exports2, "getMeticulousLocalDataDir", { enumerable: true, get: function() {
       return local_data_1.getMeticulousLocalDataDir;
+    } });
+    Object.defineProperty(exports2, "runWithLocalDataDir", { enumerable: true, get: function() {
+      return local_data_1.runWithLocalDataDir;
     } });
     Object.defineProperty(exports2, "setMeticulousLocalDataDir", { enumerable: true, get: function() {
       return local_data_1.setMeticulousLocalDataDir;
@@ -72099,36 +72126,193 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
-var require_api_token_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
+var require_oauth_constants = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getApiToken = void 0;
+    exports2.getWebappBaseUrl = exports2.getTokenEndpoint = exports2.OAUTH_SCOPES = exports2.CLI_CLIENT_ID = exports2.KEYCLOAK_ISSUER_URL = void 0;
+    exports2.KEYCLOAK_ISSUER_URL = process.env["METICULOUS_OAUTH_ISSUER_URL"] || "https://app.meticulous.ai/auth/realms/meticulous";
+    exports2.CLI_CLIENT_ID = "meticulous-cli";
+    exports2.OAUTH_SCOPES = "openid email profile";
+    var WELL_KNOWN_PATH = "/.well-known/openid-configuration";
+    var cachedTokenEndpoint = null;
+    var getTokenEndpoint = async () => {
+      if (cachedTokenEndpoint) {
+        return cachedTokenEndpoint;
+      }
+      const response = await fetch(`${exports2.KEYCLOAK_ISSUER_URL}${WELL_KNOWN_PATH}`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch OpenID configuration: ${response.status} ${response.statusText}`);
+      }
+      const config = await response.json();
+      if (!config.token_endpoint) {
+        throw new Error("OpenID configuration missing token_endpoint");
+      }
+      cachedTokenEndpoint = config.token_endpoint;
+      return cachedTokenEndpoint;
+    };
+    exports2.getTokenEndpoint = getTokenEndpoint;
+    var DEFAULT_WEBAPP_BASE_URL = "https://app.meticulous.ai";
+    var getWebappBaseUrl = () => {
+      const apiUrlFromEnv = process.env["METICULOUS_API_URL"];
+      if (apiUrlFromEnv && apiUrlFromEnv.includes("localhost")) {
+        return apiUrlFromEnv.replace(/\/api\/?$/, "").replace(":3000", ":3001");
+      }
+      return DEFAULT_WEBAPP_BASE_URL;
+    };
+    exports2.getWebappBaseUrl = getWebappBaseUrl;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
+var require_oauth_token_store = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.clearOAuthTokens = exports2.storeOAuthTokens = exports2.getStoredOAuthTokens = void 0;
+    var fs_1 = require("fs");
+    var os_1 = require("os");
+    var path_1 = require("path");
+    var METICULOUS_DIR = (0, path_1.join)((0, os_1.homedir)(), ".meticulous");
+    var TOKEN_FILE_PATH = (0, path_1.join)(METICULOUS_DIR, "oauth-tokens.json");
+    var getStoredOAuthTokens = () => {
+      try {
+        if (!(0, fs_1.existsSync)(TOKEN_FILE_PATH)) {
+          return null;
+        }
+        const data = (0, fs_1.readFileSync)(TOKEN_FILE_PATH, "utf-8");
+        return JSON.parse(data);
+      } catch {
+        return null;
+      }
+    };
+    exports2.getStoredOAuthTokens = getStoredOAuthTokens;
+    var storeOAuthTokens = (tokens) => {
+      if (!(0, fs_1.existsSync)(METICULOUS_DIR)) {
+        (0, fs_1.mkdirSync)(METICULOUS_DIR, { recursive: true });
+      }
+      (0, fs_1.writeFileSync)(TOKEN_FILE_PATH, JSON.stringify(tokens, null, 2), {
+        mode: 384
+      });
+    };
+    exports2.storeOAuthTokens = storeOAuthTokens;
+    var clearOAuthTokens = () => {
+      try {
+        if ((0, fs_1.existsSync)(TOKEN_FILE_PATH)) {
+          (0, fs_1.unlinkSync)(TOKEN_FILE_PATH);
+        }
+      } catch {
+      }
+    };
+    exports2.clearOAuthTokens = clearOAuthTokens;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
+var require_oauth_refresh = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getValidAccessToken = void 0;
+    var oauth_constants_1 = require_oauth_constants();
+    var oauth_token_store_1 = require_oauth_token_store();
+    var TOKEN_EXPIRY_BUFFER_SECONDS = 30;
+    var getValidAccessToken = async () => {
+      const tokens = (0, oauth_token_store_1.getStoredOAuthTokens)();
+      if (!tokens) {
+        return null;
+      }
+      const now = Math.floor(Date.now() / 1e3);
+      if (tokens.expiresAt > now + TOKEN_EXPIRY_BUFFER_SECONDS) {
+        return tokens.accessToken;
+      }
+      if (!tokens.refreshToken) {
+        (0, oauth_token_store_1.clearOAuthTokens)();
+        return null;
+      }
+      try {
+        const body = new URLSearchParams({
+          grant_type: "refresh_token",
+          client_id: oauth_constants_1.CLI_CLIENT_ID,
+          refresh_token: tokens.refreshToken
+        });
+        const tokenEndpoint = await (0, oauth_constants_1.getTokenEndpoint)();
+        const response = await fetch(tokenEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body.toString()
+        });
+        if (!response.ok) {
+          (0, oauth_token_store_1.clearOAuthTokens)();
+          return null;
+        }
+        const data = await response.json();
+        const updatedTokens = {
+          accessToken: data.access_token,
+          refreshToken: data.refresh_token,
+          expiresAt: Math.floor(Date.now() / 1e3) + data.expires_in,
+          idToken: data.id_token
+        };
+        (0, oauth_token_store_1.storeOAuthTokens)(updatedTokens);
+        return updatedTokens.accessToken;
+      } catch {
+        (0, oauth_token_store_1.clearOAuthTokens)();
+        return null;
+      }
+    };
+    exports2.getValidAccessToken = getValidAccessToken;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
+var require_api_token_utils = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getAuthToken = exports2.getApiToken = void 0;
     var fs_1 = require("fs");
     var os_1 = require("os");
     var path_1 = require("path");
     var common_1 = require_dist12();
+    var oauth_refresh_1 = require_oauth_refresh();
     var PERSONAL_CONFIG_FILE_PATH = ".meticulous/config.json";
-    var getApiToken = (apiToken) => {
-      const logger = (0, common_1.initLogger)();
-      if (apiToken) {
-        return apiToken;
-      }
-      if (process.env["METICULOUS_API_TOKEN"]) {
-        return process.env["METICULOUS_API_TOKEN"];
-      }
+    var getFileBasedToken = () => {
       const personalConfigFileAbsolutePath = (0, path_1.join)((0, os_1.homedir)(), PERSONAL_CONFIG_FILE_PATH);
       if ((0, fs_1.existsSync)(personalConfigFileAbsolutePath)) {
         const config = JSON.parse((0, fs_1.readFileSync)(personalConfigFileAbsolutePath).toString("utf-8"));
         if (config.apiToken) {
+          const logger = (0, common_1.initLogger)();
           logger.info(`Using apiToken from ${personalConfigFileAbsolutePath}`);
           return config.apiToken;
         }
       }
       return null;
     };
+    var getApiToken = (apiToken) => {
+      if (apiToken) {
+        return apiToken;
+      }
+      if (process.env["METICULOUS_API_TOKEN"]) {
+        return process.env["METICULOUS_API_TOKEN"];
+      }
+      return getFileBasedToken();
+    };
     exports2.getApiToken = getApiToken;
+    var getAuthToken = async (apiToken) => {
+      if (apiToken) {
+        return apiToken;
+      }
+      if (process.env["METICULOUS_API_TOKEN"]) {
+        return process.env["METICULOUS_API_TOKEN"];
+      }
+      const oauthToken = await (0, oauth_refresh_1.getValidAccessToken)();
+      if (oauthToken) {
+        return oauthToken;
+      }
+      return getFileBasedToken();
+    };
+    exports2.getAuthToken = getAuthToken;
   }
 });
 
@@ -75154,9 +75338,210 @@ var require_lib3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
+var require_oauth_callback_server = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.startCallbackServer = void 0;
+    var http_1 = require("http");
+    var CALLBACK_TIMEOUT_MS = 12e4;
+    var SUCCESS_HTML = `<!DOCTYPE html>
+<html>
+<head>
+  <title>Meticulous CLI</title>
+  <meta charset="utf-8">
+</head>
+<body style="font-family: system-ui, -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #171719; color: #fff;">
+  <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 24px;">
+    <img src="https://app.meticulous.ai/meticulous_logo.svg" alt="Meticulous" width="48" height="51" />
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="24" cy="24" r="24" fill="#1AC590"/>
+      <path d="M14 24.5L21 31.5L34 18.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <h2 style="margin: 0; font-size: 24px; font-weight: 600;">Authentication successful</h2>
+    <p style="margin: 0; font-size: 16px; color: #a1a1aa;">You can close this tab and return to the terminal.</p>
+  </div>
+</body>
+</html>`;
+    var startCallbackServer = () => {
+      return new Promise((resolveServer, rejectServer) => {
+        let callbackResolve;
+        let callbackReject;
+        const callbackPromise = new Promise((resolve5, reject) => {
+          callbackResolve = resolve5;
+          callbackReject = reject;
+        });
+        const server = (0, http_1.createServer)((req, res) => {
+          var _a2;
+          if (!((_a2 = req.url) === null || _a2 === void 0 ? void 0 : _a2.startsWith("/callback"))) {
+            res.writeHead(404);
+            res.end("Not found");
+            return;
+          }
+          const url = new URL(req.url, `http://127.0.0.1`);
+          const code = url.searchParams.get("code");
+          const state = url.searchParams.get("state");
+          const error2 = url.searchParams.get("error");
+          res.writeHead(200, { "Content-Type": "text/html" });
+          res.end(SUCCESS_HTML);
+          if (error2) {
+            const errorDescription = url.searchParams.get("error_description") || error2;
+            callbackReject(new Error(`OAuth error: ${errorDescription}`));
+          } else if (code && state) {
+            callbackResolve({ code, state });
+          } else {
+            callbackReject(new Error("Missing code or state in OAuth callback"));
+          }
+          server.close();
+        });
+        const timeout = setTimeout(() => {
+          server.close();
+          callbackReject(new Error(`OAuth login timed out after ${CALLBACK_TIMEOUT_MS / 1e3} seconds. Please try again.`));
+        }, CALLBACK_TIMEOUT_MS);
+        server.listen(0, "127.0.0.1", () => {
+          const address = server.address();
+          if (!address || typeof address === "string") {
+            rejectServer(new Error("Failed to start callback server"));
+            return;
+          }
+          resolveServer({
+            port: address.port,
+            waitForCallback: async () => {
+              try {
+                return await callbackPromise;
+              } finally {
+                clearTimeout(timeout);
+              }
+            }
+          });
+        });
+        server.on("error", (err) => {
+          clearTimeout(timeout);
+          rejectServer(err);
+        });
+      });
+    };
+    exports2.startCallbackServer = startCallbackServer;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
+var require_oauth_pkce = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.generateState = exports2.generateCodeChallenge = exports2.generateCodeVerifier = void 0;
+    var crypto_1 = require("crypto");
+    var generateCodeVerifier = () => {
+      return (0, crypto_1.randomBytes)(32).toString("base64url");
+    };
+    exports2.generateCodeVerifier = generateCodeVerifier;
+    var generateCodeChallenge = (verifier) => {
+      return (0, crypto_1.createHash)("sha256").update(verifier).digest("base64url");
+    };
+    exports2.generateCodeChallenge = generateCodeChallenge;
+    var generateState = () => {
+      return (0, crypto_1.randomBytes)(16).toString("base64url");
+    };
+    exports2.generateState = generateState;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
+var require_oauth_login = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.performOAuthLogin = void 0;
+    var child_process_1 = require("child_process");
+    var common_1 = require_dist12();
+    var oauth_callback_server_1 = require_oauth_callback_server();
+    var oauth_constants_1 = require_oauth_constants();
+    var oauth_pkce_1 = require_oauth_pkce();
+    var oauth_token_store_1 = require_oauth_token_store();
+    var performOAuthLogin = async () => {
+      const logger = (0, common_1.initLogger)();
+      const codeVerifier = (0, oauth_pkce_1.generateCodeVerifier)();
+      const codeChallenge = (0, oauth_pkce_1.generateCodeChallenge)(codeVerifier);
+      const state = (0, oauth_pkce_1.generateState)();
+      const callbackServer = await (0, oauth_callback_server_1.startCallbackServer)();
+      const redirectUri = `http://127.0.0.1:${callbackServer.port}/callback`;
+      const authUrl = buildAuthorizationUrl({
+        codeChallenge,
+        state,
+        redirectUri
+      });
+      logger.info("Opening browser for authentication...");
+      logger.info(`If the browser does not open, visit: ${authUrl}`);
+      openBrowser(authUrl);
+      const { code, state: returnedState } = await callbackServer.waitForCallback();
+      if (returnedState !== state) {
+        throw new Error("OAuth state mismatch. This could indicate a CSRF attack. Please try again.");
+      }
+      const tokens = await exchangeCodeForTokens({
+        code,
+        codeVerifier,
+        redirectUri
+      });
+      (0, oauth_token_store_1.storeOAuthTokens)(tokens);
+      logger.info("Authentication successful.");
+      return tokens;
+    };
+    exports2.performOAuthLogin = performOAuthLogin;
+    var buildAuthorizationUrl = ({ codeChallenge, state, redirectUri }) => {
+      const params = new URLSearchParams({
+        client_id: oauth_constants_1.CLI_CLIENT_ID,
+        response_type: "code",
+        scope: oauth_constants_1.OAUTH_SCOPES,
+        redirect_uri: redirectUri,
+        code_challenge: codeChallenge,
+        code_challenge_method: "S256",
+        state,
+        issuer: oauth_constants_1.KEYCLOAK_ISSUER_URL
+      });
+      const webappBaseUrl = (0, oauth_constants_1.getWebappBaseUrl)();
+      return `${webappBaseUrl}/cli-login?${params.toString()}`;
+    };
+    var exchangeCodeForTokens = async ({ code, codeVerifier, redirectUri }) => {
+      const body = new URLSearchParams({
+        grant_type: "authorization_code",
+        client_id: oauth_constants_1.CLI_CLIENT_ID,
+        code,
+        redirect_uri: redirectUri,
+        code_verifier: codeVerifier
+      });
+      const tokenEndpoint = await (0, oauth_constants_1.getTokenEndpoint)();
+      const response = await fetch(tokenEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString()
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Token exchange failed: ${response.status} ${errorText}`);
+      }
+      const data = await response.json();
+      return {
+        accessToken: data.access_token,
+        refreshToken: data.refresh_token,
+        expiresAt: Math.floor(Date.now() / 1e3) + data.expires_in,
+        idToken: data.id_token
+      };
+    };
+    var openBrowser = (url) => {
+      const command2 = process.platform === "darwin" ? `open "${url}"` : process.platform === "win32" ? `start "" "${url}"` : `xdg-open "${url}"`;
+      (0, child_process_1.exec)(command2, (error2) => {
+        if (error2) {
+        }
+      });
+    };
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
 var require_get_proxy_agent = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getProxyAgent = void 0;
@@ -75170,18 +75555,19 @@ var require_get_proxy_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/client.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/client.js
 var require_client2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
     "use strict";
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.createClient = exports2.makeRequest = void 0;
+    exports2.createClientWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.makeRequest = void 0;
     var common_1 = require_dist12();
     var node_fetch_1 = __importDefault2(require_lib3());
     var api_token_utils_1 = require_api_token_utils();
+    var oauth_login_1 = require_oauth_login();
     var get_proxy_agent_1 = require_get_proxy_agent();
     var DEFAULT_TIMEOUT = 6e4;
     var BASE_API_URL = "https://app.meticulous.ai/api/";
@@ -75258,16 +75644,10 @@ var require_client2 = __commonJS({
       });
     };
     exports2.makeRequest = makeRequest;
-    var createClient3 = ({ apiToken: apiToken_ }) => {
-      const logger = (0, common_1.initLogger)();
-      const apiToken = (0, api_token_utils_1.getApiToken)(apiToken_);
-      if (!apiToken) {
-        logger.error("You must provide an API token by using the --apiToken parameter");
-        process.exit(1);
-      }
+    var buildClient = (token, logger) => {
       const makeRequestWithToken = async (url, options = {}, config) => {
         const headers = {
-          authorization: apiToken
+          authorization: token
         };
         return (0, exports2.makeRequest)({
           url,
@@ -75299,7 +75679,34 @@ var require_client2 = __commonJS({
         }
       };
     };
+    var createClient3 = ({ apiToken: apiToken_ }) => {
+      const logger = (0, common_1.initLogger)();
+      const apiToken = (0, api_token_utils_1.getApiToken)(apiToken_);
+      if (!apiToken) {
+        logger.error("You must provide an API token by using the --apiToken parameter");
+        process.exit(1);
+      }
+      return buildClient(apiToken, logger);
+    };
     exports2.createClient = createClient3;
+    var isInteractiveContext = () => process.stdin.isTTY === true && !process.env["CI"];
+    exports2.isInteractiveContext = isInteractiveContext;
+    var createClientWithOAuth = async (options) => {
+      const logger = (0, common_1.initLogger)();
+      let apiToken = await (0, api_token_utils_1.getAuthToken)(options.apiToken);
+      const isInteractive = options.enableOAuthLogin && (0, exports2.isInteractiveContext)();
+      if (!apiToken && isInteractive) {
+        const tokens = await (0, oauth_login_1.performOAuthLogin)();
+        apiToken = tokens.accessToken;
+      }
+      if (!apiToken) {
+        const message = isInteractive ? "No authentication found. Use --apiToken, set METICULOUS_API_TOKEN, or log in via browser." : "No authentication found. Set METICULOUS_API_TOKEN or pass --apiToken.";
+        logger.error(message);
+        return process.exit(1);
+      }
+      return buildClient(apiToken, logger);
+    };
+    exports2.createClientWithOAuth = createClientWithOAuth;
     var getApiUrl = () => {
       if (process.env["METICULOUS_API_URL"]) {
         return process.env["METICULOUS_API_URL"];
@@ -75309,9 +75716,9 @@ var require_client2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
 var require_project_deployments_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = void 0;
@@ -75320,8 +75727,8 @@ var require_project_deployments_api = __commonJS({
       return data;
     };
     exports2.requestAssetUpload = requestAssetUpload;
-    var requestMultipartAssetUpload = async ({ client }) => {
-      const { data } = await client.post("project-deployments/request-multipart-asset-upload", {});
+    var requestMultipartAssetUpload = async ({ client, ...params }) => {
+      const { data } = await client.post("project-deployments/request-multipart-asset-upload", params);
       return data;
     };
     exports2.requestMultipartAssetUpload = requestMultipartAssetUpload;
@@ -75358,9 +75765,9 @@ var require_project_deployments_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
 var require_registry_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRegistryAuth = void 0;
@@ -75372,9 +75779,9 @@ var require_registry_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/index.js
 var require_dist13 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.250.4/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.255.2/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -75397,8 +75804,12 @@ var require_dist13 = __commonJS({
           __createBinding2(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.isFetchError = exports2.getRegistryAuth = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.getProxyAgent = exports2.makeRequest = exports2.createClient = exports2.getApiToken = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.getIsLocked = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.getRepoUrl = exports2.getProject = void 0;
+    exports2.isFetchError = exports2.getRegistryAuth = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.getProxyAgent = exports2.clearOAuthTokens = exports2.getValidAccessToken = exports2.performOAuthLogin = exports2.makeRequest = exports2.isInteractiveContext = exports2.createClientWithOAuth = exports2.createClient = exports2.getAuthToken = exports2.getApiToken = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.getIsLocked = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.getRepoUrl = exports2.getProject = exports2.getWhoami = void 0;
     __exportStar2(require_github_cloud_replay_api(), exports2);
+    var oauth_api_1 = require_oauth_api();
+    Object.defineProperty(exports2, "getWhoami", { enumerable: true, get: function() {
+      return oauth_api_1.getWhoami;
+    } });
     var project_api_1 = require_project_api();
     Object.defineProperty(exports2, "getProject", { enumerable: true, get: function() {
       return project_api_1.getProject;
@@ -75457,12 +75868,33 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "getApiToken", { enumerable: true, get: function() {
       return api_token_utils_1.getApiToken;
     } });
+    Object.defineProperty(exports2, "getAuthToken", { enumerable: true, get: function() {
+      return api_token_utils_1.getAuthToken;
+    } });
     var client_1 = require_client2();
     Object.defineProperty(exports2, "createClient", { enumerable: true, get: function() {
       return client_1.createClient;
     } });
+    Object.defineProperty(exports2, "createClientWithOAuth", { enumerable: true, get: function() {
+      return client_1.createClientWithOAuth;
+    } });
+    Object.defineProperty(exports2, "isInteractiveContext", { enumerable: true, get: function() {
+      return client_1.isInteractiveContext;
+    } });
     Object.defineProperty(exports2, "makeRequest", { enumerable: true, get: function() {
       return client_1.makeRequest;
+    } });
+    var oauth_login_1 = require_oauth_login();
+    Object.defineProperty(exports2, "performOAuthLogin", { enumerable: true, get: function() {
+      return oauth_login_1.performOAuthLogin;
+    } });
+    var oauth_refresh_1 = require_oauth_refresh();
+    Object.defineProperty(exports2, "getValidAccessToken", { enumerable: true, get: function() {
+      return oauth_refresh_1.getValidAccessToken;
+    } });
+    var oauth_token_store_1 = require_oauth_token_store();
+    Object.defineProperty(exports2, "clearOAuthTokens", { enumerable: true, get: function() {
+      return oauth_token_store_1.clearOAuthTokens;
     } });
     var get_proxy_agent_1 = require_get_proxy_agent();
     Object.defineProperty(exports2, "getProxyAgent", { enumerable: true, get: function() {
