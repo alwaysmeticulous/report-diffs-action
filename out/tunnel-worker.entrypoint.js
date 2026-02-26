@@ -33,9 +33,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/defer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/defer.js
 var require_defer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defer = void 0;
@@ -320,9 +320,9 @@ var require_loglevel = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
 var require_console_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
     "use strict";
     var __importDefault3 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -378,16 +378,22 @@ var require_console_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
 var require_local_data = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = void 0;
+    exports2.runWithLocalDataDir = exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = void 0;
+    var async_hooks_1 = require("async_hooks");
     var path_1 = require("path");
     var console_logger_1 = require_console_logger();
+    var asyncLocalDataDir = new async_hooks_1.AsyncLocalStorage();
     var _localDataDir = "";
     var getMeticulousLocalDataDir = () => {
+      const asyncDir = asyncLocalDataDir.getStore();
+      if (asyncDir) {
+        return asyncDir;
+      }
       const logger = (0, console_logger_1.initLogger)();
       if (!_localDataDir) {
         (0, exports2.setMeticulousLocalDataDir)();
@@ -406,6 +412,10 @@ var require_local_data = __commonJS({
       _localDataDir = localDataDir || process.env["METICULOUS_DIR"] || (0, path_1.normalize)((0, path_1.join)(process.env["HOME"] || process.cwd(), ".meticulous"));
     };
     exports2.setMeticulousLocalDataDir = setMeticulousLocalDataDir;
+    var runWithLocalDataDir = (dataDir, fn) => {
+      return asyncLocalDataDir.run(dataDir, fn);
+    };
+    exports2.runWithLocalDataDir = runWithLocalDataDir;
   }
 });
 
@@ -7214,9 +7224,9 @@ var require_luxon = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
 var require_logs = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getLogFile = void 0;
@@ -7233,9 +7243,9 @@ var require_logs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
 var require_debug_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DebugLogger = void 0;
@@ -7324,9 +7334,9 @@ var require_debug_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/constants.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/constants.js
 var require_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.COMMON_CHROMIUM_FLAGS = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = void 0;
@@ -7407,9 +7417,9 @@ var require_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/version.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
 var require_version_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getMeticulousVersion = void 0;
@@ -7428,9 +7438,9 @@ var require_version_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
 var require_commit_sha_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getCommitDate = exports2.getCommitSha = void 0;
@@ -7501,9 +7511,9 @@ var require_commit_sha_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
 var require_http_retry_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.executeWithRetry = exports2.defaultShouldRetry = void 0;
@@ -51170,9 +51180,9 @@ var init_revisions = __esm({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
 var require_browser_installer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -51347,12 +51357,12 @@ For more help, see: https://pptr.dev/troubleshooting`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/index.js
 var require_dist12 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.248.14/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ensureBrowser = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
+    exports2.ensureBrowser = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
     var defer_1 = require_defer();
     Object.defineProperty(exports2, "defer", { enumerable: true, get: function() {
       return defer_1.defer;
@@ -51360,6 +51370,9 @@ var require_dist12 = __commonJS({
     var local_data_1 = require_local_data();
     Object.defineProperty(exports2, "getMeticulousLocalDataDir", { enumerable: true, get: function() {
       return local_data_1.getMeticulousLocalDataDir;
+    } });
+    Object.defineProperty(exports2, "runWithLocalDataDir", { enumerable: true, get: function() {
+      return local_data_1.runWithLocalDataDir;
     } });
     Object.defineProperty(exports2, "setMeticulousLocalDataDir", { enumerable: true, get: function() {
       return local_data_1.setMeticulousLocalDataDir;
@@ -51419,9 +51432,9 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.248.14/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js
 var require_open_socket = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.248.14/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js"(exports2) {
     "use strict";
     var __importDefault3 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -52329,9 +52342,9 @@ var require_source2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.248.14/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js
 var require_get_local_address = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.248.14/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getLocalAddress = void 0;
@@ -52346,9 +52359,9 @@ var require_get_local_address = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.248.14/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js
 var require_tunnel_http2_cluster = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.248.14/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -52539,7 +52552,7 @@ var require_tunnel_http2_cluster = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.248.14/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js
 var __importDefault2 = exports && exports.__importDefault || function(mod) {
   return mod && mod.__esModule ? mod : { "default": mod };
 };
