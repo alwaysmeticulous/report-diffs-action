@@ -79429,8 +79429,6 @@ var getUploadContainerInputs = () => {
   const apiToken = (0, import_core2.getInput)("api-token", { required: true });
   const githubToken = (0, import_core2.getInput)("github-token", { required: true });
   const imageTag = (0, import_core2.getInput)("image-tag", { required: true });
-  const waitForBaseStr = (0, import_core2.getInput)("wait-for-base") || "true";
-  const waitForBase = waitForBaseStr.toLowerCase() === "true";
   const containerPortStr = (0, import_core2.getInput)("container-port");
   const containerEnvStr = (0, import_core2.getInput)("container-env");
   if (!imageTag || imageTag.trim() === "") {
@@ -79459,7 +79457,6 @@ var getUploadContainerInputs = () => {
     apiToken,
     githubToken,
     imageTag: imageTag.trim(),
-    waitForBase,
     containerPort,
     containerEnv
   };
