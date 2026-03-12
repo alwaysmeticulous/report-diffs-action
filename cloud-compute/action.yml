@@ -60,6 +60,9 @@ inputs:
       The regex to check when deciding if a request should be served from the companion assets. This is typically not needed.
     required: false
     default: ""
+  base-api-url:
+    description: Override the Meticulous base API URL. Only needed for self-hosted or staging environments.
+    required: false
 
 outputs: {}
 runs:
