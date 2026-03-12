@@ -18,6 +18,9 @@ inputs:
       For more details on the syntax see https://github.com/vercel/serve-handler?tab=readme-ov-file#rewrites-array.
     required: false
     default: "[]"
+  base-api-url:
+    description: Override the Meticulous base API URL. Only needed for self-hosted or staging environments.
+    required: false
 
 outputs: {}
 runs:

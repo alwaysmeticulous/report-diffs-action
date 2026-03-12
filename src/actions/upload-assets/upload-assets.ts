@@ -30,8 +30,12 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
     },
     async (span) => {
       try {
-        const { apiToken, githubToken, appDirectory, rewrites } =
+        const { apiToken, githubToken, appDirectory, rewrites, baseApiUrl } =
           getUploadAssetsInputs();
+
+        if (baseApiUrl) {
+          process.env["METICULOUS_API_URL"] = baseApiUrl;
+        }
         const event = getCodeChangeEvent(context.eventName, context.payload);
         const octokit = getOctokitOrFail(githubToken);
 
