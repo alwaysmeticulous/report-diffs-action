@@ -11,6 +11,7 @@ export const getInCloudActionInputs = (): {
   rewriteHostnameToAppUrl: boolean;
   companionAssetsFolder?: string;
   companionAssetsRegex?: string;
+  baseApiUrl?: string;
 } => {
   // The names, required value, and types should match that in action.yml
   const apiToken = getInput("api-token", { required: false });
@@ -31,6 +32,7 @@ export const getInCloudActionInputs = (): {
   );
 
   const projectsYaml = getInput("projects-yaml", { required: false });
+  const baseApiUrl = getInput("base-api-url", { required: false }) || undefined;
 
   if (!!companionAssetsFolder !== !!companionAssetsRegex) {
     throw new Error(
@@ -56,6 +58,7 @@ export const getInCloudActionInputs = (): {
       rewriteHostnameToAppUrl,
       companionAssetsFolder,
       companionAssetsRegex,
+      baseApiUrl,
     };
   }
 
@@ -81,5 +84,6 @@ export const getInCloudActionInputs = (): {
     rewriteHostnameToAppUrl,
     companionAssetsFolder,
     companionAssetsRegex,
+    baseApiUrl,
   };
 };

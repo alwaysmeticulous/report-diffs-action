@@ -79430,6 +79430,7 @@ var getUploadAssetsInputs = () => {
   const githubToken = (0, import_core2.getInput)("github-token", { required: true });
   const appDirectory = (0, import_core2.getInput)("app-directory", { required: true });
   const rewrites = JSON.parse((0, import_core2.getInput)("rewrites") || "[]");
+  const baseApiUrl = (0, import_core2.getInput)("base-api-url", { required: false }) || void 0;
   if (!Array.isArray(rewrites)) {
     throw new Error("Rewrites must be an array");
   }
@@ -79450,7 +79451,8 @@ var getUploadAssetsInputs = () => {
     apiToken,
     githubToken,
     appDirectory,
-    rewrites
+    rewrites,
+    baseApiUrl
   };
 };
 
