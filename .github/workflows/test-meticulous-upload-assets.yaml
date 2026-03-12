@@ -59,3 +59,4 @@ jobs:
         with:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
           app-directory: ./tests/react-bmi-calculator/build
+          base-api-url: "https://app.this-will-not-work.meticulous.ai/"
