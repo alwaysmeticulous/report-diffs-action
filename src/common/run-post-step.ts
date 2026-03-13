@@ -84,8 +84,21 @@ const isPrCommentFromAction = ({
   }
 
   return (
-    prComment.body?.includes(getCommentIdentifier(testSuiteOrProjectId)) &&
+    !!includesMeticulousComment(prComment.body, testSuiteOrProjectId) &&
     new Date(prComment.updated_at).getTime() >= workflowStartTime.getTime()
+  );
+};
+
+const COMBINED_COMMENT_IDENTIFIER =
+  "<!--- alwaysmeticulous/report-diffs-action/status-comment/repo-";
+
+const includesMeticulousComment = (
+  body: string | undefined,
+  testSuiteOrProjectId: string | null
+) => {
+  return (
+    body?.includes(getCommentIdentifier(testSuiteOrProjectId)) ||
+    body?.includes(COMBINED_COMMENT_IDENTIFIER)
   );
 };
 
