@@ -79417,7 +79417,11 @@ var isPrCommentFromAction = ({
   if (!prComment.body) {
     return false;
   }
-  return prComment.body?.includes(getCommentIdentifier(testSuiteOrProjectId)) && new Date(prComment.updated_at).getTime() >= workflowStartTime.getTime();
+  return !!includesMeticulousComment(prComment.body, testSuiteOrProjectId) && new Date(prComment.updated_at).getTime() >= workflowStartTime.getTime();
+};
+var COMBINED_COMMENT_IDENTIFIER = "<!--- alwaysmeticulous/report-diffs-action/status-comment/repo-";
+var includesMeticulousComment = (body, testSuiteOrProjectId) => {
+  return body?.includes(getCommentIdentifier(testSuiteOrProjectId)) || body?.includes(COMBINED_COMMENT_IDENTIFIER);
 };
 var getCommentIdentifier = (testSuiteOrProjectId) => {
   return `<!--- alwaysmeticulous/report-diffs-action/status-comment/${testSuiteOrProjectId}`;
