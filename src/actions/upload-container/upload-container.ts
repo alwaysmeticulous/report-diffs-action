@@ -30,14 +30,8 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
     },
     async (span) => {
       try {
-        const {
-          apiToken,
-          githubToken,
-          imageTag,
-          waitForBase,
-          containerPort,
-          containerEnv,
-        } = getUploadContainerInputs();
+        const { apiToken, githubToken, imageTag, containerPort, containerEnv } =
+          getUploadContainerInputs();
         const event = getCodeChangeEvent(context.eventName, context.payload);
         const octokit = getOctokitOrFail(githubToken);
 
@@ -78,7 +72,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           apiToken,
           localImageTag: imageTag,
           commitSha: getActualCommitShaFromRepo(),
-          waitForBase,
+          waitForBase: false,
           ...(containerPort != null ? { containerPort } : {}),
           ...(containerEnv != null ? { containerEnv } : {}),
         });

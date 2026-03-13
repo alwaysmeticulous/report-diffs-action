@@ -5,7 +5,6 @@ export interface UploadContainerInputs {
   apiToken: string;
   githubToken: string;
   imageTag: string;
-  waitForBase: boolean;
   containerPort: number | undefined;
   containerEnv: ContainerEnvVariable[] | undefined;
 }
@@ -14,8 +13,6 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
   const apiToken = getInput("api-token", { required: true });
   const githubToken = getInput("github-token", { required: true });
   const imageTag = getInput("image-tag", { required: true });
-  const waitForBaseStr = getInput("wait-for-base") || "true";
-  const waitForBase = waitForBaseStr.toLowerCase() === "true";
   const containerPortStr = getInput("container-port");
   const containerEnvStr = getInput("container-env");
 
@@ -52,7 +49,6 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
     apiToken,
     githubToken,
     imageTag: imageTag.trim(),
-    waitForBase,
     containerPort,
     containerEnv,
   };

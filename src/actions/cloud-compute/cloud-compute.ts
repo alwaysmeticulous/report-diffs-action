@@ -31,7 +31,12 @@ export const runMeticulousTestsCloudComputeAction = async (): Promise<void> => {
         rewriteHostnameToAppUrl,
         companionAssetsFolder,
         companionAssetsRegex,
+        baseApiUrl,
       } = getInCloudActionInputs();
+
+      if (baseApiUrl) {
+        process.env["METICULOUS_API_URL"] = baseApiUrl;
+      }
 
       const headSha = await getHeadCommitSha({
         headShaFromInput,

@@ -6,6 +6,7 @@ export interface UploadAssetsInputs {
   githubToken: string;
   appDirectory: string;
   rewrites: AssetUploadMetadata["rewrites"];
+  baseApiUrl?: string;
 }
 
 export const getUploadAssetsInputs = (): UploadAssetsInputs => {
@@ -13,6 +14,7 @@ export const getUploadAssetsInputs = (): UploadAssetsInputs => {
   const githubToken = getInput("github-token", { required: true });
   const appDirectory = getInput("app-directory", { required: true });
   const rewrites = JSON.parse(getInput("rewrites") || "[]");
+  const baseApiUrl = getInput("base-api-url", { required: false }) || undefined;
 
   if (!Array.isArray(rewrites)) {
     throw new Error("Rewrites must be an array");
@@ -39,5 +41,6 @@ export const getUploadAssetsInputs = (): UploadAssetsInputs => {
     githubToken,
     appDirectory,
     rewrites,
+    baseApiUrl,
   };
 };
