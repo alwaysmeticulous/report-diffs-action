@@ -79435,6 +79435,9 @@ var getUploadContainerInputs = () => {
   const imageTag = (0, import_core2.getInput)("image-tag", { required: true });
   const containerPortStr = (0, import_core2.getInput)("container-port");
   const containerEnvStr = (0, import_core2.getInput)("container-env");
+  const containerHealthCheckEndpointStr = (0, import_core2.getInput)(
+    "container-health-check-endpoint"
+  );
   if (!imageTag || imageTag.trim() === "") {
     throw new Error("image-tag must be a non-empty string");
   }
@@ -79457,12 +79460,14 @@ var getUploadContainerInputs = () => {
       return { name: line.slice(0, eqIndex), value: line.slice(eqIndex + 1) };
     });
   }
+  const containerHealthCheckEndpoint = containerHealthCheckEndpointStr && containerHealthCheckEndpointStr.trim() !== "" ? containerHealthCheckEndpointStr.trim() : void 0;
   return {
     apiToken,
     githubToken,
     imageTag: imageTag.trim(),
     containerPort,
-    containerEnv
+    containerEnv,
+    containerHealthCheckEndpoint
   };
 };
 
