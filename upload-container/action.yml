@@ -23,6 +23,11 @@ inputs:
         FOO=bar
         BAZ=qux
     required: false
+  container-health-check-endpoint:
+    description: |
+      The HTTP path used for health checks on the container (e.g. '/health'). Defaults to '/'
+      if not provided.
+    required: false
 
 outputs: {}
 runs:

@@ -7,6 +7,7 @@ export interface UploadContainerInputs {
   imageTag: string;
   containerPort: number | undefined;
   containerEnv: ContainerEnvVariable[] | undefined;
+  containerHealthCheckEndpoint: string | undefined;
 }
 
 export const getUploadContainerInputs = (): UploadContainerInputs => {
@@ -15,6 +16,9 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
   const imageTag = getInput("image-tag", { required: true });
   const containerPortStr = getInput("container-port");
   const containerEnvStr = getInput("container-env");
+  const containerHealthCheckEndpointStr = getInput(
+    "container-health-check-endpoint"
+  );
 
   if (!imageTag || imageTag.trim() === "") {
     throw new Error("image-tag must be a non-empty string");
@@ -45,11 +49,18 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
       });
   }
 
+  const containerHealthCheckEndpoint =
+    containerHealthCheckEndpointStr &&
+    containerHealthCheckEndpointStr.trim() !== ""
+      ? containerHealthCheckEndpointStr.trim()
+      : undefined;
+
   return {
     apiToken,
     githubToken,
     imageTag: imageTag.trim(),
     containerPort,
     containerEnv,
+    containerHealthCheckEndpoint,
   };
 };
