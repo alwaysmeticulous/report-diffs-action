@@ -21,14 +21,14 @@ importers:
         specifier: ^2.266.2
         version: 2.266.2
       '@alwaysmeticulous/remote-replay-launcher':
-        specifier: ^2.264.6
-        version: 2.264.6
+        specifier: ^2.266.2
+        version: 2.266.2
       '@alwaysmeticulous/replay-orchestrator-launcher':
-        specifier: ^2.266.0
-        version: 2.266.0
+        specifier: ^2.266.2
+        version: 2.266.2
       '@alwaysmeticulous/sentry':
-        specifier: ^2.264.0
-        version: 2.264.0
+        specifier: ^2.266.2
+        version: 2.266.2
       '@sentry/cli':
         specifier: ^2.58.4
         version: 2.58.4
@@ -64,8 +64,8 @@ importers:
         specifier: ^2.264.0
         version: 2.264.0
       '@alwaysmeticulous/sdk-bundles-api':
-        specifier: ^2.264.0
-        version: 2.264.0
+        specifier: ^2.266.2
+        version: 2.266.2
       '@alwaysmeticulous/tunnels-client':
         specifier: ^2.266.2
         version: 2.266.2
@@ -136,45 +136,33 @@ packages:
     resolution: {integrity: sha512-/1IMlWLaT4x/M7ECko4pOflDh5y17cpkB4gBm/lNb1aA9GPEQ13trS5eGj6dah5KpzWQUtbpcvmVyS/Ur/AZZw==}
     engines: {node: '>= 12'}
 
-  '@alwaysmeticulous/client@2.264.6':
-    resolution: {integrity: sha512-CE1D8AXclnac6382wOOyXsNi5J4eNAXu8hmEx1reUVDVZxhWOdODcrNlgKAhNZHjVYHw13RqsrPjuN6ae7tujw==}
-    engines: {node: '>= 12'}
-
   '@alwaysmeticulous/client@2.266.2':
     resolution: {integrity: sha512-YH2JxRCq7UD5AoiIQd3QFfCCass08hSlQFThBDKwG7j54Vf21PREpH7lKg31djxwQF2l8THo1528qKatWkpX5Q==}
-    engines: {node: '>= 12'}
-
-  '@alwaysmeticulous/common@2.264.0':
-    resolution: {integrity: sha512-bNdA2PR4uVj2L0cBEKLw1HURSRqoO3IXpZZ0ffqKll2LbE5xx0n3YI724FMLoHWjOxn/uZGVHLNFswC8QOY4MA==}
     engines: {node: '>= 12'}
 
   '@alwaysmeticulous/common@2.266.2':
     resolution: {integrity: sha512-3wjqyfljAD2jqJxRhGqz7bl2kFfJcrtCxFnD9Q5G7Tt23KOmYuB91aOkuv2lDbDC3iDXqHVD/Pft/LZI6MKgJQ==}
     engines: {node: '>= 12'}
 
-  '@alwaysmeticulous/downloading-helpers@2.266.0':
-    resolution: {integrity: sha512-K4ZSTsMmScRBKG0IcD0IJhPtlER0osyyXkqwpZel3mm78duRF8yPI+HB4FqGZIiAEsJnOcFlX0JHDRjYuN/5+w==}
+  '@alwaysmeticulous/downloading-helpers@2.266.2':
+    resolution: {integrity: sha512-wRy7eooc4Iqvr6KimYQOGrn6LpTQixFFLSHdxAmSki6euzXETxnw6jWlP3SY4GoeOwoPUG9KSvo03IKyPiNsSw==}
     engines: {node: '>= 12'}
 
-  '@alwaysmeticulous/remote-replay-launcher@2.264.6':
-    resolution: {integrity: sha512-jFl5j2gxbuwArpkGVGmZBdagtkpeTHHwnAQ2fn233e+A1tqhUAXza6BmAQ+2MGz8W0rA9KC837e0PM2mUhn2tA==}
+  '@alwaysmeticulous/remote-replay-launcher@2.266.2':
+    resolution: {integrity: sha512-CiC0NmKUQFgVczXtuYosT15lXZBohjruh/7JITqYfh6yLuVs3gK51OgetuRp2vnvTJ/bYOHaho0qepRgb+KOsA==}
     engines: {node: '>= 12'}
 
-  '@alwaysmeticulous/replay-orchestrator-launcher@2.266.0':
-    resolution: {integrity: sha512-7RdCSlGz65fzJnji/kJ6z6EnOOv9lP8lBAKfSYiitToLezRobgeVObd/1xTd6dZ+lDDWKGFFcP4LFqBfUDnR8Q==}
+  '@alwaysmeticulous/replay-orchestrator-launcher@2.266.2':
+    resolution: {integrity: sha512-3KzvQGEdUYT7Irf/UvqgOBKNlfJ/RP4ad+O9+9ktqbkBbiXwiHcEzBjd+d+2Yes/hupKWD5l0adAMLlHrLe+bA==}
     engines: {node: '>= 12'}
 
-  '@alwaysmeticulous/sdk-bundles-api@2.264.0':
-    resolution: {integrity: sha512-x6dUViYEb5CsXxREfCq5puumXgozqu4UnpVbFXR45eJMxFIkpM7s9TuaksT8frusBoRR6u09XGmozO0qoFA3aw==}
+  '@alwaysmeticulous/sdk-bundles-api@2.266.2':
+    resolution: {integrity: sha512-QC+9JCLNT09KSs143zcaZ7+BAsFyoHhyDfNMFPz3AuK6ld7ek0t4Ybg/SfIdRFvnbi6LHgis7uXZWpKzOKKqPQ==}
     engines: {node: '>= 12'}
 
-  '@alwaysmeticulous/sentry@2.264.0':
-    resolution: {integrity: sha512-IL3lTj0l0tXT7uVJI8xWXzH65m7gdR8ECuD2gWI8/biMPW51gYWBnfH6zjFIHJqhp/6BwTx6AMdk3Sl2AYKvIQ==}
+  '@alwaysmeticulous/sentry@2.266.2':
+    resolution: {integrity: sha512-fYPR1Mx8eyToFJ4FQjW8dtMYPjRf1I0lk9T7eCGRXBIwhOPNhJkuHGTR7HvxTJXwsPoi7dgBUsjCdkvqFR7Zdg==}
     engines: {node: '>= 12'}
-
-  '@alwaysmeticulous/tunnels-client@2.264.0':
-    resolution: {integrity: sha512-rmTjh6Ld94vZlKSGZPnc4uXNewHZmL2J5itPP1xakPDAdBGwaS/Psyz8gDEO868YWdBi/U39jxuFA4R5n3m/nA==}
-    engines: {node: '>= 14'}
 
   '@alwaysmeticulous/tunnels-client@2.266.2':
     resolution: {integrity: sha512-P6LF501JiR99osSg00Px2jCOtubHYZH66YXK9YS+zKiXlm8NaqAd/rsGWGWYOWmbxOgWytBYmWU7fzNkqi55XA==}
@@ -3629,22 +3617,6 @@ snapshots:
 
   '@alwaysmeticulous/api@2.264.0': {}
 
-  '@alwaysmeticulous/client@2.264.6':
-    dependencies:
-      '@alwaysmeticulous/api': 2.264.0
-      '@alwaysmeticulous/common': 2.264.0
-      loglevel: 1.9.2
-      node-fetch: 2.7.0
-      proxy-agent: 6.5.0
-    transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
-      - encoding
-      - react-native-b4a
-      - supports-color
-      - utf-8-validate
-
   '@alwaysmeticulous/client@2.266.2':
     dependencies:
       '@alwaysmeticulous/api': 2.264.0
@@ -3657,21 +3629,6 @@ snapshots:
       - bare-buffer
       - bufferutil
       - encoding
-      - react-native-b4a
-      - supports-color
-      - utf-8-validate
-
-  '@alwaysmeticulous/common@2.264.0':
-    dependencies:
-      '@puppeteer/browsers': 2.10.6
-      chalk: 4.1.2
-      loglevel: 1.9.2
-      luxon: 3.7.2
-      puppeteer-core: 24.14.0
-    transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
       - react-native-b4a
       - supports-color
       - utf-8-validate
@@ -3691,11 +3648,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/downloading-helpers@2.266.0':
+  '@alwaysmeticulous/downloading-helpers@2.266.2':
     dependencies:
       '@alwaysmeticulous/api': 2.264.0
-      '@alwaysmeticulous/client': 2.264.6
-      '@alwaysmeticulous/common': 2.264.0
+      '@alwaysmeticulous/client': 2.266.2
+      '@alwaysmeticulous/common': 2.266.2
       axios: 1.13.6
       axios-retry: 4.5.0(axios@1.13.6)
       cli-progress: 3.12.0
@@ -3715,12 +3672,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/remote-replay-launcher@2.264.6':
+  '@alwaysmeticulous/remote-replay-launcher@2.266.2':
     dependencies:
       '@alwaysmeticulous/api': 2.264.0
-      '@alwaysmeticulous/client': 2.264.6
-      '@alwaysmeticulous/common': 2.264.0
-      '@alwaysmeticulous/tunnels-client': 2.264.0
+      '@alwaysmeticulous/client': 2.266.2
+      '@alwaysmeticulous/common': 2.266.2
+      '@alwaysmeticulous/tunnels-client': 2.266.2
       '@sentry/node': 10.44.0
       dockerode: 4.0.9
       fast-zlib: 2.0.1
@@ -3737,11 +3694,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/replay-orchestrator-launcher@2.266.0':
+  '@alwaysmeticulous/replay-orchestrator-launcher@2.266.2':
     dependencies:
-      '@alwaysmeticulous/common': 2.264.0
-      '@alwaysmeticulous/downloading-helpers': 2.266.0
-      '@alwaysmeticulous/sdk-bundles-api': 2.264.0
+      '@alwaysmeticulous/common': 2.266.2
+      '@alwaysmeticulous/downloading-helpers': 2.266.2
+      '@alwaysmeticulous/sdk-bundles-api': 2.266.2
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -3752,36 +3709,19 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/sdk-bundles-api@2.264.0':
+  '@alwaysmeticulous/sdk-bundles-api@2.266.2':
     dependencies:
       '@alwaysmeticulous/api': 2.264.0
 
-  '@alwaysmeticulous/sentry@2.264.0':
+  '@alwaysmeticulous/sentry@2.266.2':
     dependencies:
-      '@alwaysmeticulous/common': 2.264.0
+      '@alwaysmeticulous/common': 2.266.2
       '@sentry/node': 10.44.0
       luxon: 3.7.2
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
       - bufferutil
-      - react-native-b4a
-      - supports-color
-      - utf-8-validate
-
-  '@alwaysmeticulous/tunnels-client@2.264.0':
-    dependencies:
-      '@alwaysmeticulous/common': 2.264.0
-      agentkeepalive: 4.6.0
-      cacheable-lookup: 6.1.0
-      loglevel: 1.9.2
-      node-fetch: 2.7.0
-      proxy-agent: 6.5.0
-    transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
-      - encoding
       - react-native-b4a
       - supports-color
       - utf-8-validate
