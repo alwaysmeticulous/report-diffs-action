@@ -1,5 +1,9 @@
 import { context } from "@actions/github";
 import {
+  BaseResolutionDetails,
+  TestRunTriggerDebugContext,
+} from "@alwaysmeticulous/api";
+import {
   createClient,
   getProject,
   IN_PROGRESS_TEST_RUN_STATUS,
@@ -19,6 +23,7 @@ import { getPrefixedLogger, shortSha } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { updateStatusComment } from "../../common/update-status-comment";
 import { DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION } from "./consts";
+import { explainBaseResolutionDetails } from "./explain-base-resolution-details";
 import { getCloudComputeBaseTestRun } from "./get-cloud-compute-base-test-run";
 import { getPullRequestId } from "./get-pull-request-id";
 
@@ -98,8 +103,13 @@ export const runOneTestRun = async ({
   });
 
   let shaToCompareAgainst: string | null = null;
+  let baseResolutionDetails: BaseResolutionDetails | undefined;
   if (baseTestRun != null) {
     shaToCompareAgainst = baseCommitSha;
+    baseResolutionDetails = {
+      type: "suitable-test-run-already-existed",
+      testRunId: baseTestRun.id,
+    };
     logger.info(
       `Tests already exist for commit ${baseCommitSha} (${baseTestRun.id})`
     );
@@ -119,7 +129,10 @@ export const runOneTestRun = async ({
       logger
     );
     if (codeChangeBase) {
-      const { baseTestRunExists } = await tryTriggerTestsWorkflowOnBase({
+      const {
+        baseTestRunExists,
+        baseResolutionDetails: resolutionDetails,
+      } = await tryTriggerTestsWorkflowOnBase({
         logger,
         event,
         base: codeChangeBase,
@@ -133,6 +146,7 @@ export const runOneTestRun = async ({
         context,
         octokit,
       });
+      baseResolutionDetails = resolutionDetails;
 
       if (baseTestRunExists) {
         shaToCompareAgainst = codeChangeBase;
@@ -235,6 +249,19 @@ export const runOneTestRun = async ({
   };
 
   // We use MERGE_COMMIT_SHA as the deployment is created for the merge commit.
+  const debugContext: TestRunTriggerDebugContext | undefined =
+    baseResolutionDetails == null
+      ? undefined
+      : { baseResolutionDetails: baseResolutionDetails };
+
+  if (debugContext?.baseResolutionDetails != null) {
+    logger.info(
+      `Base resolution details: ${explainBaseResolutionDetails(
+        debugContext.baseResolutionDetails
+      )}`
+    );
+    logger.debug(JSON.stringify({ debugContext }, null, 2));
+  }
 
   await executeRemoteTestRun({
     apiToken,
@@ -253,6 +280,7 @@ export const runOneTestRun = async ({
       ? { keepTunnelOpenPromise: keepTunnelOpenPromise.promise }
       : {}),
     ...(pullRequestId ? { pullRequestHostingProviderId: pullRequestId } : {}),
+    ...(debugContext ? { debugContext } : {}),
     ...(companionAssetsFolder && companionAssetsRegex
       ? {
           companionAssets: {

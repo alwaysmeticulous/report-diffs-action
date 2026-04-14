@@ -1,6 +1,7 @@
 import { warning as ghWarning } from "@actions/core";
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
+import { BaseResolutionDetails } from "@alwaysmeticulous/api";
 import { TestRun } from "@alwaysmeticulous/client";
 import log from "loglevel";
 import { Duration } from "luxon";
@@ -29,6 +30,11 @@ const POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
   seconds: 10,
 });
 
+export interface BaseTestsResolutionResult {
+  baseTestRunExists: boolean;
+  baseResolutionDetails?: BaseResolutionDetails;
+}
+
 export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
   ...params
 ) => {
@@ -39,7 +45,13 @@ export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
     const message = `Error while running tests on base ${params[0].base}. No diffs will be reported for this run.`;
     params[0].logger.warn(message);
     ghWarning(message);
-    return { baseTestRunExists: false };
+    return {
+      baseTestRunExists: false,
+      baseResolutionDetails: {
+        type: "failed-for-other-reason",
+        message,
+      },
+    };
   }
 };
 
@@ -58,7 +70,7 @@ export const ensureBaseTestsExists = async ({
   octokit: InstanceType<typeof GitHub>;
   getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
   logger: log.Logger;
-}): Promise<{ baseTestRunExists: boolean }> => {
+}): Promise<BaseTestsResolutionResult> => {
   if (!base) {
     return { baseTestRunExists: false };
   }
@@ -67,7 +79,13 @@ export const ensureBaseTestsExists = async ({
 
   if (testRun != null) {
     logger.info(`Tests already exist for commit ${base} (${testRun.id})`);
-    return { baseTestRunExists: true };
+    return {
+      baseTestRunExists: true,
+      baseResolutionDetails: {
+        type: "suitable-test-run-already-existed",
+        testRunId: testRun.id,
+      },
+    };
   }
 
   return await tryTriggerTestsWorkflowOnBase({
@@ -90,7 +108,7 @@ export interface TryTriggerTestsWorkflowOnBaseOpts {
 
 export const tryTriggerTestsWorkflowOnBase = async (
   opts: TryTriggerTestsWorkflowOnBaseOpts
-): Promise<{ baseTestRunExists: boolean }> => {
+): Promise<BaseTestsResolutionResult> => {
   let isDone = false;
   const isCancelled = () => {
     return isDone;
@@ -111,7 +129,7 @@ export const tryTriggerTestsWorkflowOnBase = async (
 const waitOnWorkflowRun = async (
   opts: TryTriggerTestsWorkflowOnBaseOpts,
   isCancelled: () => boolean
-): Promise<{ baseTestRunExists: boolean }> => {
+): Promise<BaseTestsResolutionResult> => {
   const { logger, event, base, context, octokit } = opts;
   const { owner, repo } = context.repo;
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
@@ -130,6 +148,7 @@ const waitOnWorkflowRun = async (
     );
 
     if (event.type === "pull_request") {
+      const waitStartMs = Date.now();
       await waitForWorkflowCompletionAndThrowIfFailed({
         owner,
         repo,
@@ -140,7 +159,15 @@ const waitOnWorkflowRun = async (
         isCancelled,
         logger,
       });
-      return { baseTestRunExists: true };
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "waited-for-existing-workflow-run",
+          workflowId: `${alreadyPending.workflowRunId}`,
+          baseCommitSha: base,
+          msTaken: Date.now() - waitStartMs,
+        },
+      };
     }
     // If we are not a PR event, then it's unlikely anyone will be looking at the comparisons. However,
     // it is very possible that someone is waiting for _us_ to complete. So let's not delay the workflow
@@ -176,7 +203,15 @@ const waitOnWorkflowRun = async (
     Therefore no diffs will be reported for this run. Re-running the tests may fix this.`;
     logger.warn(message);
     ghWarning(message);
-    return { baseTestRunExists: false };
+    return {
+      baseTestRunExists: false,
+      baseResolutionDetails: {
+        type: "required-new-workflow-run-but-failed-due-to-new-commit-to-base-branch",
+        baseRef,
+        targetBaseCommitSha: base,
+        currentLastestBaseCommitSha: currentBaseSha,
+      },
+    };
   }
 
   const workflowRun = await startNewWorkflowRun({
@@ -193,10 +228,17 @@ const waitOnWorkflowRun = async (
     const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${base}.`;
     logger.warn(message);
     ghWarning(message);
-    return { baseTestRunExists: false };
+    return {
+      baseTestRunExists: false,
+      baseResolutionDetails: {
+        type: "failed-for-other-reason",
+        message,
+      },
+    };
   }
 
   logger.info(`Waiting on workflow run: ${workflowRun.html_url}`);
+  const waitStartMs = Date.now();
   await waitForWorkflowCompletionAndThrowIfFailed({
     owner,
     repo,
@@ -208,13 +250,20 @@ const waitOnWorkflowRun = async (
     logger,
   });
 
-  return { baseTestRunExists: true };
+  return {
+    baseTestRunExists: true,
+    baseResolutionDetails: {
+      type: "triggered-new-workflow-run-successfully",
+      workflowId: `${workflowRun.workflowRunId}`,
+      msTaken: Date.now() - waitStartMs,
+    },
+  };
 };
 
 const waitOnBaseTestRun = async (
   getBaseTestRun: () => Promise<TestRun | null>,
   isCancelled: () => boolean
-): Promise<{ baseTestRunExists: boolean }> => {
+): Promise<BaseTestsResolutionResult> => {
   let baseTestRun = await getBaseTestRun();
   while (!baseTestRun) {
     if (isCancelled()) {
@@ -225,7 +274,13 @@ const waitOnBaseTestRun = async (
     );
     baseTestRun = await getBaseTestRun();
   }
-  return { baseTestRunExists: true };
+  return {
+    baseTestRunExists: true,
+    baseResolutionDetails: {
+      type: "suitable-test-run-already-existed",
+      testRunId: baseTestRun.id,
+    },
+  };
 };
 
 const waitForWorkflowCompletionAndThrowIfFailed = async ({

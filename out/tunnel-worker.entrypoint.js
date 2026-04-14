@@ -33,9 +33,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/defer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/defer.js
 var require_defer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -326,9 +326,9 @@ var require_loglevel = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
 var require_console_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -391,9 +391,9 @@ var require_console_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
 var require_local_data = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -7244,9 +7244,9 @@ var require_luxon = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
 var require_logs = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -7270,9 +7270,9 @@ var require_logs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
 var require_debug_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -7368,9 +7368,9 @@ var require_debug_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/constants.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/constants.js
 var require_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -7459,9 +7459,9 @@ var require_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/version.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
 var require_version_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -7487,14 +7487,14 @@ var require_version_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
 var require_commit_sha_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "831a5537-163b-52c5-a5d9-1695a4a47513");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "7ee3e956-cf37-55d9-bc34-38ae3823f04d");
       } catch (e2) {
       }
     }();
@@ -7582,7 +7582,10 @@ var require_commit_sha_utils = __commonJS({
       } catch (error) {
         logger.warn(`Could not fetch from origin: ${error instanceof Error ? error.message : error}`);
       }
-      if (branchName === "main" || branchName === "master" || branchName === "HEAD") {
+      const defaultBranch = await detectDefaultBranch(cwd);
+      const defaultBranchName = defaultBranch === null || defaultBranch === void 0 ? void 0 : defaultBranch.replace(/^origin\//, "");
+      const defaultBranchCandidates = defaultBranchName ? [defaultBranchName] : ["main", "master"];
+      if (branchName === "HEAD" || defaultBranchCandidates.includes(branchName)) {
         try {
           const headSha = await execPromise("git rev-parse HEAD", cwd);
           logger.debug(`On ${branchName === "HEAD" ? "detached HEAD" : branchName}, using HEAD as base SHA: ${headSha}`);
@@ -7592,8 +7595,13 @@ var require_commit_sha_utils = __commonJS({
           return null;
         }
       }
-      const baseCandidates = ["origin/main", "origin/master"];
-      for (const candidate of baseCandidates) {
+      const baseCandidates = [
+        ...defaultBranch ? [defaultBranch] : [],
+        "origin/main",
+        "origin/master"
+      ];
+      const uniqueCandidates = [...new Set(baseCandidates)];
+      for (const candidate of uniqueCandidates) {
         try {
           const mergeBase = await execPromise(`git merge-base ${candidate} HEAD`, cwd);
           logger.debug(`Computed merge-base with '${candidate}': ${mergeBase}`);
@@ -7601,7 +7609,7 @@ var require_commit_sha_utils = __commonJS({
         } catch {
         }
       }
-      logger.warn("Could not compute base SHA: no 'origin/main' or 'origin/master' branch found.");
+      logger.warn("Could not compute base SHA: no default branch found on origin.");
       return null;
     };
     exports2.getLocalBaseSha = getLocalBaseSha;
@@ -7619,6 +7627,27 @@ var require_commit_sha_utils = __commonJS({
       return execFilePromise("git", args, options === null || options === void 0 ? void 0 : options.cwd);
     };
     exports2.getGitDiff = getGitDiff;
+    var detectDefaultBranch = async (cwd) => {
+      const logger = (0, console_logger_1.initLogger)();
+      try {
+        const ref = await execPromise("git symbolic-ref refs/remotes/origin/HEAD", cwd);
+        const branch = ref.replace(/^refs\/remotes\//, "");
+        logger.debug(`Default branch from symbolic-ref: ${branch}`);
+        return branch;
+      } catch {
+      }
+      try {
+        const output = await execPromise("git remote show origin", cwd);
+        const match = output.match(/HEAD branch:\s*(\S+)/);
+        if (match) {
+          const branch = `origin/${match[1]}`;
+          logger.debug(`Default branch from remote show: ${branch}`);
+          return branch;
+        }
+      } catch {
+      }
+      return null;
+    };
     var getCommitDate = async (commitDate_, commitSha) => {
       if (commitDate_) {
         return commitDate_;
@@ -7642,9 +7671,9 @@ var require_commit_sha_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
 var require_http_retry_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -33759,198 +33788,425 @@ var require_dnsResolve = __commonJS({
   }
 });
 
-// node_modules/.pnpm/netmask@2.0.2/node_modules/netmask/lib/netmask.js
-var require_netmask = __commonJS({
-  "node_modules/.pnpm/netmask@2.0.2/node_modules/netmask/lib/netmask.js"(exports2) {
-    (function() {
-      var Netmask, atob2, chr, chr0, chrA, chra, ip2long, long2ip;
-      long2ip = function(long) {
-        var a, b, c, d;
-        a = (long & 255 << 24) >>> 24;
-        b = (long & 255 << 16) >>> 16;
-        c = (long & 255 << 8) >>> 8;
-        d = long & 255;
-        return [a, b, c, d].join(".");
-      };
-      ip2long = function(ip) {
-        var b, c, i, j, n, ref;
-        b = [];
-        for (i = j = 0; j <= 3; i = ++j) {
-          if (ip.length === 0) {
+// node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask4.js
+var require_netmask4 = __commonJS({
+  "node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask4.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Netmask4Impl = void 0;
+    exports2.ip2long = ip2long;
+    exports2.long2ip = long2ip;
+    function long2ip(long) {
+      const a = (long & 255 << 24) >>> 24;
+      const b = (long & 255 << 16) >>> 16;
+      const c = (long & 255 << 8) >>> 8;
+      const d = long & 255;
+      return [a, b, c, d].join(".");
+    }
+    var chr0 = "0".charCodeAt(0);
+    var chra = "a".charCodeAt(0);
+    var chrA = "A".charCodeAt(0);
+    function parseNum(s) {
+      let n = 0;
+      let base = 10;
+      let dmax = "9";
+      let i = 0;
+      if (s.length > 1 && s[i] === "0") {
+        if (s[i + 1] === "x" || s[i + 1] === "X") {
+          i += 2;
+          base = 16;
+        } else if ("0" <= s[i + 1] && s[i + 1] <= "9") {
+          i++;
+          base = 8;
+          dmax = "7";
+        }
+      }
+      const start = i;
+      while (i < s.length) {
+        if ("0" <= s[i] && s[i] <= dmax) {
+          n = n * base + (s.charCodeAt(i) - chr0) >>> 0;
+        } else if (base === 16) {
+          if ("a" <= s[i] && s[i] <= "f") {
+            n = n * base + (10 + s.charCodeAt(i) - chra) >>> 0;
+          } else if ("A" <= s[i] && s[i] <= "F") {
+            n = n * base + (10 + s.charCodeAt(i) - chrA) >>> 0;
+          } else {
             break;
           }
-          if (i > 0) {
-            if (ip[0] !== ".") {
-              throw new Error("Invalid IP");
-            }
-            ip = ip.substring(1);
-          }
-          ref = atob2(ip), n = ref[0], c = ref[1];
-          ip = ip.substring(c);
-          b.push(n);
+        } else {
+          break;
         }
-        if (ip.length !== 0) {
-          throw new Error("Invalid IP");
+        if (n > 4294967295) {
+          throw new Error("too large");
         }
-        switch (b.length) {
-          case 1:
-            if (b[0] > 4294967295) {
-              throw new Error("Invalid IP");
-            }
-            return b[0] >>> 0;
-          case 2:
-            if (b[0] > 255 || b[1] > 16777215) {
-              throw new Error("Invalid IP");
-            }
-            return (b[0] << 24 | b[1]) >>> 0;
-          case 3:
-            if (b[0] > 255 || b[1] > 255 || b[2] > 65535) {
-              throw new Error("Invalid IP");
-            }
-            return (b[0] << 24 | b[1] << 16 | b[2]) >>> 0;
-          case 4:
-            if (b[0] > 255 || b[1] > 255 || b[2] > 255 || b[3] > 255) {
-              throw new Error("Invalid IP");
-            }
-            return (b[0] << 24 | b[1] << 16 | b[2] << 8 | b[3]) >>> 0;
-          default:
+        i++;
+      }
+      if (i === start) {
+        throw new Error("empty octet");
+      }
+      return [n, i];
+    }
+    function ip2long(ip) {
+      const b = [];
+      for (let i = 0; i <= 3; i++) {
+        if (ip.length === 0) {
+          break;
+        }
+        if (i > 0) {
+          if (ip[0] !== ".") {
             throw new Error("Invalid IP");
-        }
-      };
-      chr = function(b) {
-        return b.charCodeAt(0);
-      };
-      chr0 = chr("0");
-      chra = chr("a");
-      chrA = chr("A");
-      atob2 = function(s) {
-        var base, dmax, i, n, start;
-        n = 0;
-        base = 10;
-        dmax = "9";
-        i = 0;
-        if (s.length > 1 && s[i] === "0") {
-          if (s[i + 1] === "x" || s[i + 1] === "X") {
-            i += 2;
-            base = 16;
-          } else if ("0" <= s[i + 1] && s[i + 1] <= "9") {
-            i++;
-            base = 8;
-            dmax = "7";
           }
+          ip = ip.substring(1);
         }
-        start = i;
-        while (i < s.length) {
-          if ("0" <= s[i] && s[i] <= dmax) {
-            n = n * base + (chr(s[i]) - chr0) >>> 0;
-          } else if (base === 16) {
-            if ("a" <= s[i] && s[i] <= "f") {
-              n = n * base + (10 + chr(s[i]) - chra) >>> 0;
-            } else if ("A" <= s[i] && s[i] <= "F") {
-              n = n * base + (10 + chr(s[i]) - chrA) >>> 0;
-            } else {
+        const [n, c] = parseNum(ip);
+        ip = ip.substring(c);
+        b.push(n);
+      }
+      if (ip.length !== 0) {
+        throw new Error("Invalid IP");
+      }
+      switch (b.length) {
+        case 1:
+          if (b[0] > 4294967295) {
+            throw new Error("Invalid IP");
+          }
+          return b[0] >>> 0;
+        case 2:
+          if (b[0] > 255 || b[1] > 16777215) {
+            throw new Error("Invalid IP");
+          }
+          return (b[0] << 24 | b[1]) >>> 0;
+        case 3:
+          if (b[0] > 255 || b[1] > 255 || b[2] > 65535) {
+            throw new Error("Invalid IP");
+          }
+          return (b[0] << 24 | b[1] << 16 | b[2]) >>> 0;
+        case 4:
+          if (b[0] > 255 || b[1] > 255 || b[2] > 255 || b[3] > 255) {
+            throw new Error("Invalid IP");
+          }
+          return (b[0] << 24 | b[1] << 16 | b[2] << 8 | b[3]) >>> 0;
+        default:
+          throw new Error("Invalid IP");
+      }
+    }
+    var Netmask4Impl = class _Netmask4Impl {
+      constructor(net, mask) {
+        if (typeof net !== "string") {
+          throw new Error("Missing `net' parameter");
+        }
+        let maskStr = mask;
+        if (!maskStr) {
+          const parts = net.split("/", 2);
+          net = parts[0];
+          maskStr = parts[1];
+        }
+        if (!maskStr) {
+          maskStr = 32;
+        }
+        if (typeof maskStr === "string" && maskStr.indexOf(".") > -1) {
+          try {
+            this.maskLong = ip2long(maskStr);
+          } catch (error) {
+            throw new Error("Invalid mask: " + maskStr);
+          }
+          this.bitmask = NaN;
+          for (let i = 32; i >= 0; i--) {
+            if (this.maskLong === 4294967295 << 32 - i >>> 0) {
+              this.bitmask = i;
               break;
             }
-          } else {
-            break;
           }
-          if (n > 4294967295) {
-            throw new Error("too large");
+        } else if (maskStr || maskStr === 0) {
+          this.bitmask = parseInt(maskStr, 10);
+          this.maskLong = 0;
+          if (this.bitmask > 0) {
+            this.maskLong = 4294967295 << 32 - this.bitmask >>> 0;
           }
-          i++;
+        } else {
+          throw new Error("Invalid mask: empty");
         }
-        if (i === start) {
-          throw new Error("empty octet");
+        try {
+          this.netLong = (ip2long(net) & this.maskLong) >>> 0;
+        } catch (error) {
+          throw new Error("Invalid net address: " + net);
         }
-        return [n, i];
-      };
-      Netmask = function() {
-        function Netmask2(net, mask) {
-          var error, i, j, ref;
-          if (typeof net !== "string") {
-            throw new Error("Missing `net' parameter");
-          }
-          if (!mask) {
-            ref = net.split("/", 2), net = ref[0], mask = ref[1];
-          }
-          if (!mask) {
-            mask = 32;
-          }
-          if (typeof mask === "string" && mask.indexOf(".") > -1) {
-            try {
-              this.maskLong = ip2long(mask);
-            } catch (error1) {
-              error = error1;
-              throw new Error("Invalid mask: " + mask);
-            }
-            for (i = j = 32; j >= 0; i = --j) {
-              if (this.maskLong === 4294967295 << 32 - i >>> 0) {
-                this.bitmask = i;
-                break;
-              }
-            }
-          } else if (mask || mask === 0) {
-            this.bitmask = parseInt(mask, 10);
-            this.maskLong = 0;
-            if (this.bitmask > 0) {
-              this.maskLong = 4294967295 << 32 - this.bitmask >>> 0;
-            }
-          } else {
-            throw new Error("Invalid mask: empty");
-          }
-          try {
-            this.netLong = (ip2long(net) & this.maskLong) >>> 0;
-          } catch (error1) {
-            error = error1;
-            throw new Error("Invalid net address: " + net);
-          }
-          if (!(this.bitmask <= 32)) {
-            throw new Error("Invalid mask for ip4: " + mask);
-          }
-          this.size = Math.pow(2, 32 - this.bitmask);
-          this.base = long2ip(this.netLong);
-          this.mask = long2ip(this.maskLong);
-          this.hostmask = long2ip(~this.maskLong);
-          this.first = this.bitmask <= 30 ? long2ip(this.netLong + 1) : this.base;
-          this.last = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 2) : long2ip(this.netLong + this.size - 1);
-          this.broadcast = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 1) : void 0;
+        if (!(this.bitmask <= 32)) {
+          throw new Error("Invalid mask for ip4: " + maskStr);
         }
-        Netmask2.prototype.contains = function(ip) {
-          if (typeof ip === "string" && (ip.indexOf("/") > 0 || ip.split(".").length !== 4)) {
-            ip = new Netmask2(ip);
-          }
-          if (ip instanceof Netmask2) {
-            return this.contains(ip.base) && this.contains(ip.broadcast || ip.last);
+        this.size = Math.pow(2, 32 - this.bitmask);
+        this.base = long2ip(this.netLong);
+        this.mask = long2ip(this.maskLong);
+        this.hostmask = long2ip(~this.maskLong);
+        this.first = this.bitmask <= 30 ? long2ip(this.netLong + 1) : this.base;
+        this.last = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 2) : long2ip(this.netLong + this.size - 1);
+        this.broadcast = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 1) : void 0;
+      }
+      contains(ip) {
+        if (typeof ip === "string" && (ip.indexOf("/") > 0 || ip.split(".").length !== 4)) {
+          ip = new _Netmask4Impl(ip);
+        }
+        if (ip instanceof _Netmask4Impl) {
+          return this.contains(ip.base) && this.contains(ip.broadcast || ip.last);
+        } else {
+          return (ip2long(ip) & this.maskLong) >>> 0 === (this.netLong & this.maskLong) >>> 0;
+        }
+      }
+      next(count = 1) {
+        return new _Netmask4Impl(long2ip(this.netLong + this.size * count), this.mask);
+      }
+      forEach(fn) {
+        let long = ip2long(this.first);
+        const lastLong = ip2long(this.last);
+        let index = 0;
+        while (long <= lastLong) {
+          fn(long2ip(long), long, index);
+          index++;
+          long++;
+        }
+      }
+      toString() {
+        return this.base + "/" + this.bitmask;
+      }
+    };
+    exports2.Netmask4Impl = Netmask4Impl;
+  }
+});
+
+// node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask6.js
+var require_netmask6 = __commonJS({
+  "node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask6.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Netmask6Impl = void 0;
+    exports2.ip6bigint = ip6bigint;
+    exports2.bigint2ip6 = bigint2ip6;
+    var netmask4_1 = require_netmask4();
+    var MAX_IPV6 = (1n << 128n) - 1n;
+    function ip6bigint(ip) {
+      const zoneIdx = ip.indexOf("%");
+      if (zoneIdx !== -1) {
+        ip = ip.substring(0, zoneIdx);
+      }
+      const lastColon = ip.lastIndexOf(":");
+      if (lastColon !== -1 && ip.indexOf(".", lastColon) !== -1) {
+        const ipv4Part = ip.substring(lastColon + 1);
+        const ipv4Long = (0, netmask4_1.ip2long)(ipv4Part);
+        const ipv6Prefix = ip.substring(0, lastColon + 1) + "0:0";
+        const prefixVal = parseIPv6Pure(ipv6Prefix);
+        return prefixVal & ~0xffffffffn | BigInt(ipv4Long);
+      }
+      return parseIPv6Pure(ip);
+    }
+    function parseIPv6Pure(ip) {
+      const doubleColonIdx = ip.indexOf("::");
+      let groups;
+      if (doubleColonIdx !== -1) {
+        const left2 = ip.substring(0, doubleColonIdx);
+        const right2 = ip.substring(doubleColonIdx + 2);
+        const leftGroups = left2 === "" ? [] : left2.split(":");
+        const rightGroups = right2 === "" ? [] : right2.split(":");
+        const missing = 8 - leftGroups.length - rightGroups.length;
+        if (missing < 0) {
+          throw new Error("Invalid IPv6: too many groups");
+        }
+        groups = [...leftGroups, ...Array(missing).fill("0"), ...rightGroups];
+      } else {
+        groups = ip.split(":");
+      }
+      if (groups.length !== 8) {
+        throw new Error("Invalid IPv6: expected 8 groups, got " + groups.length);
+      }
+      let result = 0n;
+      for (let i = 0; i < 8; i++) {
+        const g = groups[i];
+        if (g.length === 0 || g.length > 4) {
+          throw new Error('Invalid IPv6: bad group "' + g + '"');
+        }
+        const val = parseInt(g, 16);
+        if (isNaN(val) || val < 0 || val > 65535) {
+          throw new Error('Invalid IPv6: bad group "' + g + '"');
+        }
+        result = result << 16n | BigInt(val);
+      }
+      return result;
+    }
+    function bigint2ip6(n) {
+      if (n < 0n || n > MAX_IPV6) {
+        throw new Error("Invalid IPv6 address value");
+      }
+      const groups = [];
+      for (let i = 0; i < 8; i++) {
+        groups.unshift(Number(n & 0xffffn));
+        n >>= 16n;
+      }
+      let bestStart = -1;
+      let bestLen = 0;
+      let curStart = -1;
+      let curLen = 0;
+      for (let i = 0; i < 8; i++) {
+        if (groups[i] === 0) {
+          if (curStart === -1) {
+            curStart = i;
+            curLen = 1;
           } else {
-            return (ip2long(ip) & this.maskLong) >>> 0 === (this.netLong & this.maskLong) >>> 0;
+            curLen++;
           }
-        };
-        Netmask2.prototype.next = function(count) {
-          if (count == null) {
-            count = 1;
+        } else {
+          if (curLen > bestLen && curLen >= 2) {
+            bestStart = curStart;
+            bestLen = curLen;
           }
-          return new Netmask2(long2ip(this.netLong + this.size * count), this.mask);
-        };
-        Netmask2.prototype.forEach = function(fn) {
-          var index, lastLong, long;
-          long = ip2long(this.first);
-          lastLong = ip2long(this.last);
-          index = 0;
-          while (long <= lastLong) {
-            fn(long2ip(long), long, index);
-            index++;
-            long++;
+          curStart = -1;
+          curLen = 0;
+        }
+      }
+      if (curLen > bestLen && curLen >= 2) {
+        bestStart = curStart;
+        bestLen = curLen;
+      }
+      if (bestStart !== -1 && bestStart + bestLen === 8 && bestStart > 0) {
+        const before = groups.slice(0, bestStart).map((g) => g.toString(16));
+        return before.join(":") + "::";
+      } else if (bestStart === 0) {
+        const after = groups.slice(bestLen).map((g) => g.toString(16));
+        return "::" + after.join(":");
+      } else if (bestStart > 0) {
+        const before = groups.slice(0, bestStart).map((g) => g.toString(16));
+        const after = groups.slice(bestStart + bestLen).map((g) => g.toString(16));
+        return before.join(":") + "::" + after.join(":");
+      } else {
+        return groups.map((g) => g.toString(16)).join(":");
+      }
+    }
+    var Netmask6Impl = class _Netmask6Impl {
+      constructor(net, mask) {
+        if (typeof net !== "string") {
+          throw new Error("Missing `net' parameter");
+        }
+        let prefixLen = mask;
+        if (prefixLen === void 0 || prefixLen === null) {
+          const slashIdx = net.indexOf("/");
+          if (slashIdx !== -1) {
+            prefixLen = parseInt(net.substring(slashIdx + 1), 10);
+            net = net.substring(0, slashIdx);
+          } else {
+            prefixLen = 128;
           }
-        };
-        Netmask2.prototype.toString = function() {
-          return this.base + "/" + this.bitmask;
-        };
-        return Netmask2;
-      }();
-      exports2.ip2long = ip2long;
-      exports2.long2ip = long2ip;
-      exports2.Netmask = Netmask;
-    }).call(exports2);
+        }
+        if (isNaN(prefixLen) || prefixLen < 0 || prefixLen > 128) {
+          throw new Error("Invalid mask for IPv6: " + prefixLen);
+        }
+        this.bitmask = prefixLen;
+        if (this.bitmask === 0) {
+          this.maskBigint = 0n;
+        } else {
+          this.maskBigint = MAX_IPV6 >> BigInt(128 - this.bitmask) << BigInt(128 - this.bitmask);
+        }
+        try {
+          this.netBigint = ip6bigint(net) & this.maskBigint;
+        } catch (error) {
+          throw new Error("Invalid IPv6 net address: " + net);
+        }
+        this.size = Number(1n << BigInt(128 - this.bitmask));
+        this.base = bigint2ip6(this.netBigint);
+        this.mask = bigint2ip6(this.maskBigint);
+        this.hostmask = bigint2ip6(~this.maskBigint & MAX_IPV6);
+        this.first = this.base;
+        this.last = bigint2ip6(this.netBigint + (1n << BigInt(128 - this.bitmask)) - 1n);
+        this.broadcast = void 0;
+      }
+      contains(ip) {
+        if (typeof ip === "string") {
+          if (ip.indexOf("/") > 0) {
+            ip = new _Netmask6Impl(ip);
+          }
+        }
+        if (ip instanceof _Netmask6Impl) {
+          return this.contains(ip.base) && this.contains(ip.last);
+        } else {
+          const addr = ip6bigint(ip);
+          return (addr & this.maskBigint) === this.netBigint;
+        }
+      }
+      next(count = 1) {
+        const sizeBig = 1n << BigInt(128 - this.bitmask);
+        return new _Netmask6Impl(bigint2ip6(this.netBigint + sizeBig * BigInt(count)), this.bitmask);
+      }
+      forEach(fn) {
+        let addr = this.netBigint;
+        const sizeBig = 1n << BigInt(128 - this.bitmask);
+        const lastAddr = this.netBigint + sizeBig - 1n;
+        let index = 0;
+        while (addr <= lastAddr) {
+          fn(bigint2ip6(addr), Number(addr), index);
+          index++;
+          addr++;
+        }
+      }
+      toString() {
+        return this.base + "/" + this.bitmask;
+      }
+    };
+    exports2.Netmask6Impl = Netmask6Impl;
+  }
+});
+
+// node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask.js
+var require_netmask = __commonJS({
+  "node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Netmask = void 0;
+    var netmask4_1 = require_netmask4();
+    var netmask6_1 = require_netmask6();
+    var Netmask = class _Netmask {
+      constructor(net, mask) {
+        if (typeof net !== "string") {
+          throw new Error("Missing `net' parameter");
+        }
+        const addrPart = net.indexOf("/") !== -1 ? net.substring(0, net.indexOf("/")) : net;
+        if (addrPart.indexOf(":") !== -1) {
+          this._impl = new netmask6_1.Netmask6Impl(net, mask);
+        } else {
+          this._impl = new netmask4_1.Netmask4Impl(net, mask);
+        }
+        this.base = this._impl.base;
+        this.mask = this._impl.mask;
+        this.hostmask = this._impl.hostmask;
+        this.bitmask = this._impl.bitmask;
+        this.size = this._impl.size;
+        this.first = this._impl.first;
+        this.last = this._impl.last;
+        this.broadcast = this._impl.broadcast;
+      }
+      contains(ip) {
+        if (typeof ip === "string") {
+          if (ip.indexOf("/") > 0) {
+            ip = new _Netmask(ip);
+          } else if (ip.indexOf(":") === -1 && ip.split(".").length !== 4) {
+            ip = new _Netmask(ip);
+          }
+        }
+        if (ip instanceof _Netmask) {
+          return this.contains(ip.base) && this.contains(ip.broadcast || ip.last);
+        }
+        return this._impl.contains(ip);
+      }
+      next(count = 1) {
+        const nextImpl = this._impl.next(count);
+        const result = new _Netmask(nextImpl.base, nextImpl.bitmask);
+        return result;
+      }
+      /** @deprecated */
+      forEach(fn) {
+        this._impl.forEach(fn);
+      }
+      toString() {
+        return this._impl.toString();
+      }
+    };
+    exports2.Netmask = Netmask;
   }
 });
 
@@ -41726,9 +41982,9 @@ var require_text_decoder = __commonJS({
   }
 });
 
-// node_modules/.pnpm/streamx@2.23.0/node_modules/streamx/index.js
+// node_modules/.pnpm/streamx@2.25.0/node_modules/streamx/index.js
 var require_streamx = __commonJS({
-  "node_modules/.pnpm/streamx@2.23.0/node_modules/streamx/index.js"(exports2, module2) {
+  "node_modules/.pnpm/streamx@2.25.0/node_modules/streamx/index.js"(exports2, module2) {
     var { EventEmitter } = require_default();
     var STREAM_DESTROYED = new Error("Stream was destroyed");
     var PREMATURE_CLOSE = new Error("Premature close");
@@ -41835,6 +42091,9 @@ var require_streamx = __commonJS({
         this.map = mapWritable || map;
         this.afterWrite = afterWrite.bind(this);
         this.afterUpdateNextTick = updateWriteNT.bind(this);
+      }
+      get ending() {
+        return (this.stream._duplexState & WRITE_FINISHING) !== 0;
       }
       get ended() {
         return (this.stream._duplexState & WRITE_DONE) !== 0;
@@ -41945,6 +42204,9 @@ var require_streamx = __commonJS({
         this.pipeTo = null;
         this.afterRead = afterRead.bind(this);
         this.afterUpdateNextTick = updateReadNT.bind(this);
+      }
+      get ending() {
+        return (this.stream._duplexState & READ_ENDING) !== 0;
       }
       get ended() {
         return (this.stream._duplexState & READ_DONE) !== 0;
@@ -42733,8 +42995,14 @@ var require_streamx = __commonJS({
     function isStreamx(stream) {
       return typeof stream._duplexState === "number" && isStream(stream);
     }
+    function isEnding(stream) {
+      return !!stream._readableState && stream._readableState.ending;
+    }
     function isEnded(stream) {
       return !!stream._readableState && stream._readableState.ended;
+    }
+    function isFinishing(stream) {
+      return !!stream._writableState && stream._writableState.ending;
     }
     function isFinished(stream) {
       return !!stream._writableState && stream._writableState.ended;
@@ -42747,7 +43015,7 @@ var require_streamx = __commonJS({
       return isStreamx(stream) && stream.readable;
     }
     function isDisturbed(stream) {
-      return (stream._duplexState & OPENING) !== OPENING || (stream._duplexState & ACTIVE_OR_TICKING) !== 0;
+      return (stream._duplexState & OPENING) !== OPENING || (stream._duplexState & DESTROYING) === DESTROYING || (stream._duplexState & ACTIVE_OR_TICKING) !== 0;
     }
     function isTypedArray(data) {
       return typeof data === "object" && data !== null && typeof data.byteLength === "number";
@@ -42768,7 +43036,9 @@ var require_streamx = __commonJS({
       pipelinePromise,
       isStream,
       isStreamx,
+      isEnding,
       isEnded,
+      isFinishing,
       isFinished,
       isDisturbed,
       getStreamError,
@@ -51429,9 +51699,9 @@ var init_revisions = __esm({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
 var require_browser_installer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -51624,9 +51894,9 @@ For more help, see: https://pptr.dev/troubleshooting`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/index.js
 var require_dist12 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.266.2/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -51715,9 +51985,9 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.266.2/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js
 var require_open_socket = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.266.2/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -52632,9 +52902,9 @@ var require_source2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.266.2/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js
 var require_get_local_address = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.266.2/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -52656,9 +52926,9 @@ var require_get_local_address = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.266.2/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js
 var require_tunnel_http2_cluster = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.266.2/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -52868,7 +53138,7 @@ var require_tunnel_http2_cluster = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.266.2/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js
 !function() {
   try {
     var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
