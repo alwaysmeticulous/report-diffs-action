@@ -5,7 +5,6 @@ import { BaseResolutionDetails } from "@alwaysmeticulous/api";
 import { TestRun } from "@alwaysmeticulous/client";
 import log from "loglevel";
 import { Duration } from "luxon";
-import { performance } from "perf_hooks";
 import { CodeChangeEvent } from "../types";
 import {
   DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
@@ -22,9 +21,6 @@ import {
 
 const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST = Duration.fromObject({
   minutes: 30,
-});
-const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PUSH_EVENT = Duration.fromObject({
-  minutes: 10,
 });
 
 const POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
