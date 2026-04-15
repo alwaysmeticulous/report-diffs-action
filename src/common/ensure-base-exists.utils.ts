@@ -5,6 +5,7 @@ import { BaseResolutionDetails } from "@alwaysmeticulous/api";
 import { TestRun } from "@alwaysmeticulous/client";
 import log from "loglevel";
 import { Duration } from "luxon";
+import { performance } from "perf_hooks";
 import { CodeChangeEvent } from "../types";
 import {
   DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
