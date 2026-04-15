@@ -23,7 +23,6 @@ import { getPrefixedLogger, shortSha } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { updateStatusComment } from "../../common/update-status-comment";
 import { DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION } from "./consts";
-import { explainBaseResolutionDetails } from "./explain-base-resolution-details";
 import { getCloudComputeBaseTestRun } from "./get-cloud-compute-base-test-run";
 import { getPullRequestId } from "./get-pull-request-id";
 
@@ -253,15 +252,6 @@ export const runOneTestRun = async ({
     baseResolutionDetails == null
       ? undefined
       : { baseResolutionDetails: baseResolutionDetails };
-
-  if (debugContext?.baseResolutionDetails != null) {
-    logger.info(
-      `Base resolution details: ${explainBaseResolutionDetails(
-        debugContext.baseResolutionDetails
-      )}`
-    );
-    logger.debug(JSON.stringify({ debugContext }, null, 2));
-  }
 
   await executeRemoteTestRun({
     apiToken,
