@@ -128,23 +128,21 @@ export const runOneTestRun = async ({
       logger
     );
     if (codeChangeBase) {
-      const {
-        baseTestRunExists,
-        baseResolutionDetails: resolutionDetails,
-      } = await tryTriggerTestsWorkflowOnBase({
-        logger,
-        event,
-        base: codeChangeBase,
-        getBaseTestRun: async () => {
-          const { baseTestRun } = await getCloudComputeBaseTestRun({
-            apiToken,
-            headCommitSha: headSha,
-          });
-          return baseTestRun;
-        },
-        context,
-        octokit,
-      });
+      const { baseTestRunExists, baseResolutionDetails: resolutionDetails } =
+        await tryTriggerTestsWorkflowOnBase({
+          logger,
+          event,
+          base: codeChangeBase,
+          getBaseTestRun: async () => {
+            const { baseTestRun } = await getCloudComputeBaseTestRun({
+              apiToken,
+              headCommitSha: headSha,
+            });
+            return baseTestRun;
+          },
+          context,
+          octokit,
+        });
       baseResolutionDetails = resolutionDetails;
 
       if (baseTestRunExists) {
