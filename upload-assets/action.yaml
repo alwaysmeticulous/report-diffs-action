@@ -21,6 +21,12 @@ inputs:
   base-api-url:
     description: Override the Meticulous base API URL. Only needed for self-hosted or staging environments.
     required: false
+  commit-sha:
+    description: |
+      The commit SHA to associate the uploaded assets with. If not provided, the action will try to read it
+      from the checked-out git repository, falling back to the GITHUB_SHA environment variable. Provide this
+      explicitly when running without 'actions/checkout' (e.g. in a job that only downloads a pre-built artifact).
+    required: false
 
 outputs: {}
 runs:
