@@ -28,6 +28,12 @@ inputs:
       The HTTP path used for health checks on the container (e.g. '/health'). Defaults to '/'
       if not provided.
     required: false
+  commit-sha:
+    description: |
+      The commit SHA to associate the uploaded container with. If not provided, the action will try to read it
+      from the checked-out git repository, falling back to the GITHUB_SHA environment variable. Provide this
+      explicitly when running without 'actions/checkout' (e.g. in a job that only builds or pulls a Docker image).
+    required: false
 
 outputs: {}
 runs:

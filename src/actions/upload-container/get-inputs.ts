@@ -8,6 +8,7 @@ export interface UploadContainerInputs {
   containerPort: number | undefined;
   containerEnv: ContainerEnvVariable[] | undefined;
   containerHealthCheckEndpoint: string | undefined;
+  commitSha?: string;
 }
 
 export const getUploadContainerInputs = (): UploadContainerInputs => {
@@ -19,6 +20,7 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
   const containerHealthCheckEndpointStr = getInput(
     "container-health-check-endpoint"
   );
+  const commitSha = getInput("commit-sha", { required: false }) || undefined;
 
   if (!imageTag || imageTag.trim() === "") {
     throw new Error("image-tag must be a non-empty string");
@@ -62,5 +64,6 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
     containerPort,
     containerEnv,
     containerHealthCheckEndpoint,
+    commitSha,
   };
 };
