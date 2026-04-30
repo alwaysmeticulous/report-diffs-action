@@ -64,87 +64,98 @@ jobs:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
           image-tag: react-bmi-calculator:${{ github.sha }}
 
-  test-no-checkout-explicit-sha:
-    name: Report diffs (uploading container, no checkout, explicit commit-sha)
-    runs-on: ubuntu-latest
-
-    steps:
-      # Checkout into a subdirectory so the workspace root is NOT a git repo.
-      # This simulates a job that didn't run actions/checkout at the workspace
-      # root (e.g. one that only pulls a pre-built image).
-      - name: Checkout action source into subdirectory
-        uses: actions/checkout@v3
-        with:
-          path: action-source
-
-      - name: Use Node.js LTS
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.27.0
-
-      - name: Install react-bmi-calculator dependencies
-        working-directory: ./action-source/tests/react-bmi-calculator
-        run: pnpm install --frozen-lockfile
-
-      - name: Build react-bmi-calculator
-        working-directory: ./action-source/tests/react-bmi-calculator
-        run: pnpm build
-
-      - name: Build Docker image
-        working-directory: ./action-source/tests/react-bmi-calculator
-        run: docker build -t react-bmi-calculator:${{ github.sha }} .
-
-      - name: Run report-diffs-action (container upload)
-        id: test
-        uses: ./action-source/upload-container
-        with:
-          api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
-          image-tag: react-bmi-calculator:${{ github.sha }}
-          commit-sha: ${{ github.sha }}
-
-  test-no-checkout-fallback-sha:
-    name: Report diffs (uploading container, no checkout, GITHUB_SHA fallback)
-    runs-on: ubuntu-latest
-
-    steps:
-      # Same setup as above: workspace root is not a git repo, but here we
-      # also omit the 'commit-sha' input so the action must fall back to
-      # GITHUB_SHA from the GitHub Actions context.
-      - name: Checkout action source into subdirectory
-        uses: actions/checkout@v3
-        with:
-          path: action-source
-
-      - name: Use Node.js LTS
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.27.0
-
-      - name: Install react-bmi-calculator dependencies
-        working-directory: ./action-source/tests/react-bmi-calculator
-        run: pnpm install --frozen-lockfile
-
-      - name: Build react-bmi-calculator
-        working-directory: ./action-source/tests/react-bmi-calculator
-        run: pnpm build
-
-      - name: Build Docker image
-        working-directory: ./action-source/tests/react-bmi-calculator
-        run: docker build -t react-bmi-calculator:${{ github.sha }} .
-
-      - name: Run report-diffs-action (container upload)
-        id: test
-        uses: ./action-source/upload-container
-        with:
-          api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
-          image-tag: react-bmi-calculator:${{ github.sha }}
+  # The two jobs below verify the no-git-checkout code paths added to
+  # upload-container (explicit `commit-sha` input and `GITHUB_SHA` fallback).
+  # They are commented out by default because both would upload against the
+  # same commit SHA as the `test` job above, and the Meticulous backend
+  # rejects duplicate deployments per (project, source, commit-sha) — so at
+  # most one of the three uploads can succeed per workflow run.
+  #
+  # To verify the fix manually, uncomment ONE of the two jobs below (and
+  # ideally temporarily disable the `test` job above so this job's upload
+  # wins the deployment).
+  #
+  # test-no-checkout-explicit-sha:
+  #   name: Report diffs (uploading container, no checkout, explicit commit-sha)
+  #   runs-on: ubuntu-latest
+  #
+  #   steps:
+  #     # Checkout into a subdirectory so the workspace root is NOT a git repo.
+  #     # This simulates a job that didn't run actions/checkout at the workspace
+  #     # root (e.g. one that only pulls a pre-built image).
+  #     - name: Checkout action source into subdirectory
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: action-source
+  #
+  #     - name: Use Node.js LTS
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "20"
+  #
+  #     - name: Setup pnpm
+  #       uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 10.27.0
+  #
+  #     - name: Install react-bmi-calculator dependencies
+  #       working-directory: ./action-source/tests/react-bmi-calculator
+  #       run: pnpm install --frozen-lockfile
+  #
+  #     - name: Build react-bmi-calculator
+  #       working-directory: ./action-source/tests/react-bmi-calculator
+  #       run: pnpm build
+  #
+  #     - name: Build Docker image
+  #       working-directory: ./action-source/tests/react-bmi-calculator
+  #       run: docker build -t react-bmi-calculator:${{ github.sha }} .
+  #
+  #     - name: Run report-diffs-action (container upload)
+  #       id: test
+  #       uses: ./action-source/upload-container
+  #       with:
+  #         api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
+  #         image-tag: react-bmi-calculator:${{ github.sha }}
+  #         commit-sha: ${{ github.sha }}
+  #
+  # test-no-checkout-fallback-sha:
+  #   name: Report diffs (uploading container, no checkout, GITHUB_SHA fallback)
+  #   runs-on: ubuntu-latest
+  #
+  #   steps:
+  #     # Same setup as above: workspace root is not a git repo, but here we
+  #     # also omit the 'commit-sha' input so the action must fall back to
+  #     # context.sha (process.env.GITHUB_SHA).
+  #     - name: Checkout action source into subdirectory
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: action-source
+  #
+  #     - name: Use Node.js LTS
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "20"
+  #
+  #     - name: Setup pnpm
+  #       uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 10.27.0
+  #
+  #     - name: Install react-bmi-calculator dependencies
+  #       working-directory: ./action-source/tests/react-bmi-calculator
+  #       run: pnpm install --frozen-lockfile
+  #
+  #     - name: Build react-bmi-calculator
+  #       working-directory: ./action-source/tests/react-bmi-calculator
+  #       run: pnpm build
+  #
+  #     - name: Build Docker image
+  #       working-directory: ./action-source/tests/react-bmi-calculator
+  #       run: docker build -t react-bmi-calculator:${{ github.sha }} .
+  #
+  #     - name: Run report-diffs-action (container upload)
+  #       id: test
+  #       uses: ./action-source/upload-container
+  #       with:
+  #         api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
+  #         image-tag: react-bmi-calculator:${{ github.sha }}
