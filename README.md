@@ -6,11 +6,12 @@ A GitHub Action that performs visual regression testing by comparing screenshots
 
 ## Available Actions
 
-| Action | Use Case |
-|--------|----------|
-| `upload-assets` | Upload static assets for testing **(recommended for static sites)** |
-| `cloud-compute` | Test via secure tunnel to your locally-served app |
-| `report-diffs-action` | Run tests in GitHub Actions runner (legacy) |
+| Action                | Use Case                                                            |
+|-----------------------|---------------------------------------------------------------------|
+| `upload-assets`       | Upload static assets for testing **(recommended for static sites)** |
+| `upload-container`    | Upload a Docker container for testing                               |
+| `cloud-compute`       | Test via secure tunnel to your locally-served app                   |
+| `report-diffs-action` | Run tests in GitHub Actions runner (legacy)                         |
 
 > **Recommendation:** If your app can be built as static assets (HTML/JS/CSS), use `upload-assets`. It's simpler and more reliable than running a server in CI.
 
@@ -44,6 +45,7 @@ A GitHub Action that performs visual regression testing by comparing screenshots
 All inputs are documented in the `action.yml` files:
 
 - [`upload-assets/action.yaml`](./upload-assets/action.yaml)
+- [`upload-container/action.yml`](./upload-container/action.yml)
 - [`cloud-compute/action.yml`](./cloud-compute/action.yml)
 - [`action.yml`](./action.yml) (legacy)
 
