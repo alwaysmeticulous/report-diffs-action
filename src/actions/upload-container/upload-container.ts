@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/node";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import {
   getBaseAndHeadCommitShas,
-  getActualCommitShaFromRepo,
+  getActualCommitShaFromRepoOrContext,
 } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
@@ -37,6 +37,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           containerPort,
           containerEnv,
           containerHealthCheckEndpoint,
+          commitSha: commitShaInput,
         } = getUploadContainerInputs();
         const event = getCodeChangeEvent(context.eventName, context.payload);
         const octokit = getOctokitOrFail(githubToken);
@@ -74,10 +75,19 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
 
         logger.info(`Uploading container image: ${imageTag}`);
 
+        const commitSha =
+          commitShaInput ?? getActualCommitShaFromRepoOrContext(logger);
+        if (!commitSha) {
+          throw new Error(
+            "Could not determine a commit SHA to associate the uploaded container with. " +
+              "Either run 'actions/checkout' before this action, or pass the 'commit-sha' input explicitly."
+          );
+        }
+
         await uploadContainerAndTriggerTestRun({
           apiToken,
           localImageTag: imageTag,
-          commitSha: getActualCommitShaFromRepo(),
+          commitSha,
           waitForBase: false,
           ...(containerPort != null ? { containerPort } : {}),
           ...(containerEnv != null ? { containerEnv } : {}),

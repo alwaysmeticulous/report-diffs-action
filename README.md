@@ -6,12 +6,12 @@ A GitHub Action that performs visual regression testing by comparing screenshots
 
 ## Available Actions
 
-| Action | Use Case |
-|--------|----------|
-| `upload-assets` | Upload built static assets for Meticulous to test **(recommended for static sites)** |
-| `upload-container` | Upload a built Docker image for Meticulous to host and test **(recommended for server-rendered apps, e.g. Next.js)** |
-| `cloud-compute` | Test a locally-served app via a secure tunnel (last resort) |
-| `report-diffs-action` | Run tests in GitHub Actions runner (legacy) |
+| Action                | Use Case                                                                                                             |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------|
+| `upload-assets`       | Upload built static assets for Meticulous to test **(recommended for static sites)**                                 |
+| `upload-container`    | Upload a built Docker image for Meticulous to host and test **(recommended for server-rendered apps, e.g. Next.js)** |
+| `cloud-compute`       | Test a locally-served app via a secure tunnel (last resort)                                                          |
+| `report-diffs-action` | Run tests in GitHub Actions runner (legacy)                                                                          |
 
 > **Recommendation:** Pick the first approach that fits your app:
 > 1. **`upload-assets`** if your app can be served as a folder of static assets (HTML/JS/CSS).
