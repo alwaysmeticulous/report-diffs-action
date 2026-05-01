@@ -33,12 +33,19 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/defer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/defer.js
 var require_defer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "14ea5af5-45bd-5fba-90da-098144169bf9");
+      } catch (e2) {
+      }
+    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.defer = void 0;
+    exports2.defer = defer;
     function defer() {
       let state = "pending";
       let resolve5 = null;
@@ -59,7 +66,6 @@ var require_defer = __commonJS({
         getState: () => state
       };
     }
-    exports2.defer = defer;
   }
 });
 
@@ -320,10 +326,17 @@ var require_loglevel = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
 var require_console_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "cec91a77-7e15-5d5b-a267-f11665f4882b");
+      } catch (e2) {
+      }
+    }();
     var __importDefault3 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -378,10 +391,17 @@ var require_console_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
 var require_local_data = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "9391bd64-8e39-57a1-bc01-f610dee5cad2");
+      } catch (e2) {
+      }
+    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.runWithLocalDataDir = exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = void 0;
     var async_hooks_1 = require("async_hooks");
@@ -7224,10 +7244,17 @@ var require_luxon = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
 var require_logs = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "153baeb9-e3cd-542d-a72e-8b9c8d2a1d03");
+      } catch (e2) {
+      }
+    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getLogFile = void 0;
     var promises_1 = require("fs/promises");
@@ -7243,10 +7270,17 @@ var require_logs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
 var require_debug_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "3e61c9b1-6b72-5ad2-a0d6-efc140cbf783");
+      } catch (e2) {
+      }
+    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DebugLogger = void 0;
     var child_process_1 = require("child_process");
@@ -7334,10 +7368,17 @@ var require_debug_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/constants.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/constants.js
 var require_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "c7febd1c-55b4-5835-b20f-575238707a33");
+      } catch (e2) {
+      }
+    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.COMMON_CHROMIUM_FLAGS = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = void 0;
     exports2.BASE_SNIPPETS_URL = "https://snippet.meticulous.ai/";
@@ -7353,6 +7394,7 @@ var require_constants = __commonJS({
       disableRemoteFonts: false,
       noSandbox: false,
       maxDurationMs: 5 * 60 * 1e3,
+      // 5 minutes
       maxEventCount: null,
       essentialFeaturesOnly: false,
       logPossibleNonDeterminism: false
@@ -7417,10 +7459,17 @@ var require_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
 var require_version_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "f7a9dcad-9565-56bb-80ab-2d2aa5164b73");
+      } catch (e2) {
+      }
+    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getMeticulousVersion = void 0;
     var promises_1 = require("fs/promises");
@@ -7438,17 +7487,46 @@ var require_version_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
 var require_commit_sha_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "7ee3e956-cf37-55d9-bc34-38ae3823f04d");
+      } catch (e2) {
+      }
+    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getCommitDate = exports2.getCommitSha = void 0;
+    exports2.getCommitDate = exports2.getGitDiff = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitSha = void 0;
     var child_process_1 = require("child_process");
     var console_logger_1 = require_console_logger();
-    var getGitRevParseHead = () => {
+    var execPromise = (command2, cwd) => {
       return new Promise((resolve5, reject) => {
-        (0, child_process_1.exec)("git rev-parse HEAD", { encoding: "utf-8" }, (error, output) => {
+        (0, child_process_1.exec)(command2, { encoding: "utf-8", cwd }, (error, output) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+          resolve5(output.trim());
+        });
+      });
+    };
+    var execFilePromise = (file, args, cwd) => {
+      return new Promise((resolve5, reject) => {
+        (0, child_process_1.execFile)(file, args, { encoding: "utf-8", cwd }, (error, output) => {
+          if (error) {
+            reject(error);
+            return;
+          }
+          resolve5(output.trim());
+        });
+      });
+    };
+    var getGitRevParseHead = (cwd) => {
+      return new Promise((resolve5, reject) => {
+        (0, child_process_1.exec)("git rev-parse HEAD", { encoding: "utf-8", cwd }, (error, output) => {
           if (error) {
             reject(error);
             return;
@@ -7457,13 +7535,13 @@ var require_commit_sha_utils = __commonJS({
         });
       });
     };
-    var getCommitSha = async (commitSha_) => {
+    var getCommitSha = async (commitSha_, options) => {
       if (commitSha_) {
         return commitSha_;
       }
       const logger = (0, console_logger_1.initLogger)();
       try {
-        const gitCommitSha = (await getGitRevParseHead()).trim();
+        const gitCommitSha = (await getGitRevParseHead(options === null || options === void 0 ? void 0 : options.cwd)).trim();
         return gitCommitSha;
       } catch (error) {
         if (error instanceof Error) {
@@ -7477,9 +7555,9 @@ var require_commit_sha_utils = __commonJS({
       }
     };
     exports2.getCommitSha = getCommitSha;
-    var getGitCommitDate = (commitSha) => {
+    var getGitCommitDate = (commitSha, cwd) => {
       return new Promise((resolve5, reject) => {
-        (0, child_process_1.execFile)("git", ["show", "-s", "--format=%cI", commitSha], { encoding: "utf-8" }, (error, output) => {
+        (0, child_process_1.execFile)("git", ["show", "-s", "--format=%cI", commitSha], { encoding: "utf-8", cwd }, (error, output) => {
           if (error) {
             reject(error);
             return;
@@ -7487,6 +7565,88 @@ var require_commit_sha_utils = __commonJS({
           resolve5(output);
         });
       });
+    };
+    var getLocalBaseSha = async (options) => {
+      const logger = (0, console_logger_1.initLogger)();
+      const cwd = options === null || options === void 0 ? void 0 : options.cwd;
+      let branchName;
+      try {
+        branchName = await execPromise("git rev-parse --abbrev-ref HEAD", cwd);
+      } catch (error) {
+        logger.info(`Could not determine current branch (not in a git repository?): ${error instanceof Error ? error.message : error}`);
+        return null;
+      }
+      logger.debug(`Current branch: ${branchName}`);
+      try {
+        await execPromise("git fetch origin", cwd);
+      } catch (error) {
+        logger.warn(`Could not fetch from origin: ${error instanceof Error ? error.message : error}`);
+      }
+      const defaultBranch = await detectDefaultBranch(cwd);
+      const defaultBranchName = defaultBranch === null || defaultBranch === void 0 ? void 0 : defaultBranch.replace(/^origin\//, "");
+      const defaultBranchCandidates = defaultBranchName ? [defaultBranchName] : ["main", "master"];
+      if (branchName === "HEAD" || defaultBranchCandidates.includes(branchName)) {
+        try {
+          const headSha = await execPromise("git rev-parse HEAD", cwd);
+          logger.debug(`On ${branchName === "HEAD" ? "detached HEAD" : branchName}, using HEAD as base SHA: ${headSha}`);
+          return headSha;
+        } catch (error) {
+          logger.warn(`On ${branchName === "HEAD" ? "detached HEAD" : branchName}, but could not get HEAD SHA: ${error instanceof Error ? error.message : error}`);
+          return null;
+        }
+      }
+      const baseCandidates = [
+        ...defaultBranch ? [defaultBranch] : [],
+        "origin/main",
+        "origin/master"
+      ];
+      const uniqueCandidates = [...new Set(baseCandidates)];
+      for (const candidate of uniqueCandidates) {
+        try {
+          const mergeBase = await execPromise(`git merge-base ${candidate} HEAD`, cwd);
+          logger.debug(`Computed merge-base with '${candidate}': ${mergeBase}`);
+          return mergeBase;
+        } catch {
+        }
+      }
+      logger.warn("Could not compute base SHA: no default branch found on origin.");
+      return null;
+    };
+    exports2.getLocalBaseSha = getLocalBaseSha;
+    var hasUncommittedChanges = async (options) => {
+      try {
+        const output = await execPromise("git status --porcelain --untracked-files=no", options === null || options === void 0 ? void 0 : options.cwd);
+        return output.length > 0;
+      } catch {
+        return false;
+      }
+    };
+    exports2.hasUncommittedChanges = hasUncommittedChanges;
+    var getGitDiff = async (baseSha, headSha, options) => {
+      const args = headSha ? ["diff", baseSha, headSha] : ["diff", baseSha];
+      return execFilePromise("git", args, options === null || options === void 0 ? void 0 : options.cwd);
+    };
+    exports2.getGitDiff = getGitDiff;
+    var detectDefaultBranch = async (cwd) => {
+      const logger = (0, console_logger_1.initLogger)();
+      try {
+        const ref = await execPromise("git symbolic-ref refs/remotes/origin/HEAD", cwd);
+        const branch = ref.replace(/^refs\/remotes\//, "");
+        logger.debug(`Default branch from symbolic-ref: ${branch}`);
+        return branch;
+      } catch {
+      }
+      try {
+        const output = await execPromise("git remote show origin", cwd);
+        const match = output.match(/HEAD branch:\s*(\S+)/);
+        if (match) {
+          const branch = `origin/${match[1]}`;
+          logger.debug(`Default branch from remote show: ${branch}`);
+          return branch;
+        }
+      } catch {
+      }
+      return null;
     };
     var getCommitDate = async (commitDate_, commitSha) => {
       if (commitDate_) {
@@ -7511,10 +7671,17 @@ var require_commit_sha_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
 var require_http_retry_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "c3eedb8d-a3a5-58b4-bcd2-9ca0a65c5490");
+      } catch (e2) {
+      }
+    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.executeWithRetry = exports2.defaultShouldRetry = void 0;
     var defaultShouldRetry = (error) => {
@@ -16204,9 +16371,9 @@ var require_file = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/parseControlResponse.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseControlResponse.js
 var require_parseControlResponse = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/parseControlResponse.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseControlResponse.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.parseControlResponse = parseControlResponse;
@@ -16256,9 +16423,9 @@ var require_parseControlResponse = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/FtpContext.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/FtpContext.js
 var require_FtpContext = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/FtpContext.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/FtpContext.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.FTPContext = exports2.FTPError = void 0;
@@ -16573,9 +16740,9 @@ Closing reason: ${this._closingError.stack}`;
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/FileInfo.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/FileInfo.js
 var require_FileInfo = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/FileInfo.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/FileInfo.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.FileInfo = exports2.FileType = void 0;
@@ -16630,9 +16797,9 @@ var require_FileInfo = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/parseListDOS.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListDOS.js
 var require_parseListDOS = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/parseListDOS.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListDOS.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.testLine = testLine;
@@ -16673,9 +16840,9 @@ var require_parseListDOS = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/parseListUnix.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListUnix.js
 var require_parseListUnix = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/parseListUnix.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListUnix.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.testLine = testLine;
@@ -16759,9 +16926,9 @@ var require_parseListUnix = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/parseListMLSD.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListMLSD.js
 var require_parseListMLSD = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/parseListMLSD.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListMLSD.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.testLine = testLine;
@@ -16922,9 +17089,9 @@ var require_parseListMLSD = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/parseList.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseList.js
 var require_parseList = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/parseList.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseList.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -17007,9 +17174,9 @@ var require_parseList = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/ProgressTracker.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/ProgressTracker.js
 var require_ProgressTracker = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/ProgressTracker.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/ProgressTracker.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProgressTracker = void 0;
@@ -17078,9 +17245,9 @@ var require_ProgressTracker = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/StringWriter.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/StringWriter.js
 var require_StringWriter = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/StringWriter.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/StringWriter.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.StringWriter = void 0;
@@ -17106,9 +17273,9 @@ var require_StringWriter = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/netUtils.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/netUtils.js
 var require_netUtils = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/netUtils.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/netUtils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.describeTLS = describeTLS;
@@ -17157,9 +17324,9 @@ var require_netUtils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/transfer.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/transfer.js
 var require_transfer = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/transfer.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/transfer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.enterPassiveModeIPv6 = enterPassiveModeIPv6;
@@ -17409,9 +17576,9 @@ var require_transfer = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/Client.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/Client.js
 var require_Client = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/Client.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/Client.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Client = void 0;
@@ -17993,6 +18160,12 @@ var require_Client = __commonJS({
       async _downloadFromWorkingDir(localDirPath) {
         await ensureLocalDirectory(localDirPath);
         for (const file of await this.list()) {
+          const hasInvalidName = !file.name || (0, path_1.basename)(file.name) !== file.name;
+          if (hasInvalidName) {
+            const safeName = JSON.stringify(file.name);
+            this.ftp.log(`Invalid filename from server listing, will skip file. (${safeName})`);
+            continue;
+          }
           const localPath = (0, path_1.join)(localDirPath, file.name);
           if (file.isDirectory) {
             await this.cd(file.name);
@@ -18136,17 +18309,17 @@ var require_Client = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/StringEncoding.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/StringEncoding.js
 var require_StringEncoding = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/StringEncoding.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/StringEncoding.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/index.js
+// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/index.js
 var require_dist5 = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.1.0/node_modules/basic-ftp/dist/index.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/index.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -33615,198 +33788,425 @@ var require_dnsResolve = __commonJS({
   }
 });
 
-// node_modules/.pnpm/netmask@2.0.2/node_modules/netmask/lib/netmask.js
-var require_netmask = __commonJS({
-  "node_modules/.pnpm/netmask@2.0.2/node_modules/netmask/lib/netmask.js"(exports2) {
-    (function() {
-      var Netmask, atob2, chr, chr0, chrA, chra, ip2long, long2ip;
-      long2ip = function(long) {
-        var a, b, c, d;
-        a = (long & 255 << 24) >>> 24;
-        b = (long & 255 << 16) >>> 16;
-        c = (long & 255 << 8) >>> 8;
-        d = long & 255;
-        return [a, b, c, d].join(".");
-      };
-      ip2long = function(ip) {
-        var b, c, i, j, n, ref;
-        b = [];
-        for (i = j = 0; j <= 3; i = ++j) {
-          if (ip.length === 0) {
+// node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask4.js
+var require_netmask4 = __commonJS({
+  "node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask4.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Netmask4Impl = void 0;
+    exports2.ip2long = ip2long;
+    exports2.long2ip = long2ip;
+    function long2ip(long) {
+      const a = (long & 255 << 24) >>> 24;
+      const b = (long & 255 << 16) >>> 16;
+      const c = (long & 255 << 8) >>> 8;
+      const d = long & 255;
+      return [a, b, c, d].join(".");
+    }
+    var chr0 = "0".charCodeAt(0);
+    var chra = "a".charCodeAt(0);
+    var chrA = "A".charCodeAt(0);
+    function parseNum(s) {
+      let n = 0;
+      let base = 10;
+      let dmax = "9";
+      let i = 0;
+      if (s.length > 1 && s[i] === "0") {
+        if (s[i + 1] === "x" || s[i + 1] === "X") {
+          i += 2;
+          base = 16;
+        } else if ("0" <= s[i + 1] && s[i + 1] <= "9") {
+          i++;
+          base = 8;
+          dmax = "7";
+        }
+      }
+      const start = i;
+      while (i < s.length) {
+        if ("0" <= s[i] && s[i] <= dmax) {
+          n = n * base + (s.charCodeAt(i) - chr0) >>> 0;
+        } else if (base === 16) {
+          if ("a" <= s[i] && s[i] <= "f") {
+            n = n * base + (10 + s.charCodeAt(i) - chra) >>> 0;
+          } else if ("A" <= s[i] && s[i] <= "F") {
+            n = n * base + (10 + s.charCodeAt(i) - chrA) >>> 0;
+          } else {
             break;
           }
-          if (i > 0) {
-            if (ip[0] !== ".") {
-              throw new Error("Invalid IP");
-            }
-            ip = ip.substring(1);
-          }
-          ref = atob2(ip), n = ref[0], c = ref[1];
-          ip = ip.substring(c);
-          b.push(n);
+        } else {
+          break;
         }
-        if (ip.length !== 0) {
-          throw new Error("Invalid IP");
+        if (n > 4294967295) {
+          throw new Error("too large");
         }
-        switch (b.length) {
-          case 1:
-            if (b[0] > 4294967295) {
-              throw new Error("Invalid IP");
-            }
-            return b[0] >>> 0;
-          case 2:
-            if (b[0] > 255 || b[1] > 16777215) {
-              throw new Error("Invalid IP");
-            }
-            return (b[0] << 24 | b[1]) >>> 0;
-          case 3:
-            if (b[0] > 255 || b[1] > 255 || b[2] > 65535) {
-              throw new Error("Invalid IP");
-            }
-            return (b[0] << 24 | b[1] << 16 | b[2]) >>> 0;
-          case 4:
-            if (b[0] > 255 || b[1] > 255 || b[2] > 255 || b[3] > 255) {
-              throw new Error("Invalid IP");
-            }
-            return (b[0] << 24 | b[1] << 16 | b[2] << 8 | b[3]) >>> 0;
-          default:
+        i++;
+      }
+      if (i === start) {
+        throw new Error("empty octet");
+      }
+      return [n, i];
+    }
+    function ip2long(ip) {
+      const b = [];
+      for (let i = 0; i <= 3; i++) {
+        if (ip.length === 0) {
+          break;
+        }
+        if (i > 0) {
+          if (ip[0] !== ".") {
             throw new Error("Invalid IP");
-        }
-      };
-      chr = function(b) {
-        return b.charCodeAt(0);
-      };
-      chr0 = chr("0");
-      chra = chr("a");
-      chrA = chr("A");
-      atob2 = function(s) {
-        var base, dmax, i, n, start;
-        n = 0;
-        base = 10;
-        dmax = "9";
-        i = 0;
-        if (s.length > 1 && s[i] === "0") {
-          if (s[i + 1] === "x" || s[i + 1] === "X") {
-            i += 2;
-            base = 16;
-          } else if ("0" <= s[i + 1] && s[i + 1] <= "9") {
-            i++;
-            base = 8;
-            dmax = "7";
           }
+          ip = ip.substring(1);
         }
-        start = i;
-        while (i < s.length) {
-          if ("0" <= s[i] && s[i] <= dmax) {
-            n = n * base + (chr(s[i]) - chr0) >>> 0;
-          } else if (base === 16) {
-            if ("a" <= s[i] && s[i] <= "f") {
-              n = n * base + (10 + chr(s[i]) - chra) >>> 0;
-            } else if ("A" <= s[i] && s[i] <= "F") {
-              n = n * base + (10 + chr(s[i]) - chrA) >>> 0;
-            } else {
+        const [n, c] = parseNum(ip);
+        ip = ip.substring(c);
+        b.push(n);
+      }
+      if (ip.length !== 0) {
+        throw new Error("Invalid IP");
+      }
+      switch (b.length) {
+        case 1:
+          if (b[0] > 4294967295) {
+            throw new Error("Invalid IP");
+          }
+          return b[0] >>> 0;
+        case 2:
+          if (b[0] > 255 || b[1] > 16777215) {
+            throw new Error("Invalid IP");
+          }
+          return (b[0] << 24 | b[1]) >>> 0;
+        case 3:
+          if (b[0] > 255 || b[1] > 255 || b[2] > 65535) {
+            throw new Error("Invalid IP");
+          }
+          return (b[0] << 24 | b[1] << 16 | b[2]) >>> 0;
+        case 4:
+          if (b[0] > 255 || b[1] > 255 || b[2] > 255 || b[3] > 255) {
+            throw new Error("Invalid IP");
+          }
+          return (b[0] << 24 | b[1] << 16 | b[2] << 8 | b[3]) >>> 0;
+        default:
+          throw new Error("Invalid IP");
+      }
+    }
+    var Netmask4Impl = class _Netmask4Impl {
+      constructor(net, mask) {
+        if (typeof net !== "string") {
+          throw new Error("Missing `net' parameter");
+        }
+        let maskStr = mask;
+        if (!maskStr) {
+          const parts = net.split("/", 2);
+          net = parts[0];
+          maskStr = parts[1];
+        }
+        if (!maskStr) {
+          maskStr = 32;
+        }
+        if (typeof maskStr === "string" && maskStr.indexOf(".") > -1) {
+          try {
+            this.maskLong = ip2long(maskStr);
+          } catch (error) {
+            throw new Error("Invalid mask: " + maskStr);
+          }
+          this.bitmask = NaN;
+          for (let i = 32; i >= 0; i--) {
+            if (this.maskLong === 4294967295 << 32 - i >>> 0) {
+              this.bitmask = i;
               break;
             }
-          } else {
-            break;
           }
-          if (n > 4294967295) {
-            throw new Error("too large");
+        } else if (maskStr || maskStr === 0) {
+          this.bitmask = parseInt(maskStr, 10);
+          this.maskLong = 0;
+          if (this.bitmask > 0) {
+            this.maskLong = 4294967295 << 32 - this.bitmask >>> 0;
           }
-          i++;
+        } else {
+          throw new Error("Invalid mask: empty");
         }
-        if (i === start) {
-          throw new Error("empty octet");
+        try {
+          this.netLong = (ip2long(net) & this.maskLong) >>> 0;
+        } catch (error) {
+          throw new Error("Invalid net address: " + net);
         }
-        return [n, i];
-      };
-      Netmask = function() {
-        function Netmask2(net, mask) {
-          var error, i, j, ref;
-          if (typeof net !== "string") {
-            throw new Error("Missing `net' parameter");
-          }
-          if (!mask) {
-            ref = net.split("/", 2), net = ref[0], mask = ref[1];
-          }
-          if (!mask) {
-            mask = 32;
-          }
-          if (typeof mask === "string" && mask.indexOf(".") > -1) {
-            try {
-              this.maskLong = ip2long(mask);
-            } catch (error1) {
-              error = error1;
-              throw new Error("Invalid mask: " + mask);
-            }
-            for (i = j = 32; j >= 0; i = --j) {
-              if (this.maskLong === 4294967295 << 32 - i >>> 0) {
-                this.bitmask = i;
-                break;
-              }
-            }
-          } else if (mask || mask === 0) {
-            this.bitmask = parseInt(mask, 10);
-            this.maskLong = 0;
-            if (this.bitmask > 0) {
-              this.maskLong = 4294967295 << 32 - this.bitmask >>> 0;
-            }
-          } else {
-            throw new Error("Invalid mask: empty");
-          }
-          try {
-            this.netLong = (ip2long(net) & this.maskLong) >>> 0;
-          } catch (error1) {
-            error = error1;
-            throw new Error("Invalid net address: " + net);
-          }
-          if (!(this.bitmask <= 32)) {
-            throw new Error("Invalid mask for ip4: " + mask);
-          }
-          this.size = Math.pow(2, 32 - this.bitmask);
-          this.base = long2ip(this.netLong);
-          this.mask = long2ip(this.maskLong);
-          this.hostmask = long2ip(~this.maskLong);
-          this.first = this.bitmask <= 30 ? long2ip(this.netLong + 1) : this.base;
-          this.last = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 2) : long2ip(this.netLong + this.size - 1);
-          this.broadcast = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 1) : void 0;
+        if (!(this.bitmask <= 32)) {
+          throw new Error("Invalid mask for ip4: " + maskStr);
         }
-        Netmask2.prototype.contains = function(ip) {
-          if (typeof ip === "string" && (ip.indexOf("/") > 0 || ip.split(".").length !== 4)) {
-            ip = new Netmask2(ip);
-          }
-          if (ip instanceof Netmask2) {
-            return this.contains(ip.base) && this.contains(ip.broadcast || ip.last);
+        this.size = Math.pow(2, 32 - this.bitmask);
+        this.base = long2ip(this.netLong);
+        this.mask = long2ip(this.maskLong);
+        this.hostmask = long2ip(~this.maskLong);
+        this.first = this.bitmask <= 30 ? long2ip(this.netLong + 1) : this.base;
+        this.last = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 2) : long2ip(this.netLong + this.size - 1);
+        this.broadcast = this.bitmask <= 30 ? long2ip(this.netLong + this.size - 1) : void 0;
+      }
+      contains(ip) {
+        if (typeof ip === "string" && (ip.indexOf("/") > 0 || ip.split(".").length !== 4)) {
+          ip = new _Netmask4Impl(ip);
+        }
+        if (ip instanceof _Netmask4Impl) {
+          return this.contains(ip.base) && this.contains(ip.broadcast || ip.last);
+        } else {
+          return (ip2long(ip) & this.maskLong) >>> 0 === (this.netLong & this.maskLong) >>> 0;
+        }
+      }
+      next(count = 1) {
+        return new _Netmask4Impl(long2ip(this.netLong + this.size * count), this.mask);
+      }
+      forEach(fn) {
+        let long = ip2long(this.first);
+        const lastLong = ip2long(this.last);
+        let index = 0;
+        while (long <= lastLong) {
+          fn(long2ip(long), long, index);
+          index++;
+          long++;
+        }
+      }
+      toString() {
+        return this.base + "/" + this.bitmask;
+      }
+    };
+    exports2.Netmask4Impl = Netmask4Impl;
+  }
+});
+
+// node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask6.js
+var require_netmask6 = __commonJS({
+  "node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask6.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Netmask6Impl = void 0;
+    exports2.ip6bigint = ip6bigint;
+    exports2.bigint2ip6 = bigint2ip6;
+    var netmask4_1 = require_netmask4();
+    var MAX_IPV6 = (1n << 128n) - 1n;
+    function ip6bigint(ip) {
+      const zoneIdx = ip.indexOf("%");
+      if (zoneIdx !== -1) {
+        ip = ip.substring(0, zoneIdx);
+      }
+      const lastColon = ip.lastIndexOf(":");
+      if (lastColon !== -1 && ip.indexOf(".", lastColon) !== -1) {
+        const ipv4Part = ip.substring(lastColon + 1);
+        const ipv4Long = (0, netmask4_1.ip2long)(ipv4Part);
+        const ipv6Prefix = ip.substring(0, lastColon + 1) + "0:0";
+        const prefixVal = parseIPv6Pure(ipv6Prefix);
+        return prefixVal & ~0xffffffffn | BigInt(ipv4Long);
+      }
+      return parseIPv6Pure(ip);
+    }
+    function parseIPv6Pure(ip) {
+      const doubleColonIdx = ip.indexOf("::");
+      let groups;
+      if (doubleColonIdx !== -1) {
+        const left2 = ip.substring(0, doubleColonIdx);
+        const right2 = ip.substring(doubleColonIdx + 2);
+        const leftGroups = left2 === "" ? [] : left2.split(":");
+        const rightGroups = right2 === "" ? [] : right2.split(":");
+        const missing = 8 - leftGroups.length - rightGroups.length;
+        if (missing < 0) {
+          throw new Error("Invalid IPv6: too many groups");
+        }
+        groups = [...leftGroups, ...Array(missing).fill("0"), ...rightGroups];
+      } else {
+        groups = ip.split(":");
+      }
+      if (groups.length !== 8) {
+        throw new Error("Invalid IPv6: expected 8 groups, got " + groups.length);
+      }
+      let result = 0n;
+      for (let i = 0; i < 8; i++) {
+        const g = groups[i];
+        if (g.length === 0 || g.length > 4) {
+          throw new Error('Invalid IPv6: bad group "' + g + '"');
+        }
+        const val = parseInt(g, 16);
+        if (isNaN(val) || val < 0 || val > 65535) {
+          throw new Error('Invalid IPv6: bad group "' + g + '"');
+        }
+        result = result << 16n | BigInt(val);
+      }
+      return result;
+    }
+    function bigint2ip6(n) {
+      if (n < 0n || n > MAX_IPV6) {
+        throw new Error("Invalid IPv6 address value");
+      }
+      const groups = [];
+      for (let i = 0; i < 8; i++) {
+        groups.unshift(Number(n & 0xffffn));
+        n >>= 16n;
+      }
+      let bestStart = -1;
+      let bestLen = 0;
+      let curStart = -1;
+      let curLen = 0;
+      for (let i = 0; i < 8; i++) {
+        if (groups[i] === 0) {
+          if (curStart === -1) {
+            curStart = i;
+            curLen = 1;
           } else {
-            return (ip2long(ip) & this.maskLong) >>> 0 === (this.netLong & this.maskLong) >>> 0;
+            curLen++;
           }
-        };
-        Netmask2.prototype.next = function(count) {
-          if (count == null) {
-            count = 1;
+        } else {
+          if (curLen > bestLen && curLen >= 2) {
+            bestStart = curStart;
+            bestLen = curLen;
           }
-          return new Netmask2(long2ip(this.netLong + this.size * count), this.mask);
-        };
-        Netmask2.prototype.forEach = function(fn) {
-          var index, lastLong, long;
-          long = ip2long(this.first);
-          lastLong = ip2long(this.last);
-          index = 0;
-          while (long <= lastLong) {
-            fn(long2ip(long), long, index);
-            index++;
-            long++;
+          curStart = -1;
+          curLen = 0;
+        }
+      }
+      if (curLen > bestLen && curLen >= 2) {
+        bestStart = curStart;
+        bestLen = curLen;
+      }
+      if (bestStart !== -1 && bestStart + bestLen === 8 && bestStart > 0) {
+        const before = groups.slice(0, bestStart).map((g) => g.toString(16));
+        return before.join(":") + "::";
+      } else if (bestStart === 0) {
+        const after = groups.slice(bestLen).map((g) => g.toString(16));
+        return "::" + after.join(":");
+      } else if (bestStart > 0) {
+        const before = groups.slice(0, bestStart).map((g) => g.toString(16));
+        const after = groups.slice(bestStart + bestLen).map((g) => g.toString(16));
+        return before.join(":") + "::" + after.join(":");
+      } else {
+        return groups.map((g) => g.toString(16)).join(":");
+      }
+    }
+    var Netmask6Impl = class _Netmask6Impl {
+      constructor(net, mask) {
+        if (typeof net !== "string") {
+          throw new Error("Missing `net' parameter");
+        }
+        let prefixLen = mask;
+        if (prefixLen === void 0 || prefixLen === null) {
+          const slashIdx = net.indexOf("/");
+          if (slashIdx !== -1) {
+            prefixLen = parseInt(net.substring(slashIdx + 1), 10);
+            net = net.substring(0, slashIdx);
+          } else {
+            prefixLen = 128;
           }
-        };
-        Netmask2.prototype.toString = function() {
-          return this.base + "/" + this.bitmask;
-        };
-        return Netmask2;
-      }();
-      exports2.ip2long = ip2long;
-      exports2.long2ip = long2ip;
-      exports2.Netmask = Netmask;
-    }).call(exports2);
+        }
+        if (isNaN(prefixLen) || prefixLen < 0 || prefixLen > 128) {
+          throw new Error("Invalid mask for IPv6: " + prefixLen);
+        }
+        this.bitmask = prefixLen;
+        if (this.bitmask === 0) {
+          this.maskBigint = 0n;
+        } else {
+          this.maskBigint = MAX_IPV6 >> BigInt(128 - this.bitmask) << BigInt(128 - this.bitmask);
+        }
+        try {
+          this.netBigint = ip6bigint(net) & this.maskBigint;
+        } catch (error) {
+          throw new Error("Invalid IPv6 net address: " + net);
+        }
+        this.size = Number(1n << BigInt(128 - this.bitmask));
+        this.base = bigint2ip6(this.netBigint);
+        this.mask = bigint2ip6(this.maskBigint);
+        this.hostmask = bigint2ip6(~this.maskBigint & MAX_IPV6);
+        this.first = this.base;
+        this.last = bigint2ip6(this.netBigint + (1n << BigInt(128 - this.bitmask)) - 1n);
+        this.broadcast = void 0;
+      }
+      contains(ip) {
+        if (typeof ip === "string") {
+          if (ip.indexOf("/") > 0) {
+            ip = new _Netmask6Impl(ip);
+          }
+        }
+        if (ip instanceof _Netmask6Impl) {
+          return this.contains(ip.base) && this.contains(ip.last);
+        } else {
+          const addr = ip6bigint(ip);
+          return (addr & this.maskBigint) === this.netBigint;
+        }
+      }
+      next(count = 1) {
+        const sizeBig = 1n << BigInt(128 - this.bitmask);
+        return new _Netmask6Impl(bigint2ip6(this.netBigint + sizeBig * BigInt(count)), this.bitmask);
+      }
+      forEach(fn) {
+        let addr = this.netBigint;
+        const sizeBig = 1n << BigInt(128 - this.bitmask);
+        const lastAddr = this.netBigint + sizeBig - 1n;
+        let index = 0;
+        while (addr <= lastAddr) {
+          fn(bigint2ip6(addr), Number(addr), index);
+          index++;
+          addr++;
+        }
+      }
+      toString() {
+        return this.base + "/" + this.bitmask;
+      }
+    };
+    exports2.Netmask6Impl = Netmask6Impl;
+  }
+});
+
+// node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask.js
+var require_netmask = __commonJS({
+  "node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Netmask = void 0;
+    var netmask4_1 = require_netmask4();
+    var netmask6_1 = require_netmask6();
+    var Netmask = class _Netmask {
+      constructor(net, mask) {
+        if (typeof net !== "string") {
+          throw new Error("Missing `net' parameter");
+        }
+        const addrPart = net.indexOf("/") !== -1 ? net.substring(0, net.indexOf("/")) : net;
+        if (addrPart.indexOf(":") !== -1) {
+          this._impl = new netmask6_1.Netmask6Impl(net, mask);
+        } else {
+          this._impl = new netmask4_1.Netmask4Impl(net, mask);
+        }
+        this.base = this._impl.base;
+        this.mask = this._impl.mask;
+        this.hostmask = this._impl.hostmask;
+        this.bitmask = this._impl.bitmask;
+        this.size = this._impl.size;
+        this.first = this._impl.first;
+        this.last = this._impl.last;
+        this.broadcast = this._impl.broadcast;
+      }
+      contains(ip) {
+        if (typeof ip === "string") {
+          if (ip.indexOf("/") > 0) {
+            ip = new _Netmask(ip);
+          } else if (ip.indexOf(":") === -1 && ip.split(".").length !== 4) {
+            ip = new _Netmask(ip);
+          }
+        }
+        if (ip instanceof _Netmask) {
+          return this.contains(ip.base) && this.contains(ip.broadcast || ip.last);
+        }
+        return this._impl.contains(ip);
+      }
+      next(count = 1) {
+        const nextImpl = this._impl.next(count);
+        const result = new _Netmask(nextImpl.base, nextImpl.bitmask);
+        return result;
+      }
+      /** @deprecated */
+      forEach(fn) {
+        this._impl.forEach(fn);
+      }
+      toString() {
+        return this._impl.toString();
+      }
+    };
+    exports2.Netmask = Netmask;
   }
 });
 
@@ -39408,9 +39808,9 @@ var require_end_of_stream = __commonJS({
   }
 });
 
-// node_modules/.pnpm/pump@3.0.3/node_modules/pump/index.js
+// node_modules/.pnpm/pump@3.0.4/node_modules/pump/index.js
 var require_pump = __commonJS({
-  "node_modules/.pnpm/pump@3.0.3/node_modules/pump/index.js"(exports2, module2) {
+  "node_modules/.pnpm/pump@3.0.4/node_modules/pump/index.js"(exports2, module2) {
     var once = require_once();
     var eos = require_end_of_stream();
     var fs;
@@ -41163,9 +41563,9 @@ var require_fast_fifo = __commonJS({
   }
 });
 
-// node_modules/.pnpm/b4a@1.7.3/node_modules/b4a/index.js
+// node_modules/.pnpm/b4a@1.8.0/node_modules/b4a/index.js
 var require_b4a = __commonJS({
-  "node_modules/.pnpm/b4a@1.7.3/node_modules/b4a/index.js"(exports2, module2) {
+  "node_modules/.pnpm/b4a@1.8.0/node_modules/b4a/index.js"(exports2, module2) {
     function isBuffer(value) {
       return Buffer.isBuffer(value) || value instanceof Uint8Array;
     }
@@ -41321,9 +41721,9 @@ var require_b4a = __commonJS({
   }
 });
 
-// node_modules/.pnpm/text-decoder@1.2.3/node_modules/text-decoder/lib/pass-through-decoder.js
+// node_modules/.pnpm/text-decoder@1.2.7/node_modules/text-decoder/lib/pass-through-decoder.js
 var require_pass_through_decoder = __commonJS({
-  "node_modules/.pnpm/text-decoder@1.2.3/node_modules/text-decoder/lib/pass-through-decoder.js"(exports2, module2) {
+  "node_modules/.pnpm/text-decoder@1.2.7/node_modules/text-decoder/lib/pass-through-decoder.js"(exports2, module2) {
     var b4a = require_b4a();
     module2.exports = class PassThroughDecoder {
       constructor(encoding) {
@@ -41332,8 +41732,8 @@ var require_pass_through_decoder = __commonJS({
       get remaining() {
         return 0;
       }
-      decode(tail) {
-        return b4a.toString(tail, this.encoding);
+      decode(data) {
+        return b4a.toString(data, this.encoding);
       }
       flush() {
         return "";
@@ -41342,99 +41742,185 @@ var require_pass_through_decoder = __commonJS({
   }
 });
 
-// node_modules/.pnpm/text-decoder@1.2.3/node_modules/text-decoder/lib/utf8-decoder.js
+// node_modules/.pnpm/text-decoder@1.2.7/node_modules/text-decoder/lib/utf8-decoder.js
 var require_utf8_decoder = __commonJS({
-  "node_modules/.pnpm/text-decoder@1.2.3/node_modules/text-decoder/lib/utf8-decoder.js"(exports2, module2) {
+  "node_modules/.pnpm/text-decoder@1.2.7/node_modules/text-decoder/lib/utf8-decoder.js"(exports2, module2) {
     var b4a = require_b4a();
     module2.exports = class UTF8Decoder {
       constructor() {
-        this.codePoint = 0;
-        this.bytesSeen = 0;
-        this.bytesNeeded = 0;
-        this.lowerBoundary = 128;
-        this.upperBoundary = 191;
+        this._reset();
       }
       get remaining() {
         return this.bytesSeen;
       }
       decode(data) {
-        if (this.bytesNeeded === 0) {
-          let isBoundary = true;
-          for (let i = Math.max(0, data.byteLength - 4), n = data.byteLength; i < n && isBoundary; i++) {
-            isBoundary = data[i] <= 127;
-          }
-          if (isBoundary)
-            return b4a.toString(data, "utf8");
+        if (data.byteLength === 0)
+          return "";
+        if (this.bytesNeeded === 0 && trailingIncomplete(data, 0) === 0) {
+          this.bytesSeen = trailingBytesSeen(data);
+          return b4a.toString(data, "utf8");
         }
         let result = "";
-        for (let i = 0, n = data.byteLength; i < n; i++) {
+        let start = 0;
+        if (this.bytesNeeded > 0) {
+          while (start < data.byteLength) {
+            const byte = data[start];
+            if (byte < this.lowerBoundary || byte > this.upperBoundary) {
+              result += "\uFFFD";
+              this._reset();
+              break;
+            }
+            this.lowerBoundary = 128;
+            this.upperBoundary = 191;
+            this.codePoint = this.codePoint << 6 | byte & 63;
+            this.bytesSeen++;
+            start++;
+            if (this.bytesSeen === this.bytesNeeded) {
+              result += String.fromCodePoint(this.codePoint);
+              this._reset();
+              break;
+            }
+          }
+          if (this.bytesNeeded > 0)
+            return result;
+        }
+        const trailing = trailingIncomplete(data, start);
+        const end = data.byteLength - trailing;
+        if (end > start)
+          result += b4a.toString(data, "utf8", start, end);
+        for (let i = end; i < data.byteLength; i++) {
           const byte = data[i];
           if (this.bytesNeeded === 0) {
             if (byte <= 127) {
+              this.bytesSeen = 0;
               result += String.fromCharCode(byte);
+            } else if (byte >= 194 && byte <= 223) {
+              this.bytesNeeded = 2;
+              this.bytesSeen = 1;
+              this.codePoint = byte & 31;
+            } else if (byte >= 224 && byte <= 239) {
+              if (byte === 224)
+                this.lowerBoundary = 160;
+              else if (byte === 237)
+                this.upperBoundary = 159;
+              this.bytesNeeded = 3;
+              this.bytesSeen = 1;
+              this.codePoint = byte & 15;
+            } else if (byte >= 240 && byte <= 244) {
+              if (byte === 240)
+                this.lowerBoundary = 144;
+              else if (byte === 244)
+                this.upperBoundary = 143;
+              this.bytesNeeded = 4;
+              this.bytesSeen = 1;
+              this.codePoint = byte & 7;
             } else {
               this.bytesSeen = 1;
-              if (byte >= 194 && byte <= 223) {
-                this.bytesNeeded = 2;
-                this.codePoint = byte & 31;
-              } else if (byte >= 224 && byte <= 239) {
-                if (byte === 224)
-                  this.lowerBoundary = 160;
-                else if (byte === 237)
-                  this.upperBoundary = 159;
-                this.bytesNeeded = 3;
-                this.codePoint = byte & 15;
-              } else if (byte >= 240 && byte <= 244) {
-                if (byte === 240)
-                  this.lowerBoundary = 144;
-                if (byte === 244)
-                  this.upperBoundary = 143;
-                this.bytesNeeded = 4;
-                this.codePoint = byte & 7;
-              } else {
-                result += "\uFFFD";
-              }
+              result += "\uFFFD";
             }
             continue;
           }
           if (byte < this.lowerBoundary || byte > this.upperBoundary) {
-            this.codePoint = 0;
-            this.bytesNeeded = 0;
-            this.bytesSeen = 0;
-            this.lowerBoundary = 128;
-            this.upperBoundary = 191;
             result += "\uFFFD";
+            i--;
+            this._reset();
             continue;
           }
           this.lowerBoundary = 128;
           this.upperBoundary = 191;
           this.codePoint = this.codePoint << 6 | byte & 63;
           this.bytesSeen++;
-          if (this.bytesSeen !== this.bytesNeeded)
-            continue;
-          result += String.fromCodePoint(this.codePoint);
-          this.codePoint = 0;
-          this.bytesNeeded = 0;
-          this.bytesSeen = 0;
+          if (this.bytesSeen === this.bytesNeeded) {
+            result += String.fromCodePoint(this.codePoint);
+            this._reset();
+          }
         }
         return result;
       }
       flush() {
         const result = this.bytesNeeded > 0 ? "\uFFFD" : "";
+        this._reset();
+        return result;
+      }
+      _reset() {
         this.codePoint = 0;
         this.bytesNeeded = 0;
         this.bytesSeen = 0;
         this.lowerBoundary = 128;
         this.upperBoundary = 191;
-        return result;
       }
     };
+    function trailingIncomplete(data, start) {
+      const len = data.byteLength;
+      if (len <= start)
+        return 0;
+      const limit = Math.max(start, len - 4);
+      let i = len - 1;
+      while (i > limit && (data[i] & 192) === 128)
+        i--;
+      if (i < start)
+        return 0;
+      const byte = data[i];
+      let needed;
+      if (byte <= 127)
+        return 0;
+      if (byte >= 194 && byte <= 223)
+        needed = 2;
+      else if (byte >= 224 && byte <= 239)
+        needed = 3;
+      else if (byte >= 240 && byte <= 244)
+        needed = 4;
+      else
+        return 0;
+      const available = len - i;
+      return available < needed ? available : 0;
+    }
+    function trailingBytesSeen(data) {
+      const len = data.byteLength;
+      if (len === 0)
+        return 0;
+      const last = data[len - 1];
+      if (last <= 127)
+        return 0;
+      if ((last & 192) !== 128)
+        return 1;
+      const limit = Math.max(0, len - 4);
+      let i = len - 2;
+      while (i >= limit && (data[i] & 192) === 128)
+        i--;
+      if (i < 0)
+        return 1;
+      const first = data[i];
+      let needed;
+      if (first >= 194 && first <= 223)
+        needed = 2;
+      else if (first >= 224 && first <= 239)
+        needed = 3;
+      else if (first >= 240 && first <= 244)
+        needed = 4;
+      else
+        return 1;
+      if (len - i !== needed)
+        return 1;
+      if (needed >= 3) {
+        const second = data[i + 1];
+        if (first === 224 && second < 160)
+          return 1;
+        if (first === 237 && second > 159)
+          return 1;
+        if (first === 240 && second < 144)
+          return 1;
+        if (first === 244 && second > 143)
+          return 1;
+      }
+      return 0;
+    }
   }
 });
 
-// node_modules/.pnpm/text-decoder@1.2.3/node_modules/text-decoder/index.js
+// node_modules/.pnpm/text-decoder@1.2.7/node_modules/text-decoder/index.js
 var require_text_decoder = __commonJS({
-  "node_modules/.pnpm/text-decoder@1.2.3/node_modules/text-decoder/index.js"(exports2, module2) {
+  "node_modules/.pnpm/text-decoder@1.2.7/node_modules/text-decoder/index.js"(exports2, module2) {
     var PassThroughDecoder = require_pass_through_decoder();
     var UTF8Decoder = require_utf8_decoder();
     module2.exports = class TextDecoder {
@@ -41496,9 +41982,9 @@ var require_text_decoder = __commonJS({
   }
 });
 
-// node_modules/.pnpm/streamx@2.23.0/node_modules/streamx/index.js
+// node_modules/.pnpm/streamx@2.25.0/node_modules/streamx/index.js
 var require_streamx = __commonJS({
-  "node_modules/.pnpm/streamx@2.23.0/node_modules/streamx/index.js"(exports2, module2) {
+  "node_modules/.pnpm/streamx@2.25.0/node_modules/streamx/index.js"(exports2, module2) {
     var { EventEmitter } = require_default();
     var STREAM_DESTROYED = new Error("Stream was destroyed");
     var PREMATURE_CLOSE = new Error("Premature close");
@@ -41605,6 +42091,9 @@ var require_streamx = __commonJS({
         this.map = mapWritable || map;
         this.afterWrite = afterWrite.bind(this);
         this.afterUpdateNextTick = updateWriteNT.bind(this);
+      }
+      get ending() {
+        return (this.stream._duplexState & WRITE_FINISHING) !== 0;
       }
       get ended() {
         return (this.stream._duplexState & WRITE_DONE) !== 0;
@@ -41715,6 +42204,9 @@ var require_streamx = __commonJS({
         this.pipeTo = null;
         this.afterRead = afterRead.bind(this);
         this.afterUpdateNextTick = updateReadNT.bind(this);
+      }
+      get ending() {
+        return (this.stream._duplexState & READ_ENDING) !== 0;
       }
       get ended() {
         return (this.stream._duplexState & READ_DONE) !== 0;
@@ -42503,8 +42995,14 @@ var require_streamx = __commonJS({
     function isStreamx(stream) {
       return typeof stream._duplexState === "number" && isStream(stream);
     }
+    function isEnding(stream) {
+      return !!stream._readableState && stream._readableState.ending;
+    }
     function isEnded(stream) {
       return !!stream._readableState && stream._readableState.ended;
+    }
+    function isFinishing(stream) {
+      return !!stream._writableState && stream._writableState.ending;
     }
     function isFinished(stream) {
       return !!stream._writableState && stream._writableState.ended;
@@ -42517,7 +43015,7 @@ var require_streamx = __commonJS({
       return isStreamx(stream) && stream.readable;
     }
     function isDisturbed(stream) {
-      return (stream._duplexState & OPENING) !== OPENING || (stream._duplexState & ACTIVE_OR_TICKING) !== 0;
+      return (stream._duplexState & OPENING) !== OPENING || (stream._duplexState & DESTROYING) === DESTROYING || (stream._duplexState & ACTIVE_OR_TICKING) !== 0;
     }
     function isTypedArray(data) {
       return typeof data === "object" && data !== null && typeof data.byteLength === "number";
@@ -42538,7 +43036,9 @@ var require_streamx = __commonJS({
       pipelinePromise,
       isStream,
       isStreamx,
+      isEnding,
       isEnded,
+      isFinishing,
       isFinished,
       isDisturbed,
       getStreamError,
@@ -42553,9 +43053,9 @@ var require_streamx = __commonJS({
   }
 });
 
-// node_modules/.pnpm/tar-stream@3.1.7/node_modules/tar-stream/headers.js
+// node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/headers.js
 var require_headers = __commonJS({
-  "node_modules/.pnpm/tar-stream@3.1.7/node_modules/tar-stream/headers.js"(exports2) {
+  "node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/headers.js"(exports2) {
     var b4a = require_b4a();
     var ZEROS = "0000000000000000000";
     var SEVENS = "7777777777777777777";
@@ -42849,9 +43349,9 @@ var require_headers = __commonJS({
   }
 });
 
-// node_modules/.pnpm/tar-stream@3.1.7/node_modules/tar-stream/extract.js
+// node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/extract.js
 var require_extract = __commonJS({
-  "node_modules/.pnpm/tar-stream@3.1.7/node_modules/tar-stream/extract.js"(exports2, module2) {
+  "node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/extract.js"(exports2, module2) {
     var { Writable, Readable, getStreamError } = require_streamx();
     var FIFO = require_fast_fifo();
     var b4a = require_b4a();
@@ -43208,9 +43708,9 @@ var require_extract = __commonJS({
   }
 });
 
-// node_modules/.pnpm/tar-stream@3.1.7/node_modules/tar-stream/constants.js
+// node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/constants.js
 var require_constants6 = __commonJS({
-  "node_modules/.pnpm/tar-stream@3.1.7/node_modules/tar-stream/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/constants.js"(exports2, module2) {
     var constants = {
       // just for envs without fs
       S_IFMT: 61440,
@@ -43228,9 +43728,9 @@ var require_constants6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/tar-stream@3.1.7/node_modules/tar-stream/pack.js
+// node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/pack.js
 var require_pack = __commonJS({
-  "node_modules/.pnpm/tar-stream@3.1.7/node_modules/tar-stream/pack.js"(exports2, module2) {
+  "node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/pack.js"(exports2, module2) {
     var { Readable, Writable, getStreamError } = require_streamx();
     var b4a = require_b4a();
     var constants = require_constants6();
@@ -43487,17 +43987,17 @@ var require_pack = __commonJS({
   }
 });
 
-// node_modules/.pnpm/tar-stream@3.1.7/node_modules/tar-stream/index.js
+// node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/index.js
 var require_tar_stream = __commonJS({
-  "node_modules/.pnpm/tar-stream@3.1.7/node_modules/tar-stream/index.js"(exports2) {
+  "node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/index.js"(exports2) {
     exports2.extract = require_extract();
     exports2.pack = require_pack();
   }
 });
 
-// node_modules/.pnpm/tar-fs@3.1.1/node_modules/tar-fs/index.js
+// node_modules/.pnpm/tar-fs@3.1.2/node_modules/tar-fs/index.js
 var require_tar_fs = __commonJS({
-  "node_modules/.pnpm/tar-fs@3.1.1/node_modules/tar-fs/index.js"(exports2) {
+  "node_modules/.pnpm/tar-fs@3.1.2/node_modules/tar-fs/index.js"(exports2) {
     var tar = require_tar_stream();
     var pump = require_pump();
     var fs = require("fs");
@@ -43701,7 +44201,13 @@ var require_tar_fs = __commonJS({
             const dst = path.resolve(path.dirname(name), header.linkname);
             if (!inCwd(dst) && validateSymLinks)
               return next(new Error(name + " is not a valid symlink"));
-            xfs.symlink(header.linkname, name, stat);
+            validateNotSymlink(xfs, dst, path.join(cwd, "."), function(err, valid) {
+              if (err)
+                return next(err);
+              if (!valid && validateSymLinks)
+                return next(new Error(name + " is not a valid symlink"));
+              xfs.symlink(header.linkname, name, stat);
+            });
           });
         }
         function onlink() {
@@ -43709,7 +44215,7 @@ var require_tar_fs = __commonJS({
             return next();
           xfs.unlink(name, function() {
             const link = path.join(cwd, path.join("/", header.linkname));
-            fs.realpath(link, function(err, dst) {
+            xfs.realpath(link, function(err, dst) {
               if (err || !inCwd(dst))
                 return next(new Error(name + " is not a valid hardlink"));
               xfs.link(dst, name, function(err2) {
@@ -43792,6 +44298,19 @@ var require_tar_fs = __commonJS({
         });
       }
     };
+    function validateNotSymlink(fs2, name, root, cb) {
+      if (name === root)
+        return cb(null, true);
+      if (!name.startsWith(root + path.sep))
+        return cb(null, false);
+      fs2.lstat(name, function(err, st) {
+        if (err && err.code !== "ENOENT" && err.code !== "EPERM")
+          return cb(err);
+        if (err || !st.isSymbolicLink())
+          return validateNotSymlink(fs2, path.join(name, ".."), root, cb);
+        cb(null, false);
+      });
+    }
     function validate(fs2, name, root, cb) {
       if (name === root)
         return cb(null, true);
@@ -51180,10 +51699,17 @@ var init_revisions = __esm({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
 var require_browser_installer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "49a0a9e3-a2fe-5e9e-86b1-a3fa5b397bf1");
+      } catch (e2) {
+      }
+    }();
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
         k2 = k;
@@ -51204,23 +51730,35 @@ var require_browser_installer = __commonJS({
     } : function(o, v) {
       o["default"] = v;
     });
-    var __importStar2 = exports2 && exports2.__importStar || function(mod) {
-      if (mod && mod.__esModule)
-        return mod;
-      var result = {};
-      if (mod != null) {
-        for (var k in mod)
-          if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k))
-            __createBinding2(result, mod, k);
-      }
-      __setModuleDefault2(result, mod);
-      return result;
-    };
+    var __importStar2 = exports2 && exports2.__importStar || /* @__PURE__ */ function() {
+      var ownKeys2 = function(o) {
+        ownKeys2 = Object.getOwnPropertyNames || function(o2) {
+          var ar = [];
+          for (var k in o2)
+            if (Object.prototype.hasOwnProperty.call(o2, k))
+              ar[ar.length] = k;
+          return ar;
+        };
+        return ownKeys2(o);
+      };
+      return function(mod) {
+        if (mod && mod.__esModule)
+          return mod;
+        var result = {};
+        if (mod != null) {
+          for (var k = ownKeys2(mod), i = 0; i < k.length; i++)
+            if (k[i] !== "default")
+              __createBinding2(result, mod, k[i]);
+        }
+        __setModuleDefault2(result, mod);
+        return result;
+      };
+    }();
     var __importDefault3 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ensureBrowser = void 0;
+    exports2.ensureBrowser = ensureBrowser;
     var fs = __importStar2(require("fs"));
     var os = __importStar2(require("os"));
     var path = __importStar2(require("path"));
@@ -51353,16 +51891,22 @@ For more help, see: https://pptr.dev/troubleshooting`;
         throw err;
       }
     }
-    exports2.ensureBrowser = ensureBrowser;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/index.js
 var require_dist12 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.255.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.273.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "fcce77a5-41e4-5083-8092-41f863dc94b9");
+      } catch (e2) {
+      }
+    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ensureBrowser = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
+    exports2.ensureBrowser = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getGitDiff = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
     var defer_1 = require_defer();
     Object.defineProperty(exports2, "defer", { enumerable: true, get: function() {
       return defer_1.defer;
@@ -51418,6 +51962,15 @@ var require_dist12 = __commonJS({
     Object.defineProperty(exports2, "getCommitDate", { enumerable: true, get: function() {
       return commit_sha_utils_1.getCommitDate;
     } });
+    Object.defineProperty(exports2, "getLocalBaseSha", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getLocalBaseSha;
+    } });
+    Object.defineProperty(exports2, "hasUncommittedChanges", { enumerable: true, get: function() {
+      return commit_sha_utils_1.hasUncommittedChanges;
+    } });
+    Object.defineProperty(exports2, "getGitDiff", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getGitDiff;
+    } });
     var http_retry_utils_1 = require_http_retry_utils();
     Object.defineProperty(exports2, "executeWithRetry", { enumerable: true, get: function() {
       return http_retry_utils_1.executeWithRetry;
@@ -51432,10 +51985,17 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js
 var require_open_socket = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "89b9ffc6-08e3-5b1b-9abb-4d78ca3c95d8");
+      } catch (e2) {
+      }
+    }();
     var __importDefault3 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -52342,10 +52902,17 @@ var require_source2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js
 var require_get_local_address = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "fd604f9c-23e0-5c2f-a181-9ff8d4a13b22");
+      } catch (e2) {
+      }
+    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getLocalAddress = void 0;
     var LOCAL_ADDRESS_ENV_VARIABLE = "METICULOUS_TUNNEL_CLIENT_REQUEST_LOCAL_ADDRESS";
@@ -52359,10 +52926,17 @@ var require_get_local_address = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js
 var require_tunnel_http2_cluster = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js"(exports2) {
     "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "388f250d-06e4-5c97-bcd5-b163237d48e3");
+      } catch (e2) {
+      }
+    }();
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
         k2 = k;
@@ -52383,18 +52957,30 @@ var require_tunnel_http2_cluster = __commonJS({
     } : function(o, v) {
       o["default"] = v;
     });
-    var __importStar2 = exports2 && exports2.__importStar || function(mod) {
-      if (mod && mod.__esModule)
-        return mod;
-      var result = {};
-      if (mod != null) {
-        for (var k in mod)
-          if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k))
-            __createBinding2(result, mod, k);
-      }
-      __setModuleDefault2(result, mod);
-      return result;
-    };
+    var __importStar2 = exports2 && exports2.__importStar || /* @__PURE__ */ function() {
+      var ownKeys2 = function(o) {
+        ownKeys2 = Object.getOwnPropertyNames || function(o2) {
+          var ar = [];
+          for (var k in o2)
+            if (Object.prototype.hasOwnProperty.call(o2, k))
+              ar[ar.length] = k;
+          return ar;
+        };
+        return ownKeys2(o);
+      };
+      return function(mod) {
+        if (mod && mod.__esModule)
+          return mod;
+        var result = {};
+        if (mod != null) {
+          for (var k = ownKeys2(mod), i = 0; i < k.length; i++)
+            if (k[i] !== "default")
+              __createBinding2(result, mod, k[i]);
+        }
+        __setModuleDefault2(result, mod);
+        return result;
+      };
+    }();
     var __importDefault3 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -52552,7 +53138,14 @@ var require_tunnel_http2_cluster = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.255.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.273.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js
+!function() {
+  try {
+    var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+    n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "a2fb8f57-4cb2-5097-bd7e-ed5d80b74ad5");
+  } catch (e2) {
+  }
+}();
 var __importDefault2 = exports && exports.__importDefault || function(mod) {
   return mod && mod.__esModule ? mod : { "default": mod };
 };
