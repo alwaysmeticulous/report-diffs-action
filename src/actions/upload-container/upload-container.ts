@@ -56,6 +56,25 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           { useDeploymentUrl: false },
           logger
         );
+        await safeEnsureBaseTestsExists({
+          event,
+          apiToken,
+          base,
+          context,
+          octokit,
+          getBaseTestRun: async ({ baseSha }) =>
+            await getLatestTestRunResults({
+              client: createClient({ apiToken }),
+              commitSha: baseSha,
+              // We deliberately don't filter by environment version here because when containers are uploaded,
+              // the backend can trigger a re-run. So we don't care whether we have a valid base now,
+              // just whether the commit was tested at some point which means we have the container.
+            }),
+          logger,
+        });
+
+        logger.info(`Uploading container image: ${imageTag}`);
+
         const commitSha =
           commitShaInput ?? getActualCommitShaFromRepoOrContext(logger);
         if (!commitSha) {
@@ -65,38 +84,17 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           );
         }
 
-        await Promise.all([
-          safeEnsureBaseTestsExists({
-            event,
-            apiToken,
-            base,
-            context,
-            octokit,
-            getBaseTestRun: async ({ baseSha }) =>
-              await getLatestTestRunResults({
-                client: createClient({ apiToken }),
-                commitSha: baseSha,
-                // We deliberately don't filter by environment version here because when containers are uploaded,
-                // the backend can trigger a re-run. So we don't care whether we have a valid base now,
-                // just whether the commit was tested at some point which means we have the container.
-              }),
-            logger,
-          }),
-          (async () => {
-            logger.info(`Uploading container image: ${imageTag}`);
-            await uploadContainerAndTriggerTestRun({
-              apiToken,
-              localImageTag: imageTag,
-              commitSha,
-              waitForBase: false,
-              ...(containerPort != null ? { containerPort } : {}),
-              ...(containerEnv != null ? { containerEnv } : {}),
-              ...(containerHealthCheckEndpoint != null
-                ? { containerHealthCheckEndpoint }
-                : {}),
-            });
-          })(),
-        ]);
+        await uploadContainerAndTriggerTestRun({
+          apiToken,
+          localImageTag: imageTag,
+          commitSha,
+          waitForBase: false,
+          ...(containerPort != null ? { containerPort } : {}),
+          ...(containerEnv != null ? { containerEnv } : {}),
+          ...(containerHealthCheckEndpoint != null
+            ? { containerHealthCheckEndpoint }
+            : {}),
+        });
         span.setStatus({ code: 1, message: "ok" });
         return 0;
       } catch (error) {
