@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { context } from "@actions/github";
 import log from "loglevel";
 import { CodeChangeEvent } from "../types";
@@ -109,11 +109,13 @@ const tryGetMergeBaseOfHeadCommit = (
     // Only a single commit is fetched by the checkout action by default
     // (https://github.com/actions/checkout#checkout-v3)
     // We therefore run fetch with the `--unshallow` param to fetch the whole branch/commit ancestor chains, which merge-base needs
-    execSync(`git fetch origin ${pullRequestHeadSha} --unshallow`);
-    execSync(`git fetch origin ${baseRef}`);
-    const mergeBase = execSync(
-      `git merge-base ${pullRequestHeadSha} origin/${baseRef}`
-    )
+    execFileSync("git", ["fetch", "origin", pullRequestHeadSha, "--unshallow"]);
+    execFileSync("git", ["fetch", "origin", "--", baseRef]);
+    const mergeBase = execFileSync("git", [
+      "merge-base",
+      pullRequestHeadSha,
+      `origin/${baseRef}`,
+    ])
       .toString()
       .trim();
 
@@ -140,7 +142,9 @@ const tryGetMergeBaseOfHeadCommit = (
  * Get the actual commit SHA that we have the code for.
  */
 export const getActualCommitShaFromRepo = (): string => {
-  return execSync("git rev-list --max-count=1 HEAD").toString().trim();
+  return execFileSync("git", ["rev-list", "--max-count=1", "HEAD"])
+    .toString()
+    .trim();
 };
 
 const tryGetMergeBaseOfTemporaryMergeCommit = (
@@ -178,7 +182,7 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
     }
 
     // The GITHUB_SHA is always a merge commit for PRs
-    const parents = execSync(`git cat-file -p ${mergeCommitSha}`)
+    const parents = execFileSync("git", ["cat-file", "-p", mergeCommitSha])
       .toString()
       .split("\n")
       .filter((line) => line.startsWith("parent "))
@@ -219,7 +223,13 @@ const markGitDirectoryAsSafe = () => {
   // which gets executed when we run a git command. However we trust github to not do that, so can
   // mark this directory as safe.
   // See https://medium.com/@thecodinganalyst/git-detect-dubious-ownership-in-repository-e7f33037a8f for more details
-  execSync(`git config --global --add safe.directory "${process.cwd()}"`);
+  execFileSync("git", [
+    "config",
+    "--global",
+    "--add",
+    "safe.directory",
+    process.cwd(),
+  ]);
 };
 
 const isValidGitSha = (sha: string): boolean => {
