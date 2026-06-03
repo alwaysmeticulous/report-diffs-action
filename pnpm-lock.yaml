@@ -15,20 +15,20 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       '@alwaysmeticulous/client':
-        specifier: ^2.273.0
-        version: 2.273.0
+        specifier: ^2.288.2
+        version: 2.288.2
       '@alwaysmeticulous/common':
-        specifier: ^2.273.0
-        version: 2.273.0
+        specifier: ^2.287.1
+        version: 2.287.1
       '@alwaysmeticulous/remote-replay-launcher':
-        specifier: ^2.273.0
-        version: 2.273.0
+        specifier: ^2.288.2
+        version: 2.288.2
       '@alwaysmeticulous/replay-orchestrator-launcher':
-        specifier: ^2.273.0
-        version: 2.273.0
+        specifier: ^2.288.2
+        version: 2.288.2
       '@alwaysmeticulous/sentry':
-        specifier: ^2.273.0
-        version: 2.273.0
+        specifier: ^2.287.1
+        version: 2.287.1
       '@sentry/cli':
         specifier: ^2.58.4
         version: 2.58.4
@@ -61,14 +61,14 @@ importers:
         version: 2.8.2
     devDependencies:
       '@alwaysmeticulous/api':
-        specifier: ^2.273.0
-        version: 2.273.0
+        specifier: ^2.288.2
+        version: 2.288.2
       '@alwaysmeticulous/sdk-bundles-api':
-        specifier: ^2.273.0
-        version: 2.273.0
+        specifier: ^2.288.2
+        version: 2.288.2
       '@alwaysmeticulous/tunnels-client':
-        specifier: ^2.273.0
-        version: 2.273.0
+        specifier: ^2.287.1
+        version: 2.287.1
       '@types/lodash.debounce':
         specifier: ^4.0.9
         version: 4.0.9
@@ -132,41 +132,41 @@ packages:
   '@actions/io@1.1.3':
     resolution: {integrity: sha512-wi9JjgKLYS7U/z8PPbco+PvTb/nRWjeoFlJ1Qer83k/3C5PHQi28hiVdeE2kHXmIL99mQFawx8qt/JPjZilJ8Q==}
 
-  '@alwaysmeticulous/api@2.273.0':
-    resolution: {integrity: sha512-HmhkkvS+oUYrAVnqO/4YPB1dikZIwLFpP/0tUU0d31K55GAwqf/G01H0ephMl/oQocAP4q3yh5BQZL5M2FeDuQ==}
-    engines: {node: '>= 12'}
+  '@alwaysmeticulous/api@2.288.2':
+    resolution: {integrity: sha512-zlbI6J0O+HMaUkjHoLf/0Qmw/TwOhmEKRIK/6ITM+dT9Lp01Ry9KwkzikrmTyt0PfTwoDRGL6RrZdfWpdEKZ1w==}
+    engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/client@2.273.0':
-    resolution: {integrity: sha512-5OwLlMEJzNaYkybzdtHh1jZ9fr0ur+skvz16K0MkM/tZaPQrBnSGvJna/YfAfqU9uf2AKUSr/6ZSb0CPtQovHA==}
-    engines: {node: '>= 12'}
+  '@alwaysmeticulous/client@2.288.2':
+    resolution: {integrity: sha512-0GGErDCQ6HG84daaOBO7Wugwu/4hn01Xy13WOqaDrfx0bm7Seio5YXiVUo6aLTS4GdXT+3vcHljPNyGZT3prAg==}
+    engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/common@2.273.0':
-    resolution: {integrity: sha512-Pe4CkG9qeg4haUTW6GQAdBiA1j/a7Ehfk1kLmch6XxipS5wOwHtAZFK9xFWd0yvIcLqJaNWsFPY0NBwnEcoSDA==}
-    engines: {node: '>= 12'}
+  '@alwaysmeticulous/common@2.287.1':
+    resolution: {integrity: sha512-acqTVod+qwep6TWCWoQvjuOPlswRHeD5Ej6YiRg/moI/KLFSw5yuMviY0MwuPgaPBOD930F8yGI3NBK1ps86JQ==}
+    engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/downloading-helpers@2.273.0':
-    resolution: {integrity: sha512-yBDsm7cn89aF0c6rQbDMNbRDCCdFs33hI5Cu4Y6d+yC+T0J4DPa47KU01+iuMiNF2XTUd+emxKwSjwDaGoyQAQ==}
-    engines: {node: '>= 12'}
+  '@alwaysmeticulous/downloading-helpers@2.288.2':
+    resolution: {integrity: sha512-hlr2QVbZ5ISgCHNLjmoP4U60CKG3iOLsnSoIF8N/kyoxMOH/sVwPBc1LiktSJ5kyYa0zLl4AgFuojpH3ytyENQ==}
+    engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/remote-replay-launcher@2.273.0':
-    resolution: {integrity: sha512-BemLPwYPev43IHAxNYvmP9GYl3CPsgzq7BpjGGUEvVguEAGv8uiIXGIc/A+EUUXERteyEHsRVlRs/zOEmgXkKQ==}
-    engines: {node: '>= 12'}
+  '@alwaysmeticulous/remote-replay-launcher@2.288.2':
+    resolution: {integrity: sha512-/mW7wBmJ5Hd5W0IGxpRelmP1B2k7+wuGVEy3OICowku0/8ND/G31Jw0of91IhuPcy0Run0uvW13E8sKZ5xUa0A==}
+    engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/replay-orchestrator-launcher@2.273.0':
-    resolution: {integrity: sha512-FNmHieq6xtfcfdD4cTUQvqVPX6lpsLl5C1fwuFZehiufQwIjxhRK+LJrVg4Qdm1dzDbJuX6ciYItdR8qGoVOtA==}
-    engines: {node: '>= 12'}
+  '@alwaysmeticulous/replay-orchestrator-launcher@2.288.2':
+    resolution: {integrity: sha512-2u6w9u7x2XPiaNdlLma6VeHwiIBpcf3TjbhpBphT4eWxIDLhzvuiw7ThKgksCbHEczzjgiliZ/kZS9+Kppf3ew==}
+    engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/sdk-bundles-api@2.273.0':
-    resolution: {integrity: sha512-K/1649lunsVlNpHzOeLCwGz5fQh5lSEOBVLbnAVvhLhaWjnB+uDdoOSIdaSvlFCPpOdos/PUQS1hEHsX+T5wJw==}
-    engines: {node: '>= 12'}
+  '@alwaysmeticulous/sdk-bundles-api@2.288.2':
+    resolution: {integrity: sha512-sPoyAjuUrWrLLyBD6J2HWGenCZqoUQzyr3NgVPUeY4PngqImWNVrmMIkCjridwV2d7595nr9vTfywdsg99XeRA==}
+    engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/sentry@2.273.0':
-    resolution: {integrity: sha512-QhIlof8zGtoaHuqVTxrbEwXHGcSXInXQtTpfOZ1eEHITi0O7FeEUFGt3vgLwJcqjn7wUCM/k8U0nyUeKabiFzw==}
-    engines: {node: '>= 12'}
+  '@alwaysmeticulous/sentry@2.287.1':
+    resolution: {integrity: sha512-SzzlBoXJ++oUcSCIeYTkrzP2xrsHjZbcJorHAt9pIuAJ4bLolIRWYsh5CKCPirhwoWD7pS8ph54nGd+OgRUZ0g==}
+    engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/tunnels-client@2.273.0':
-    resolution: {integrity: sha512-SwkaIFyEahJ3RmQiGEQ+mXNyNlZ2n8C5HmX4g+IgIVxDvttkxilfcIDoqN3PF8EHwJFNxhet9pKLKns0TKzqpA==}
-    engines: {node: '>= 14'}
+  '@alwaysmeticulous/tunnels-client@2.287.1':
+    resolution: {integrity: sha512-8JrD7I4BJI7pzrM7TAEYDzR/9nivFH9fPWlYsKSlkBGdUdAao2Tu9zHOq/jXcvW17WT+PxenPMNz7Pwq5GNoJg==}
+    engines: {node: '>= 18'}
 
   '@balena/dockerignore@1.0.2':
     resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
@@ -1746,8 +1746,8 @@ packages:
     peerDependencies:
       axios: 0.x || 1.x
 
-  axios@1.14.0:
-    resolution: {integrity: sha512-3Y8yrqLSwjuzpXuZ0oIYZ/XGgLwUIBU3uLvbcpb0pidD9ctpShJd43KSlEEkVQg6DS0G9NKyzOvBfUtDKEyHvQ==}
+  axios@1.16.1:
+    resolution: {integrity: sha512-caYkukvroVPO8KrzuJEb50Hm07KwfBZPEC3VeFHTsqWHvKTsy54hjJz9BS/cdaypROE2rH6xvm9mHX4fgWkr3A==}
 
   b4a@1.8.0:
     resolution: {integrity: sha512-qRuSmNSkGQaHwNbM7J78Wwy+ghLEYF1zNrSeMxj4Kgw6y33O3mXcQ6Ie9fRvfU/YnxWkOchPXbaLb73TkIsfdg==}
@@ -2010,9 +2010,9 @@ packages:
     resolution: {integrity: sha512-XJgGhoR/CLpqshm4d3L7rzH6t8NgDFUIIpztYlLHIApeJjMZKYJMz2zxPsYxnejq5h3ELYSw/RBsi3t5h7gNTA==}
     engines: {node: '>= 8.0'}
 
-  dockerode@4.0.10:
-    resolution: {integrity: sha512-8L/P9JynLBiG7/coiA4FlQXegHltRqS0a+KqI44P1zgQh8QLHTg7FKOwhkBgSJwZTeHsq30WRoVFLuwkfK0YFg==}
-    engines: {node: '>= 8.0'}
+  dockerode@5.0.0:
+    resolution: {integrity: sha512-C52mvJ+7lcyhWNfrzVfFsbTrBfy/ezE9FGEYLpu17FUeBcCkxERk9nN7uDl/478ynDiQ4U+5DbQC2vENHkVEtQ==}
+    engines: {node: '>= 14.17'}
 
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
@@ -2259,8 +2259,8 @@ packages:
   flatted@3.3.3:
     resolution: {integrity: sha512-GX+ysw4PBCz0PzosHDepZGANEuFCMLrnRTiEy9McGjmkCQYwRq4A/X786G/fjM/+OjsWSU1ZrY5qyARZmO/uwg==}
 
-  follow-redirects@1.15.11:
-    resolution: {integrity: sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==}
+  follow-redirects@1.16.0:
+    resolution: {integrity: sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -3354,6 +3354,10 @@ packages:
     resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
     engines: {node: '>=14.0'}
 
+  undici@6.25.0:
+    resolution: {integrity: sha512-ZgpWDC5gmNiuY9CnLVXEH8rl50xhRCuLNA97fAUnKi8RRuV4E6KG31pDTsLVUKnohJE0I3XDrTeEydAXRw47xg==}
+    engines: {node: '>=18.17'}
+
   universal-user-agent@6.0.1:
     resolution: {integrity: sha512-yCzhz6FN2wU1NiiQRogkTQszlQSlpWaw8SvVegAc+bDxbzHgh1vX8uIe8OYyMH6DwH+sdTJsgMl36+mSMdRJIQ==}
 
@@ -3372,10 +3376,6 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
-
-  uuid@10.0.0:
-    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
-    hasBin: true
 
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
@@ -3627,31 +3627,31 @@ snapshots:
 
   '@actions/io@1.1.3': {}
 
-  '@alwaysmeticulous/api@2.273.0': {}
+  '@alwaysmeticulous/api@2.288.2': {}
 
-  '@alwaysmeticulous/client@2.273.0':
+  '@alwaysmeticulous/client@2.288.2':
     dependencies:
-      '@alwaysmeticulous/api': 2.273.0
-      '@alwaysmeticulous/common': 2.273.0
+      '@alwaysmeticulous/api': 2.288.2
+      '@alwaysmeticulous/common': 2.287.1
       loglevel: 1.9.2
-      node-fetch: 2.7.0
       proxy-agent: 6.5.0
+      undici: 6.25.0
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
       - bufferutil
-      - encoding
       - react-native-b4a
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/common@2.273.0':
+  '@alwaysmeticulous/common@2.287.1':
     dependencies:
       '@puppeteer/browsers': 2.10.6
       chalk: 4.1.2
       loglevel: 1.9.2
       luxon: 3.7.2
       puppeteer-core: 24.14.0
+      undici: 6.25.0
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -3660,13 +3660,13 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/downloading-helpers@2.273.0':
+  '@alwaysmeticulous/downloading-helpers@2.288.2':
     dependencies:
-      '@alwaysmeticulous/api': 2.273.0
-      '@alwaysmeticulous/client': 2.273.0
-      '@alwaysmeticulous/common': 2.273.0
-      axios: 1.14.0
-      axios-retry: 4.5.0(axios@1.14.0)
+      '@alwaysmeticulous/api': 2.288.2
+      '@alwaysmeticulous/client': 2.288.2
+      '@alwaysmeticulous/common': 2.287.1
+      axios: 1.16.1
+      axios-retry: 4.5.0(axios@1.16.1)
       cli-progress: 3.12.0
       extract-zip: 2.0.1
       fast-zlib: 2.0.1
@@ -3679,19 +3679,18 @@ snapshots:
       - bare-buffer
       - bufferutil
       - debug
-      - encoding
       - react-native-b4a
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/remote-replay-launcher@2.273.0':
+  '@alwaysmeticulous/remote-replay-launcher@2.288.2':
     dependencies:
-      '@alwaysmeticulous/api': 2.273.0
-      '@alwaysmeticulous/client': 2.273.0
-      '@alwaysmeticulous/common': 2.273.0
-      '@alwaysmeticulous/tunnels-client': 2.273.0
+      '@alwaysmeticulous/api': 2.288.2
+      '@alwaysmeticulous/client': 2.288.2
+      '@alwaysmeticulous/common': 2.287.1
+      '@alwaysmeticulous/tunnels-client': 2.287.1
       '@sentry/node': 10.47.0
-      dockerode: 4.0.10
+      dockerode: 5.0.0
       fast-zlib: 2.0.1
       loglevel: 1.9.2
       p-limit: 3.1.0
@@ -3702,33 +3701,31 @@ snapshots:
       - bare-abort-controller
       - bare-buffer
       - bufferutil
-      - encoding
       - react-native-b4a
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/replay-orchestrator-launcher@2.273.0':
+  '@alwaysmeticulous/replay-orchestrator-launcher@2.288.2':
     dependencies:
-      '@alwaysmeticulous/common': 2.273.0
-      '@alwaysmeticulous/downloading-helpers': 2.273.0
-      '@alwaysmeticulous/sdk-bundles-api': 2.273.0
+      '@alwaysmeticulous/common': 2.287.1
+      '@alwaysmeticulous/downloading-helpers': 2.288.2
+      '@alwaysmeticulous/sdk-bundles-api': 2.288.2
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
       - bufferutil
       - debug
-      - encoding
       - react-native-b4a
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/sdk-bundles-api@2.273.0':
+  '@alwaysmeticulous/sdk-bundles-api@2.288.2':
     dependencies:
-      '@alwaysmeticulous/api': 2.273.0
+      '@alwaysmeticulous/api': 2.288.2
 
-  '@alwaysmeticulous/sentry@2.273.0':
+  '@alwaysmeticulous/sentry@2.287.1':
     dependencies:
-      '@alwaysmeticulous/common': 2.273.0
+      '@alwaysmeticulous/common': 2.287.1
       '@sentry/node': 10.47.0
       luxon: 3.7.2
     transitivePeerDependencies:
@@ -3740,19 +3737,17 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/tunnels-client@2.273.0':
+  '@alwaysmeticulous/tunnels-client@2.287.1':
     dependencies:
-      '@alwaysmeticulous/common': 2.273.0
+      '@alwaysmeticulous/common': 2.287.1
       agentkeepalive: 4.6.0
       cacheable-lookup: 6.1.0
       loglevel: 1.9.2
-      node-fetch: 2.7.0
       proxy-agent: 6.5.0
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
       - bufferutil
-      - encoding
       - react-native-b4a
       - supports-color
       - utf-8-validate
@@ -5336,18 +5331,20 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  axios-retry@4.5.0(axios@1.14.0):
+  axios-retry@4.5.0(axios@1.16.1):
     dependencies:
-      axios: 1.14.0
+      axios: 1.16.1
       is-retry-allowed: 2.2.0
 
-  axios@1.14.0:
+  axios@1.16.1:
     dependencies:
-      follow-redirects: 1.15.11
+      follow-redirects: 1.16.0
       form-data: 4.0.5
+      https-proxy-agent: 5.0.1
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
+      - supports-color
 
   b4a@1.8.0: {}
 
@@ -5594,7 +5591,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  dockerode@4.0.10:
+  dockerode@5.0.0:
     dependencies:
       '@balena/dockerignore': 1.0.2
       '@grpc/grpc-js': 1.14.3
@@ -5602,7 +5599,6 @@ snapshots:
       docker-modem: 5.0.7
       protobufjs: 7.5.4
       tar-fs: 2.1.4
-      uuid: 10.0.0
     transitivePeerDependencies:
       - supports-color
 
@@ -5999,7 +5995,7 @@ snapshots:
 
   flatted@3.3.3: {}
 
-  follow-redirects@1.15.11: {}
+  follow-redirects@1.16.0: {}
 
   for-each@0.3.5:
     dependencies:
@@ -7275,6 +7271,8 @@ snapshots:
     dependencies:
       '@fastify/busboy': 2.1.1
 
+  undici@6.25.0: {}
+
   universal-user-agent@6.0.1: {}
 
   universalify@0.2.0:
@@ -7315,8 +7313,6 @@ snapshots:
     optional: true
 
   util-deprecate@1.0.2: {}
-
-  uuid@10.0.0: {}
 
   v8-compile-cache-lib@3.0.1: {}
 
