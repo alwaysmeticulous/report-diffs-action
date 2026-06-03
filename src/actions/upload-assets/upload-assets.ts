@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/node";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import {
   getBaseAndHeadCommitShas,
-  getActualCommitShaFromRepo,
+  getActualCommitShaFromRepoOrContext,
 } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
@@ -30,8 +30,14 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
     },
     async (span) => {
       try {
-        const { apiToken, githubToken, appDirectory, rewrites, baseApiUrl } =
-          getUploadAssetsInputs();
+        const {
+          apiToken,
+          githubToken,
+          appDirectory,
+          rewrites,
+          baseApiUrl,
+          commitSha: commitShaInput,
+        } = getUploadAssetsInputs();
 
         if (baseApiUrl) {
           process.env["METICULOUS_API_URL"] = baseApiUrl;
@@ -72,10 +78,19 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
 
         logger.info(`Uploading assets from directory: ${appDirectory}`);
 
+        const commitSha =
+          commitShaInput ?? getActualCommitShaFromRepoOrContext(logger);
+        if (!commitSha) {
+          throw new Error(
+            "Could not determine a commit SHA to associate the uploaded assets with. " +
+              "Either run 'actions/checkout' before this action, or pass the 'commit-sha' input explicitly."
+          );
+        }
+
         await uploadAssetsAndTriggerTestRun({
           apiToken,
           appDirectory,
-          commitSha: getActualCommitShaFromRepo(),
+          commitSha,
           rewrites,
           waitForBase: false,
         });
