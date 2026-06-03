@@ -2,6 +2,9 @@ import "source-map-support/register";
 import { setFailed } from "@actions/core";
 import * as Sentry from "@sentry/node";
 import { runMeticulousTestsCloudComputeAction } from "./actions/cloud-compute/cloud-compute";
+import { setMeticulousClientUserAgentSuffix } from "./common/user-agent";
+
+setMeticulousClientUserAgentSuffix("cloud-compute");
 
 runMeticulousTestsCloudComputeAction().catch(async (error) => {
   Sentry.captureException(error);

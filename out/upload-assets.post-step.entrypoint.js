@@ -99284,7 +99284,15 @@ var runUploadAssetsPostStep = async () => {
   });
 };
 
+// src/common/user-agent.ts
+var setMeticulousClientUserAgentSuffix = (subAction) => {
+  const name = subAction ? `report-diffs-action/${subAction}` : "report-diffs-action";
+  const ref = process.env["GITHUB_ACTION_REF"]?.trim();
+  process.env["METICULOUS_CLIENT_USER_AGENT_SUFFIX"] = ref ? `${name}@${ref}` : name;
+};
+
 // src/upload-assets.post-step.entrypoint.ts
+setMeticulousClientUserAgentSuffix("upload-assets");
 runUploadAssetsPostStep().catch(async (error2) => {
   captureException(error2);
   const message = error2 instanceof Error ? error2.message : `${error2}`;
