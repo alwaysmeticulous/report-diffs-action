@@ -3,6 +3,14 @@ import { setMeticulousClientUserAgentSuffix } from "../user-agent";
 
 const ENV_VAR = "METICULOUS_CLIENT_USER_AGENT_SUFFIX";
 
+const restore = (key: string, value: string | undefined): void => {
+  if (value === undefined) {
+    delete process.env[key];
+  } else {
+    process.env[key] = value;
+  }
+};
+
 describe("setMeticulousClientUserAgentSuffix", () => {
   let originalRef: string | undefined;
   let originalSuffix: string | undefined;
@@ -35,12 +43,10 @@ describe("setMeticulousClientUserAgentSuffix", () => {
     setMeticulousClientUserAgentSuffix("upload-assets");
     expect(process.env[ENV_VAR]).toBe("report-diffs-action/upload-assets");
   });
-});
 
-const restore = (key: string, value: string | undefined): void => {
-  if (value === undefined) {
-    delete process.env[key];
-  } else {
-    process.env[key] = value;
-  }
-};
+  it("strips characters that would be invalid in a header value", () => {
+    process.env["GITHUB_ACTION_REF"] = "v1\r\n evil";
+    setMeticulousClientUserAgentSuffix("cloud-compute");
+    expect(process.env[ENV_VAR]).toBe("report-diffs-action/cloud-compute@v1evil");
+  });
+});

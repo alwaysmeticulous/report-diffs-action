@@ -117570,7 +117570,7 @@ var runCloudComputePostStep = async () => {
 // src/common/user-agent.ts
 var setMeticulousClientUserAgentSuffix = (subAction) => {
   const name = subAction ? `report-diffs-action/${subAction}` : "report-diffs-action";
-  const ref = process.env["GITHUB_ACTION_REF"]?.trim();
+  const ref = process.env["GITHUB_ACTION_REF"]?.replace(/[^\w.\-/]/g, "");
   process.env["METICULOUS_CLIENT_USER_AGENT_SUFFIX"] = ref ? `${name}@${ref}` : name;
 };
 

@@ -19,7 +19,10 @@ export const setMeticulousClientUserAgentSuffix = (subAction?: string): void => 
   const name = subAction
     ? `report-diffs-action/${subAction}`
     : "report-diffs-action";
-  const ref = process.env["GITHUB_ACTION_REF"]?.trim();
+  // Git refs only contain a restricted character set, but sanitize defensively
+  // so an unexpected value can never produce an invalid header (undici rejects
+  // control characters) — characters outside word/`.`/`-`/`/` are dropped.
+  const ref = process.env["GITHUB_ACTION_REF"]?.replace(/[^\w.\-/]/g, "");
   process.env["METICULOUS_CLIENT_USER_AGENT_SUFFIX"] = ref
     ? `${name}@${ref}`
     : name;
