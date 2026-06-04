@@ -47,6 +47,8 @@ describe("setMeticulousClientUserAgentSuffix", () => {
   it("strips characters that would be invalid in a header value", () => {
     process.env["GITHUB_ACTION_REF"] = "v1\r\n evil";
     setMeticulousClientUserAgentSuffix("cloud-compute");
-    expect(process.env[ENV_VAR]).toBe("report-diffs-action/cloud-compute@v1evil");
+    expect(process.env[ENV_VAR]).toBe(
+      "report-diffs-action/cloud-compute@v1evil"
+    );
   });
 });

@@ -15,7 +15,9 @@
  * entrypoint). `subAction` is the path under `report-diffs-action/` that the
  * step is invoked as (e.g. `"cloud-compute"`); omit it for the root action.
  */
-export const setMeticulousClientUserAgentSuffix = (subAction?: string): void => {
+export const setMeticulousClientUserAgentSuffix = (
+  subAction?: string
+): void => {
   const name = subAction
     ? `report-diffs-action/${subAction}`
     : "report-diffs-action";
