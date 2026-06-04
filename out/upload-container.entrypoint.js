@@ -27705,9 +27705,9 @@ var require_github = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/errors.js
 var require_errors2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -27786,9 +27786,9 @@ ${requestAndResponse}`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
 var require_agent_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -27857,9 +27857,9 @@ var require_agent_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
 var require_github_cloud_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -27883,9 +27883,9 @@ var require_github_cloud_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
 var require_oauth_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -27909,9 +27909,9 @@ var require_oauth_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
 var require_project_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -27966,9 +27966,9 @@ var require_project_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
 var require_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -28013,9 +28013,9 @@ var require_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
 var require_session_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -28060,9 +28060,9 @@ var require_session_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
 var require_replay_diff_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -28087,9 +28087,9 @@ var require_replay_diff_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
 var require_source_code_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -28118,9 +28118,9 @@ var require_source_code_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
 var require_test_run_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -28214,9 +28214,9 @@ var require_test_run_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
 var require_deployment_lock_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -28240,9 +28240,9 @@ var require_deployment_lock_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
 var require_test_run_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -96955,9 +96955,9 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
 var require_oauth_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97001,9 +97001,9 @@ var require_oauth_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
 var require_oauth_token_store = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97088,9 +97088,9 @@ var require_oauth_token_store = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
 var require_oauth_refresh = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97152,9 +97152,9 @@ var require_oauth_refresh = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
 var require_api_token_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97210,9 +97210,9 @@ var require_api_token_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
 var require_oauth_callback_server = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97304,9 +97304,9 @@ var require_oauth_callback_server = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
 var require_oauth_pkce = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97333,9 +97333,9 @@ var require_oauth_pkce = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
 var require_oauth_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97431,26 +97431,51 @@ var require_oauth_login = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/client.js
-var require_client3 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/version.js
+var require_version2 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "786c0eb9-d89d-5da6-834f-7133ebbda259");
+        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "ac10f4cc-7a38-5615-8b9d-956b50ad79da");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.createClientWithOAuth = exports2.resolveApiTokenWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.makeRequest = void 0;
+    exports2.VERSION = void 0;
+    exports2.VERSION = "2.289.2";
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/client.js
+var require_client3 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+    "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
+        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "af79d0c2-4021-56e8-8cee-e32a4cc3a1a6");
+      } catch (e2) {
+      }
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.createClientWithOAuth = exports2.resolveApiTokenWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.makeRequest = exports2.buildUserAgent = void 0;
     var common_1 = require_dist12();
     var oauth_api_1 = require_oauth_api();
     var api_token_utils_1 = require_api_token_utils();
     var oauth_login_1 = require_oauth_login();
     var oauth_token_store_1 = require_oauth_token_store();
+    var version_1 = require_version2();
     var DEFAULT_TIMEOUT = 6e4;
     var BASE_API_URL = "https://app.meticulous.ai/api/";
+    var USER_AGENT = `@alwaysmeticulous/client/${version_1.VERSION}`;
+    var USER_AGENT_SUFFIX_ENV_VAR = "METICULOUS_CLIENT_USER_AGENT_SUFFIX";
+    var buildUserAgent = (appInfo) => {
+      const suffix = appInfo?.trim() || process.env[USER_AGENT_SUFFIX_ENV_VAR]?.trim();
+      return suffix ? `${USER_AGENT} ${suffix}` : USER_AGENT;
+    };
+    exports2.buildUserAgent = buildUserAgent;
     var makeSingleRequest = async (url, options, timeout) => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => {
@@ -97500,6 +97525,7 @@ var require_client3 = __commonJS({
       let finalUrl = combineUrls(getApiUrl(), url);
       const finalHeaders = {
         "Content-Type": "application/json",
+        "user-agent": (0, exports2.buildUserAgent)(),
         ...headers,
         ...config.headers,
         ...options.headers
@@ -97523,10 +97549,12 @@ var require_client3 = __commonJS({
       });
     };
     exports2.makeRequest = makeRequest;
-    var buildClient = (token, logger) => {
+    var buildClient = (token, logger, appInfo) => {
+      const userAgent = (0, exports2.buildUserAgent)(appInfo);
       const makeRequestWithToken = async (url, options = {}, config) => {
         const headers = {
-          authorization: token
+          authorization: token,
+          "user-agent": userAgent
         };
         return (0, exports2.makeRequest)({
           url,
@@ -97558,14 +97586,14 @@ var require_client3 = __commonJS({
         }
       };
     };
-    var createClient2 = ({ apiToken: apiToken_ }) => {
+    var createClient2 = ({ apiToken: apiToken_, appInfo }) => {
       const logger = (0, common_1.initLogger)();
       const apiToken = (0, api_token_utils_1.getApiToken)(apiToken_);
       if (!apiToken) {
         logger.error("You must provide an API token by using the --apiToken parameter");
         process.exit(1);
       }
-      return buildClient(apiToken, logger);
+      return buildClient(apiToken, logger, appInfo);
     };
     exports2.createClient = createClient2;
     var isInteractiveContext = () => process.stdin.isTTY === true && !process.env["CI"];
@@ -97577,7 +97605,7 @@ var require_client3 = __commonJS({
       if (!apiToken && isInteractive) {
         const tokens = await (0, oauth_login_1.performOAuthLogin)();
         apiToken = tokens.accessToken;
-        await maybeAutoSelectProject(apiToken, logger);
+        await maybeAutoSelectProject(apiToken, logger, options.appInfo);
       }
       if (!apiToken) {
         const message = isInteractive ? "No authentication found. Use --apiToken, set METICULOUS_API_TOKEN, or log in via browser." : "No authentication found. Set METICULOUS_API_TOKEN or pass --apiToken.";
@@ -97587,12 +97615,12 @@ var require_client3 = __commonJS({
       return apiToken;
     };
     exports2.resolveApiTokenWithOAuth = resolveApiTokenWithOAuth;
-    var maybeAutoSelectProject = async (apiToken, logger) => {
+    var maybeAutoSelectProject = async (apiToken, logger, appInfo) => {
       if ((0, oauth_token_store_1.getStoredProjectId)()) {
         return;
       }
       try {
-        const client = buildClient(apiToken, logger);
+        const client = buildClient(apiToken, logger, appInfo);
         const projects = await (0, oauth_api_1.getOAuthProjects)(client);
         if (projects.length === 1) {
           const only = projects[0];
@@ -97606,7 +97634,7 @@ var require_client3 = __commonJS({
     };
     var createClientWithOAuth = async (options) => {
       const apiToken = await (0, exports2.resolveApiTokenWithOAuth)(options);
-      return buildClient(apiToken, (0, common_1.initLogger)());
+      return buildClient(apiToken, (0, common_1.initLogger)(), options.appInfo);
     };
     exports2.createClientWithOAuth = createClientWithOAuth;
     var getApiUrl = () => {
@@ -97618,9 +97646,9 @@ var require_client3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
 var require_oauth_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97666,9 +97694,9 @@ var require_oauth_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
 var require_get_proxy_agent = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97689,9 +97717,9 @@ var require_get_proxy_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
 var require_retry_transient_upload_errors = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97766,9 +97794,9 @@ ${responseBody}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
 var require_put_file_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97820,9 +97848,9 @@ var require_put_file_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
 var require_project_deployments_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97882,9 +97910,9 @@ var require_project_deployments_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
 var require_registry_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97903,9 +97931,9 @@ var require_registry_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
 var require_local_changes_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97935,9 +97963,9 @@ var require_local_changes_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/index.js
 var require_dist13 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -101552,7 +101580,7 @@ var require_globalThis = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+core@2.6.1_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/core/build/src/version.js
-var require_version2 = __commonJS({
+var require_version3 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+core@2.6.1_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/core/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -103665,7 +103693,7 @@ var require_sdk_info = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SDK_INFO = void 0;
-    var version_1 = require_version2();
+    var version_1 = require_version3();
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
     var semconv_1 = require_semconv();
     exports2.SDK_INFO = {
@@ -104652,7 +104680,7 @@ var require_src2 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-http@0.214.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-http/build/src/version.js
-var require_version3 = __commonJS({
+var require_version4 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-http@0.214.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-http/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -107553,7 +107581,7 @@ var require_http2 = __commonJS({
     var api_1 = (init_esm2(), __toCommonJS(esm_exports));
     var core_1 = require_src2();
     var url = require("url");
-    var version_1 = require_version3();
+    var version_1 = require_version4();
     var instrumentation_1 = require_src4();
     var events_1 = require("events");
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
@@ -108116,7 +108144,7 @@ var require_worldwide = __commonJS({
 });
 
 // node_modules/.pnpm/@sentry+core@10.47.0/node_modules/@sentry/core/build/cjs/utils/version.js
-var require_version4 = __commonJS({
+var require_version5 = __commonJS({
   "node_modules/.pnpm/@sentry+core@10.47.0/node_modules/@sentry/core/build/cjs/utils/version.js"(exports2) {
     Object.defineProperty(exports2, Symbol.toStringTag, { value: "Module" });
     var SDK_VERSION2 = "10.47.0";
@@ -108128,7 +108156,7 @@ var require_version4 = __commonJS({
 var require_carrier = __commonJS({
   "node_modules/.pnpm/@sentry+core@10.47.0/node_modules/@sentry/core/build/cjs/carrier.js"(exports2) {
     Object.defineProperty(exports2, Symbol.toStringTag, { value: "Module" });
-    var version = require_version4();
+    var version = require_version5();
     var worldwide = require_worldwide();
     function getMainCarrier2() {
       getSentryCarrier2(worldwide.GLOBAL_OBJ);
@@ -116185,7 +116213,7 @@ var require_ipAddress = __commonJS({
 var require_sdkMetadata = __commonJS({
   "node_modules/.pnpm/@sentry+core@10.47.0/node_modules/@sentry/core/build/cjs/utils/sdkMetadata.js"(exports2) {
     Object.defineProperty(exports2, Symbol.toStringTag, { value: "Module" });
-    var version = require_version4();
+    var version = require_version5();
     function applySdkMetadata(options, name, names = [name], source = "npm") {
       const sdk = (options._metadata = options._metadata || {}).sdk = options._metadata.sdk || {};
       if (!sdk.name) {
@@ -124931,7 +124959,7 @@ var require_cjs = __commonJS({
     var propagationContext = require_propagationContext();
     var vercelWaitUntil = require_vercelWaitUntil();
     var flushIfServerless = require_flushIfServerless();
-    var version = require_version4();
+    var version = require_version5();
     var debugIds = require_debug_ids();
     var metadata = require_metadata();
     var escapeStringForRegex = require_escapeStringForRegex();
@@ -128795,7 +128823,7 @@ var require_TracerMetrics = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+sdk-trace-base@2.6.1_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/sdk-trace-base/build/src/version.js
-var require_version5 = __commonJS({
+var require_version6 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+sdk-trace-base@2.6.1_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/sdk-trace-base/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -128816,7 +128844,7 @@ var require_Tracer = __commonJS({
     var utility_1 = require_utility();
     var platform_1 = require_platform5();
     var TracerMetrics_1 = require_TracerMetrics();
-    var version_1 = require_version5();
+    var version_1 = require_version6();
     var Tracer = class {
       _sampler;
       _generalLimits;
@@ -134591,7 +134619,7 @@ var require_http5 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-undici@0.24.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-undici/build/src/version.js
-var require_version6 = __commonJS({
+var require_version7 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-undici@0.24.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-undici/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -134613,7 +134641,7 @@ var require_undici3 = __commonJS({
     var api_1 = (init_esm2(), __toCommonJS(esm_exports));
     var core_1 = require_src2();
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
-    var version_1 = require_version6();
+    var version_1 = require_version7();
     var UndiciInstrumentation = class extends instrumentation_1.InstrumentationBase {
       _recordFromReq = /* @__PURE__ */ new WeakMap();
       constructor(config = {}) {
@@ -135027,7 +135055,7 @@ var require_node_fetch2 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-fs@0.33.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-fs/build/src/version.js
-var require_version7 = __commonJS({
+var require_version8 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-fs@0.33.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-fs/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -135211,7 +135239,7 @@ var require_instrumentation3 = __commonJS({
     var api = (init_esm2(), __toCommonJS(esm_exports));
     var core_1 = require_src2();
     var instrumentation_1 = require_src4();
-    var version_1 = require_version7();
+    var version_1 = require_version8();
     var constants_1 = require_constants28();
     var util_1 = require("util");
     var utils_1 = require_utils23();
@@ -135807,7 +135835,7 @@ var require_utils24 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-express@0.62.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-express/build/src/version.js
-var require_version8 = __commonJS({
+var require_version9 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-express@0.62.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-express/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -135828,7 +135856,7 @@ var require_instrumentation4 = __commonJS({
     var ExpressLayerType_1 = require_ExpressLayerType();
     var AttributeNames_1 = require_AttributeNames2();
     var utils_1 = require_utils24();
-    var version_1 = require_version8();
+    var version_1 = require_version9();
     var instrumentation_1 = require_src4();
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
     var internal_types_1 = require_internal_types2();
@@ -141183,7 +141211,7 @@ var require_utils27 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-graphql@0.62.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-graphql/build/src/version.js
-var require_version9 = __commonJS({
+var require_version10 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-graphql@0.62.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-graphql/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -141206,7 +141234,7 @@ var require_instrumentation8 = __commonJS({
     var symbols_1 = require_symbols11();
     var internal_types_1 = require_internal_types3();
     var utils_1 = require_utils27();
-    var version_1 = require_version9();
+    var version_1 = require_version10();
     var DEFAULT_CONFIG = {
       mergeItems: false,
       depth: -1,
@@ -141626,7 +141654,7 @@ var require_semconv5 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-kafkajs@0.23.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-kafkajs/build/src/version.js
-var require_version10 = __commonJS({
+var require_version11 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-kafkajs@0.23.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-kafkajs/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -141648,7 +141676,7 @@ var require_instrumentation9 = __commonJS({
     var internal_types_1 = require_internal_types4();
     var propagator_1 = require_propagator();
     var semconv_1 = require_semconv5();
-    var version_1 = require_version10();
+    var version_1 = require_version11();
     function prepareCounter(meter, value, attributes) {
       return (errorType) => {
         meter.add(value, {
@@ -142109,7 +142137,7 @@ var require_kafka = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-lru-memoizer@0.58.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-lru-memoizer/build/src/version.js
-var require_version11 = __commonJS({
+var require_version12 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-lru-memoizer@0.58.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-lru-memoizer/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -142127,7 +142155,7 @@ var require_instrumentation10 = __commonJS({
     exports2.LruMemoizerInstrumentation = void 0;
     var api_1 = (init_esm2(), __toCommonJS(esm_exports));
     var instrumentation_1 = require_src4();
-    var version_1 = require_version11();
+    var version_1 = require_version12();
     var LruMemoizerInstrumentation = class extends instrumentation_1.InstrumentationBase {
       constructor(config = {}) {
         super(version_1.PACKAGE_NAME, version_1.PACKAGE_VERSION, config);
@@ -142236,7 +142264,7 @@ var require_internal_types5 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-mongodb@0.67.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-mongodb/build/src/version.js
-var require_version12 = __commonJS({
+var require_version13 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-mongodb@0.67.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-mongodb/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -142257,7 +142285,7 @@ var require_instrumentation11 = __commonJS({
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
     var semconv_1 = require_semconv6();
     var internal_types_1 = require_internal_types5();
-    var version_1 = require_version12();
+    var version_1 = require_version13();
     var DEFAULT_CONFIG = {
       requireParentSpan: true
     };
@@ -143102,7 +143130,7 @@ Mongoose Error Code: ${error2.code}` : ""}`
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-mongoose@0.60.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-mongoose/build/src/version.js
-var require_version13 = __commonJS({
+var require_version14 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-mongoose@0.60.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-mongoose/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -143122,7 +143150,7 @@ var require_mongoose = __commonJS({
     var core_1 = require_src2();
     var utils_1 = require_utils28();
     var instrumentation_1 = require_src4();
-    var version_1 = require_version13();
+    var version_1 = require_version14();
     var semconv_1 = require_semconv7();
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
     var contextCaptureFunctionsCommon = [
@@ -143619,7 +143647,7 @@ var require_utils29 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-mysql@0.60.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-mysql/build/src/version.js
-var require_version14 = __commonJS({
+var require_version15 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-mysql@0.60.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-mysql/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -143641,7 +143669,7 @@ var require_instrumentation12 = __commonJS({
     var semconv_1 = require_semconv8();
     var AttributeNames_1 = require_AttributeNames5();
     var utils_1 = require_utils29();
-    var version_1 = require_version14();
+    var version_1 = require_version15();
     var MySQLInstrumentation = class extends instrumentation_1.InstrumentationBase {
       _netSemconvStability;
       _dbSemconvStability;
@@ -144108,7 +144136,7 @@ var require_utils30 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-mysql2@0.60.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-mysql2/build/src/version.js
-var require_version15 = __commonJS({
+var require_version16 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-mysql2@0.60.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-mysql2/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -144129,7 +144157,7 @@ var require_instrumentation13 = __commonJS({
     var semconv_1 = require_semconv9();
     var sql_common_1 = require_src20();
     var utils_1 = require_utils30();
-    var version_1 = require_version15();
+    var version_1 = require_version16();
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
     var supportedVersions = [">=1.4.2 <4"];
     var MySQL2Instrumentation = class extends instrumentation_1.InstrumentationBase {
@@ -144396,7 +144424,7 @@ var require_src22 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-ioredis@0.62.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-ioredis/build/src/version.js
-var require_version16 = __commonJS({
+var require_version17 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-ioredis@0.62.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-ioredis/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -144419,7 +144447,7 @@ var require_instrumentation14 = __commonJS({
     var instrumentation_2 = require_src4();
     var utils_1 = require_utils31();
     var redis_common_1 = require_src22();
-    var version_1 = require_version16();
+    var version_1 = require_version17();
     var DEFAULT_CONFIG = {
       requireParentSpan: true
     };
@@ -144604,7 +144632,7 @@ var require_src23 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-redis@0.62.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-redis/build/src/version.js
-var require_version17 = __commonJS({
+var require_version18 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-redis@0.62.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-redis/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -144682,7 +144710,7 @@ var require_instrumentation15 = __commonJS({
     exports2.RedisInstrumentationV2_V3 = void 0;
     var instrumentation_1 = require_src4();
     var utils_1 = require_utils32();
-    var version_1 = require_version17();
+    var version_1 = require_version18();
     var api_1 = (init_esm2(), __toCommonJS(esm_exports));
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
     var semconv_1 = require_semconv11();
@@ -144875,7 +144903,7 @@ var require_instrumentation16 = __commonJS({
     var instrumentation_1 = require_src4();
     var utils_1 = require_utils33();
     var redis_common_1 = require_src22();
-    var version_1 = require_version17();
+    var version_1 = require_version18();
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
     var semconv_1 = require_semconv11();
     var OTEL_OPEN_SPANS = Symbol("opentelemetry.instrumentation.redis.open_spans");
@@ -145175,7 +145203,7 @@ var require_redis = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RedisInstrumentation = void 0;
     var instrumentation_1 = require_src4();
-    var version_1 = require_version17();
+    var version_1 = require_version18();
     var instrumentation_2 = require_instrumentation15();
     var instrumentation_3 = require_instrumentation16();
     var DEFAULT_CONFIG = {
@@ -145768,7 +145796,7 @@ var require_utils34 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-pg@0.66.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-pg/build/src/version.js
-var require_version18 = __commonJS({
+var require_version19 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-pg@0.66.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-pg/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -145789,7 +145817,7 @@ var require_instrumentation17 = __commonJS({
     var internal_types_1 = require_internal_types6();
     var utils = require_utils34();
     var sql_common_1 = require_src20();
-    var version_1 = require_version18();
+    var version_1 = require_version19();
     var SpanNames_1 = require_SpanNames();
     var core_1 = require_src2();
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
@@ -148483,7 +148511,7 @@ var require_prisma = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-hapi@0.60.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-hapi/build/src/version.js
-var require_version19 = __commonJS({
+var require_version20 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-hapi@0.60.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-hapi/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -148647,7 +148675,7 @@ var require_instrumentation20 = __commonJS({
     var api = (init_esm2(), __toCommonJS(esm_exports));
     var core_1 = require_src2();
     var instrumentation_1 = require_src4();
-    var version_1 = require_version19();
+    var version_1 = require_version20();
     var internal_types_1 = require_internal_types7();
     var utils_1 = require_utils36();
     var HapiInstrumentation = class extends instrumentation_1.InstrumentationBase {
@@ -149337,7 +149365,7 @@ var require_types5 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-koa@0.62.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-koa/build/src/version.js
-var require_version20 = __commonJS({
+var require_version21 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-koa@0.62.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-koa/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -149417,7 +149445,7 @@ var require_instrumentation22 = __commonJS({
     var api = (init_esm2(), __toCommonJS(esm_exports));
     var instrumentation_1 = require_src4();
     var types_1 = require_types5();
-    var version_1 = require_version20();
+    var version_1 = require_version21();
     var utils_1 = require_utils37();
     var core_1 = require_src2();
     var internal_types_1 = require_internal_types8();
@@ -149660,7 +149688,7 @@ var require_AttributeNames9 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-connect@0.57.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-connect/build/src/version.js
-var require_version21 = __commonJS({
+var require_version22 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-connect@0.57.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-connect/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -149728,7 +149756,7 @@ var require_instrumentation23 = __commonJS({
     var api_1 = (init_esm2(), __toCommonJS(esm_exports));
     var core_1 = require_src2();
     var AttributeNames_1 = require_AttributeNames9();
-    var version_1 = require_version21();
+    var version_1 = require_version22();
     var instrumentation_1 = require_src4();
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
     var utils_1 = require_utils38();
@@ -149954,7 +149982,7 @@ var require_connect3 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-knex@0.58.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-knex/build/src/version.js
-var require_version22 = __commonJS({
+var require_version23 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-knex@0.58.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-knex/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -150113,7 +150141,7 @@ var require_instrumentation24 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.KnexInstrumentation = void 0;
     var api = (init_esm2(), __toCommonJS(esm_exports));
-    var version_1 = require_version22();
+    var version_1 = require_version23();
     var constants = require_constants31();
     var instrumentation_1 = require_src4();
     var utils = require_utils39();
@@ -150358,7 +150386,7 @@ var require_utils40 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-tedious@0.33.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-tedious/build/src/version.js
-var require_version23 = __commonJS({
+var require_version24 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-tedious@0.33.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-tedious/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -150380,7 +150408,7 @@ var require_instrumentation25 = __commonJS({
     var semantic_conventions_1 = (init_esm3(), __toCommonJS(esm_exports2));
     var semconv_1 = require_semconv15();
     var utils_1 = require_utils40();
-    var version_1 = require_version23();
+    var version_1 = require_version24();
     var CURRENT_DATABASE = Symbol("opentelemetry.instrumentation-tedious.current-database");
     exports2.INJECTED_CTX = Symbol("opentelemetry.instrumentation-tedious.context-info-injected");
     var PATCHED_METHODS = [
@@ -150639,7 +150667,7 @@ var require_tedious = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-generic-pool@0.57.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-generic-pool/build/src/version.js
-var require_version24 = __commonJS({
+var require_version25 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-generic-pool@0.57.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-generic-pool/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -150657,7 +150685,7 @@ var require_instrumentation26 = __commonJS({
     exports2.GenericPoolInstrumentation = void 0;
     var api = (init_esm2(), __toCommonJS(esm_exports));
     var instrumentation_1 = require_src4();
-    var version_1 = require_version24();
+    var version_1 = require_version25();
     var MODULE_NAME = "generic-pool";
     var GenericPoolInstrumentation = class extends instrumentation_1.InstrumentationBase {
       // only used for v2 - v2.3)
@@ -150803,7 +150831,7 @@ var require_genericPool = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-dataloader@0.31.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-dataloader/build/src/version.js
-var require_version25 = __commonJS({
+var require_version26 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-dataloader@0.31.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-dataloader/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -150821,7 +150849,7 @@ var require_instrumentation27 = __commonJS({
     exports2.DataloaderInstrumentation = void 0;
     var instrumentation_1 = require_src4();
     var api_1 = (init_esm2(), __toCommonJS(esm_exports));
-    var version_1 = require_version25();
+    var version_1 = require_version26();
     var MODULE_NAME = "dataloader";
     function extractModuleExports(module3) {
       return module3[Symbol.toStringTag] === "Module" ? module3.default : module3;
@@ -151281,7 +151309,7 @@ var require_utils41 = __commonJS({
 });
 
 // node_modules/.pnpm/@opentelemetry+instrumentation-amqplib@0.61.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-amqplib/build/src/version.js
-var require_version26 = __commonJS({
+var require_version27 = __commonJS({
   "node_modules/.pnpm/@opentelemetry+instrumentation-amqplib@0.61.0_@opentelemetry+api@1.9.1/node_modules/@opentelemetry/instrumentation-amqplib/build/src/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -151304,7 +151332,7 @@ var require_amqplib = __commonJS({
     var semconv_obsolete_1 = require_semconv_obsolete();
     var types_1 = require_types6();
     var utils_1 = require_utils41();
-    var version_1 = require_version26();
+    var version_1 = require_version27();
     var supportedVersions = [">=0.5.5 <1"];
     var AmqplibInstrumentation = class extends instrumentation_1.InstrumentationBase {
       _netSemconvStability;
@@ -153594,9 +153622,9 @@ var require_cjs4 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js
 var require_poll_for_base_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -157371,9 +157399,9 @@ var require_p_limit = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js
 var require_multipart_buffer_manager = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -157468,9 +157496,9 @@ var require_multipart_buffer_manager = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js
 var require_multipart_compressing_uploader = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -157564,9 +157592,9 @@ var require_multipart_compressing_uploader = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js
 var require_asset_upload_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -176040,9 +176068,9 @@ var require_lib4 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js
 var require_resource_tracker = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -176153,9 +176181,9 @@ var require_resource_tracker = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js
 var require_url_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -176190,9 +176218,9 @@ var require_url_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js
 var require_execute_remote_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -176390,9 +176418,9 @@ var require_execute_remote_test_run = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js
 var require_upload_assets_and_trigger_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -230647,9 +230675,9 @@ var require_docker2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js
 var require_upload_container = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -230894,9 +230922,9 @@ var require_upload_container = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js
 var require_upload_container_and_trigger_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -230937,9 +230965,9 @@ var require_upload_container_and_trigger_test_run = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js
 var require_dist16 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.288.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.289.2/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -240747,7 +240775,15 @@ var runMeticulousUploadContainerAction = async () => {
   process.exit(exitCode);
 };
 
+// src/common/user-agent.ts
+var setMeticulousClientUserAgentSuffix = (subAction) => {
+  const name = subAction ? `report-diffs-action/${subAction}` : "report-diffs-action";
+  const ref = process.env["GITHUB_ACTION_REF"]?.replace(/[^\w.\-/]/g, "");
+  process.env["METICULOUS_CLIENT_USER_AGENT_SUFFIX"] = ref ? `${name}@${ref}` : name;
+};
+
 // src/upload-container.entrypoint.ts
+setMeticulousClientUserAgentSuffix("upload-container");
 runMeticulousUploadContainerAction().catch(async (error2) => {
   captureException(error2);
   const message = error2 instanceof Error ? error2.message : `${error2}`;

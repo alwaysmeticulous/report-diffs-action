@@ -2,6 +2,9 @@ import "source-map-support/register";
 import { warning } from "@actions/core";
 import * as Sentry from "@sentry/node";
 import { runUploadContainerPostStep } from "./actions/upload-container/post-step";
+import { setMeticulousClientUserAgentSuffix } from "./common/user-agent";
+
+setMeticulousClientUserAgentSuffix("upload-container");
 
 runUploadContainerPostStep().catch(async (error) => {
   // Capture unexpected errors
