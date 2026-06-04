@@ -1,6 +1,9 @@
 import { setFailed } from "@actions/core";
 import * as Sentry from "@sentry/node";
 import { runMeticulousTestsAction } from "./actions/main/main";
+import { setMeticulousClientUserAgentSuffix } from "./common/user-agent";
+
+setMeticulousClientUserAgentSuffix();
 
 runMeticulousTestsAction().catch(async (error) => {
   // Capture unexpected errors

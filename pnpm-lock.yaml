@@ -15,17 +15,17 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       '@alwaysmeticulous/client':
-        specifier: ^2.288.2
-        version: 2.288.2
+        specifier: ^2.289.2
+        version: 2.289.2
       '@alwaysmeticulous/common':
         specifier: ^2.287.1
         version: 2.287.1
       '@alwaysmeticulous/remote-replay-launcher':
-        specifier: ^2.288.2
-        version: 2.288.2
+        specifier: ^2.289.2
+        version: 2.289.2
       '@alwaysmeticulous/replay-orchestrator-launcher':
-        specifier: ^2.288.2
-        version: 2.288.2
+        specifier: ^2.289.2
+        version: 2.289.2
       '@alwaysmeticulous/sentry':
         specifier: ^2.287.1
         version: 2.287.1
@@ -136,28 +136,36 @@ packages:
     resolution: {integrity: sha512-zlbI6J0O+HMaUkjHoLf/0Qmw/TwOhmEKRIK/6ITM+dT9Lp01Ry9KwkzikrmTyt0PfTwoDRGL6RrZdfWpdEKZ1w==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/client@2.288.2':
-    resolution: {integrity: sha512-0GGErDCQ6HG84daaOBO7Wugwu/4hn01Xy13WOqaDrfx0bm7Seio5YXiVUo6aLTS4GdXT+3vcHljPNyGZT3prAg==}
+  '@alwaysmeticulous/api@2.289.1':
+    resolution: {integrity: sha512-n4tSQfNHU5rNLrTLX/M/nge2Ec2A4rTh7c0MUOUlZ/DZNJgxycWsQxq7cg7chDWGLXLCWd4Pf/0E31kumlxU/g==}
+    engines: {node: '>= 18'}
+
+  '@alwaysmeticulous/client@2.289.2':
+    resolution: {integrity: sha512-Y07wLQ0yWG+DKpBSsLlaVfpLYejO46A09RRt2/MBQlfmtuFqUgw93KuQQNRLuBp+KF7g9uoSWNQb9/faFUSlfA==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/common@2.287.1':
     resolution: {integrity: sha512-acqTVod+qwep6TWCWoQvjuOPlswRHeD5Ej6YiRg/moI/KLFSw5yuMviY0MwuPgaPBOD930F8yGI3NBK1ps86JQ==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/downloading-helpers@2.288.2':
-    resolution: {integrity: sha512-hlr2QVbZ5ISgCHNLjmoP4U60CKG3iOLsnSoIF8N/kyoxMOH/sVwPBc1LiktSJ5kyYa0zLl4AgFuojpH3ytyENQ==}
+  '@alwaysmeticulous/downloading-helpers@2.289.2':
+    resolution: {integrity: sha512-cYib7FTX9jgEFLdGLSViAtIatY0h/zwIrp+fT9ctsc0w/O7wkqaDbo2v/dcGrE+mjDMFTTOMCLG7NO4cNiUrUw==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/remote-replay-launcher@2.288.2':
-    resolution: {integrity: sha512-/mW7wBmJ5Hd5W0IGxpRelmP1B2k7+wuGVEy3OICowku0/8ND/G31Jw0of91IhuPcy0Run0uvW13E8sKZ5xUa0A==}
+  '@alwaysmeticulous/remote-replay-launcher@2.289.2':
+    resolution: {integrity: sha512-CmaD6tzk9w6t2lE2UpwLaqtxohzniSGsQpax6VeOSvYgGMyBsFpP5qiu77E1gPhG4/rO26laOd3EXrQ6TYYu2g==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/replay-orchestrator-launcher@2.288.2':
-    resolution: {integrity: sha512-2u6w9u7x2XPiaNdlLma6VeHwiIBpcf3TjbhpBphT4eWxIDLhzvuiw7ThKgksCbHEczzjgiliZ/kZS9+Kppf3ew==}
+  '@alwaysmeticulous/replay-orchestrator-launcher@2.289.2':
+    resolution: {integrity: sha512-rtwKt95uJZN82IpXfi+D4/FnWYvDU4x4YXNqRVbyWGcFR4Ww9tJBH8I4Jmkjpz2iq8hcZgdk4OwFixDFVvWAEw==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/sdk-bundles-api@2.288.2':
     resolution: {integrity: sha512-sPoyAjuUrWrLLyBD6J2HWGenCZqoUQzyr3NgVPUeY4PngqImWNVrmMIkCjridwV2d7595nr9vTfywdsg99XeRA==}
+    engines: {node: '>= 18'}
+
+  '@alwaysmeticulous/sdk-bundles-api@2.289.1':
+    resolution: {integrity: sha512-Sm1i4XJVxObhZ2QToyNZcmjQYXY+sZNCkkU6VikvGAihP8mM2V/AOqjgTGO7mCmD++gfZxOCtuQ1K3VIm8pOWQ==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/sentry@2.287.1':
@@ -2716,10 +2724,6 @@ packages:
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
-  minipass@7.1.2:
-    resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
-    engines: {node: '>=16 || 14 >=14.17'}
-
   minipass@7.1.3:
     resolution: {integrity: sha512-tEBHqDnIoM/1rXME1zgka9g6Q2lcoCkxHLuc7ODJ5BxbP5d4c2Z5cGgtXAku59200Cx7diuHTOYfSBD8n6mm8A==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -3629,9 +3633,11 @@ snapshots:
 
   '@alwaysmeticulous/api@2.288.2': {}
 
-  '@alwaysmeticulous/client@2.288.2':
+  '@alwaysmeticulous/api@2.289.1': {}
+
+  '@alwaysmeticulous/client@2.289.2':
     dependencies:
-      '@alwaysmeticulous/api': 2.288.2
+      '@alwaysmeticulous/api': 2.289.1
       '@alwaysmeticulous/common': 2.287.1
       loglevel: 1.9.2
       proxy-agent: 6.5.0
@@ -3660,10 +3666,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/downloading-helpers@2.288.2':
+  '@alwaysmeticulous/downloading-helpers@2.289.2':
     dependencies:
-      '@alwaysmeticulous/api': 2.288.2
-      '@alwaysmeticulous/client': 2.288.2
+      '@alwaysmeticulous/api': 2.289.1
+      '@alwaysmeticulous/client': 2.289.2
       '@alwaysmeticulous/common': 2.287.1
       axios: 1.16.1
       axios-retry: 4.5.0(axios@1.16.1)
@@ -3683,10 +3689,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/remote-replay-launcher@2.288.2':
+  '@alwaysmeticulous/remote-replay-launcher@2.289.2':
     dependencies:
-      '@alwaysmeticulous/api': 2.288.2
-      '@alwaysmeticulous/client': 2.288.2
+      '@alwaysmeticulous/api': 2.289.1
+      '@alwaysmeticulous/client': 2.289.2
       '@alwaysmeticulous/common': 2.287.1
       '@alwaysmeticulous/tunnels-client': 2.287.1
       '@sentry/node': 10.47.0
@@ -3705,11 +3711,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/replay-orchestrator-launcher@2.288.2':
+  '@alwaysmeticulous/replay-orchestrator-launcher@2.289.2':
     dependencies:
       '@alwaysmeticulous/common': 2.287.1
-      '@alwaysmeticulous/downloading-helpers': 2.288.2
-      '@alwaysmeticulous/sdk-bundles-api': 2.288.2
+      '@alwaysmeticulous/downloading-helpers': 2.289.2
+      '@alwaysmeticulous/sdk-bundles-api': 2.289.1
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -3722,6 +3728,10 @@ snapshots:
   '@alwaysmeticulous/sdk-bundles-api@2.288.2':
     dependencies:
       '@alwaysmeticulous/api': 2.288.2
+
+  '@alwaysmeticulous/sdk-bundles-api@2.289.1':
+    dependencies:
+      '@alwaysmeticulous/api': 2.289.1
 
   '@alwaysmeticulous/sentry@2.287.1':
     dependencies:
@@ -4116,7 +4126,7 @@ snapshots:
 
   '@opentelemetry/api-logs@0.57.2':
     dependencies:
-      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api': 1.9.1
 
   '@opentelemetry/api@1.9.0': {}
 
@@ -4145,7 +4155,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
     transitivePeerDependencies:
       - supports-color
 
@@ -4163,7 +4173,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
       '@types/connect': 3.4.38
     transitivePeerDependencies:
       - supports-color
@@ -4197,7 +4207,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
     transitivePeerDependencies:
       - supports-color
 
@@ -4259,7 +4269,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
     transitivePeerDependencies:
       - supports-color
 
@@ -4298,7 +4308,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/redis-common': 0.36.2
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
     transitivePeerDependencies:
       - supports-color
 
@@ -4323,7 +4333,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
     transitivePeerDependencies:
       - supports-color
 
@@ -4331,7 +4341,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
     transitivePeerDependencies:
       - supports-color
 
@@ -4348,7 +4358,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
     transitivePeerDependencies:
       - supports-color
 
@@ -4379,7 +4389,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
     transitivePeerDependencies:
       - supports-color
 
@@ -4396,7 +4406,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
     transitivePeerDependencies:
       - supports-color
 
@@ -4413,7 +4423,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
       '@opentelemetry/sql-common': 0.40.1(@opentelemetry/api@1.9.0)
     transitivePeerDependencies:
       - supports-color
@@ -4431,7 +4441,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
       '@types/mysql': 2.15.26
     transitivePeerDependencies:
       - supports-color
@@ -4450,7 +4460,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
       '@opentelemetry/sql-common': 0.40.1(@opentelemetry/api@1.9.0)
       '@types/pg': 8.6.1
       '@types/pg-pool': 2.0.6
@@ -4474,7 +4484,7 @@ snapshots:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
       '@opentelemetry/redis-common': 0.36.2
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
     transitivePeerDependencies:
       - supports-color
 
@@ -4491,7 +4501,7 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.39.0
+      '@opentelemetry/semantic-conventions': 1.40.0
       '@types/tedious': 4.0.14
     transitivePeerDependencies:
       - supports-color
@@ -4980,7 +4990,7 @@ snapshots:
 
   '@types/pg-pool@2.0.6':
     dependencies:
-      '@types/pg': 8.6.1
+      '@types/pg': 8.15.6
 
   '@types/pg-pool@2.0.7':
     dependencies:
@@ -6102,7 +6112,7 @@ snapshots:
       foreground-child: 3.3.1
       jackspeak: 3.4.3
       minimatch: 9.0.5
-      minipass: 7.1.2
+      minipass: 7.1.3
       package-json-from-dist: 1.0.1
       path-scurry: 1.11.1
 
@@ -6511,8 +6521,6 @@ snapshots:
 
   minimist@1.2.8: {}
 
-  minipass@7.1.2: {}
-
   minipass@7.1.3: {}
 
   minizlib@3.1.0:
@@ -6647,7 +6655,7 @@ snapshots:
   path-scurry@1.11.1:
     dependencies:
       lru-cache: 10.4.3
-      minipass: 7.1.2
+      minipass: 7.1.3
 
   path-type@4.0.0: {}
 

@@ -2,6 +2,9 @@ import "source-map-support/register";
 import { warning } from "@actions/core";
 import * as Sentry from "@sentry/node";
 import { runCloudComputePostStep } from "./actions/cloud-compute/post-step";
+import { setMeticulousClientUserAgentSuffix } from "./common/user-agent";
+
+setMeticulousClientUserAgentSuffix("cloud-compute");
 
 runCloudComputePostStep().catch(async (error) => {
   // Capture unexpected errors

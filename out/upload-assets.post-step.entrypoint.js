@@ -22152,9 +22152,9 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/errors.js
 var require_errors2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -22233,9 +22233,9 @@ ${requestAndResponse}`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
 var require_agent_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -22304,9 +22304,9 @@ var require_agent_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
 var require_github_cloud_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -22330,9 +22330,9 @@ var require_github_cloud_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
 var require_oauth_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -22356,9 +22356,9 @@ var require_oauth_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
 var require_project_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -22413,9 +22413,9 @@ var require_project_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
 var require_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -22460,9 +22460,9 @@ var require_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
 var require_session_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -22507,9 +22507,9 @@ var require_session_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
 var require_replay_diff_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -22534,9 +22534,9 @@ var require_replay_diff_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
 var require_source_code_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -22565,9 +22565,9 @@ var require_source_code_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
 var require_test_run_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -22661,9 +22661,9 @@ var require_test_run_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
 var require_deployment_lock_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -22687,9 +22687,9 @@ var require_deployment_lock_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
 var require_test_run_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -91478,9 +91478,9 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
 var require_oauth_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -91524,9 +91524,9 @@ var require_oauth_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
 var require_oauth_token_store = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -91611,9 +91611,9 @@ var require_oauth_token_store = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
 var require_oauth_refresh = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -91675,9 +91675,9 @@ var require_oauth_refresh = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
 var require_api_token_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -91733,9 +91733,9 @@ var require_api_token_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
 var require_oauth_callback_server = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -91827,9 +91827,9 @@ var require_oauth_callback_server = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
 var require_oauth_pkce = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -91856,9 +91856,9 @@ var require_oauth_pkce = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
 var require_oauth_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -91954,26 +91954,51 @@ var require_oauth_login = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/client.js
-var require_client3 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/version.js
+var require_version2 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "786c0eb9-d89d-5da6-834f-7133ebbda259");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "ac10f4cc-7a38-5615-8b9d-956b50ad79da");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.createClientWithOAuth = exports2.resolveApiTokenWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.makeRequest = void 0;
+    exports2.VERSION = void 0;
+    exports2.VERSION = "2.289.2";
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/client.js
+var require_client3 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+    "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "af79d0c2-4021-56e8-8cee-e32a4cc3a1a6");
+      } catch (e2) {
+      }
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.createClientWithOAuth = exports2.resolveApiTokenWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.makeRequest = exports2.buildUserAgent = void 0;
     var common_1 = require_dist12();
     var oauth_api_1 = require_oauth_api();
     var api_token_utils_1 = require_api_token_utils();
     var oauth_login_1 = require_oauth_login();
     var oauth_token_store_1 = require_oauth_token_store();
+    var version_1 = require_version2();
     var DEFAULT_TIMEOUT = 6e4;
     var BASE_API_URL = "https://app.meticulous.ai/api/";
+    var USER_AGENT = `@alwaysmeticulous/client/${version_1.VERSION}`;
+    var USER_AGENT_SUFFIX_ENV_VAR = "METICULOUS_CLIENT_USER_AGENT_SUFFIX";
+    var buildUserAgent = (appInfo) => {
+      const suffix = appInfo?.trim() || process.env[USER_AGENT_SUFFIX_ENV_VAR]?.trim();
+      return suffix ? `${USER_AGENT} ${suffix}` : USER_AGENT;
+    };
+    exports2.buildUserAgent = buildUserAgent;
     var makeSingleRequest = async (url, options, timeout) => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => {
@@ -92023,6 +92048,7 @@ var require_client3 = __commonJS({
       let finalUrl = combineUrls(getApiUrl(), url);
       const finalHeaders = {
         "Content-Type": "application/json",
+        "user-agent": (0, exports2.buildUserAgent)(),
         ...headers,
         ...config.headers,
         ...options.headers
@@ -92046,10 +92072,12 @@ var require_client3 = __commonJS({
       });
     };
     exports2.makeRequest = makeRequest;
-    var buildClient = (token, logger) => {
+    var buildClient = (token, logger, appInfo) => {
+      const userAgent = (0, exports2.buildUserAgent)(appInfo);
       const makeRequestWithToken = async (url, options = {}, config) => {
         const headers = {
-          authorization: token
+          authorization: token,
+          "user-agent": userAgent
         };
         return (0, exports2.makeRequest)({
           url,
@@ -92081,14 +92109,14 @@ var require_client3 = __commonJS({
         }
       };
     };
-    var createClient3 = ({ apiToken: apiToken_ }) => {
+    var createClient3 = ({ apiToken: apiToken_, appInfo }) => {
       const logger = (0, common_1.initLogger)();
       const apiToken = (0, api_token_utils_1.getApiToken)(apiToken_);
       if (!apiToken) {
         logger.error("You must provide an API token by using the --apiToken parameter");
         process.exit(1);
       }
-      return buildClient(apiToken, logger);
+      return buildClient(apiToken, logger, appInfo);
     };
     exports2.createClient = createClient3;
     var isInteractiveContext = () => process.stdin.isTTY === true && !process.env["CI"];
@@ -92100,7 +92128,7 @@ var require_client3 = __commonJS({
       if (!apiToken && isInteractive) {
         const tokens = await (0, oauth_login_1.performOAuthLogin)();
         apiToken = tokens.accessToken;
-        await maybeAutoSelectProject(apiToken, logger);
+        await maybeAutoSelectProject(apiToken, logger, options.appInfo);
       }
       if (!apiToken) {
         const message = isInteractive ? "No authentication found. Use --apiToken, set METICULOUS_API_TOKEN, or log in via browser." : "No authentication found. Set METICULOUS_API_TOKEN or pass --apiToken.";
@@ -92110,12 +92138,12 @@ var require_client3 = __commonJS({
       return apiToken;
     };
     exports2.resolveApiTokenWithOAuth = resolveApiTokenWithOAuth;
-    var maybeAutoSelectProject = async (apiToken, logger) => {
+    var maybeAutoSelectProject = async (apiToken, logger, appInfo) => {
       if ((0, oauth_token_store_1.getStoredProjectId)()) {
         return;
       }
       try {
-        const client = buildClient(apiToken, logger);
+        const client = buildClient(apiToken, logger, appInfo);
         const projects = await (0, oauth_api_1.getOAuthProjects)(client);
         if (projects.length === 1) {
           const only = projects[0];
@@ -92129,7 +92157,7 @@ var require_client3 = __commonJS({
     };
     var createClientWithOAuth = async (options) => {
       const apiToken = await (0, exports2.resolveApiTokenWithOAuth)(options);
-      return buildClient(apiToken, (0, common_1.initLogger)());
+      return buildClient(apiToken, (0, common_1.initLogger)(), options.appInfo);
     };
     exports2.createClientWithOAuth = createClientWithOAuth;
     var getApiUrl = () => {
@@ -92141,9 +92169,9 @@ var require_client3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
 var require_oauth_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -92189,9 +92217,9 @@ var require_oauth_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
 var require_get_proxy_agent = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -92212,9 +92240,9 @@ var require_get_proxy_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
 var require_retry_transient_upload_errors = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -92289,9 +92317,9 @@ ${responseBody}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
 var require_put_file_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -92343,9 +92371,9 @@ var require_put_file_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
 var require_project_deployments_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -92405,9 +92433,9 @@ var require_project_deployments_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
 var require_registry_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -92426,9 +92454,9 @@ var require_registry_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
 var require_local_changes_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -92458,9 +92486,9 @@ var require_local_changes_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/index.js
 var require_dist13 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.288.2/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -99284,7 +99312,15 @@ var runUploadAssetsPostStep = async () => {
   });
 };
 
+// src/common/user-agent.ts
+var setMeticulousClientUserAgentSuffix = (subAction) => {
+  const name = subAction ? `report-diffs-action/${subAction}` : "report-diffs-action";
+  const ref = process.env["GITHUB_ACTION_REF"]?.replace(/[^\w.\-/]/g, "");
+  process.env["METICULOUS_CLIENT_USER_AGENT_SUFFIX"] = ref ? `${name}@${ref}` : name;
+};
+
 // src/upload-assets.post-step.entrypoint.ts
+setMeticulousClientUserAgentSuffix("upload-assets");
 runUploadAssetsPostStep().catch(async (error2) => {
   captureException(error2);
   const message = error2 instanceof Error ? error2.message : `${error2}`;

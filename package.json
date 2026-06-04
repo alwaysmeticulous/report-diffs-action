@@ -28,10 +28,10 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^5.1.1",
-    "@alwaysmeticulous/client": "^2.288.2",
+    "@alwaysmeticulous/client": "^2.289.2",
     "@alwaysmeticulous/common": "^2.287.1",
-    "@alwaysmeticulous/remote-replay-launcher": "^2.288.2",
-    "@alwaysmeticulous/replay-orchestrator-launcher": "^2.288.2",
+    "@alwaysmeticulous/remote-replay-launcher": "^2.289.2",
+    "@alwaysmeticulous/replay-orchestrator-launcher": "^2.289.2",
     "@alwaysmeticulous/sentry": "^2.287.1",
     "@sentry/cli": "^2.58.4",
     "@sentry/node": "^9.47.1",
