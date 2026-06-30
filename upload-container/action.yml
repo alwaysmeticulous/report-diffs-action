@@ -37,7 +37,7 @@ inputs:
 
 outputs: {}
 runs:
-  using: node20
+  using: node24
   main: "../out/upload-container.entrypoint.js"
   post: "../out/upload-container.post-step.entrypoint.js"
 branding:
