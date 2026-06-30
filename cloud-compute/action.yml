@@ -66,7 +66,7 @@ inputs:
 
 outputs: {}
 runs:
-  using: node20
+  using: node24
   main: "../out/cloud-compute.entrypoint.js"
   post: "../out/cloud-compute.post-step.entrypoint.js"
 branding:
