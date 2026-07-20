@@ -182,9 +182,9 @@ export class ResultsReporter {
       if (totalScreensCompared > 0) {
         await this.setStatusComment({
           createIfDoesNotExist: true,
-          body: `✅ Meticulous spotted zero visual differences across ${totalScreensCompared} screens tested: [view results](${testRun.url}).${coverageLine}${this.buildAgentAccessNote(
-            testRun.id
-          )}`,
+          body: `✅ Meticulous spotted zero visual differences across ${totalScreensCompared} screens tested: [view results](${
+            testRun.url
+          }).${coverageLine}${this.buildAgentAccessNote(testRun.id)}`,
           logger,
         });
       } else {
@@ -203,7 +203,13 @@ export class ResultsReporter {
           // Usually this means that the user has just set up Meticulous and is running it for the first time.
           await this.setStatusComment({
             createIfDoesNotExist: true,
-            body: `🤖 Meticulous replayed ${testCaseResults.length} user sessions and [took ${totalScreenshotsTaken} visual snapshots](${testRun.url}). Meticulous did not run on ${this.options.baseSha} of the ${baseRefStr} branch and so there was nothing to compare against.
+            body: `🤖 Meticulous replayed ${
+              testCaseResults.length
+            } user sessions and [took ${totalScreenshotsTaken} visual snapshots](${
+              testRun.url
+            }). Meticulous did not run on ${
+              this.options.baseSha
+            } of the ${baseRefStr} branch and so there was nothing to compare against.
             \nPlease merge your pull request for setting up Meticulous in CI and ensure that it’s running on push events to the ${baseRefStr} branch.${this.buildAgentAccessNote(
               testRun.id
             )}`,
@@ -221,9 +227,9 @@ export class ResultsReporter {
       }
       await this.setStatusComment({
         createIfDoesNotExist: true,
-        body: `🔴 Meticulous **spotted visual differences** in ${screensWithDifferences} of ${totalScreensCompared} screens tested: [view and approve differences detected](${testRun.url}).${coverageLine}${this.buildAgentAccessNote(
-          testRun.id
-        )}`,
+        body: `🔴 Meticulous **spotted visual differences** in ${screensWithDifferences} of ${totalScreensCompared} screens tested: [view and approve differences detected](${
+          testRun.url
+        }).${coverageLine}${this.buildAgentAccessNote(testRun.id)}`,
         logger,
       });
     }
