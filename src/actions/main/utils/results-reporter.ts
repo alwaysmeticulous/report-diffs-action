@@ -182,7 +182,9 @@ export class ResultsReporter {
       if (totalScreensCompared > 0) {
         await this.setStatusComment({
           createIfDoesNotExist: true,
-          body: `✅ Meticulous spotted zero visual differences across ${totalScreensCompared} screens tested: [view results](${testRun.url}).${coverageLine}`,
+          body: `✅ Meticulous spotted zero visual differences across ${totalScreensCompared} screens tested: [view results](${
+            testRun.url
+          }).${coverageLine}${this.buildAgentAccessNote(testRun.id)}`,
           logger,
         });
       } else {
@@ -201,8 +203,16 @@ export class ResultsReporter {
           // Usually this means that the user has just set up Meticulous and is running it for the first time.
           await this.setStatusComment({
             createIfDoesNotExist: true,
-            body: `🤖 Meticulous replayed ${testCaseResults.length} user sessions and [took ${totalScreenshotsTaken} visual snapshots](${testRun.url}). Meticulous did not run on ${this.options.baseSha} of the ${baseRefStr} branch and so there was nothing to compare against.
-            \nPlease merge your pull request for setting up Meticulous in CI and ensure that it’s running on push events to the ${baseRefStr} branch.`,
+            body: `🤖 Meticulous replayed ${
+              testCaseResults.length
+            } user sessions and [took ${totalScreenshotsTaken} visual snapshots](${
+              testRun.url
+            }). Meticulous did not run on ${
+              this.options.baseSha
+            } of the ${baseRefStr} branch and so there was nothing to compare against.
+            \nPlease merge your pull request for setting up Meticulous in CI and ensure that it’s running on push events to the ${baseRefStr} branch.${this.buildAgentAccessNote(
+              testRun.id
+            )}`,
             logger,
           });
         }
@@ -217,7 +227,9 @@ export class ResultsReporter {
       }
       await this.setStatusComment({
         createIfDoesNotExist: true,
-        body: `🔴 Meticulous **spotted visual differences** in ${screensWithDifferences} of ${totalScreensCompared} screens tested: [view and approve differences detected](${testRun.url}).${coverageLine}`,
+        body: `🔴 Meticulous **spotted visual differences** in ${screensWithDifferences} of ${totalScreensCompared} screens tested: [view and approve differences detected](${
+          testRun.url
+        }).${coverageLine}${this.buildAgentAccessNote(testRun.id)}`,
         logger,
       });
     }
@@ -296,5 +308,36 @@ export class ResultsReporter {
       testSuiteId,
       logger,
     });
+  }
+
+  /**
+   * Hidden from the rendered GitHub UI (HTML comments are stripped on render), but present in the
+   * raw comment body returned by the GitHub API - so a coding agent reading the comment via
+   * `gh api` / REST / GraphQL sees it, while human readers don't.
+   */
+  private buildAgentAccessNote(testRunId: string): string {
+    return `\n\n<!---
+For coding agents: the links above are not accessible to you directly. Access the results instead via the Meticulous CLI or MCP server.
+
+First, check whether the CLI or MCP is set up:
+- CLI: run \`meticulous --version\` (or check whether @alwaysmeticulous/cli is installed)
+- MCP: check whether a Meticulous MCP server is available (URL: https://app.meticulous.ai/api/mcp)
+
+If neither is set up, suggest the user install the CLI (\`npm install --global @alwaysmeticulous/cli@latest\`) or add the MCP server (https://app.meticulous.ai/api/mcp), and point them to the setup docs: https://app.meticulous.ai/docs/agents/setup
+
+Once set up:
+- Check for the \`meticulous-review\` skill and follow its instructions.
+- If it's not installed, suggest the user install the Meticulous skills: \`npx skills add alwaysmeticulous/skills --all --agents claude-code,codex,cursor\`
+- Otherwise, here is the rough approach:
+  1. Get the diffs for this test run:
+     - CLI: meticulous agent test-run-diffs --testRunId ${testRunId}
+     - MCP: get_test_run_diffs(testRunId="${testRunId}")
+  2. Investigate each diff (using the replayDiffId and screenshotName from the diffs list):
+     - CLI: meticulous agent image-files --replayDiffId <replayDiffId> --screenshotName <screenshotName> (or image-urls for signed URLs instead of downloads)
+       - If needed: meticulous agent dom-diff --replayDiffId <replayDiffId> --screenshotName <screenshotName>
+       - If needed: meticulous agent timeline-diff --replayDiffId <replayDiffId>
+     - MCP: get_image_urls(...)
+       - If needed: get_dom_diff(...), get_timeline_diff(...)
+-->`;
   }
 }
