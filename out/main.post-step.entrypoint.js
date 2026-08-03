@@ -27705,30 +27705,53 @@ var require_github = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/errors.js
 var require_errors2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "9b0011d2-3195-5884-8aaa-d4df92e35b06");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "c24aac2d-9e75-5ea1-ab2c-dee44b890631");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.maybeEnrichFetchError = exports2.isFetchError = void 0;
+    exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.WRONG_CREDENTIAL_TYPE_GUIDANCE = exports2.MISSING_AUTH_GUIDANCE = exports2.isAuthFailureStatus = exports2.isFetchError = void 0;
     var isFetchError = (error2) => {
       return error2 && typeof error2 === "object" && error2.response;
     };
     exports2.isFetchError = isFetchError;
+    var isAuthFailureStatus = (status) => status === 401 || status === 403;
+    exports2.isAuthFailureStatus = isAuthFailureStatus;
+    exports2.MISSING_AUTH_GUIDANCE = "An API token is probably missing or invalid. Set METICULOUS_API_TOKEN, pass --apiToken, or run `meticulous auth login`.";
+    exports2.WRONG_CREDENTIAL_TYPE_GUIDANCE = "An API token is probably missing, invalid, or an injected credential was rejected as the wrong type for this endpoint. Set METICULOUS_API_TOKEN, pass --apiToken, or run `meticulous auth login`.";
+    var isMissingAuthGuidanceApplied = (message) => message.includes(exports2.MISSING_AUTH_GUIDANCE) || message.includes(exports2.WRONG_CREDENTIAL_TYPE_GUIDANCE);
     var maybeEnrichFetchError = (error2) => {
       if ((0, exports2.isFetchError)(error2)) {
+        if (isMissingAuthGuidanceApplied(error2.message)) {
+          return error2;
+        }
         return enrichFetchError(error2);
       }
       return error2;
     };
     exports2.maybeEnrichFetchError = maybeEnrichFetchError;
+    var maybeEnrichMissingAuthFetchError = (error2, hadAuthorizationHeader) => {
+      if (hadAuthorizationHeader || !(0, exports2.isFetchError)(error2)) {
+        return error2;
+      }
+      const status = error2.response?.status;
+      if (!(0, exports2.isAuthFailureStatus)(status)) {
+        return error2;
+      }
+      const guidance = status === 403 ? exports2.WRONG_CREDENTIAL_TYPE_GUIDANCE : exports2.MISSING_AUTH_GUIDANCE;
+      const newError = new Error(`Authentication failed (HTTP ${status}). ${guidance}`);
+      newError.response = error2.response;
+      newError.config = error2.config;
+      return newError;
+    };
+    exports2.maybeEnrichMissingAuthFetchError = maybeEnrichMissingAuthFetchError;
     var enrichFetchError = (error2) => {
       const errorMessage = error2.response?.data?.message;
       const requestAndResponse = requestAndResponseToString(error2.config ?? null, error2.response ?? null);
@@ -27772,7 +27795,7 @@ ${requestAndResponse}`;
         return truncate2(data, 50);
       }
       if (!data) {
-        return data + "";
+        return String(data);
       }
       try {
         return truncate2(JSON.stringify(data), 50);
@@ -27786,44 +27809,124 @@ ${requestAndResponse}`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
 var require_agent_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "2d13753d-945c-582b-a070-e08d10805e24");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "6bc825eb-59a7-5fa2-8231-ef23e5d816ec");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getStructuredSessionData = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummary = exports2.trackAgentFeatureUsage = void 0;
+    exports2.getSessions = exports2.getStructuredSessionData = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.getTestRunForCommit = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummaryCounts = exports2.getDiffComments = exports2.getTestRunDiffsSummary = exports2.submitAgentFeedback = exports2.trackAgentFeatureUsage = exports2.shouldDefaultToExecutedRanges = exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = exports2.DIFFS_SUMMARY_CLIENT_VERSION = void 0;
     var errors_1 = require_errors2();
-    var trackAgentFeatureUsage = async ({ client, feature, projectId }) => {
-      await client.post("agent/telemetry", { feature }, projectId ? { params: { projectId } } : void 0).catch(() => {
+    exports2.DIFFS_SUMMARY_CLIENT_VERSION = 3;
+    exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = 2;
+    var shouldDefaultToExecutedRanges = (columnFlags) => columnFlags.includeExecutedRanges || !(columnFlags.includeExecutableRanges || columnFlags.includeUncoveredRanges || columnFlags.includeCoveragePercentage);
+    exports2.shouldDefaultToExecutedRanges = shouldDefaultToExecutedRanges;
+    var trackAgentFeatureUsage = async ({ client, feature, project }) => {
+      await client.post("agent/telemetry", { feature }, project ? { params: { project } } : void 0).catch(() => {
       });
     };
     exports2.trackAgentFeatureUsage = trackAgentFeatureUsage;
-    var getTestRunDiffsSummary = async (client, testRunId, options) => {
-      const params = {};
-      if (options?.includeReplayIds) {
-        params.includeReplayIds = "true";
-      }
-      if (options?.includeMatches) {
-        params.includeMatches = "true";
-      }
-      const { data } = await client.get(`agent/test-runs/${testRunId}/diffs-summary`, { params }).catch((error2) => {
+    var submitAgentFeedback = async ({ client, message, outcome, testRunId, skill, agentName, agentModel, project }) => {
+      const { data } = await client.post("agent/feedback", {
+        message,
+        ...outcome != null ? { outcome } : {},
+        ...testRunId != null ? { testRunId } : {},
+        ...skill != null ? { skill } : {},
+        ...agentName != null ? { agentName } : {},
+        ...agentModel != null ? { agentModel } : {}
+      }, project ? { params: { project } } : void 0).catch((error2) => {
         throw (0, errors_1.maybeEnrichFetchError)(error2);
       });
       return data;
     };
-    exports2.getTestRunDiffsSummary = getTestRunDiffsSummary;
-    var getScreenshotDomDiff = async (client, replayDiffId, screenshotName, index, context3) => {
-      const params = {};
-      if (index != null) {
-        params.index = String(index);
+    exports2.submitAgentFeedback = submitAgentFeedback;
+    var getTestRunDiffsSummary = async (client, testRunId, options) => {
+      const params = {
+        clientVersion: String(exports2.DIFFS_SUMMARY_CLIENT_VERSION)
+      };
+      if (options?.includeReplayIds) {
+        params.includeReplayIds = "true";
       }
+      if (options?.includeMismatchFraction) {
+        params.includeMismatchFraction = "true";
+      }
+      if (options?.includeDomDiffIds) {
+        params.includeDomDiffIds = "true";
+      }
+      if (options?.includeAllDiffs) {
+        params.includeAllDiffs = "true";
+      }
+      if (options?.orderByReplayDiffs) {
+        params.orderByReplayDiffs = "true";
+      }
+      if (options?.includeReviews || options?.includeReviewDecisions) {
+        params.includeReviews = "true";
+      }
+      if (options?.onlyUnreviewed) {
+        params.onlyUnreviewed = "true";
+      }
+      if (options?.onlyRejected) {
+        params.onlyRejected = "true";
+      }
+      if (options?.retrigger) {
+        params.retrigger = "true";
+      }
+      const { data } = await client.get(`agent/test-runs/${testRunId}/diffs-summary`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return normalizeDiffsSummaryResponse(data, options?.includeMismatchFraction ?? false);
+    };
+    exports2.getTestRunDiffsSummary = getTestRunDiffsSummary;
+    var normalizeDiffsSummaryResponse = (response, includeMismatchFraction) => {
+      const { data, ...metadata } = response;
+      if (data == null || data.length === 0 || !("screenshots" in data[0])) {
+        return response;
+      }
+      const entries = data.flatMap((replayDiff) => replayDiff.screenshots.map((screenshot) => ({
+        index: screenshot.index,
+        diff: {
+          replayDiffId: replayDiff.replayDiffId,
+          screenshotName: screenshot.screenshotName,
+          ...includeMismatchFraction && screenshot.mismatchFraction != null ? { mismatchFraction: screenshot.mismatchFraction } : {},
+          ...screenshot.domDiffIds != null ? { domDiffIds: screenshot.domDiffIds } : {},
+          ...screenshot.isSelected != null ? { isSelected: screenshot.isSelected } : {},
+          ...screenshot.decision != null ? { decision: screenshot.decision } : {},
+          ...screenshot.openComments != null ? { openComments: screenshot.openComments } : {},
+          ...replayDiff.baseReplayId != null ? { baseReplayId: replayDiff.baseReplayId } : {},
+          ...replayDiff.headReplayId != null ? { headReplayId: replayDiff.headReplayId } : {}
+        }
+      }))).sort((a, b) => a.index - b.index);
+      return {
+        ...metadata,
+        data: entries.map(({ diff }) => diff)
+      };
+    };
+    var getDiffComments = async (client, replayDiffId, screenshotName, options = {}) => {
+      const params = {};
+      if (options.includeResolved) {
+        params.includeResolved = "true";
+      }
+      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/comments`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getDiffComments = getDiffComments;
+    var getTestRunDiffsSummaryCounts = async (client, testRunId) => {
+      const { data } = await client.get(`agent/test-runs/${testRunId}/diffs-summary/counts`).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunDiffsSummaryCounts = getTestRunDiffsSummaryCounts;
+    var getScreenshotDomDiff = async (client, replayDiffId, screenshotName, context3) => {
+      const params = {};
       if (context3 != null) {
         params.context = context3;
       }
@@ -27833,6 +27936,117 @@ var require_agent_api = __commonJS({
       return data;
     };
     exports2.getScreenshotDomDiff = getScreenshotDomDiff;
+    var getTestRunForCommit = async (client, commitSha, options) => {
+      const params = { commitSha };
+      if (options?.project != null) {
+        params.project = options.project;
+      }
+      const { data } = await client.get("agent/test-runs", { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunForCommit = getTestRunForCommit;
+    var getTestRunJsCoverage = async (client, testRunId, options) => {
+      const params = {
+        clientVersion: String(exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION)
+      };
+      const includeExecutedRanges = (0, exports2.shouldDefaultToExecutedRanges)(options ?? {});
+      if (options?.includeAllFiles) {
+        params.includeAllFiles = "true";
+      }
+      if (options?.globFilter != null && options.globFilter !== "") {
+        params.globFilter = options.globFilter;
+      }
+      if (includeExecutedRanges) {
+        params.includeExecutedRanges = "true";
+      }
+      if (options?.includeExecutableRanges) {
+        params.includeExecutableRanges = "true";
+      }
+      if (options?.includeUncoveredRanges) {
+        params.includeUncoveredRanges = "true";
+      }
+      if (options?.includeCoveragePercentage) {
+        params.includeCoveragePercentage = "true";
+      }
+      if (options?.prDiffOnly) {
+        params.prDiffOnly = "true";
+      }
+      if (options?.unionTestRunIds != null && options.unionTestRunIds.length > 0) {
+        params.unionTestRunIds = options.unionTestRunIds.join(",");
+      }
+      const { data } = await client.get(`agent/test-runs/${testRunId}/js-coverage`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunJsCoverage = getTestRunJsCoverage;
+    var getProjectJsCoverage = async (client, options) => {
+      const params = {
+        clientVersion: String(exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION)
+      };
+      const includeExecutedRanges = (0, exports2.shouldDefaultToExecutedRanges)(options ?? {});
+      if (options?.project != null && options.project !== "") {
+        params.project = options.project;
+      }
+      if (options?.includeAllFiles) {
+        params.includeAllFiles = "true";
+      }
+      if (options?.globFilter != null && options.globFilter !== "") {
+        params.globFilter = options.globFilter;
+      }
+      if (includeExecutedRanges) {
+        params.includeExecutedRanges = "true";
+      }
+      if (options?.includeExecutableRanges) {
+        params.includeExecutableRanges = "true";
+      }
+      if (options?.includeUncoveredRanges) {
+        params.includeUncoveredRanges = "true";
+      }
+      if (options?.includeCoveragePercentage) {
+        params.includeCoveragePercentage = "true";
+      }
+      const { data } = await client.get("agent/projects/js-coverage", { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getProjectJsCoverage = getProjectJsCoverage;
+    var getReplayJsCoverage = async (client, replayId, screenshotName, options) => {
+      const path = screenshotName != null ? `agent/replays/${replayId}/screenshots/${encodeURIComponent(screenshotName)}/js-coverage` : `agent/replays/${replayId}/js-coverage`;
+      const params = {};
+      if (options?.testRunId != null) {
+        params.testRunId = options.testRunId;
+      }
+      if (options?.includeAllFiles) {
+        params.includeAllFiles = "true";
+      }
+      if (options?.globFilter != null && options.globFilter !== "") {
+        params.globFilter = options.globFilter;
+      }
+      const { data } = await client.get(path, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getReplayJsCoverage = getReplayJsCoverage;
+    var getReplayDiffJsCoverage = async (client, replayDiffId, screenshotName, options) => {
+      const path = screenshotName != null ? `agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/js-coverage-diff` : `agent/replay-diffs/${replayDiffId}/js-coverage-diff`;
+      const params = {};
+      if (options?.includeAllFiles) {
+        params.includeAllFiles = "true";
+      }
+      if (options?.globFilter != null && options.globFilter !== "") {
+        params.globFilter = options.globFilter;
+      }
+      const { data } = await client.get(path, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getReplayDiffJsCoverage = getReplayDiffJsCoverage;
     var getScreenshotUrls = async (client, replayDiffId, screenshotName) => {
       const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/image-urls`).catch((error2) => {
         throw (0, errors_1.maybeEnrichFetchError)(error2);
@@ -27854,12 +28068,56 @@ var require_agent_api = __commonJS({
       return data;
     };
     exports2.getStructuredSessionData = getStructuredSessionData;
+    var getSessions = async (client, options) => {
+      const params = {};
+      if (options?.project != null) {
+        params.project = options.project;
+      }
+      if (options?.createdSince != null) {
+        params.createdSince = options.createdSince;
+      }
+      if (options?.createdUntil != null) {
+        params.createdUntil = options.createdUntil;
+      }
+      if (options?.recordedSince != null) {
+        params.recordedSince = options.recordedSince;
+      }
+      if (options?.recordedUntil != null) {
+        params.recordedUntil = options.recordedUntil;
+      }
+      if (options?.recordedBy != null) {
+        params.recordedBy = options.recordedBy;
+      }
+      if (options?.excludeSyntheticSessions) {
+        params.excludeSyntheticSessions = "true";
+      }
+      if (options?.visitedUrlFilter != null) {
+        params.visitedUrlFilter = options.visitedUrlFilter;
+      }
+      if (options?.includeStartUrl) {
+        params.includeStartUrl = "true";
+      }
+      if (options?.includeAbandonedReason) {
+        params.includeAbandonedReason = "true";
+      }
+      if (options?.limit != null) {
+        params.limit = String(options.limit);
+      }
+      if (options?.offset != null) {
+        params.offset = String(options.offset);
+      }
+      const { data } = await client.get("agent/sessions", { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getSessions = getSessions;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
 var require_github_cloud_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -27883,19 +28141,19 @@ var require_github_cloud_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
 var require_oauth_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "fac625ff-cf0d-58c8-bf8d-3460d25dfc78");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "9cde7ff5-4e09-5b26-b3a0-91010ab2b2c6");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getOAuthProjects = exports2.getWhoami = void 0;
+    exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = void 0;
     var getWhoami = async (client) => {
       const { data } = await client.get("oauth/whoami");
       return data;
@@ -27906,12 +28164,28 @@ var require_oauth_api = __commonJS({
       return data.projects;
     };
     exports2.getOAuthProjects = getOAuthProjects;
+    var getOAuthDefaultProject = async (client, opts) => {
+      const path = opts?.includeAutoPick === false ? "oauth/default-project?includeAutoPick=false" : "oauth/default-project";
+      const { data } = await client.get(path);
+      return data;
+    };
+    exports2.getOAuthDefaultProject = getOAuthDefaultProject;
+    var setOAuthDefaultProject = async (client, project) => {
+      const { data } = await client.put("oauth/default-project", { project });
+      return data;
+    };
+    exports2.setOAuthDefaultProject = setOAuthDefaultProject;
+    var clearOAuthDefaultProject = async (client) => {
+      const { data } = await client.delete("oauth/default-project");
+      return data;
+    };
+    exports2.clearOAuthDefaultProject = clearOAuthDefaultProject;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
 var require_project_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -27966,14 +28240,48 @@ var require_project_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
-var require_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js
+var require_crawler_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "31eb5ce7-025f-5b07-a649-c97ce8d00078");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "3a945a27-aedf-5a8a-bc2f-6fa484b52a1b");
+      } catch (e2) {
+      }
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.createCrawlerTestRun = void 0;
+    var errors_1 = require_errors2();
+    var createCrawlerTestRun = async ({ client, sessionIds, appUrl, projectId }) => {
+      const { data } = await client.post("crawler/test-runs", {
+        sessionIds,
+        appUrl,
+        ...projectId ? { projectId } : {}
+      }).catch((error2) => {
+        if ((0, errors_1.isFetchError)(error2)) {
+          const errorMessage = error2.response?.data?.message;
+          if (errorMessage) {
+            throw new Error(errorMessage);
+          }
+        }
+        throw error2;
+      });
+      return data;
+    };
+    exports2.createCrawlerTestRun = createCrawlerTestRun;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
+var require_replay_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+    "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "880ba7cb-e40b-55a9-98be-5643b2fdf69a");
       } catch (e2) {
       }
     }();
@@ -28000,8 +28308,17 @@ var require_replay_api = __commonJS({
       return data;
     };
     exports2.getReplayDownloadUrl = getReplayDownloadUrl;
-    var getReplayV3DownloadUrls = async (client, replayId) => {
-      const { data } = await client.get(`replays/${replayId}/download-urls`).catch((error2) => {
+    var getReplayV3DownloadUrls = async (client, replayId, options) => {
+      const params = {};
+      if (options?.includeScreenshots === false) {
+        params["includeScreenshots"] = "false";
+      }
+      if (options?.includeDiffs === false) {
+        params["includeDiffs"] = "false";
+      }
+      const { data } = await client.get(`replays/${replayId}/download-urls`, {
+        params
+      }).catch((error2) => {
         if ((0, errors_1.isFetchError)(error2) && error2.response?.status === 404) {
           return { data: null };
         }
@@ -28013,19 +28330,19 @@ var require_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
 var require_session_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "0a219974-f9cd-56a4-a7c1-48f19445f702");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "7d9be07f-feb5-5111-be74-80045e9057c8");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getRecordedSessionData = exports2.getRecordedSession = void 0;
+    exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = void 0;
     var errors_1 = require_errors2();
     var getRecordedSession = async (client, sessionId) => {
       const { data } = await client.get(`sessions/${sessionId}`).catch((error2) => {
@@ -28037,8 +28354,10 @@ var require_session_api = __commonJS({
       return data;
     };
     exports2.getRecordedSession = getRecordedSession;
-    var getRecordedSessionData = async (client, sessionId) => {
-      const { data } = await client.get(`sessions/${sessionId}/data`).catch((error2) => {
+    var getRecordedSessionData = async (client, sessionId, fields) => {
+      const { data } = await client.get(`sessions/${sessionId}/data`, {
+        ...fields?.length ? { params: { fields: fields.join(",") } } : {}
+      }).catch((error2) => {
         if ((0, errors_1.isFetchError)(error2) && error2.response?.status === 404) {
           return { data: null };
         }
@@ -28047,6 +28366,16 @@ var require_session_api = __commonJS({
       return data;
     };
     exports2.getRecordedSessionData = getRecordedSessionData;
+    var getBackendReplayEnv = async ({ client, sessionId }) => {
+      const { data } = await client.get(`sessions/${sessionId}/backend-replay-env`).catch((error2) => {
+        if ((0, errors_1.isFetchError)(error2) && error2.response?.status === 404) {
+          return { data: [] };
+        }
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getBackendReplayEnv = getBackendReplayEnv;
     var getRecordingCommandId = async (client, projectId) => {
       const { data } = await client.post("sessions/start", void 0, projectId ? { params: { projectId } } : void 0);
       const { recordingCommandId } = data;
@@ -28060,9 +28389,9 @@ var require_session_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
 var require_replay_diff_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -28087,9 +28416,9 @@ var require_replay_diff_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
 var require_source_code_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -28118,19 +28447,19 @@ var require_source_code_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
 var require_test_run_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "6c1f22ad-d242-55ac-b041-1686e1d8da15");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "dc5c8860-9207-5a3c-8639-6b6edf1d5be6");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getSnapshotsFromTestRun = exports2.emitTelemetry = exports2.getTestRunReplayDiffs = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = void 0;
+    exports2.emitTelemetry = exports2.getTestRunReplayDiffs = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = void 0;
     var errors_1 = require_errors2();
     var executeSecureTunnelTestRun = async ({ client, headSha, tunnelUrl, basicAuthUser, basicAuthPassword, environment, isLockable, companionAssetsInfo, pullRequestHostingProviderId, postComment, debugContext }) => {
       const { data } = await client.post("test-runs/trigger-secure-tunnel-test-run-v2", {
@@ -28155,6 +28484,25 @@ var require_test_run_api = __commonJS({
       return data;
     };
     exports2.getTestRun = getTestRun;
+    var getTestRunNetworkPatchingResult = async ({ client, testRunId }) => {
+      const { data } = await client.get(`test-runs/${testRunId}/network-patching-result`).catch((error2) => {
+        if ((0, errors_1.isFetchError)(error2) && error2.response?.status === 404) {
+          return { data: null };
+        }
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data ?? null;
+    };
+    exports2.getTestRunNetworkPatchingResult = getTestRunNetworkPatchingResult;
+    var markTestRunExpectsCustomChecks = async ({ client, testRunId }) => {
+      await client.post(`test-runs/${testRunId}/expect-custom-checks`, {}).catch((error2) => {
+        if ((0, errors_1.isFetchError)(error2) && error2.response?.status === 404) {
+          return;
+        }
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+    };
+    exports2.markTestRunExpectsCustomChecks = markTestRunExpectsCustomChecks;
     var getTestRunData = async ({ client, testRunId, includeAppContainerLogs }) => {
       const params = includeAppContainerLogs ? { params: { includeAppContainerLogs: true } } : {};
       const { data } = await client.get(`test-runs/${testRunId}/data`, params);
@@ -28200,23 +28548,12 @@ var require_test_run_api = __commonJS({
       await client.post(`test-runs/telemetry`, { values, commitSha });
     };
     exports2.emitTelemetry = emitTelemetry2;
-    var getSnapshotsFromTestRun = async ({ client, testRunId, snapshotTypes }) => {
-      const params = new URLSearchParams();
-      for (const snapshotType of snapshotTypes) {
-        params.append("snapshotTypes", snapshotType);
-      }
-      const { data } = await client.get(`test-runs/${testRunId}/custom-check-snapshots?${params.toString()}`).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getSnapshotsFromTestRun = getSnapshotsFromTestRun;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
 var require_deployment_lock_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -28240,9 +28577,34 @@ var require_deployment_lock_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js
+var require_commit_label_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js"(exports2) {
+    "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "2ea57afa-529d-55ad-8c02-4b44558e0ccd");
+      } catch (e2) {
+      }
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = void 0;
+    var errors_1 = require_errors2();
+    exports2.COMMIT_LABEL_TYPES = ["not-relevant"];
+    var labelCommit = async ({ client, commitSha, labels }) => {
+      const { data } = await client.post("commit-labels", { commitSha, labels }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.labelCommit = labelCommit;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
 var require_test_run_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -28262,9 +28624,9 @@ var require_test_run_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/defer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/defer.js
 var require_defer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -28555,14 +28917,14 @@ var require_loglevel = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
 var require_console_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "cec91a77-7e15-5d5b-a267-f11665f4882b");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "9d04c177-a849-53cf-b482-182680bcb9b2");
       } catch (e2) {
       }
     }();
@@ -28570,13 +28932,16 @@ var require_console_logger = __commonJS({
       return mod && mod.__esModule ? mod : { "default": mod };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = void 0;
+    exports2.logNotice = exports2.logProgress = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = void 0;
     var loglevel_1 = __importDefault2(require_loglevel());
     exports2.METICULOUS_LOGGER_NAME = "@alwaysmeticulous";
     var timestampsApplied = false;
+    var explicitLevelSet = false;
     var initLogger = () => {
       const logger = loglevel_1.default.getLogger(exports2.METICULOUS_LOGGER_NAME);
-      logger.setDefaultLevel(loglevel_1.default.levels.INFO);
+      if (!explicitLevelSet) {
+        logger.setDefaultLevel(loglevel_1.default.levels.INFO);
+      }
       if (process.env.METICULOUS_TIMESTAMP_LOGS === "true" && !timestampsApplied) {
         const originalFactory = logger.methodFactory;
         logger.methodFactory = (methodName, logLevel, loggerName) => {
@@ -28613,21 +28978,32 @@ var require_console_logger = __commonJS({
           logger.setLevel(loglevel_1.default.levels.SILENT, false);
           break;
         default:
-          break;
+          return;
       }
+      explicitLevelSet = true;
     };
     exports2.setLogLevel = setLogLevel;
+    var logProgress = (message) => {
+      if ((0, exports2.initLogger)().getLevel() <= loglevel_1.default.levels.INFO) {
+        console.error(message);
+      }
+    };
+    exports2.logProgress = logProgress;
+    var logNotice = (message) => {
+      console.error(message);
+    };
+    exports2.logNotice = logNotice;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
 var require_local_data = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "9391bd64-8e39-57a1-bc01-f610dee5cad2");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "719b44ad-f23e-51d7-93db-a96477f2e7fe");
       } catch (e2) {
       }
     }();
@@ -28662,7 +29038,11 @@ var require_local_data = __commonJS({
     };
     exports2.setMeticulousLocalDataDir = setMeticulousLocalDataDir;
     var runWithLocalDataDir = (dataDir, fn) => {
-      return asyncLocalDataDir.run(dataDir, fn);
+      let result;
+      asyncLocalDataDir.run(dataDir, () => {
+        result = fn();
+      });
+      return result;
     };
     exports2.runWithLocalDataDir = runWithLocalDataDir;
   }
@@ -35473,9 +35853,9 @@ var require_luxon = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
 var require_logs = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -35499,14 +35879,14 @@ var require_logs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
 var require_debug_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "8dd86f11-30d9-577c-9eaf-d815476d68a9");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "f5df0ffa-b6f1-512c-b088-96af51bd18a2");
       } catch (e2) {
       }
     }();
@@ -35601,9 +35981,9 @@ var require_debug_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/constants.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/constants.js
 var require_constants6 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -35692,9 +36072,9 @@ var require_constants6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/version.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
 var require_version_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -35720,19 +36100,19 @@ var require_version_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
 var require_commit_sha_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "b8c8a56f-11f6-5eda-82fc-286431541769");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "0dd5889d-a18a-555e-ab2a-14e7e312429f");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getCommitDate = exports2.getGitDiff = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitSha = exports2.getBitbucketPullRequestCommitShaFromCi = void 0;
+    exports2.getCommitDate = exports2.getStashCreateSha = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitSha = void 0;
     var child_process_1 = require("child_process");
     var console_logger_1 = require_console_logger();
     var execPromise = (command2, cwd) => {
@@ -35750,22 +36130,13 @@ var require_commit_sha_utils = __commonJS({
       return new Promise((resolve5, reject) => {
         (0, child_process_1.execFile)(file, args, { encoding: "utf-8", cwd }, (error2, output) => {
           if (error2) {
-            reject(error2);
+            reject(error2 instanceof Error ? error2 : new Error(String(error2)));
             return;
           }
           resolve5(output.trim());
         });
       });
     };
-    var getBitbucketPullRequestCommitShaFromCi = () => {
-      const prId = process.env.BITBUCKET_PR_ID;
-      const commitSha = process.env.BITBUCKET_COMMIT;
-      if (prId && commitSha) {
-        return commitSha.trim();
-      }
-      return void 0;
-    };
-    exports2.getBitbucketPullRequestCommitShaFromCi = getBitbucketPullRequestCommitShaFromCi;
     var getGitRevParseHead = (cwd) => {
       return new Promise((resolve5, reject) => {
         (0, child_process_1.exec)("git rev-parse HEAD", { encoding: "utf-8", cwd }, (error2, output) => {
@@ -35782,13 +36153,6 @@ var require_commit_sha_utils = __commonJS({
         return commitSha_;
       }
       const logger = (0, console_logger_1.initLogger)();
-      if (!options?.cwd) {
-        const bitbucketPullRequestCommitSha = (0, exports2.getBitbucketPullRequestCommitShaFromCi)();
-        if (bitbucketPullRequestCommitSha) {
-          logger.info(`Commit SHA inferred from Bitbucket Pipelines PR environment: ${bitbucketPullRequestCommitSha}`);
-          return bitbucketPullRequestCommitSha;
-        }
-      }
       try {
         const gitCommitSha = (await getGitRevParseHead(options?.cwd)).trim();
         return gitCommitSha;
@@ -35808,7 +36172,7 @@ var require_commit_sha_utils = __commonJS({
       return new Promise((resolve5, reject) => {
         (0, child_process_1.execFile)("git", ["show", "-s", "--format=%cI", commitSha], { encoding: "utf-8", cwd }, (error2, output) => {
           if (error2) {
-            reject(error2);
+            reject(error2 instanceof Error ? error2 : new Error(String(error2)));
             return;
           }
           resolve5(output);
@@ -35871,11 +36235,25 @@ var require_commit_sha_utils = __commonJS({
       }
     };
     exports2.hasUncommittedChanges = hasUncommittedChanges;
+    var getUntrackedFiles = async (options) => {
+      try {
+        const output = await execFilePromise("git", ["ls-files", "--others", "--exclude-standard"], options?.cwd);
+        return output.split("\n").map((line) => line.trim()).filter((line) => line.length > 0);
+      } catch {
+        return [];
+      }
+    };
+    exports2.getUntrackedFiles = getUntrackedFiles;
     var getGitDiff = async (baseSha, headSha, options) => {
       const args = headSha ? ["diff", baseSha, headSha] : ["diff", baseSha];
       return execFilePromise("git", args, options?.cwd);
     };
     exports2.getGitDiff = getGitDiff;
+    var getStashCreateSha = async (options) => {
+      const output = (await execFilePromise("git", ["stash", "create"], options?.cwd)).trim();
+      return output || void 0;
+    };
+    exports2.getStashCreateSha = getStashCreateSha;
     var detectDefaultBranch = async (cwd) => {
       const logger = (0, console_logger_1.initLogger)();
       try {
@@ -35920,9 +36298,9 @@ var require_commit_sha_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js
 var require_error_code_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -35954,36 +36332,88 @@ var require_error_code_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
 var require_http_retry_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "ec59f5ec-9749-5342-8c3b-5fbf428502de");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "727322cf-ab15-5eaf-8ab8-a374436b02d3");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.executeWithRetry = exports2.defaultShouldRetry = void 0;
+    exports2.executeWithRetry = exports2.computeRetryDelayMs = exports2.getRetryAfterMs = exports2.defaultShouldRetry = void 0;
     var error_code_utils_1 = require_error_code_utils();
+    var DEFAULT_MAX_RETRIES = 3;
+    var DEFAULT_RETRY_DELAY_MS = 1e3;
+    var DEFAULT_MAX_RETRY_DELAY_MS = 3e4;
+    var RETRY_AFTER_JITTER_MS = 1e3;
+    var RETRYABLE_NETWORK_ERROR_CODES = /* @__PURE__ */ new Set([
+      "ECONNRESET",
+      "ETIMEDOUT",
+      "ECONNREFUSED",
+      "ENOTFOUND",
+      // undici-specific codes (surfaced via fetch's cause chain)
+      "UND_ERR_CONNECT_TIMEOUT",
+      "UND_ERR_HEADERS_TIMEOUT",
+      "UND_ERR_SOCKET",
+      // OpenSSL handshake glitches (e.g. LB/proxy briefly returning non-TLS bytes).
+      // Seen in CI as TypeError: fetch failed -> ERR_SSL_PACKET_LENGTH_TOO_LONG.
+      "ERR_SSL_PACKET_LENGTH_TOO_LONG",
+      "ERR_SSL_WRONG_VERSION_NUMBER"
+    ]);
     var defaultShouldRetry = (error2) => {
       if (error2.name === "AbortError") {
-        return false;
-      }
-      const errorCode = (0, error_code_utils_1.getErrorCode)(error2);
-      if (errorCode === "ECONNRESET" || errorCode === "ETIMEDOUT") {
         return true;
       }
-      if (error2.response && error2.response.status >= 500) {
+      const errorCode = (0, error_code_utils_1.getErrorCode)(error2);
+      if (errorCode != null && RETRYABLE_NETWORK_ERROR_CODES.has(errorCode)) {
+        return true;
+      }
+      const status = error2.response?.status;
+      if (status === 429) {
+        return true;
+      }
+      if (typeof status === "number" && status >= 500) {
         return true;
       }
       return false;
     };
     exports2.defaultShouldRetry = defaultShouldRetry;
+    var getRetryAfterMs = (error2, now = Date.now()) => {
+      const headers = error2?.response?.headers;
+      if (!headers || typeof headers !== "object") {
+        return null;
+      }
+      const raw = headers["retry-after"] ?? headers["Retry-After"];
+      if (raw == null) {
+        return null;
+      }
+      const value = Array.isArray(raw) ? raw[0] : String(raw);
+      const seconds = Number(value);
+      if (Number.isFinite(seconds)) {
+        return Math.max(0, seconds * 1e3);
+      }
+      const dateMs = Date.parse(value);
+      if (!Number.isNaN(dateMs)) {
+        return Math.max(0, dateMs - now);
+      }
+      return null;
+    };
+    exports2.getRetryAfterMs = getRetryAfterMs;
+    var computeRetryDelayMs = (attempt, { retryDelay, maxRetryDelay, retryAfterMs }, random = Math.random) => {
+      if (retryAfterMs != null) {
+        const jitter = random() * RETRY_AFTER_JITTER_MS;
+        return Math.min(retryAfterMs + jitter, maxRetryDelay);
+      }
+      const cappedBackoff = Math.min(retryDelay * 2 ** attempt, maxRetryDelay);
+      return cappedBackoff / 2 + random() * (cappedBackoff / 2);
+    };
+    exports2.computeRetryDelayMs = computeRetryDelayMs;
     var executeWithRetry = async (operation, options = {}) => {
-      const { maxRetries = 3, retryDelay = 1e3, shouldRetry = exports2.defaultShouldRetry, logger } = options;
+      const { maxRetries = DEFAULT_MAX_RETRIES, retryDelay = DEFAULT_RETRY_DELAY_MS, maxRetryDelay = DEFAULT_MAX_RETRY_DELAY_MS, shouldRetry = exports2.defaultShouldRetry, logger } = options;
       let lastError;
       for (let attempt = 0; attempt <= maxRetries; attempt++) {
         try {
@@ -35991,9 +36421,13 @@ var require_http_retry_utils = __commonJS({
         } catch (error2) {
           lastError = error2;
           if (attempt < maxRetries && shouldRetry(error2)) {
-            const delay = (attempt + 1) * retryDelay;
+            const delay = (0, exports2.computeRetryDelayMs)(attempt, {
+              retryDelay,
+              maxRetryDelay,
+              retryAfterMs: (0, exports2.getRetryAfterMs)(error2)
+            });
             if (logger) {
-              logger.warn(`Operation failed, retrying... (attempt ${attempt + 2})`);
+              logger.warn(`Operation failed, retrying in ${Math.round(delay)}ms (attempt ${attempt + 2} of ${maxRetries + 1})`);
             }
             await new Promise((resolve5) => setTimeout(resolve5, delay));
           } else {
@@ -36007,9 +36441,9 @@ var require_http_retry_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/symbols.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/symbols.js
 var require_symbols6 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/symbols.js"(exports2, module2) {
     module2.exports = {
       kClose: Symbol("close"),
       kDestroy: Symbol("destroy"),
@@ -36080,9 +36514,9 @@ var require_symbols6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/errors.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/errors.js
 var require_errors3 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/errors.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/errors.js"(exports2, module2) {
     "use strict";
     var kUndiciError = Symbol.for("undici.error.UND_ERR");
     var UndiciError = class extends Error {
@@ -36438,9 +36872,9 @@ var require_errors3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/constants.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/constants.js
 var require_constants7 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/constants.js"(exports2, module2) {
     "use strict";
     var headerNameLowerCasedRecord = {};
     var wellknownHeaderNames = [
@@ -36553,9 +36987,9 @@ var require_constants7 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/tree.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/tree.js
 var require_tree = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/tree.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/tree.js"(exports2, module2) {
     "use strict";
     var {
       wellknownHeaderNames,
@@ -36693,9 +37127,9 @@ var require_tree = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/util.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/util.js
 var require_util9 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/util.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { kDestroyed, kBodyUsed, kListeners, kBody } = require_symbols6();
@@ -37202,9 +37636,9 @@ var require_util9 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/diagnostics.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/diagnostics.js
 var require_diagnostics = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/diagnostics.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/diagnostics.js"(exports2, module2) {
     "use strict";
     var diagnosticsChannel = require("node:diagnostics_channel");
     var util = require("node:util");
@@ -37387,9 +37821,9 @@ var require_diagnostics = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/request.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/request.js
 var require_request3 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/request.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/request.js"(exports2, module2) {
     "use strict";
     var {
       InvalidArgumentError,
@@ -37668,7 +38102,11 @@ var require_request3 = __commonJS({
           } else if (typeof val[i] === "object") {
             throw new InvalidArgumentError(`invalid ${key} header`);
           } else {
-            arr.push(`${val[i]}`);
+            const str = `${val[i]}`;
+            if (!isValidHeaderValue(str)) {
+              throw new InvalidArgumentError(`invalid ${key} header`);
+            }
+            arr.push(str);
           }
         }
         val = arr;
@@ -37680,6 +38118,9 @@ var require_request3 = __commonJS({
         val = "";
       } else {
         val = `${val}`;
+        if (!isValidHeaderValue(val)) {
+          throw new InvalidArgumentError(`invalid ${key} header`);
+        }
       }
       if (headerName === "host") {
         if (request.host !== null) {
@@ -37720,9 +38161,9 @@ var require_request3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/dispatcher.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/dispatcher.js
 var require_dispatcher2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/dispatcher.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/dispatcher.js"(exports2, module2) {
     "use strict";
     var EventEmitter = require("node:events");
     var Dispatcher = class extends EventEmitter {
@@ -37775,9 +38216,9 @@ var require_dispatcher2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/dispatcher-base.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/dispatcher-base.js
 var require_dispatcher_base2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/dispatcher-base.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/dispatcher-base.js"(exports2, module2) {
     "use strict";
     var Dispatcher = require_dispatcher2();
     var {
@@ -37801,6 +38242,7 @@ var require_dispatcher_base2 = __commonJS({
       }
       get webSocketOptions() {
         return {
+          maxFragments: this[kWebSocketOptions].maxFragments ?? 131072,
           maxPayloadSize: this[kWebSocketOptions].maxPayloadSize ?? 128 * 1024 * 1024
         };
       }
@@ -37943,9 +38385,9 @@ var require_dispatcher_base2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/util/timers.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/util/timers.js
 var require_timers2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/util/timers.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/util/timers.js"(exports2, module2) {
     "use strict";
     var fastNow = 0;
     var RESOLUTION_MS = 1e3;
@@ -38174,9 +38616,9 @@ var require_timers2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/connect.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/connect.js
 var require_connect2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/core/connect.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/connect.js"(exports2, module2) {
     "use strict";
     var net = require("node:net");
     var assert = require("node:assert");
@@ -38354,9 +38796,9 @@ var require_connect2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/llhttp/utils.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/utils.js
 var require_utils6 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/llhttp/utils.js"(exports2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.enumToMap = void 0;
@@ -38374,9 +38816,9 @@ var require_utils6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/llhttp/constants.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/constants.js
 var require_constants8 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/llhttp/constants.js"(exports2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SPECIAL_HEADERS = exports2.HEADER_STATE = exports2.MINOR = exports2.MAJOR = exports2.CONNECTION_TOKEN_CHARS = exports2.HEADER_CHARS = exports2.TOKEN = exports2.STRICT_TOKEN = exports2.HEX = exports2.URL_CHAR = exports2.STRICT_URL_CHAR = exports2.USERINFO_CHARS = exports2.MARK = exports2.ALPHANUM = exports2.NUM = exports2.HEX_MAP = exports2.NUM_MAP = exports2.ALPHA = exports2.FINISH = exports2.H_METHOD_MAP = exports2.METHOD_MAP = exports2.METHODS_RTSP = exports2.METHODS_ICE = exports2.METHODS_HTTP = exports2.METHODS = exports2.LENIENT_FLAGS = exports2.FLAGS = exports2.TYPE = exports2.ERROR = void 0;
@@ -38695,27 +39137,27 @@ var require_constants8 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/llhttp/llhttp-wasm.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/llhttp-wasm.js
 var require_llhttp_wasm2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/llhttp/llhttp-wasm.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/llhttp-wasm.js"(exports2, module2) {
     "use strict";
     var { Buffer: Buffer2 } = require("node:buffer");
     module2.exports = Buffer2.from("AGFzbQEAAAABJwdgAX8Bf2ADf39/AX9gAX8AYAJ/fwBgBH9/f38Bf2AAAGADf39/AALLAQgDZW52GHdhc21fb25faGVhZGVyc19jb21wbGV0ZQAEA2VudhV3YXNtX29uX21lc3NhZ2VfYmVnaW4AAANlbnYLd2FzbV9vbl91cmwAAQNlbnYOd2FzbV9vbl9zdGF0dXMAAQNlbnYUd2FzbV9vbl9oZWFkZXJfZmllbGQAAQNlbnYUd2FzbV9vbl9oZWFkZXJfdmFsdWUAAQNlbnYMd2FzbV9vbl9ib2R5AAEDZW52GHdhc21fb25fbWVzc2FnZV9jb21wbGV0ZQAAAy0sBQYAAAIAAAAAAAACAQIAAgICAAADAAAAAAMDAwMBAQEBAQEBAQEAAAIAAAAEBQFwARISBQMBAAIGCAF/AUGA1AQLB9EFIgZtZW1vcnkCAAtfaW5pdGlhbGl6ZQAIGV9faW5kaXJlY3RfZnVuY3Rpb25fdGFibGUBAAtsbGh0dHBfaW5pdAAJGGxsaHR0cF9zaG91bGRfa2VlcF9hbGl2ZQAvDGxsaHR0cF9hbGxvYwALBm1hbGxvYwAxC2xsaHR0cF9mcmVlAAwEZnJlZQAMD2xsaHR0cF9nZXRfdHlwZQANFWxsaHR0cF9nZXRfaHR0cF9tYWpvcgAOFWxsaHR0cF9nZXRfaHR0cF9taW5vcgAPEWxsaHR0cF9nZXRfbWV0aG9kABAWbGxodHRwX2dldF9zdGF0dXNfY29kZQAREmxsaHR0cF9nZXRfdXBncmFkZQASDGxsaHR0cF9yZXNldAATDmxsaHR0cF9leGVjdXRlABQUbGxodHRwX3NldHRpbmdzX2luaXQAFQ1sbGh0dHBfZmluaXNoABYMbGxodHRwX3BhdXNlABcNbGxodHRwX3Jlc3VtZQAYG2xsaHR0cF9yZXN1bWVfYWZ0ZXJfdXBncmFkZQAZEGxsaHR0cF9nZXRfZXJybm8AGhdsbGh0dHBfZ2V0X2Vycm9yX3JlYXNvbgAbF2xsaHR0cF9zZXRfZXJyb3JfcmVhc29uABwUbGxodHRwX2dldF9lcnJvcl9wb3MAHRFsbGh0dHBfZXJybm9fbmFtZQAeEmxsaHR0cF9tZXRob2RfbmFtZQAfEmxsaHR0cF9zdGF0dXNfbmFtZQAgGmxsaHR0cF9zZXRfbGVu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PgtBhwEMPQtBiAEMPAtBiQEMOwtBigEMOgtBiwEMOQtBjAEMOAtBjQEMNwtBjgEMNgtBjwEMNQtBkAEMNAtBkQEMMwtBkgEMMgtBkwEMMQtBlAEMMAtBlQEMLwtBlgEMLgtBlwEMLQtBmAEMLAtBmQEMKwtBmgEMKgtBmwEMKQtBnAEMKAtBnQEMJwtBngEMJgtBnwEMJQtBoAEMJAtBoQEMIwtBogEMIgtBowEMIQtBpAEMIAtBpQEMHwtBpgEMHgtBpwEMHQtBqAEMHAtBqQEMGwtBqgEMGgtBqwEMGQtBrAEMGAtBrQEMFwtBrgEMFgtBAQwVC0GvAQwUC0GwAQwTC0GxAQwSC0GzAQwRC0GyAQwQC0G0AQwPC0G1AQwOC0G2AQwNC0G3AQwMC0G4AQwLC0G5AQwKC0G6AQwJC0G7AQwIC0HGAQwHC0G8AQwGC0G9AQwFC0G+AQwEC0G/AQwDC0HAAQwCC0HCAQwBC0HBAQshAwNAAkACQAJAAkACQAJAAkACQAJAIAICfwJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJ/AkACQAJAAkACQAJAAkACQAJAAkACQAJAAkAgAgJ/AkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACfwJAAkACfwJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkAC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iQEhAwykAgtBASABLQAAQd8ARw1nGiABQQFqIQEMXgtBigEhAyABIARGDaICIAIoAgAiACAEIAFraiEFIAEgAGtBAWohBgNAIAEtAAAgAEGMzwBqLQAARw1kIABBAUYN+gEgAEEBaiEAIAQgAUEBaiIBRw0ACyACIAU2AgAMogILQYsBIQMgASAERg2hAiACKAIAIgAgBCABa2ohBSABIABrQQJqIQYCQANAIAEtAAAgAEGOzwBqLQAARw1kIABBAkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyiAgsgAkEANgIAIAZBAWohAUECDGULQYwBIQMgASAERg2gAiACKAIAIgAgBCABa2ohBSABIABrQQFqIQYCQANAIAEtAAAgAEHwzwBqLQAARw1jIABBAUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyhAgsgAkEANgIAIAZBAWohAUEfDGQLQY0BIQMgASAERg2fAiACKAIAIgAgBCABa2ohBSABIABrQQFqIQYCQANAIAEtAAAgAEHyzwBqLQAARw1iIABBAUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAygAgsgAkEANgIAIAZBAWohAUEJDGMLIAEgBEYEQEGOASEDDJ8CCwJAAkAgAS0AAEHJAGsOBwBiYmJiYgFiCyABQQFqIQFB+AAhAwyGAgsgAUEBaiEBQfkAIQMMhQILQY8BIQMgASAERg2dAiACKAIAIgAgBCABa2ohBSABIABrQQVqIQYCQANAIAEtAAAgAEGRzwBqLQAARw1gIABBBUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyeAgsgAkEANgIAIAZBAWohAUEYDGELQZABIQMgASAERg2cAiACKAIAIgAgBCABa2ohBSABIABrQQJqIQYCQANAIAEtAAAgAEGXzwBqLQAARw1fIABBAkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAydAgsgAkEANgIAIAZBAWohAUEXDGALQZEBIQMgASAERg2bAiACKAIAIgAgBCABa2ohBSABIABrQQZqIQYCQANAIAEtAAAgAEGazwBqLQAARw1eIABBBkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAycAgsgAkEANgIAIAZBAWohAUEV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JSIARQ0RIAJB5QA2AhwgAiABNgIUIAIgADYCDEEAIQMMtAELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0gIAJB0wA2AhwgAiABNgIUIAIgADYCDEEAIQMMswELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0iIAJB0gA2AhwgAiABNgIUIAIgADYCDEEAIQMMsgELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0OIAJB5QA2AhwgAiABNgIUIAIgADYCDEEAIQMMsQELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0dIAJB0wA2AhwgAiABNgIUIAIgADYCDEEAIQMMsAELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0fIAJB0gA2AhwgAiABNgIUIAIgADYCDEEAIQMMrwELIABBP0cNASABQQFqCyEBQQUhAwyUAQtBACEDIAJBADYCHCACIAE2AhQgAkH9EjYCECACQQc2AgwMrAELIAJBADYCHCACIAE2AhQgAkHcCDYCECACQQc2AgxBACEDDKsBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNByACQeUANgIcIAIgATYCFCACIAA2AgxBACEDDKoBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNFiACQdMANgIcIAIgATYCFCACIAA2AgxBACEDDKkBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNGCACQdIANgIcIAIgATYCFCACIAA2AgxBACEDDKgBCyACQQA2AhwgAiABNgIUIAJBxgo2AhAgAkEHNgIMQQAhAwynAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDQMgAkHlADYCHCACIAE2AhQgAiAANgIMQQAhAwymAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDRIgAkHTADYCHCACIAE2AhQgAiAANgIMQQAhAwylAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDRQgAkHSADYCHCACIAE2AhQgAiAANgIMQQAhAwykAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDQAgAkHlADYCHCACIAE2AhQgAiAANgIMQQAhAwyjAQtB1QAhAwyJAQsgAEEVRwRAIAJBADYCHCACIAE2AhQgAkG5DTYCECACQRo2AgxB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AkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAIABB5ABrDvQDY2IAAWFhYWFhYQIDBAVhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhBgcICQoLDA0OD2FhYWFhEGFhYWFhYWFhYWFhEWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYRITFBUWFxgZGhthYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2YTc4OTphYWFhYWFhYTthYWE8YWFhYT0+P2FhYWFhYWFhQGFhQWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYUJDREVGR0hJSktMTU5PUFFSU2FhYWFhYWFhVFVWV1hZWlthXF1hYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFeYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhX2BhC0HhJw8LQaQhDwtByywPC0H+MQ8LQcAkDwtBqyQPC0GNKA8LQeImDwtBgDAPC0G5Lw8LQdckDwtB7x8PC0HhHw8LQfofDwtB8iAPC0GoLw8LQa4yDwtBiDAPC0HsJw8LQYIiDwtBjh0PC0HQLg8LQcojDwtBxTIPC0HfHA8LQdIcDwtBxCAPC0HXIA8LQaIfDwtB7S4PC0GrMA8LQdQlDwtBzC4PC0H6Lg8LQfwrDwtB0jAPC0HxHQ8LQbsgDwtB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CABB3AgLii1JbnZhbGlkIGNoYXIgaW4gdXJsIHF1ZXJ5AFNwYW4gY2FsbGJhY2sgZXJyb3IgaW4gb25fYm9keQBDb250ZW50LUxlbmd0aCBvdmVyZmxvdwBDaHVuayBzaXplIG92ZXJmbG93AFJlc3BvbnNlIG92ZXJmbG93AEludmFsaWQgbWV0aG9kIGZvciBIVFRQL3gueCByZXF1ZXN0AEludmFsaWQgbWV0aG9kIGZvciBSVFNQL3gueCByZXF1ZXN0AEV4cGVjdGVkIFNPVVJDRSBtZXRob2QgZm9yIElDRS94LnggcmVxdWVzdABJbnZhbGlkIGNoYXIgaW4gdXJsIGZyYWdtZW50IHN0YXJ0AEV4cGVjdGVkIGRvdABTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX3N0YXR1cwBJbnZhbGlkIHJlc3BvbnNlIHN0YXR1cwBJbnZhbGlkIGNoYXJhY3RlciBpbiBjaHVuayBleHRlbnNpb25zAFVzZXIgY2FsbGJhY2sgZXJyb3IAYG9uX3Jlc2V0YCBjYWxsYmFjayBlcnJvcgBgb25fY2h1bmtfaGVhZGVyYCBjYWxsYmFjayBlcnJvcgBgb25fbWVzc2FnZV9iZWdpbmAgY2FsbGJhY2sgZXJyb3IAYG9uX2NodW5rX2V4dGVuc2lvbl92YWx1ZWAgY2FsbGJhY2sgZXJyb3IAYG9uX3N0YXR1c19jb21wbGV0ZWAgY2FsbGJhY2sgZXJyb3IAYG9uX3ZlcnNpb25fY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl91cmxfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9jaHVua19jb21wbGV0ZWAgY2FsbGJhY2sgZXJyb3IAYG9uX2hlYWRlcl92YWx1ZV9jb21wbGV0ZWAgY2FsbGJhY2sgZXJyb3IAYG9uX21lc3NhZ2VfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9tZXRob2RfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9oZWFkZXJfZmllbGRfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9jaHVua19leHRlbnNpb25fbmFtZWAgY2FsbGJhY2sgZXJyb3IAVW5leHBlY3RlZCBjaGFyIGluIHVybCBzZXJ2ZXIASW52YWxpZCBoZWFkZXIgdmFsdWUgY2hhcgBJbnZhbGlkIGhlYWRlciBmaWVsZCBjaGFyAFNwYW4gY2FsbGJhY2sgZXJyb3IgaW4gb25fdmVyc2lvbgBJbnZhbGlkIG1pbm9yIHZlcnNpb24ASW52YWxpZCBtYWpvciB2ZXJzaW9uAEV4cGVjdGVkIHNwYWNlIGFmdGVyIHZlcnNpb24ARXhwZWN0ZWQgQ1JMRiBhZnRlciB2ZXJzaW9uAEludmFsaWQgSFRUUCB2ZXJzaW9uAEludmFsaWQgaGVhZGVyIHRva2VuAFNwYW4gY2FsbGJhY2sgZXJyb3IgaW4gb25fdXJsAEludmFsaWQgY2hhcmFjdGVycyBpbiB1cmwAVW5leHBlY3RlZCBzdGFydCBjaGFyIGluIHVybABEb3VibGUgQCBpbiB1cmwARW1wdHkgQ29udGVudC1MZW5ndGgASW52YWxpZCBjaGFyYWN0ZXIgaW4gQ29udGVudC1MZW5ndGgARHVwbGljYXRlIENvbnRlbnQtTGVuZ3RoAEludmFsaWQgY2hhciBpbiB1cmwgcGF0aABDb250ZW50LUxlbmd0aCBjYW4ndCBiZSBwcmVzZW50IHdpdGggVHJhbnNmZXItRW5jb2RpbmcASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgc2l6ZQBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX2hlYWRlcl92YWx1ZQBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX2NodW5rX2V4dGVuc2lvbl92YWx1ZQBJbnZhbGlkIGNoYXJhY3RlciBpbiBjaHVuayBleHRlbnNpb25zIHZhbHVlAE1pc3NpbmcgZXhwZWN0ZWQgTEYgYWZ0ZXIgaGVhZGVyIHZhbHVlAEludmFsaWQgYFRyYW5zZmVyLUVuY29kaW5nYCBoZWFkZXIgdmFsdWUASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgZXh0ZW5zaW9ucyBxdW90ZSB2YWx1ZQBJbnZhbGlkIGNoYXJhY3RlciBpbiBjaHVuayBleHRlbnNpb25zIHF1b3RlZCB2YWx1ZQBQYXVzZWQgYnkgb25faGVhZGVyc19jb21wbGV0ZQBJbnZhbGlkIEVPRiBzdGF0ZQBvbl9yZXNldCBwYXVzZQBvbl9jaHVua19oZWFkZXIgcGF1c2UAb25fbWVzc2FnZV9iZWdpbiBwYXVzZQBvbl9jaHVua19leHRlbnNpb25fdmFsdWUgcGF1c2UAb25fc3RhdHVzX2NvbXBsZXRlIHBhdXNlAG9uX3ZlcnNpb25fY29tcGxldGUgcGF1c2UAb25fdXJsX2NvbXBsZXRlIHBhdXNlAG9uX2NodW5rX2NvbXBsZXRlIHBhdXNlAG9uX2hlYWRlcl92YWx1ZV9jb21wbGV0ZSBwYXVzZQBvbl9tZXNzYWdlX2NvbXBsZXRlIHBhdXNlAG9uX21ldGhvZF9jb21wbGV0ZSBwYXVzZQBvbl9oZWFkZXJfZmllbGRfY29tcGxldGUgcGF1c2UAb25fY2h1bmtfZXh0ZW5zaW9uX25hbWUgcGF1c2UAVW5leHBlY3RlZCBzcGFjZSBhZnRlciBzdGFydCBsaW5lAFNwYW4gY2FsbGJhY2sgZXJyb3IgaW4gb25fY2h1bmtfZXh0ZW5zaW9uX25hbWUASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgZXh0ZW5zaW9ucyBuYW1lAFBhdXNlIG9uIENPTk5FQ1QvVXBncmFkZQBQYXVzZSBvbiBQUkkvVXBncmFkZQBFeHBlY3RlZCBIVFRQLzIgQ29ubmVjdGlvbiBQcmVmYWNlAFNwYW4gY2FsbGJhY2sgZXJyb3IgaW4gb25fbWV0aG9kAEV4cGVjdGVkIHNwYWNlIGFmdGVyIG1ldGhvZABTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX2hlYWRlcl9maWVsZABQYXVzZWQASW52YWxpZCB3b3JkIGVuY291bnRlcmVkAEludmFsaWQgbWV0aG9kIGVuY291bnRlcmVkAFVuZXhwZWN0ZWQgY2hhciBpbiB1cmwgc2NoZW1hAFJlcXVlc3QgaGFzIGludmFsaWQgYFRyYW5zZmVyLUVuY29kaW5nYABTV0lUQ0hfUFJPWFkAVVNFX1BST1hZAE1LQUNUSVZJVFkAVU5QUk9DRVNTQUJMRV9FTlRJVFkAQ09QWQBNT1ZFRF9QRVJNQU5FTlRMWQBUT09fRUFSTFkATk9USUZZAEZBSUxFRF9ERVBFTkRFTkNZAEJBRF9HQVRFV0FZAFBMQVkAUFVUAENIRUNLT1VUAEdBVEVXQVlfVElNRU9VVABSRVFVRVNUX1RJTUVPVVQATkVUV09SS19DT05ORUNUX1RJTUVPVVQAQ09OTkVDVElPTl9USU1FT1VUAExPR0lOX1RJTUVPVVQATkVUV09SS19SRUFEX1RJTUVPVVQAUE9TVABNSVNESVJFQ1RFRF9SRVFVRVNUAENMSUVOVF9DTE9TRURfUkVRVUVTVABDTElFTlRfQ0xPU0VEX0xPQURfQkFMQU5DRURfUkVRVUVTVABCQURfUkVRVUVTVABIVFRQX1JFUVVFU1RfU0VOVF9UT19IVFRQU19QT1JUAFJFUE9SVABJTV9BX1RFQVBPVABSRVNFVF9DT05URU5UAE5PX0NPTlRFTlQAUEFSVElBTF9DT05URU5UAEhQRV9JTlZBTElEX0NPTlNUQU5UAEhQRV9DQl9SRVNFVABHRVQASFBFX1NUUklDVABDT05GTElDVABURU1QT1JBUllfUkVESVJFQ1QAUEVSTUFORU5UX1JFRElSRUNUAENPTk5FQ1QATVVMVElfU1RBVFVTAEhQRV9JTlZBTElEX1NUQVRVUwBUT09fTUFOWV9SRVFVRVNUUwBFQVJMWV9ISU5UUwBVTkFWQUlMQUJMRV9GT1JfTEVHQUxfUkVBU09OUwBPUFRJT05TAFNXSVRDSElOR19QUk9UT0NPTFMAVkFSSUFOVF9BTFNPX05FR09USUFURVMATVVMVElQTEVfQ0hPSUNFUwBJTlRFUk5BTF9TRVJWRVJfRVJST1IAV0VCX1NFUlZFUl9VTktOT1dOX0VSUk9SAFJBSUxHVU5fRVJST1IASURFTlRJVFlfUFJPVklERVJfQVVUSEVOVElDQVRJT05fRVJST1IAU1NMX0NFUlRJRklDQVRFX0VSUk9SAElOVkFMSURfWF9GT1JXQVJERURfRk9SAFNFVF9QQVJBTUVURVIAR0VUX1BBUkFNRVRFUgBIUEVfVVNFUgBTRUVfT1RIRVIASFBFX0NCX0NIVU5LX0hFQURFUgBNS0NBTEVOREFSAFNFVFVQAFdFQl9TRVJWRVJfSVNfRE9XTgBURUFSRE9XTgBIUEVfQ0xPU0VEX0NPTk5FQ1RJT04ASEVVUklTVElDX0VYUElSQVRJT04ARElTQ09OTkVDVEVEX09QRVJBVElPTgBOT05fQVVUSE9SSVRBVElWRV9JTkZPUk1BVElPTgBIUEVfSU5WQUxJRF9WRVJTSU9OAEhQRV9DQl9NRVNTQUdFX0JFR0lOAFNJVEVfSVNfRlJPWkVOAEhQRV9JTlZBTElEX0hFQURFUl9UT0tFTgBJTlZBTElEX1RPS0VOAEZPUkJJRERFTgBFTkhBTkNFX1lPVVJfQ0FMTQBIUEVfSU5WQUxJRF9VUkwAQkxPQ0tFRF9CWV9QQVJFTlRBTF9DT05UUk9MAE1LQ09MAEFDTABIUEVfSU5URVJOQUwAUkVRVUVTVF9IRUFERVJfRklFTERTX1RPT19MQVJHRV9VTk9GRklDSUFMAEhQRV9PSwBVTkxJTksAVU5MT0NLAFBSSQBSRVRSWV9XSVRIAEhQRV9JTlZBTElEX0NPTlRFTlRfTEVOR1RIAEhQRV9VTkVYUEVDVEVEX0NPTlRFTlRfTEVOR1RIAEZMVVNIAFBST1BQQVRDSABNLVNFQVJDSABVUklfVE9PX0xPTkcAUFJPQ0VTU0lORwBNSVNDRUxMQU5FT1VTX1BFUlNJU1RFTlRfV0FSTklORwBNSVNDRUxMQU5FT1VTX1dBUk5JTkcASFBFX0lOVkFMSURfVFJBTlNGRVJfRU5DT0RJTkcARXhwZWN0ZWQgQ1JMRgBIUEVfSU5WQUxJRF9DSFVOS19TSVpFAE1PVkUAQ09OVElOVUUASFBFX0NCX1NUQVRVU19DT01QTEVURQBIUEVfQ0JfSEVBREVSU19DT01QTEVURQBIUEVfQ0JfVkVSU0lPTl9DT01QTEVURQBIUEVfQ0JfVVJMX0NPTVBMRVRFAEhQRV9DQl9DSFVOS19DT01QTEVURQBIUEVfQ0JfSEVBREVSX1ZBTFVFX0NPTVBMRVRFAEhQRV9DQl9DSFVOS19FWFRFTlNJT05fVkFMVUVfQ09NUExFVEUASFBFX0NCX0NIVU5LX0VYVEVOU0lPTl9OQU1FX0NPTVBMRVRFAEhQRV9DQl9NRVNTQUdFX0NPTVBMRVRFAEhQRV9DQl9NRVRIT0RfQ09NUExFVEUASFBFX0NCX0hFQURFUl9GSUVMRF9DT01QTEVURQBERUxFVEUASFBFX0lOVkFMSURfRU9GX1NUQVRFAElOVkFMSURfU1NMX0NFUlRJRklDQVRFAFBBVVNFAE5PX1JFU1BPTlNFAFVOU1VQUE9SVEVEX01FRElBX1RZUEUAR09ORQBOT1RfQUNDRVBUQUJMRQBTRVJWSUNFX1VOQVZBSUxBQkxFAFJBTkdFX05PVF9TQVRJU0ZJQUJMRQBPUklHSU5fSVNfVU5SRUFDSEFCTEUAUkVTUE9OU0VfSVNfU1RBTEUAUFVSR0UATUVSR0UAUkVRVUVTVF9IRUFERVJfRklFTERTX1RPT19MQVJHRQBSRVFVRVNUX0hFQURFUl9UT09fTEFSR0UAUEFZTE9BRF9UT09fTEFSR0UASU5TVUZGSUNJRU5UX1NUT1JBR0UASFBFX1BBVVNFRF9VUEdSQURFAEhQRV9QQVVTRURfSDJfVVBHUkFERQBTT1VSQ0UAQU5OT1VOQ0UAVFJBQ0UASFBFX1VORVhQRUNURURfU1BBQ0UAREVTQ1JJQkUAVU5TVUJTQ1JJQkUAUkVDT1JEAEhQRV9JTlZBTElEX01FVEhPRABOT1RfRk9VTkQAUFJPUEZJTkQAVU5CSU5EAFJFQklORABVTkFVVEhPUklaRUQATUVUSE9EX05PVF9BTExPV0VEAEhUVFBfVkVSU0lPTl9OT1RfU1VQUE9SVEVEAEFMUkVBRFlfUkVQT1JURUQAQUNDRVBURUQATk9UX0lNUExFTUVOVEVEAExPT1BfREVURUNURUQASFBFX0NSX0VYUEVDVEVEAEhQRV9MRl9FWFBFQ1RFRABDUkVBVEVEAElNX1VTRUQASFBFX1BBVVNFRABUSU1FT1VUX09DQ1VSRUQAUEFZTUVOVF9SRVFVSVJFRABQUkVDT05ESVRJT05fUkVRVUlSRUQAUFJPWFlfQVVUSEVOVElDQVRJT05fUkVRVUlSRUQATkVUV09SS19BVVRIRU5USUNBVElPTl9SRVFVSVJFRABMRU5HVEhfUkVRVUlSRUQAU1NMX0NFUlRJRklDQVRFX1JFUVVJUkVEAFVQR1JBREVfUkVRVUlSRUQAUEFHRV9FWFBJUkVEAFBSRUNPTkRJVElPTl9GQUlMRUQARVhQRUNUQVRJT05fRkFJTEVEAFJFVkFMSURBVElPTl9GQUlMRUQAU1NMX0hBTkRTSEFLRV9GQUlMRUQATE9DS0VEAFRSQU5TRk9STUFUSU9OX0FQUExJRUQATk9UX01PRElGSUVEAE5PVF9FWFRFTkRFRABCQU5EV0lEVEhfTElNSVRfRVhDRUVERUQAU0lURV9JU19PVkVSTE9BREVEAEhFQUQARXhwZWN0ZWQgSFRUUC8AAF4TAAAmEwAAMBAAAPAXAACdEwAAFRIAADkXAADwEgAAChAAAHUSAACtEgAAghMAAE8UAAB/EAAAoBUAACMUAACJEgAAixQAAE0VAADUEQAAzxQAABAYAADJFgAA3BYAAMERAADgFwAAuxQAAHQUAAB8FQAA5RQAAAgXAAAfEAAAZRUAAKMUAAAoFQAAAhUAAJkVAAAsEAAAixkAAE8PAADUDgAAahAAAM4QAAACFwAAiQ4AAG4TAAAcEwAAZhQAAFYXAADBEwAAzRMAAGwTAABoFwAAZhcAAF8XAAAiEwAAzg8AAGkOAADYDgAAYxYAAMsTAACqDgAAKBcAACYXAADFEwAAXRYAAOgRAABnEwAAZRMAAPIWAABzEwAAHRcAAPkWAADzEQAAzw4AAM4VAAAMEgAAsxEAAKURAABhEAAAMhcAALsTAEH5NQsBAQBBkDYL4AEBAQIBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQBB/TcLAQEAQZE4C14CAwICAgICAAACAgACAgACAgICAgICAgICAAQAAAAAAAICAgICAgICAgICAgICAgICAgICAgICAgICAAAAAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAAgACAEH9OQsBAQBBkToLXgIAAgICAgIAAAICAAICAAICAgICAgICAgIAAwAEAAAAAgICAgICAgICAgICAgICAgICAgICAgICAgIAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgACAAIAQfA7Cw1sb3NlZWVwLWFsaXZlAEGJPAsBAQBBoDwL4AEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQBBiT4LAQEAQaA+C+cBAQEBAQEBAQEBAQEBAgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQFjaHVua2VkAEGwwAALXwEBAAEBAQEBAAABAQABAQABAQEBAQEBAQEBAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQABAEGQwgALIWVjdGlvbmVudC1sZW5ndGhvbnJveHktY29ubmVjdGlvbgBBwMIACy1yYW5zZmVyLWVuY29kaW5ncGdyYWRlDQoNCg0KU00NCg0KVFRQL0NFL1RTUC8AQfnCAAsFAQIAAQMAQZDDAAvgAQQBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAEH5xAALBQECAAEDAEGQxQAL4AEEAQEFAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQBB+cYACwQBAAABAEGRxwAL3wEBAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAEH6yAALBAEAAAIAQZDJAAtfAwQAAAQEBAQEBAQEBAQEBQQEBAQEBAQEBAQEBAAEAAYHBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQABAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAQAQfrKAAsEAQAAAQBBkMsACwEBAEGqywALQQIAAAAAAAADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwAAAAAAAAMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAEH6zAALBAEAAAEAQZDNAAsBAQBBms0ACwYCAAAAAAIAQbHNAAs6AwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAAAAAAAADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwBB8M4AC5YBTk9VTkNFRUNLT1VUTkVDVEVURUNSSUJFTFVTSEVURUFEU0VBUkNIUkdFQ1RJVklUWUxFTkRBUlZFT1RJRllQVElPTlNDSFNFQVlTVEFUQ0hHRU9SRElSRUNUT1JUUkNIUEFSQU1FVEVSVVJDRUJTQ1JJQkVBUkRPV05BQ0VJTkROS0NLVUJTQ1JJQkVIVFRQL0FEVFAv", "base64");
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/llhttp/llhttp_simd-wasm.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/llhttp_simd-wasm.js
 var require_llhttp_simd_wasm2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/llhttp/llhttp_simd-wasm.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/llhttp_simd-wasm.js"(exports2, module2) {
     "use strict";
     var { Buffer: Buffer2 } = require("node:buffer");
     module2.exports = Buffer2.from("AGFzbQEAAAABJwdgAX8Bf2ADf39/AX9gAX8AYAJ/fwBgBH9/f38Bf2AAAGADf39/AALLAQgDZW52GHdhc21fb25faGVhZGVyc19jb21wbGV0ZQAEA2VudhV3YXNtX29uX21lc3NhZ2VfYmVnaW4AAANlbnYLd2FzbV9vbl91cmwAAQNlbnYOd2FzbV9vbl9zdGF0dXMAAQNlbnYUd2FzbV9vbl9oZWFkZXJfZmllbGQAAQNlbnYUd2FzbV9vbl9oZWFkZXJfdmFsdWUAAQNlbnYMd2FzbV9vbl9ib2R5AAEDZW52GHdhc21fb25fbWVzc2FnZV9jb21wbGV0ZQAAAy0sBQYAAAIAAAAAAAACAQIAAgICAAADAAAAAAMDAwMBAQEBAQEBAQEAAAIAAAAEBQFwARISBQMBAAIGCAF/AUGA1AQLB9EFIgZtZW1vcnkCAAtfaW5pdGlhbGl6ZQAIGV9faW5kaXJlY3RfZnVuY3Rpb25fdGFibGUBAAtsbGh0dHBfaW5pdAAJGGxsaHR0cF9zaG91bGRfa2VlcF9hbGl2ZQAvDGxsaHR0cF9hbGxvYwALBm1hbGxvYwAxC2xsaHR0cF9mcmVlAAwEZnJlZQAMD2xsaHR0cF9nZXRfdHlwZQANFWxsaHR0cF9nZXRfaHR0cF9tYWpvcgAOFWxsaHR0cF9nZXRfaHR0cF9taW5vcgAPEWxsaHR0cF9nZXRfbWV0aG9kABAWbGxodHRwX2dldF9zdGF0dXNfY29kZQAREmxsaHR0cF9nZXRfdXBncmFkZQASDGxsaHR0cF9yZXNldAATDmxsaHR0cF9leGVjdXRlABQUbGxodHRwX3NldHRpbmdzX2luaXQAFQ1sbGh0dHBfZmluaXNoABYMbGxodHRwX3BhdXNlABcNbGxodHRwX3Jlc3VtZQAYG2xsaHR0cF9yZXN1bWVfYWZ0ZXJfdXBncmFkZQAZEGxsaHR0cF9nZXRfZXJybm8AGhdsbGh0dHBfZ2V0X2Vycm9yX3JlYXNvbgAbF2xsaHR0cF9zZXRfZXJyb3JfcmVhc29uABwUbGxodHRwX2dldF9lcnJvcl9wb3MAHRFsbGh0dHBfZXJybm9fbmFtZQAeEmxsaHR0cF9tZXRob2RfbmFtZQAfEmxsaHR0cF9zdGF0dXNfbmFtZQAgGmxsaHR0cF9zZXRfbGVu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PgtBhwEMPQtBiAEMPAtBiQEMOwtBigEMOgtBiwEMOQtBjAEMOAtBjQEMNwtBjgEMNgtBjwEMNQtBkAEMNAtBkQEMMwtBkgEMMgtBkwEMMQtBlAEMMAtBlQEMLwtBlgEMLgtBlwEMLQtBmAEMLAtBmQEMKwtBmgEMKgtBmwEMKQtBnAEMKAtBnQEMJwtBngEMJgtBnwEMJQtBoAEMJAtBoQEMIwtBogEMIgtBowEMIQtBpAEMIAtBpQEMHwtBpgEMHgtBpwEMHQtBqAEMHAtBqQEMGwtBqgEMGgtBqwEMGQtBrAEMGAtBrQEMFwtBrgEMFgtBAQwVC0GvAQwUC0GwAQwTC0GxAQwSC0GzAQwRC0GyAQwQC0G0AQwPC0G1AQwOC0G2AQwNC0G3AQwMC0G4AQwLC0G5AQwKC0G6AQwJC0G7AQwIC0HGAQwHC0G8AQwGC0G9AQwFC0G+AQwEC0G/AQwDC0HAAQwCC0HCAQwBC0HBAQshAwNAAkACQAJAAkACQAJAAkACQAJAIAICfwJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJ/AkACQAJAAkACQAJAAkACQAJAAkACQAJAAkAgAgJ/AkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACfwJAAkACfwJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkAC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iQEhAwykAgtBASABLQAAQd8ARw1nGiABQQFqIQEMXgtBigEhAyABIARGDaICIAIoAgAiACAEIAFraiEFIAEgAGtBAWohBgNAIAEtAAAgAEGMzwBqLQAARw1kIABBAUYN+gEgAEEBaiEAIAQgAUEBaiIBRw0ACyACIAU2AgAMogILQYsBIQMgASAERg2hAiACKAIAIgAgBCABa2ohBSABIABrQQJqIQYCQANAIAEtAAAgAEGOzwBqLQAARw1kIABBAkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyiAgsgAkEANgIAIAZBAWohAUECDGULQYwBIQMgASAERg2gAiACKAIAIgAgBCABa2ohBSABIABrQQFqIQYCQANAIAEtAAAgAEHwzwBqLQAARw1jIABBAUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyhAgsgAkEANgIAIAZBAWohAUEfDGQLQY0BIQMgASAERg2fAiACKAIAIgAgBCABa2ohBSABIABrQQFqIQYCQANAIAEtAAAgAEHyzwBqLQAARw1iIABBAUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAygAgsgAkEANgIAIAZBAWohAUEJDGMLIAEgBEYEQEGOASEDDJ8CCwJAAkAgAS0AAEHJAGsOBwBiYmJiYgFiCyABQQFqIQFB+AAhAwyGAgsgAUEBaiEBQfkAIQMMhQILQY8BIQMgASAERg2dAiACKAIAIgAgBCABa2ohBSABIABrQQVqIQYCQANAIAEtAAAgAEGRzwBqLQAARw1gIABBBUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyeAgsgAkEANgIAIAZBAWohAUEYDGELQZABIQMgASAERg2cAiACKAIAIgAgBCABa2ohBSABIABrQQJqIQYCQANAIAEtAAAgAEGXzwBqLQAARw1fIABBAkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAydAgsgAkEANgIAIAZBAWohAUEXDGALQZEBIQMgASAERg2bAiACKAIAIgAgBCABa2ohBSABIABrQQZqIQYCQANAIAEtAAAgAEGazwBqLQAARw1eIABBBkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAycAgsgAkEANgIAIAZBAWohAUEV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JSIARQ0RIAJB5QA2AhwgAiABNgIUIAIgADYCDEEAIQMMtAELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0gIAJB0wA2AhwgAiABNgIUIAIgADYCDEEAIQMMswELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0iIAJB0gA2AhwgAiABNgIUIAIgADYCDEEAIQMMsgELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0OIAJB5QA2AhwgAiABNgIUIAIgADYCDEEAIQMMsQELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0dIAJB0wA2AhwgAiABNgIUIAIgADYCDEEAIQMMsAELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0fIAJB0gA2AhwgAiABNgIUIAIgADYCDEEAIQMMrwELIABBP0cNASABQQFqCyEBQQUhAwyUAQtBACEDIAJBADYCHCACIAE2AhQgAkH9EjYCECACQQc2AgwMrAELIAJBADYCHCACIAE2AhQgAkHcCDYCECACQQc2AgxBACEDDKsBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNByACQeUANgIcIAIgATYCFCACIAA2AgxBACEDDKoBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNFiACQdMANgIcIAIgATYCFCACIAA2AgxBACEDDKkBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNGCACQdIANgIcIAIgATYCFCACIAA2AgxBACEDDKgBCyACQQA2AhwgAiABNgIUIAJBxgo2AhAgAkEHNgIMQQAhAwynAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDQMgAkHlADYCHCACIAE2AhQgAiAANgIMQQAhAwymAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDRIgAkHTADYCHCACIAE2AhQgAiAANgIMQQAhAwylAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDRQgAkHSADYCHCACIAE2AhQgAiAANgIMQQAhAwykAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDQAgAkHlADYCHCACIAE2AhQgAiAANgIMQQAhAwyjAQtB1QAhAwyJAQsgAEEVRwRAIAJBADYCHCACIAE2AhQgAkG5DTYCECACQRo2AgxB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AkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAIABB5ABrDvQDY2IAAWFhYWFhYQIDBAVhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhBgcICQoLDA0OD2FhYWFhEGFhYWFhYWFhYWFhEWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYRITFBUWFxgZGhthYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2YTc4OTphYWFhYWFhYTthYWE8YWFhYT0+P2FhYWFhYWFhQGFhQWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYUJDREVGR0hJSktMTU5PUFFSU2FhYWFhYWFhVFVWV1hZWlthXF1hYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFeYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhX2BhC0HhJw8LQaQhDwtByywPC0H+MQ8LQcAkDwtBqyQPC0GNKA8LQeImDwtBgDAPC0G5Lw8LQdckDwtB7x8PC0HhHw8LQfofDwtB8iAPC0GoLw8LQa4yDwtBiDAPC0HsJw8LQYIiDwtBjh0PC0HQLg8LQcojDwtBxTIPC0HfHA8LQdIcDwtBxCAPC0HXIA8LQaIfDwtB7S4PC0GrMA8LQdQlDwtBzC4PC0H6Lg8LQfwrDwtB0jAPC0HxHQ8LQbsgDwtB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AAADAEGUCAsFBAAAAAUAQaQICwkGAAAABwAAAAgAQdwIC4otSW52YWxpZCBjaGFyIGluIHVybCBxdWVyeQBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX2JvZHkAQ29udGVudC1MZW5ndGggb3ZlcmZsb3cAQ2h1bmsgc2l6ZSBvdmVyZmxvdwBSZXNwb25zZSBvdmVyZmxvdwBJbnZhbGlkIG1ldGhvZCBmb3IgSFRUUC94LnggcmVxdWVzdABJbnZhbGlkIG1ldGhvZCBmb3IgUlRTUC94LnggcmVxdWVzdABFeHBlY3RlZCBTT1VSQ0UgbWV0aG9kIGZvciBJQ0UveC54IHJlcXVlc3QASW52YWxpZCBjaGFyIGluIHVybCBmcmFnbWVudCBzdGFydABFeHBlY3RlZCBkb3QAU3BhbiBjYWxsYmFjayBlcnJvciBpbiBvbl9zdGF0dXMASW52YWxpZCByZXNwb25zZSBzdGF0dXMASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgZXh0ZW5zaW9ucwBVc2VyIGNhbGxiYWNrIGVycm9yAGBvbl9yZXNldGAgY2FsbGJhY2sgZXJyb3IAYG9uX2NodW5rX2hlYWRlcmAgY2FsbGJhY2sgZXJyb3IAYG9uX21lc3NhZ2VfYmVnaW5gIGNhbGxiYWNrIGVycm9yAGBvbl9jaHVua19leHRlbnNpb25fdmFsdWVgIGNhbGxiYWNrIGVycm9yAGBvbl9zdGF0dXNfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl92ZXJzaW9uX2NvbXBsZXRlYCBjYWxsYmFjayBlcnJvcgBgb25fdXJsX2NvbXBsZXRlYCBjYWxsYmFjayBlcnJvcgBgb25fY2h1bmtfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9oZWFkZXJfdmFsdWVfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9tZXNzYWdlX2NvbXBsZXRlYCBjYWxsYmFjayBlcnJvcgBgb25fbWV0aG9kX2NvbXBsZXRlYCBjYWxsYmFjayBlcnJvcgBgb25faGVhZGVyX2ZpZWxkX2NvbXBsZXRlYCBjYWxsYmFjayBlcnJvcgBgb25fY2h1bmtfZXh0ZW5zaW9uX25hbWVgIGNhbGxiYWNrIGVycm9yAFVuZXhwZWN0ZWQgY2hhciBpbiB1cmwgc2VydmVyAEludmFsaWQgaGVhZGVyIHZhbHVlIGNoYXIASW52YWxpZCBoZWFkZXIgZmllbGQgY2hhcgBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX3ZlcnNpb24ASW52YWxpZCBtaW5vciB2ZXJzaW9uAEludmFsaWQgbWFqb3IgdmVyc2lvbgBFeHBlY3RlZCBzcGFjZSBhZnRlciB2ZXJzaW9uAEV4cGVjdGVkIENSTEYgYWZ0ZXIgdmVyc2lvbgBJbnZhbGlkIEhUVFAgdmVyc2lvbgBJbnZhbGlkIGhlYWRlciB0b2tlbgBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX3VybABJbnZhbGlkIGNoYXJhY3RlcnMgaW4gdXJsAFVuZXhwZWN0ZWQgc3RhcnQgY2hhciBpbiB1cmwARG91YmxlIEAgaW4gdXJsAEVtcHR5IENvbnRlbnQtTGVuZ3RoAEludmFsaWQgY2hhcmFjdGVyIGluIENvbnRlbnQtTGVuZ3RoAER1cGxpY2F0ZSBDb250ZW50LUxlbmd0aABJbnZhbGlkIGNoYXIgaW4gdXJsIHBhdGgAQ29udGVudC1MZW5ndGggY2FuJ3QgYmUgcHJlc2VudCB3aXRoIFRyYW5zZmVyLUVuY29kaW5nAEludmFsaWQgY2hhcmFjdGVyIGluIGNodW5rIHNpemUAU3BhbiBjYWxsYmFjayBlcnJvciBpbiBvbl9oZWFkZXJfdmFsdWUAU3BhbiBjYWxsYmFjayBlcnJvciBpbiBvbl9jaHVua19leHRlbnNpb25fdmFsdWUASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgZXh0ZW5zaW9ucyB2YWx1ZQBNaXNzaW5nIGV4cGVjdGVkIExGIGFmdGVyIGhlYWRlciB2YWx1ZQBJbnZhbGlkIGBUcmFuc2Zlci1FbmNvZGluZ2AgaGVhZGVyIHZhbHVlAEludmFsaWQgY2hhcmFjdGVyIGluIGNodW5rIGV4dGVuc2lvbnMgcXVvdGUgdmFsdWUASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgZXh0ZW5zaW9ucyBxdW90ZWQgdmFsdWUAUGF1c2VkIGJ5IG9uX2hlYWRlcnNfY29tcGxldGUASW52YWxpZCBFT0Ygc3RhdGUAb25fcmVzZXQgcGF1c2UAb25fY2h1bmtfaGVhZGVyIHBhdXNlAG9uX21lc3NhZ2VfYmVnaW4gcGF1c2UAb25fY2h1bmtfZXh0ZW5zaW9uX3ZhbHVlIHBhdXNlAG9uX3N0YXR1c19jb21wbGV0ZSBwYXVzZQBvbl92ZXJzaW9uX2NvbXBsZXRlIHBhdXNlAG9uX3VybF9jb21wbGV0ZSBwYXVzZQBvbl9jaHVua19jb21wbGV0ZSBwYXVzZQBvbl9oZWFkZXJfdmFsdWVfY29tcGxldGUgcGF1c2UAb25fbWVzc2FnZV9jb21wbGV0ZSBwYXVzZQBvbl9tZXRob2RfY29tcGxldGUgcGF1c2UAb25faGVhZGVyX2ZpZWxkX2NvbXBsZXRlIHBhdXNlAG9uX2NodW5rX2V4dGVuc2lvbl9uYW1lIHBhdXNlAFVuZXhwZWN0ZWQgc3BhY2UgYWZ0ZXIgc3RhcnQgbGluZQBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX2NodW5rX2V4dGVuc2lvbl9uYW1lAEludmFsaWQgY2hhcmFjdGVyIGluIGNodW5rIGV4dGVuc2lvbnMgbmFtZQBQYXVzZSBvbiBDT05ORUNUL1VwZ3JhZGUAUGF1c2Ugb24gUFJJL1VwZ3JhZGUARXhwZWN0ZWQgSFRUUC8yIENvbm5lY3Rpb24gUHJlZmFjZQBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX21ldGhvZABFeHBlY3RlZCBzcGFjZSBhZnRlciBtZXRob2QAU3BhbiBjYWxsYmFjayBlcnJvciBpbiBvbl9oZWFkZXJfZmllbGQAUGF1c2VkAEludmFsaWQgd29yZCBlbmNvdW50ZXJlZABJbnZhbGlkIG1ldGhvZCBlbmNvdW50ZXJlZABVbmV4cGVjdGVkIGNoYXIgaW4gdXJsIHNjaGVtYQBSZXF1ZXN0IGhhcyBpbnZhbGlkIGBUcmFuc2Zlci1FbmNvZGluZ2AAU1dJVENIX1BST1hZAFVTRV9QUk9YWQBNS0FDVElWSVRZAFVOUFJPQ0VTU0FCTEVfRU5USVRZAENPUFkATU9WRURfUEVSTUFORU5UTFkAVE9PX0VBUkxZAE5PVElGWQBGQUlMRURfREVQRU5ERU5DWQBCQURfR0FURVdBWQBQTEFZAFBVVABDSEVDS09VVABHQVRFV0FZX1RJTUVPVVQAUkVRVUVTVF9USU1FT1VUAE5FVFdPUktfQ09OTkVDVF9USU1FT1VUAENPTk5FQ1RJT05fVElNRU9VVABMT0dJTl9USU1FT1VUAE5FVFdPUktfUkVBRF9USU1FT1VUAFBPU1QATUlTRElSRUNURURfUkVRVUVTVABDTElFTlRfQ0xPU0VEX1JFUVVFU1QAQ0xJRU5UX0NMT1NFRF9MT0FEX0JBTEFOQ0VEX1JFUVVFU1QAQkFEX1JFUVVFU1QASFRUUF9SRVFVRVNUX1NFTlRfVE9fSFRUUFNfUE9SVABSRVBPUlQASU1fQV9URUFQT1QAUkVTRVRfQ09OVEVOVABOT19DT05URU5UAFBBUlRJQUxfQ09OVEVOVABIUEVfSU5WQUxJRF9DT05TVEFOVABIUEVfQ0JfUkVTRVQAR0VUAEhQRV9TVFJJQ1QAQ09ORkxJQ1QAVEVNUE9SQVJZX1JFRElSRUNUAFBFUk1BTkVOVF9SRURJUkVDVABDT05ORUNUAE1VTFRJX1NUQVRVUwBIUEVfSU5WQUxJRF9TVEFUVVMAVE9PX01BTllfUkVRVUVTVFMARUFSTFlfSElOVFMAVU5BVkFJTEFCTEVfRk9SX0xFR0FMX1JFQVNPTlMAT1BUSU9OUwBTV0lUQ0hJTkdfUFJPVE9DT0xTAFZBUklBTlRfQUxTT19ORUdPVElBVEVTAE1VTFRJUExFX0NIT0lDRVMASU5URVJOQUxfU0VSVkVSX0VSUk9SAFdFQl9TRVJWRVJfVU5LTk9XTl9FUlJPUgBSQUlMR1VOX0VSUk9SAElERU5USVRZX1BST1ZJREVSX0FVVEhFTlRJQ0FUSU9OX0VSUk9SAFNTTF9DRVJUSUZJQ0FURV9FUlJPUgBJTlZBTElEX1hfRk9SV0FSREVEX0ZPUgBTRVRfUEFSQU1FVEVSAEdFVF9QQVJBTUVURVIASFBFX1VTRVIAU0VFX09USEVSAEhQRV9DQl9DSFVOS19IRUFERVIATUtDQUxFTkRBUgBTRVRVUABXRUJfU0VSVkVSX0lTX0RPV04AVEVBUkRPV04ASFBFX0NMT1NFRF9DT05ORUNUSU9OAEhFVVJJU1RJQ19FWFBJUkFUSU9OAERJU0NPTk5FQ1RFRF9PUEVSQVRJT04ATk9OX0FVVEhPUklUQVRJVkVfSU5GT1JNQVRJT04ASFBFX0lOVkFMSURfVkVSU0lPTgBIUEVfQ0JfTUVTU0FHRV9CRUdJTgBTSVRFX0lTX0ZST1pFTgBIUEVfSU5WQUxJRF9IRUFERVJfVE9LRU4ASU5WQUxJRF9UT0tFTgBGT1JCSURERU4ARU5IQU5DRV9ZT1VSX0NBTE0ASFBFX0lOVkFMSURfVVJMAEJMT0NLRURfQllfUEFSRU5UQUxfQ09OVFJPTABNS0NPTABBQ0wASFBFX0lOVEVSTkFMAFJFUVVFU1RfSEVBREVSX0ZJRUxEU19UT09fTEFSR0VfVU5PRkZJQ0lBTABIUEVfT0sAVU5MSU5LAFVOTE9DSwBQUkkAUkVUUllfV0lUSABIUEVfSU5WQUxJRF9DT05URU5UX0xFTkdUSABIUEVfVU5FWFBFQ1RFRF9DT05URU5UX0xFTkdUSABGTFVTSABQUk9QUEFUQ0gATS1TRUFSQ0gAVVJJX1RPT19MT05HAFBST0NFU1NJTkcATUlTQ0VMTEFORU9VU19QRVJTSVNURU5UX1dBUk5JTkcATUlTQ0VMTEFORU9VU19XQVJOSU5HAEhQRV9JTlZBTElEX1RSQU5TRkVSX0VOQ09ESU5HAEV4cGVjdGVkIENSTEYASFBFX0lOVkFMSURfQ0hVTktfU0laRQBNT1ZFAENPTlRJTlVFAEhQRV9DQl9TVEFUVVNfQ09NUExFVEUASFBFX0NCX0hFQURFUlNfQ09NUExFVEUASFBFX0NCX1ZFUlNJT05fQ09NUExFVEUASFBFX0NCX1VSTF9DT01QTEVURQBIUEVfQ0JfQ0hVTktfQ09NUExFVEUASFBFX0NCX0hFQURFUl9WQUxVRV9DT01QTEVURQBIUEVfQ0JfQ0hVTktfRVhURU5TSU9OX1ZBTFVFX0NPTVBMRVRFAEhQRV9DQl9DSFVOS19FWFRFTlNJT05fTkFNRV9DT01QTEVURQBIUEVfQ0JfTUVTU0FHRV9DT01QTEVURQBIUEVfQ0JfTUVUSE9EX0NPTVBMRVRFAEhQRV9DQl9IRUFERVJfRklFTERfQ09NUExFVEUAREVMRVRFAEhQRV9JTlZBTElEX0VPRl9TVEFURQBJTlZBTElEX1NTTF9DRVJUSUZJQ0FURQBQQVVTRQBOT19SRVNQT05TRQBVTlNVUFBPUlRFRF9NRURJQV9UWVBFAEdPTkUATk9UX0FDQ0VQVEFCTEUAU0VSVklDRV9VTkFWQUlMQUJMRQBSQU5HRV9OT1RfU0FUSVNGSUFCTEUAT1JJR0lOX0lTX1VOUkVBQ0hBQkxFAFJFU1BPTlNFX0lTX1NUQUxFAFBVUkdFAE1FUkdFAFJFUVVFU1RfSEVBREVSX0ZJRUxEU19UT09fTEFSR0UAUkVRVUVTVF9IRUFERVJfVE9PX0xBUkdFAFBBWUxPQURfVE9PX0xBUkdFAElOU1VGRklDSUVOVF9TVE9SQUdFAEhQRV9QQVVTRURfVVBHUkFERQBIUEVfUEFVU0VEX0gyX1VQR1JBREUAU09VUkNFAEFOTk9VTkNFAFRSQUNFAEhQRV9VTkVYUEVDVEVEX1NQQUNFAERFU0NSSUJFAFVOU1VCU0NSSUJFAFJFQ09SRABIUEVfSU5WQUxJRF9NRVRIT0QATk9UX0ZPVU5EAFBST1BGSU5EAFVOQklORABSRUJJTkQAVU5BVVRIT1JJWkVEAE1FVEhPRF9OT1RfQUxMT1dFRABIVFRQX1ZFUlNJT05fTk9UX1NVUFBPUlRFRABBTFJFQURZX1JFUE9SVEVEAEFDQ0VQVEVEAE5PVF9JTVBMRU1FTlRFRABMT09QX0RFVEVDVEVEAEhQRV9DUl9FWFBFQ1RFRABIUEVfTEZfRVhQRUNURUQAQ1JFQVRFRABJTV9VU0VEAEhQRV9QQVVTRUQAVElNRU9VVF9PQ0NVUkVEAFBBWU1FTlRfUkVRVUlSRUQAUFJFQ09ORElUSU9OX1JFUVVJUkVEAFBST1hZX0FVVEhFTlRJQ0FUSU9OX1JFUVVJUkVEAE5FVFdPUktfQVVUSEVOVElDQVRJT05fUkVRVUlSRUQATEVOR1RIX1JFUVVJUkVEAFNTTF9DRVJUSUZJQ0FURV9SRVFVSVJFRABVUEdSQURFX1JFUVVJUkVEAFBBR0VfRVhQSVJFRABQUkVDT05ESVRJT05fRkFJTEVEAEVYUEVDVEFUSU9OX0ZBSUxFRABSRVZBTElEQVRJT05fRkFJTEVEAFNTTF9IQU5EU0hBS0VfRkFJTEVEAExPQ0tFRABUUkFOU0ZPUk1BVElPTl9BUFBMSUVEAE5PVF9NT0RJRklFRABOT1RfRVhURU5ERUQAQkFORFdJRFRIX0xJTUlUX0VYQ0VFREVEAFNJVEVfSVNfT1ZFUkxPQURFRABIRUFEAEV4cGVjdGVkIEhUVFAvAABeEwAAJhMAADAQAADwFwAAnRMAABUSAAA5FwAA8BIAAAoQAAB1EgAArRIAAIITAABPFAAAfxAAAKAVAAAjFAAAiRIAAIsUAABNFQAA1BEAAM8UAAAQGAAAyRYAANwWAADBEQAA4BcAALsUAAB0FAAAfBUAAOUUAAAIFwAAHxAAAGUVAACjFAAAKBUAAAIVAACZFQAALBAAAIsZAABPDwAA1A4AAGoQAADOEAAAAhcAAIkOAABuEwAAHBMAAGYUAABWFwAAwRMAAM0TAABsEwAAaBcAAGYXAABfFwAAIhMAAM4PAABpDgAA2A4AAGMWAADLEwAAqg4AACgXAAAmFwAAxRMAAF0WAADoEQAAZxMAAGUTAADyFgAAcxMAAB0XAAD5FgAA8xEAAM8OAADOFQAADBIAALMRAAClEQAAYRAAADIXAAC7EwBB+TULAQEAQZA2C+ABAQECAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAQf03CwEBAEGROAteAgMCAgICAgAAAgIAAgIAAgICAgICAgICAgAEAAAAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgAAAAICAgICAgICAgICAgICAgICAgICAgICAgICAgICAAIAAgBB/TkLAQEAQZE6C14CAAICAgICAAACAgACAgACAgICAgICAgICAAMABAAAAAICAgICAgICAgICAgICAgICAgICAgICAgICAAAAAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAAgACAEHwOwsNbG9zZWVlcC1hbGl2ZQBBiTwLAQEAQaA8C+ABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAQYk+CwEBAEGgPgvnAQEBAQEBAQEBAQEBAQIBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBY2h1bmtlZABBsMAAC18BAQABAQEBAQAAAQEAAQEAAQEBAQEBAQEBAQAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEAAQBBkMIACyFlY3Rpb25lbnQtbGVuZ3Rob25yb3h5LWNvbm5lY3Rpb24AQcDCAAstcmFuc2Zlci1lbmNvZGluZ3BncmFkZQ0KDQoNClNNDQoNClRUUC9DRS9UU1AvAEH5wgALBQECAAEDAEGQwwAL4AEEAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQBB+cQACwUBAgABAwBBkMUAC+ABBAEBBQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAQfnGAAsEAQAAAQBBkccAC98BAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQBB+sgACwQBAAACAEGQyQALXwMEAAAEBAQEBAQEBAQEBAUEBAQEBAQEBAQEBAQABAAGBwQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEAAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAEAEH6ygALBAEAAAEAQZDLAAsBAQBBqssAC0ECAAAAAAAAAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAAAAAAAADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwBB+swACwQBAAABAEGQzQALAQEAQZrNAAsGAgAAAAACAEGxzQALOgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAAAAAAAAAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAQfDOAAuWAU5PVU5DRUVDS09VVE5FQ1RFVEVDUklCRUxVU0hFVEVBRFNFQVJDSFJHRUNUSVZJVFlMRU5EQVJWRU9USUZZUFRJT05TQ0hTRUFZU1RBVENIR0VPUkRJUkVDVE9SVFJDSFBBUkFNRVRFUlVSQ0VCU0NSSUJFQVJET1dOQUNFSU5ETktDS1VCU0NSSUJFSFRUUC9BRFRQLw==", "base64");
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/constants.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/constants.js
 var require_constants9 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/constants.js"(exports2, module2) {
     "use strict";
     var corsSafeListedMethods = (
       /** @type {const} */
@@ -38931,9 +39373,9 @@ var require_constants9 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/global.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/global.js
 var require_global3 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/global.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/global.js"(exports2, module2) {
     "use strict";
     var globalOrigin = Symbol.for("undici.globalOrigin.1");
     function getGlobalOrigin() {
@@ -38967,9 +39409,9 @@ var require_global3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/data-url.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/data-url.js
 var require_data_url = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/data-url.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/data-url.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var encoder = new TextEncoder();
@@ -39321,9 +39763,9 @@ var require_data_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/webidl.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/webidl.js
 var require_webidl2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/webidl.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/webidl.js"(exports2, module2) {
     "use strict";
     var { types, inspect: inspect2 } = require("node:util");
     var { markAsUncloneable } = require("node:worker_threads");
@@ -39740,9 +40182,9 @@ var require_webidl2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/util.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/util.js
 var require_util10 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/util.js"(exports2, module2) {
     "use strict";
     var { Transform } = require("node:stream");
     var zlib = require("node:zlib");
@@ -40599,9 +41041,9 @@ var require_util10 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/symbols.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/symbols.js
 var require_symbols7 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
       kUrl: Symbol("url"),
@@ -40613,9 +41055,9 @@ var require_symbols7 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/file.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/file.js
 var require_file2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/file.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/file.js"(exports2, module2) {
     "use strict";
     var { Blob: Blob2, File } = require("node:buffer");
     var { kState } = require_symbols7();
@@ -40676,9 +41118,9 @@ var require_file2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/formdata.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/formdata.js
 var require_formdata2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/formdata.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/formdata.js"(exports2, module2) {
     "use strict";
     var { isBlobLike, iteratorMixin } = require_util10();
     var { kState } = require_symbols7();
@@ -40823,9 +41265,9 @@ var require_formdata2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/formdata-parser.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/formdata-parser.js
 var require_formdata_parser = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/formdata-parser.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/formdata-parser.js"(exports2, module2) {
     "use strict";
     var { isUSVString, bufferToLowerCasedHeaderName } = require_util9();
     var { utf8DecodeBytes } = require_util10();
@@ -41076,9 +41518,9 @@ var require_formdata_parser = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/body.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/body.js
 var require_body2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/body.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/body.js"(exports2, module2) {
     "use strict";
     var util = require_util9();
     var {
@@ -41390,9 +41832,9 @@ Content-Type: ${value.type || "application/octet-stream"}\r
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/client-h1.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client-h1.js
 var require_client_h1 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/client-h1.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client-h1.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var util = require_util9();
@@ -41402,6 +41844,7 @@ var require_client_h1 = __commonJS({
       RequestContentLengthMismatchError,
       ResponseContentLengthMismatchError,
       RequestAbortedError,
+      InvalidArgumentError,
       HeadersTimeoutError,
       HeadersOverflowError,
       SocketError,
@@ -41448,6 +41891,9 @@ var require_client_h1 = __commonJS({
     var FastBuffer = Buffer[Symbol.species];
     var addListener = util.addListener;
     var removeAllListeners = util.removeAllListeners;
+    var kIdleSocketValidation = Symbol("kIdleSocketValidation");
+    var kIdleSocketValidationTimeout = Symbol("kIdleSocketValidationTimeout");
+    var kSocketUsed = Symbol("kSocketUsed");
     var extractBody;
     async function lazyllhttp() {
       const llhttpWasmData = process.env.JEST_WORKER_ID ? require_llhttp_wasm2() : void 0;
@@ -41610,23 +42056,54 @@ var require_client_h1 = __commonJS({
             currentBufferRef = null;
           }
           const offset = llhttp.llhttp_get_error_pos(this.ptr) - currentBufferPtr;
-          if (ret === constants.ERROR.PAUSED_UPGRADE) {
-            this.onUpgrade(data.slice(offset));
-          } else if (ret === constants.ERROR.PAUSED) {
-            this.paused = true;
-            socket.unshift(data.slice(offset));
-          } else if (ret !== constants.ERROR.OK) {
-            const ptr = llhttp.llhttp_get_error_reason(this.ptr);
-            let message = "";
-            if (ptr) {
-              const len = new Uint8Array(llhttp.memory.buffer, ptr).indexOf(0);
-              message = "Response does not match the HTTP/1.1 protocol (" + Buffer.from(llhttp.memory.buffer, ptr, len).toString() + ")";
+          if (ret !== constants.ERROR.OK) {
+            const body = data.subarray(offset);
+            if (ret === constants.ERROR.PAUSED_UPGRADE) {
+              this.onUpgrade(body);
+            } else if (ret === constants.ERROR.PAUSED) {
+              this.paused = true;
+              socket.unshift(body);
+            } else {
+              throw this.createError(ret, body);
             }
-            throw new HTTPParserError(message, constants.ERROR[ret], data.slice(offset));
           }
         } catch (err) {
           util.destroy(socket, err);
         }
+      }
+      finish() {
+        assert(currentParser === null);
+        assert(this.ptr != null);
+        assert(!this.paused);
+        const { llhttp } = this;
+        let ret;
+        try {
+          currentParser = this;
+          ret = llhttp.llhttp_finish(this.ptr);
+        } finally {
+          currentParser = null;
+        }
+        if (ret === constants.ERROR.OK) {
+          return null;
+        }
+        if (ret === constants.ERROR.PAUSED || ret === constants.ERROR.PAUSED_UPGRADE) {
+          this.paused = true;
+          return null;
+        }
+        return this.createError(ret, EMPTY_BUF);
+      }
+      createError(ret, data) {
+        const { llhttp, contentLength, bytesRead } = this;
+        if (contentLength && bytesRead !== parseInt(contentLength, 10)) {
+          return new ResponseContentLengthMismatchError();
+        }
+        const ptr = llhttp.llhttp_get_error_reason(this.ptr);
+        let message = "";
+        if (ptr) {
+          const len = new Uint8Array(llhttp.memory.buffer, ptr).indexOf(0);
+          message = "Response does not match the HTTP/1.1 protocol (" + Buffer.from(llhttp.memory.buffer, ptr, len).toString() + ")";
+        }
+        return new HTTPParserError(message, constants.ERROR[ret], data);
       }
       destroy() {
         assert(this.ptr != null);
@@ -41645,6 +42122,10 @@ var require_client_h1 = __commonJS({
       onMessageBegin() {
         const { socket, client } = this;
         if (socket.destroyed) {
+          return -1;
+        }
+        if (client[kRunning] === 0) {
+          util.destroy(socket, new SocketError("bad response", util.getSocketInfo(socket)));
           return -1;
         }
         const request = client[kQueue][client[kRunningIdx]];
@@ -41724,6 +42205,10 @@ var require_client_h1 = __commonJS({
       onHeadersComplete(statusCode, upgrade, shouldKeepAlive) {
         const { client, socket, headers, statusText } = this;
         if (socket.destroyed) {
+          return -1;
+        }
+        if (client[kRunning] === 0) {
+          util.destroy(socket, new SocketError("bad response", util.getSocketInfo(socket)));
           return -1;
         }
         const request = client[kQueue][client[kRunningIdx]];
@@ -41851,6 +42336,7 @@ var require_client_h1 = __commonJS({
         }
         request.onComplete(headers);
         client[kQueue][client[kRunningIdx]++] = null;
+        socket[kSocketUsed] = true;
         if (socket[kWriting]) {
           assert(client[kRunning] === 0);
           util.destroy(socket, new InformationalError("reset"));
@@ -41894,12 +42380,19 @@ var require_client_h1 = __commonJS({
       socket[kWriting] = false;
       socket[kReset2] = false;
       socket[kBlocking] = false;
+      socket[kIdleSocketValidation] = 0;
+      socket[kIdleSocketValidationTimeout] = null;
+      socket[kSocketUsed] = false;
       socket[kParser] = new Parser2(client, socket, llhttpInstance);
       addListener(socket, "error", function(err) {
         assert(err.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
         const parser2 = this[kParser];
         if (err.code === "ECONNRESET" && parser2.statusCode && !parser2.shouldKeepAlive) {
-          parser2.onMessageComplete();
+          const parserErr = parser2.finish();
+          if (parserErr) {
+            this[kError] = parserErr;
+            this[kClient][kOnError](parserErr);
+          }
           return;
         }
         this[kError] = err;
@@ -41914,7 +42407,10 @@ var require_client_h1 = __commonJS({
       addListener(socket, "end", function() {
         const parser2 = this[kParser];
         if (parser2.statusCode && !parser2.shouldKeepAlive) {
-          parser2.onMessageComplete();
+          const parserErr = parser2.finish();
+          if (parserErr) {
+            util.destroy(this, parserErr);
+          }
           return;
         }
         util.destroy(this, new SocketError("other side closed", util.getSocketInfo(this)));
@@ -41922,9 +42418,10 @@ var require_client_h1 = __commonJS({
       addListener(socket, "close", function() {
         const client2 = this[kClient];
         const parser2 = this[kParser];
+        clearIdleSocketValidation(this);
         if (parser2) {
           if (!this[kError] && parser2.statusCode && !parser2.shouldKeepAlive) {
-            parser2.onMessageComplete();
+            this[kError] = parser2.finish() || this[kError];
           }
           this[kParser].destroy();
           this[kParser] = null;
@@ -41973,7 +42470,7 @@ var require_client_h1 = __commonJS({
           return socket.destroyed;
         },
         busy(request) {
-          if (socket[kWriting] || socket[kReset2] || socket[kBlocking]) {
+          if (socket[kWriting] || socket[kReset2] || socket[kBlocking] || socket[kIdleSocketValidation] === 1) {
             return true;
           }
           if (request) {
@@ -41991,6 +42488,24 @@ var require_client_h1 = __commonJS({
         }
       };
     }
+    function clearIdleSocketValidation(socket) {
+      if (socket[kIdleSocketValidationTimeout]) {
+        clearTimeout(socket[kIdleSocketValidationTimeout]);
+        socket[kIdleSocketValidationTimeout] = null;
+      }
+      socket[kIdleSocketValidation] = 0;
+    }
+    function scheduleIdleSocketValidation(client, socket) {
+      socket[kIdleSocketValidation] = 1;
+      socket[kIdleSocketValidationTimeout] = setTimeout(() => {
+        socket[kIdleSocketValidationTimeout] = null;
+        socket[kIdleSocketValidation] = 2;
+        if (client[kSocket] === socket && !socket.destroyed) {
+          client[kResume]();
+        }
+      }, 0);
+      socket[kIdleSocketValidationTimeout].unref?.();
+    }
     function resumeH1(client) {
       const socket = client[kSocket];
       if (socket && !socket.destroyed) {
@@ -42002,6 +42517,29 @@ var require_client_h1 = __commonJS({
         } else if (socket[kNoRef] && socket.ref) {
           socket.ref();
           socket[kNoRef] = false;
+        }
+        if (client[kRunning] === 0 && client[kPending] > 0 && socket[kSocketUsed]) {
+          if (socket[kIdleSocketValidation] === 0) {
+            scheduleIdleSocketValidation(client, socket);
+            socket[kParser].readMore();
+            if (socket.destroyed) {
+              return;
+            }
+            return;
+          }
+          if (socket[kIdleSocketValidation] === 1) {
+            socket[kParser].readMore();
+            if (socket.destroyed) {
+              return;
+            }
+            return;
+          }
+        }
+        if (client[kRunning] === 0) {
+          socket[kParser].readMore();
+          if (socket.destroyed) {
+            return;
+          }
         }
         if (client[kSize] === 0) {
           if (socket[kParser].timeoutType !== TIMEOUT_KEEP_ALIVE) {
@@ -42033,8 +42571,16 @@ var require_client_h1 = __commonJS({
         }
         body = bodyStream.stream;
         contentLength = bodyStream.length;
-      } else if (util.isBlobLike(body) && request.contentType == null && body.type) {
-        headers.push("content-type", body.type);
+      } else if (util.isBlobLike(body) && request.contentType == null) {
+        const contentType = body.type;
+        if (contentType) {
+          const contentTypeValue = `${contentType}`;
+          if (!util.isValidHeaderValue(contentTypeValue)) {
+            util.errorRequest(client, request, new InvalidArgumentError("invalid content-type header"));
+            return false;
+          }
+          headers.push("content-type", contentTypeValue);
+        }
       }
       if (body && typeof body.read === "function") {
         body.read(0);
@@ -42055,6 +42601,7 @@ var require_client_h1 = __commonJS({
         process.emitWarning(new RequestContentLengthMismatchError());
       }
       const socket = client[kSocket];
+      clearIdleSocketValidation(socket);
       const abort = (err) => {
         if (request.aborted || request.completed) {
           return;
@@ -42410,9 +42957,9 @@ ${len.toString(16)}\r
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/client-h2.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client-h2.js
 var require_client_h2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/client-h2.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client-h2.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { pipeline } = require("node:stream");
@@ -42952,9 +43499,9 @@ var require_client_h2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/handler/redirect-handler.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/redirect-handler.js
 var require_redirect_handler = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/handler/redirect-handler.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/redirect-handler.js"(exports2, module2) {
     "use strict";
     var util = require_util9();
     var { kBodyUsed } = require_symbols6();
@@ -43111,9 +43658,9 @@ var require_redirect_handler = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/interceptor/redirect-interceptor.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/redirect-interceptor.js
 var require_redirect_interceptor = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/interceptor/redirect-interceptor.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/redirect-interceptor.js"(exports2, module2) {
     "use strict";
     var RedirectHandler = require_redirect_handler();
     function createRedirectInterceptor({ maxRedirections: defaultMaxRedirections }) {
@@ -43133,9 +43680,9 @@ var require_redirect_interceptor = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/client.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client.js
 var require_client2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/client.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var net = require("node:net");
@@ -43634,9 +44181,9 @@ var require_client2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/fixed-queue.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/fixed-queue.js
 var require_fixed_queue2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/fixed-queue.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/fixed-queue.js"(exports2, module2) {
     "use strict";
     var kSize = 2048;
     var kMask = kSize - 1;
@@ -43691,9 +44238,9 @@ var require_fixed_queue2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/pool-stats.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool-stats.js
 var require_pool_stats2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/pool-stats.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool-stats.js"(exports2, module2) {
     var { kFree, kConnected, kPending, kQueued, kRunning, kSize } = require_symbols6();
     var kPool = Symbol("pool");
     var PoolStats = class {
@@ -43723,9 +44270,9 @@ var require_pool_stats2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/pool-base.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool-base.js
 var require_pool_base2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/pool-base.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool-base.js"(exports2, module2) {
     "use strict";
     var DispatcherBase = require_dispatcher_base2();
     var FixedQueue = require_fixed_queue2();
@@ -43878,9 +44425,9 @@ var require_pool_base2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/pool.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool.js
 var require_pool2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/pool.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool.js"(exports2, module2) {
     "use strict";
     var {
       PoolBase,
@@ -43969,9 +44516,9 @@ var require_pool2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/balanced-pool.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/balanced-pool.js
 var require_balanced_pool2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/balanced-pool.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/balanced-pool.js"(exports2, module2) {
     "use strict";
     var {
       BalancedPoolMissingUpstreamError,
@@ -44114,9 +44661,9 @@ var require_balanced_pool2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/agent.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/agent.js
 var require_agent2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/agent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/agent.js"(exports2, module2) {
     "use strict";
     var { InvalidArgumentError } = require_errors3();
     var { kClients, kRunning, kClose, kDestroy, kDispatch, kInterceptors } = require_symbols6();
@@ -44211,9 +44758,9 @@ var require_agent2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/proxy-agent.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/proxy-agent.js
 var require_proxy_agent2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/proxy-agent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/proxy-agent.js"(exports2, module2) {
     "use strict";
     var { kProxy, kClose, kDestroy, kDispatch, kInterceptors } = require_symbols6();
     var { URL: URL2 } = require("node:url");
@@ -44435,9 +44982,9 @@ var require_proxy_agent2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/env-http-proxy-agent.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/env-http-proxy-agent.js
 var require_env_http_proxy_agent = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/env-http-proxy-agent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/env-http-proxy-agent.js"(exports2, module2) {
     "use strict";
     var DispatcherBase = require_dispatcher_base2();
     var { kClose, kDestroy, kClosed, kDestroyed, kDispatch, kNoProxyAgent, kHttpProxyAgent, kHttpsProxyAgent } = require_symbols6();
@@ -44571,9 +45118,9 @@ var require_env_http_proxy_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/handler/retry-handler.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/retry-handler.js
 var require_retry_handler = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/handler/retry-handler.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/retry-handler.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { kRetryHandlerDefaultRetry } = require_symbols6();
@@ -44587,6 +45134,24 @@ var require_retry_handler = __commonJS({
     function calculateRetryAfterHeader(retryAfter) {
       const current = Date.now();
       return new Date(retryAfter).getTime() - current;
+    }
+    function validatePartialResponseContentLength(headers, range, statusCode, retryCount) {
+      const contentLength = headers["content-length"];
+      if (contentLength == null) {
+        return null;
+      }
+      if (!Number.isFinite(range.start) || !Number.isFinite(range.end)) {
+        return null;
+      }
+      const length = Number(contentLength);
+      const expectedLength = range.end - range.start + 1;
+      if (!Number.isFinite(length) || length !== expectedLength) {
+        return new RequestRetryError("Content-Length mismatch", statusCode, {
+          headers,
+          data: { count: retryCount }
+        });
+      }
+      return null;
     }
     var RetryHandler = class _RetryHandler {
       constructor(opts, handlers) {
@@ -44761,6 +45326,11 @@ var require_retry_handler = __commonJS({
             );
             return false;
           }
+          const contentLengthError = validatePartialResponseContentLength(headers, contentRange, statusCode, this.retryCount);
+          if (contentLengthError != null) {
+            this.abort(contentLengthError);
+            return false;
+          }
           const { start, size, end = size - 1 } = contentRange;
           assert(this.start === start, "content-range mismatch");
           assert(this.end == null || this.end === end, "content-range mismatch");
@@ -44777,6 +45347,11 @@ var require_retry_handler = __commonJS({
                 resume,
                 statusMessage
               );
+            }
+            const contentLengthError = validatePartialResponseContentLength(headers, range, statusCode, this.retryCount);
+            if (contentLengthError != null) {
+              this.abort(contentLengthError);
+              return false;
             }
             const { start, size, end = size - 1 } = range;
             assert(
@@ -44870,9 +45445,9 @@ var require_retry_handler = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/retry-agent.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/retry-agent.js
 var require_retry_agent = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/dispatcher/retry-agent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/retry-agent.js"(exports2, module2) {
     "use strict";
     var Dispatcher = require_dispatcher2();
     var RetryHandler = require_retry_handler();
@@ -44905,9 +45480,9 @@ var require_retry_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/readable.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/readable.js
 var require_readable2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/readable.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/readable.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { Readable } = require("node:stream");
@@ -45198,9 +45773,9 @@ var require_readable2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/util.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/util.js
 var require_util11 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/util.js"(exports2, module2) {
     var assert = require("node:assert");
     var {
       ResponseStatusCodeError
@@ -45259,9 +45834,9 @@ var require_util11 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/api-request.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-request.js
 var require_api_request2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/api-request.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-request.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { Readable } = require_readable2();
@@ -45445,9 +46020,9 @@ var require_api_request2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/abort-signal.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/abort-signal.js
 var require_abort_signal2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/abort-signal.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/abort-signal.js"(exports2, module2) {
     var { addAbortListener } = require_util9();
     var { RequestAbortedError } = require_errors3();
     var kListener = Symbol("kListener");
@@ -45496,9 +46071,9 @@ var require_abort_signal2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/api-stream.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-stream.js
 var require_api_stream2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/api-stream.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-stream.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { finished, PassThrough } = require("node:stream");
@@ -45669,9 +46244,9 @@ var require_api_stream2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/api-pipeline.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-pipeline.js
 var require_api_pipeline2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/api-pipeline.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-pipeline.js"(exports2, module2) {
     "use strict";
     var {
       Readable,
@@ -45869,9 +46444,9 @@ var require_api_pipeline2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/api-upgrade.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-upgrade.js
 var require_api_upgrade2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/api-upgrade.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-upgrade.js"(exports2, module2) {
     "use strict";
     var { InvalidArgumentError, SocketError } = require_errors3();
     var { AsyncResource } = require("node:async_hooks");
@@ -45961,9 +46536,9 @@ var require_api_upgrade2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/api-connect.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-connect.js
 var require_api_connect2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/api-connect.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-connect.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { AsyncResource } = require("node:async_hooks");
@@ -46051,9 +46626,9 @@ var require_api_connect2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/index.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/index.js
 var require_api2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/api/index.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/index.js"(exports2, module2) {
     "use strict";
     module2.exports.request = require_api_request2();
     module2.exports.stream = require_api_stream2();
@@ -46063,9 +46638,9 @@ var require_api2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-errors.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-errors.js
 var require_mock_errors2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-errors.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-errors.js"(exports2, module2) {
     "use strict";
     var { UndiciError } = require_errors3();
     var kMockNotMatchedError = Symbol.for("undici.error.UND_MOCK_ERR_MOCK_NOT_MATCHED");
@@ -46088,9 +46663,9 @@ var require_mock_errors2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-symbols.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-symbols.js
 var require_mock_symbols2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
       kAgent: Symbol("agent"),
@@ -46116,9 +46691,9 @@ var require_mock_symbols2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-utils.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-utils.js
 var require_mock_utils2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-utils.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-utils.js"(exports2, module2) {
     "use strict";
     var { MockNotMatchedError } = require_mock_errors2();
     var {
@@ -46412,9 +46987,9 @@ var require_mock_utils2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-interceptor.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-interceptor.js
 var require_mock_interceptor2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-interceptor.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-interceptor.js"(exports2, module2) {
     "use strict";
     var { getResponseData, buildKey, addMockDispatch } = require_mock_utils2();
     var {
@@ -46574,9 +47149,9 @@ var require_mock_interceptor2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-client.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-client.js
 var require_mock_client2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-client.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-client.js"(exports2, module2) {
     "use strict";
     var { promisify } = require("node:util");
     var Client = require_client2();
@@ -46627,9 +47202,9 @@ var require_mock_client2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-pool.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-pool.js
 var require_mock_pool2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-pool.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-pool.js"(exports2, module2) {
     "use strict";
     var { promisify } = require("node:util");
     var Pool = require_pool2();
@@ -46680,9 +47255,9 @@ var require_mock_pool2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/pluralizer.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/pluralizer.js
 var require_pluralizer2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/pluralizer.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/pluralizer.js"(exports2, module2) {
     "use strict";
     var singulars = {
       pronoun: "it",
@@ -46711,9 +47286,9 @@ var require_pluralizer2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/pending-interceptors-formatter.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/pending-interceptors-formatter.js
 var require_pending_interceptors_formatter2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/pending-interceptors-formatter.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/pending-interceptors-formatter.js"(exports2, module2) {
     "use strict";
     var { Transform } = require("node:stream");
     var { Console } = require("node:console");
@@ -46752,9 +47327,9 @@ var require_pending_interceptors_formatter2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-agent.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-agent.js
 var require_mock_agent2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/mock/mock-agent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-agent.js"(exports2, module2) {
     "use strict";
     var { kClients } = require_symbols6();
     var Agent = require_agent2();
@@ -46882,9 +47457,9 @@ ${pendingInterceptorsFormatter.format(pending)}
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/global.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/global.js
 var require_global4 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/global.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/global.js"(exports2, module2) {
     "use strict";
     var globalDispatcher = Symbol.for("undici.globalDispatcher.1");
     var { InvalidArgumentError } = require_errors3();
@@ -46913,9 +47488,9 @@ var require_global4 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/handler/decorator-handler.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/decorator-handler.js
 var require_decorator_handler = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/handler/decorator-handler.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/decorator-handler.js"(exports2, module2) {
     "use strict";
     module2.exports = class DecoratorHandler {
       #handler;
@@ -46953,9 +47528,9 @@ var require_decorator_handler = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/interceptor/redirect.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/redirect.js
 var require_redirect = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/interceptor/redirect.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/redirect.js"(exports2, module2) {
     "use strict";
     var RedirectHandler = require_redirect_handler();
     module2.exports = (opts) => {
@@ -46979,9 +47554,9 @@ var require_redirect = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/interceptor/retry.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/retry.js
 var require_retry = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/interceptor/retry.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/retry.js"(exports2, module2) {
     "use strict";
     var RetryHandler = require_retry_handler();
     module2.exports = (globalOpts) => {
@@ -47003,9 +47578,9 @@ var require_retry = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/interceptor/dump.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/dump.js
 var require_dump = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/interceptor/dump.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/dump.js"(exports2, module2) {
     "use strict";
     var util = require_util9();
     var { InvalidArgumentError, RequestAbortedError } = require_errors3();
@@ -47101,9 +47676,9 @@ var require_dump = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/interceptor/dns.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/dns.js
 var require_dns = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/interceptor/dns.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/dns.js"(exports2, module2) {
     "use strict";
     var { isIP } = require("node:net");
     var { lookup } = require("node:dns");
@@ -47389,9 +47964,9 @@ var require_dns = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/headers.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/headers.js
 var require_headers2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/headers.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/headers.js"(exports2, module2) {
     "use strict";
     var { kConstruct } = require_symbols6();
     var { kEnumerableProperty } = require_util9();
@@ -47836,9 +48411,9 @@ var require_headers2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/response.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/response.js
 var require_response2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/response.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/response.js"(exports2, module2) {
     "use strict";
     var { Headers, HeadersList, fill, getHeadersGuard, setHeadersGuard, setHeadersList } = require_headers2();
     var { extractBody, cloneBody, mixinBody, hasFinalizationRegistry, streamRegistry, bodyUnusable } = require_body2();
@@ -48235,9 +48810,9 @@ var require_response2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/dispatcher-weakref.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/dispatcher-weakref.js
 var require_dispatcher_weakref2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/dispatcher-weakref.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/dispatcher-weakref.js"(exports2, module2) {
     "use strict";
     var { kConnected, kSize } = require_symbols6();
     var CompatWeakRef = class {
@@ -48277,9 +48852,9 @@ var require_dispatcher_weakref2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/request.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/request.js
 var require_request4 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/request.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/request.js"(exports2, module2) {
     "use strict";
     var { extractBody, mixinBody, cloneBody, bodyUnusable } = require_body2();
     var { Headers, fill: fillHeaders, HeadersList, setHeadersGuard, getHeadersGuard, setHeadersList, getHeadersList } = require_headers2();
@@ -48972,9 +49547,9 @@ var require_request4 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/index.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/index.js
 var require_fetch2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fetch/index.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/index.js"(exports2, module2) {
     "use strict";
     var {
       makeNetworkError,
@@ -50039,9 +50614,9 @@ var require_fetch2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fileapi/symbols.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/symbols.js
 var require_symbols8 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fileapi/symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
       kState: Symbol("FileReader state"),
@@ -50054,9 +50629,9 @@ var require_symbols8 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fileapi/progressevent.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/progressevent.js
 var require_progressevent2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fileapi/progressevent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/progressevent.js"(exports2, module2) {
     "use strict";
     var { webidl } = require_webidl2();
     var kState = Symbol("ProgressEvent state");
@@ -50122,9 +50697,9 @@ var require_progressevent2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fileapi/encoding.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/encoding.js
 var require_encoding2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fileapi/encoding.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/encoding.js"(exports2, module2) {
     "use strict";
     function getEncoding(label) {
       if (!label) {
@@ -50408,9 +50983,9 @@ var require_encoding2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fileapi/util.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/util.js
 var require_util12 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fileapi/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/util.js"(exports2, module2) {
     "use strict";
     var {
       kState,
@@ -50593,9 +51168,9 @@ var require_util12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fileapi/filereader.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/filereader.js
 var require_filereader2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/fileapi/filereader.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/filereader.js"(exports2, module2) {
     "use strict";
     var {
       staticPropertyDescriptors,
@@ -50852,9 +51427,9 @@ var require_filereader2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cache/symbols.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/symbols.js
 var require_symbols9 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cache/symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
       kConstruct: require_symbols6().kConstruct
@@ -50862,9 +51437,9 @@ var require_symbols9 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cache/util.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/util.js
 var require_util13 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cache/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/util.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { URLSerializer } = require_data_url();
@@ -50892,9 +51467,9 @@ var require_util13 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cache/cache.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/cache.js
 var require_cache2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cache/cache.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/cache.js"(exports2, module2) {
     "use strict";
     var { kConstruct } = require_symbols9();
     var { urlEquals, getFieldValues } = require_util13();
@@ -51439,9 +52014,9 @@ var require_cache2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cache/cachestorage.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/cachestorage.js
 var require_cachestorage2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cache/cachestorage.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/cachestorage.js"(exports2, module2) {
     "use strict";
     var { kConstruct } = require_symbols9();
     var { Cache } = require_cache2();
@@ -51549,9 +52124,9 @@ var require_cachestorage2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cookies/constants.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/constants.js
 var require_constants10 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cookies/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/constants.js"(exports2, module2) {
     "use strict";
     var maxAttributeValueSize = 1024;
     var maxNameValuePairSize = 4096;
@@ -51562,9 +52137,9 @@ var require_constants10 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cookies/util.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/util.js
 var require_util14 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cookies/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/util.js"(exports2, module2) {
     "use strict";
     function isCTLExcludingHtab(value) {
       for (let i = 0; i < value.length; ++i) {
@@ -51627,14 +52202,48 @@ var require_util14 = __commonJS({
       for (let i = 0; i < path.length; ++i) {
         const code = path.charCodeAt(i);
         if (code < 32 || // exclude CTLs (0-31)
-        code === 127 || // DEL
+        code > 126 || // exclude DEL and non-ascii
         code === 59) {
           throw new Error("Invalid cookie path");
         }
       }
     }
+    function isLetterOrDigit(code) {
+      return code >= 48 && code <= 57 || // 0-9
+      code >= 65 && code <= 90 || // A-Z
+      code >= 97 && code <= 122;
+    }
     function validateCookieDomain(domain) {
-      if (domain.startsWith("-") || domain.endsWith(".") || domain.endsWith("-")) {
+      if (domain === " ") {
+        return;
+      }
+      if (domain.length > 255) {
+        throw new Error("Invalid cookie domain");
+      }
+      let labelLength = 0;
+      for (let i = 0; i < domain.length; ++i) {
+        const code = domain.charCodeAt(i);
+        if (code === 46) {
+          if (labelLength === 0) {
+            throw new Error("Invalid cookie domain");
+          }
+          if (domain.charCodeAt(i - 1) === 45) {
+            throw new Error("Invalid cookie domain");
+          }
+          labelLength = 0;
+          continue;
+        }
+        if (labelLength === 0 && !isLetterOrDigit(code)) {
+          throw new Error("Invalid cookie domain");
+        }
+        if (!isLetterOrDigit(code) && code !== 45) {
+          throw new Error("Invalid cookie domain");
+        }
+        if (++labelLength > 63) {
+          throw new Error("Invalid cookie domain");
+        }
+      }
+      if (labelLength === 0 || domain.charCodeAt(domain.length - 1) === 45) {
         throw new Error("Invalid cookie domain");
       }
     }
@@ -51717,7 +52326,11 @@ var require_util14 = __commonJS({
           throw new Error("Invalid unparsed");
         }
         const [key, ...value] = part.split("=");
-        out.push(`${key.trim()}=${value.join("=")}`);
+        const trimmedKey = key.trim();
+        const joinedValue = value.join("=");
+        validateCookieName(trimmedKey);
+        validateCookieValue(joinedValue);
+        out.push(`${trimmedKey}=${joinedValue}`);
       }
       return out.join("; ");
     }
@@ -51732,9 +52345,9 @@ var require_util14 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cookies/parse.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/parse.js
 var require_parse2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cookies/parse.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/parse.js"(exports2, module2) {
     "use strict";
     var { maxNameValuePairSize, maxAttributeValueSize } = require_constants10();
     var { isCTLExcludingHtab } = require_util14();
@@ -51847,18 +52460,14 @@ var require_parse2 = __commonJS({
       } else if (attributeNameLowercase === "httponly") {
         cookieAttributeList.httpOnly = true;
       } else if (attributeNameLowercase === "samesite") {
-        let enforcement = "Default";
         const attributeValueLowercase = attributeValue.toLowerCase();
-        if (attributeValueLowercase.includes("none")) {
-          enforcement = "None";
+        if (attributeValueLowercase === "none") {
+          cookieAttributeList.sameSite = "None";
+        } else if (attributeValueLowercase === "strict") {
+          cookieAttributeList.sameSite = "Strict";
+        } else if (attributeValueLowercase === "lax") {
+          cookieAttributeList.sameSite = "Lax";
         }
-        if (attributeValueLowercase.includes("strict")) {
-          enforcement = "Strict";
-        }
-        if (attributeValueLowercase.includes("lax")) {
-          enforcement = "Lax";
-        }
-        cookieAttributeList.sameSite = enforcement;
       } else {
         cookieAttributeList.unparsed ??= [];
         cookieAttributeList.unparsed.push(`${attributeName}=${attributeValue}`);
@@ -51872,9 +52481,9 @@ var require_parse2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cookies/index.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/index.js
 var require_cookies2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/cookies/index.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/index.js"(exports2, module2) {
     "use strict";
     var { parseSetCookie } = require_parse2();
     var { stringify } = require_util14();
@@ -52001,9 +52610,9 @@ var require_cookies2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/events.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/events.js
 var require_events2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/events.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/events.js"(exports2, module2) {
     "use strict";
     var { webidl } = require_webidl2();
     var { kEnumerableProperty } = require_util9();
@@ -52267,9 +52876,9 @@ var require_events2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/constants.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/constants.js
 var require_constants11 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/constants.js"(exports2, module2) {
     "use strict";
     var uid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
     var staticPropertyDescriptors = {
@@ -52324,9 +52933,9 @@ var require_constants11 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/symbols.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/symbols.js
 var require_symbols10 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
       kWebSocketURL: Symbol("url"),
@@ -52341,9 +52950,9 @@ var require_symbols10 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/util.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/util.js
 var require_util15 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/util.js"(exports2, module2) {
     "use strict";
     var { kReadyState, kController, kResponse, kBinaryType, kWebSocketURL } = require_symbols10();
     var { states, opcodes } = require_constants11();
@@ -52514,9 +53123,9 @@ var require_util15 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/frame.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/frame.js
 var require_frame2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/frame.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/frame.js"(exports2, module2) {
     "use strict";
     var { maxUnsigned16Bit } = require_constants11();
     var BUFFER_SIZE = 16386;
@@ -52591,9 +53200,9 @@ var require_frame2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/connection.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/connection.js
 var require_connection2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/connection.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/connection.js"(exports2, module2) {
     "use strict";
     var { uid, states, sentCloseFrameState, emptyBuffer, opcodes } = require_constants11();
     var {
@@ -52776,9 +53385,9 @@ var require_connection2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/permessage-deflate.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/permessage-deflate.js
 var require_permessage_deflate = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/permessage-deflate.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/permessage-deflate.js"(exports2, module2) {
     "use strict";
     var { createInflateRaw, Z_DEFAULT_WINDOWBITS } = require("node:zlib");
     var { isValidClientWindowBits } = require_util15();
@@ -52857,9 +53466,9 @@ var require_permessage_deflate = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/receiver.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/receiver.js
 var require_receiver2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/receiver.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/receiver.js"(exports2, module2) {
     "use strict";
     var { Writable } = require("node:stream");
     var assert = require("node:assert");
@@ -52880,6 +53489,10 @@ var require_receiver2 = __commonJS({
     var { closeWebSocketConnection } = require_connection2();
     var { PerMessageDeflate } = require_permessage_deflate();
     var { MessageSizeExceededError } = require_errors3();
+    function failWebsocketConnectionWithCode(ws, code, reason) {
+      closeWebSocketConnection(ws, code, reason, Buffer.byteLength(reason));
+      failWebsocketConnection(ws, reason);
+    }
     var ByteParser = class extends Writable {
       #buffers = [];
       #fragmentsBytes = 0;
@@ -52891,16 +53504,19 @@ var require_receiver2 = __commonJS({
       /** @type {Map<string, PerMessageDeflate>} */
       #extensions;
       /** @type {number} */
+      #maxFragments;
+      /** @type {number} */
       #maxPayloadSize;
       /**
        * @param {import('./websocket').WebSocket} ws
        * @param {Map<string, string>|null} extensions
-       * @param {{ maxPayloadSize?: number }} [options]
+       * @param {{ maxFragments?: number, maxPayloadSize?: number }} [options]
        */
       constructor(ws, extensions, options = {}) {
         super();
         this.ws = ws;
         this.#extensions = extensions == null ? /* @__PURE__ */ new Map() : extensions;
+        this.#maxFragments = options.maxFragments ?? 0;
         this.#maxPayloadSize = options.maxPayloadSize ?? 0;
         if (this.#extensions.has("permessage-deflate")) {
           this.#extensions.set("permessage-deflate", new PerMessageDeflate(extensions, options));
@@ -52917,8 +53533,8 @@ var require_receiver2 = __commonJS({
         this.run(callback);
       }
       #validatePayloadLength() {
-        if (this.#maxPayloadSize > 0 && !isControlFrame(this.#info.opcode) && this.#info.payloadLength > this.#maxPayloadSize) {
-          failWebsocketConnection(this.ws, "Payload size exceeds maximum allowed size");
+        if (this.#maxPayloadSize > 0 && !isControlFrame(this.#info.opcode) && this.#info.payloadLength + this.#fragmentsBytes > this.#maxPayloadSize) {
+          failWebsocketConnectionWithCode(this.ws, 1009, "Payload size exceeds maximum allowed size");
           return false;
         }
         return true;
@@ -53034,9 +53650,11 @@ var require_receiver2 = __commonJS({
               this.#state = parserStates.INFO;
             } else {
               if (!this.#info.compressed) {
-                this.writeFragments(body);
+                if (!this.writeFragments(body)) {
+                  return;
+                }
                 if (this.#maxPayloadSize > 0 && this.#fragmentsBytes > this.#maxPayloadSize) {
-                  failWebsocketConnection(this.ws, new MessageSizeExceededError().message);
+                  failWebsocketConnectionWithCode(this.ws, 1009, new MessageSizeExceededError().message);
                   return;
                 }
                 if (!this.#info.fragmented && this.#info.fin) {
@@ -53049,12 +53667,15 @@ var require_receiver2 = __commonJS({
                   this.#info.fin,
                   (error2, data) => {
                     if (error2) {
-                      failWebsocketConnection(this.ws, error2.message);
+                      const code = error2 instanceof MessageSizeExceededError ? 1009 : 1007;
+                      failWebsocketConnectionWithCode(this.ws, code, error2.message);
                       return;
                     }
-                    this.writeFragments(data);
+                    if (!this.writeFragments(data)) {
+                      return;
+                    }
                     if (this.#maxPayloadSize > 0 && this.#fragmentsBytes > this.#maxPayloadSize) {
-                      failWebsocketConnection(this.ws, new MessageSizeExceededError().message);
+                      failWebsocketConnectionWithCode(this.ws, 1009, new MessageSizeExceededError().message);
                       return;
                     }
                     if (!this.#info.fin) {
@@ -53112,8 +53733,13 @@ var require_receiver2 = __commonJS({
         return buffer;
       }
       writeFragments(fragment) {
+        if (this.#maxFragments > 0 && this.#fragments.length === this.#maxFragments) {
+          failWebsocketConnectionWithCode(this.ws, 1008, "Too many message fragments");
+          return false;
+        }
         this.#fragmentsBytes += fragment.length;
         this.#fragments.push(fragment);
+        return true;
       }
       consumeFragments() {
         const fragments = this.#fragments;
@@ -53212,9 +53838,9 @@ var require_receiver2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/sender.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/sender.js
 var require_sender = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/sender.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/sender.js"(exports2, module2) {
     "use strict";
     var { WebsocketFrameSend } = require_frame2();
     var { opcodes, sendHints } = require_constants11();
@@ -53294,9 +53920,9 @@ var require_sender = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/websocket.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/websocket.js
 var require_websocket2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/websocket/websocket.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/websocket.js"(exports2, module2) {
     "use strict";
     var { webidl } = require_webidl2();
     var { URLSerializer } = require_data_url();
@@ -53563,8 +54189,11 @@ var require_websocket2 = __commonJS({
        */
       #onConnectionEstablished(response, parsedExtensions) {
         this[kResponse] = response;
-        const maxPayloadSize = this[kController]?.dispatcher?.webSocketOptions?.maxPayloadSize;
+        const webSocketOptions = this[kController]?.dispatcher?.webSocketOptions;
+        const maxFragments = webSocketOptions?.maxFragments;
+        const maxPayloadSize = webSocketOptions?.maxPayloadSize;
         const parser2 = new ByteParser(this, parsedExtensions, {
+          maxFragments,
           maxPayloadSize
         });
         parser2.on("drain", onParserDrain);
@@ -53681,9 +54310,9 @@ var require_websocket2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/eventsource/util.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/util.js
 var require_util16 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/eventsource/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/util.js"(exports2, module2) {
     "use strict";
     function isValidLastEventId(value) {
       return value.indexOf("\0") === -1;
@@ -53710,9 +54339,9 @@ var require_util16 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/eventsource/eventsource-stream.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/eventsource-stream.js
 var require_eventsource_stream = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/eventsource/eventsource-stream.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/eventsource-stream.js"(exports2, module2) {
     "use strict";
     var { Transform } = require("node:stream");
     var { isASCIINumber, isValidLastEventId } = require_util16();
@@ -53940,9 +54569,9 @@ ${value}`;
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/eventsource/eventsource.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/eventsource.js
 var require_eventsource = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/lib/web/eventsource/eventsource.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/eventsource.js"(exports2, module2) {
     "use strict";
     var { pipeline } = require("node:stream");
     var { fetching } = require_fetch2();
@@ -54241,9 +54870,9 @@ var require_eventsource = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.25.0/node_modules/undici/index.js
+// node_modules/.pnpm/undici@6.28.0/node_modules/undici/index.js
 var require_undici2 = __commonJS({
-  "node_modules/.pnpm/undici@6.25.0/node_modules/undici/index.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/index.js"(exports2, module2) {
     "use strict";
     var Client = require_client2();
     var Dispatcher = require_dispatcher2();
@@ -54383,14 +55012,14 @@ var require_undici2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js
 var require_fetch_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "a49e2120-f6be-59a3-90d1-43ef27ff8863");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "591bff50-8f8c-5569-8acb-0885e0179957");
       } catch (e2) {
       }
     }();
@@ -54549,9 +55178,9 @@ var require_types = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/constants.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/constants.js
 var require_constants12 = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/constants.js"(exports2, module2) {
     "use strict";
     var SEMVER_SPEC_VERSION = "2.0.0";
     var MAX_LENGTH = 256;
@@ -54581,9 +55210,9 @@ var require_constants12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/debug.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/debug.js
 var require_debug = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/debug.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/debug.js"(exports2, module2) {
     "use strict";
     var debug2 = typeof process === "object" && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG) ? (...args) => console.error("SEMVER", ...args) : () => {
     };
@@ -54591,9 +55220,9 @@ var require_debug = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/re.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/re.js
 var require_re = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/re.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/re.js"(exports2, module2) {
     "use strict";
     var {
       MAX_SAFE_COMPONENT_LENGTH,
@@ -54679,9 +55308,9 @@ var require_re = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/parse-options.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/parse-options.js
 var require_parse_options = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/parse-options.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/parse-options.js"(exports2, module2) {
     "use strict";
     var looseOption = Object.freeze({ loose: true });
     var emptyOpts = Object.freeze({});
@@ -54698,9 +55327,9 @@ var require_parse_options = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/identifiers.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/identifiers.js
 var require_identifiers = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/identifiers.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/identifiers.js"(exports2, module2) {
     "use strict";
     var numeric = /^[0-9]+$/;
     var compareIdentifiers = (a, b) => {
@@ -54723,15 +55352,27 @@ var require_identifiers = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/semver.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/classes/semver.js
 var require_semver = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/semver.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/classes/semver.js"(exports2, module2) {
     "use strict";
     var debug2 = require_debug();
     var { MAX_LENGTH, MAX_SAFE_INTEGER } = require_constants12();
     var { safeRe: re, t } = require_re();
     var parseOptions = require_parse_options();
     var { compareIdentifiers } = require_identifiers();
+    var isPrereleaseIdentifier = (prerelease, identifier) => {
+      const identifiers = identifier.split(".");
+      if (identifiers.length > prerelease.length) {
+        return false;
+      }
+      for (let i = 0; i < identifiers.length; i++) {
+        if (compareIdentifiers(prerelease[i], identifiers[i]) !== 0) {
+          return false;
+        }
+      }
+      return true;
+    };
     var SemVer = class _SemVer {
       constructor(version, options) {
         options = parseOptions(options);
@@ -54974,8 +55615,9 @@ var require_semver = __commonJS({
               if (identifierBase === false) {
                 prerelease = [identifier];
               }
-              if (compareIdentifiers(this.prerelease[0], identifier) === 0) {
-                if (isNaN(this.prerelease[1])) {
+              if (isPrereleaseIdentifier(this.prerelease, identifier)) {
+                const prereleaseBase = this.prerelease[identifier.split(".").length];
+                if (isNaN(prereleaseBase)) {
                   this.prerelease = prerelease;
                 }
               } else {
@@ -54998,9 +55640,9 @@ var require_semver = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/parse.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/parse.js
 var require_parse3 = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/parse.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/parse.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var parse = (version, options, throwErrors = false) => {
@@ -55020,9 +55662,9 @@ var require_parse3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/valid.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/valid.js
 var require_valid = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/valid.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/valid.js"(exports2, module2) {
     "use strict";
     var parse = require_parse3();
     var valid = (version, options) => {
@@ -55033,9 +55675,9 @@ var require_valid = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/clean.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/clean.js
 var require_clean = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/clean.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/clean.js"(exports2, module2) {
     "use strict";
     var parse = require_parse3();
     var clean = (version, options) => {
@@ -55046,9 +55688,9 @@ var require_clean = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/inc.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/inc.js
 var require_inc = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/inc.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/inc.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var inc = (version, release, options, identifier, identifierBase) => {
@@ -55070,9 +55712,9 @@ var require_inc = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/diff.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/diff.js
 var require_diff = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/diff.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/diff.js"(exports2, module2) {
     "use strict";
     var parse = require_parse3();
     var diff = (version1, version2) => {
@@ -55114,9 +55756,9 @@ var require_diff = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/major.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/major.js
 var require_major = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/major.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/major.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var major = (a, loose) => new SemVer(a, loose).major;
@@ -55124,9 +55766,9 @@ var require_major = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/minor.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/minor.js
 var require_minor = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/minor.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/minor.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var minor = (a, loose) => new SemVer(a, loose).minor;
@@ -55134,9 +55776,9 @@ var require_minor = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/patch.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/patch.js
 var require_patch = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/patch.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/patch.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var patch = (a, loose) => new SemVer(a, loose).patch;
@@ -55144,9 +55786,9 @@ var require_patch = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/prerelease.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/prerelease.js
 var require_prerelease = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/prerelease.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/prerelease.js"(exports2, module2) {
     "use strict";
     var parse = require_parse3();
     var prerelease = (version, options) => {
@@ -55157,9 +55799,9 @@ var require_prerelease = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/compare.js
 var require_compare = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/compare.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var compare = (a, b, loose) => new SemVer(a, loose).compare(new SemVer(b, loose));
@@ -55167,9 +55809,9 @@ var require_compare = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/rcompare.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/rcompare.js
 var require_rcompare = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/rcompare.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/rcompare.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var rcompare = (a, b, loose) => compare(b, a, loose);
@@ -55177,9 +55819,9 @@ var require_rcompare = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare-loose.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/compare-loose.js
 var require_compare_loose = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare-loose.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/compare-loose.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var compareLoose = (a, b) => compare(a, b, true);
@@ -55187,9 +55829,9 @@ var require_compare_loose = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare-build.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/compare-build.js
 var require_compare_build = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/compare-build.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/compare-build.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var compareBuild = (a, b, loose) => {
@@ -55201,9 +55843,9 @@ var require_compare_build = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/sort.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/sort.js
 var require_sort = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/sort.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/sort.js"(exports2, module2) {
     "use strict";
     var compareBuild = require_compare_build();
     var sort = (list, loose) => list.sort((a, b) => compareBuild(a, b, loose));
@@ -55211,9 +55853,9 @@ var require_sort = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/rsort.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/rsort.js
 var require_rsort = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/rsort.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/rsort.js"(exports2, module2) {
     "use strict";
     var compareBuild = require_compare_build();
     var rsort = (list, loose) => list.sort((a, b) => compareBuild(b, a, loose));
@@ -55221,9 +55863,9 @@ var require_rsort = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/gt.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/gt.js
 var require_gt = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/gt.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/gt.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var gt = (a, b, loose) => compare(a, b, loose) > 0;
@@ -55231,9 +55873,9 @@ var require_gt = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/lt.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/lt.js
 var require_lt = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/lt.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/lt.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var lt = (a, b, loose) => compare(a, b, loose) < 0;
@@ -55241,9 +55883,9 @@ var require_lt = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/eq.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/eq.js
 var require_eq = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/eq.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/eq.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var eq = (a, b, loose) => compare(a, b, loose) === 0;
@@ -55251,9 +55893,9 @@ var require_eq = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/neq.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/neq.js
 var require_neq = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/neq.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/neq.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var neq = (a, b, loose) => compare(a, b, loose) !== 0;
@@ -55261,9 +55903,9 @@ var require_neq = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/gte.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/gte.js
 var require_gte = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/gte.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/gte.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var gte = (a, b, loose) => compare(a, b, loose) >= 0;
@@ -55271,9 +55913,9 @@ var require_gte = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/lte.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/lte.js
 var require_lte = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/lte.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/lte.js"(exports2, module2) {
     "use strict";
     var compare = require_compare();
     var lte = (a, b, loose) => compare(a, b, loose) <= 0;
@@ -55281,9 +55923,9 @@ var require_lte = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/cmp.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/cmp.js
 var require_cmp = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/cmp.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/cmp.js"(exports2, module2) {
     "use strict";
     var eq = require_eq();
     var neq = require_neq();
@@ -55331,9 +55973,9 @@ var require_cmp = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/coerce.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/coerce.js
 var require_coerce = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/coerce.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/coerce.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var parse = require_parse3();
@@ -55377,9 +56019,50 @@ var require_coerce = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/lrucache.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/truncate.js
+var require_truncate = __commonJS({
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/truncate.js"(exports2, module2) {
+    "use strict";
+    var parse = require_parse3();
+    var constants = require_constants12();
+    var SemVer = require_semver();
+    var truncate2 = (version, truncation, options) => {
+      if (!constants.RELEASE_TYPES.includes(truncation)) {
+        return null;
+      }
+      const clonedVersion = cloneInputVersion(version, options);
+      return clonedVersion && doTruncation(clonedVersion, truncation);
+    };
+    var cloneInputVersion = (version, options) => {
+      const versionStringToParse = version instanceof SemVer ? version.version : version;
+      return parse(versionStringToParse, options);
+    };
+    var doTruncation = (version, truncation) => {
+      if (isPrerelease(truncation)) {
+        return version.version;
+      }
+      version.prerelease = [];
+      switch (truncation) {
+        case "major":
+          version.minor = 0;
+          version.patch = 0;
+          break;
+        case "minor":
+          version.patch = 0;
+          break;
+      }
+      return version.format();
+    };
+    var isPrerelease = (type) => {
+      return type.startsWith("pre");
+    };
+    module2.exports = truncate2;
+  }
+});
+
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/lrucache.js
 var require_lrucache = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/internal/lrucache.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/internal/lrucache.js"(exports2, module2) {
     "use strict";
     var LRUCache = class {
       constructor() {
@@ -55415,9 +56098,9 @@ var require_lrucache = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/range.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/classes/range.js
 var require_range = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/range.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/classes/range.js"(exports2, module2) {
     "use strict";
     var SPACE_CHARACTERS = /\s+/g;
     var Range = class _Range {
@@ -55485,6 +56168,7 @@ var require_range = __commonJS({
         return this.range;
       }
       parseRange(range) {
+        range = range.replace(BUILDSTRIPRE, "");
         const memoOpts = (this.options.includePrerelease && FLAG_INCLUDE_PRERELEASE) | (this.options.loose && FLAG_LOOSE);
         const memoKey = memoOpts + ":" + range;
         const cached = cache.get(memoKey);
@@ -55567,12 +56251,14 @@ var require_range = __commonJS({
     var SemVer = require_semver();
     var {
       safeRe: re,
+      src,
       t,
       comparatorTrimReplace,
       tildeTrimReplace,
       caretTrimReplace
     } = require_re();
     var { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } = require_constants12();
+    var BUILDSTRIPRE = new RegExp(src[t.BUILD], "g");
     var isNullSet = (c) => c.value === "<0.0.0-0";
     var isAny = (c) => c.value === "";
     var isSatisfiable = (comparators, options) => {
@@ -55601,20 +56287,22 @@ var require_range = __commonJS({
       return comp;
     };
     var isX = (id) => !id || id.toLowerCase() === "x" || id === "*";
+    var invalidXRangeOrder = (M, m, p) => isX(M) && !isX(m) || isX(m) && p && !isX(p);
     var replaceTildes = (comp, options) => {
       return comp.trim().split(/\s+/).map((c) => replaceTilde(c, options)).join(" ");
     };
     var replaceTilde = (comp, options) => {
       const r = options.loose ? re[t.TILDELOOSE] : re[t.TILDE];
+      const z = options.includePrerelease ? "-0" : "";
       return comp.replace(r, (_, M, m, p, pr) => {
         debug2("tilde", comp, _, M, m, p, pr);
         let ret;
         if (isX(M)) {
           ret = "";
         } else if (isX(m)) {
-          ret = `>=${M}.0.0 <${+M + 1}.0.0-0`;
+          ret = `>=${M}.0.0${z} <${+M + 1}.0.0-0`;
         } else if (isX(p)) {
-          ret = `>=${M}.${m}.0 <${M}.${+m + 1}.0-0`;
+          ret = `>=${M}.${m}.0${z} <${M}.${+m + 1}.0-0`;
         } else if (pr) {
           debug2("replaceTilde pr", pr);
           ret = `>=${M}.${m}.${p}-${pr} <${M}.${+m + 1}.0-0`;
@@ -55660,9 +56348,9 @@ var require_range = __commonJS({
           debug2("no pr");
           if (M === "0") {
             if (m === "0") {
-              ret = `>=${M}.${m}.${p}${z} <${M}.${m}.${+p + 1}-0`;
+              ret = `>=${M}.${m}.${p} <${M}.${m}.${+p + 1}-0`;
             } else {
-              ret = `>=${M}.${m}.${p}${z} <${M}.${+m + 1}.0-0`;
+              ret = `>=${M}.${m}.${p} <${M}.${+m + 1}.0-0`;
             }
           } else {
             ret = `>=${M}.${m}.${p} <${+M + 1}.0.0-0`;
@@ -55681,6 +56369,9 @@ var require_range = __commonJS({
       const r = options.loose ? re[t.XRANGELOOSE] : re[t.XRANGE];
       return comp.replace(r, (ret, gtlt, M, m, p, pr) => {
         debug2("xRange", comp, ret, gtlt, M, m, p, pr);
+        if (invalidXRangeOrder(M, m, p)) {
+          return comp;
+        }
         const xM = isX(M);
         const xm = xM || isX(m);
         const xp = xm || isX(p);
@@ -55792,9 +56483,9 @@ var require_range = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/comparator.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/classes/comparator.js
 var require_comparator = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/classes/comparator.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/classes/comparator.js"(exports2, module2) {
     "use strict";
     var ANY = Symbol("SemVer ANY");
     var Comparator = class _Comparator {
@@ -55905,9 +56596,9 @@ var require_comparator = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/satisfies.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/satisfies.js
 var require_satisfies = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/functions/satisfies.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/functions/satisfies.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var satisfies = (version, range, options) => {
@@ -55922,9 +56613,9 @@ var require_satisfies = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/to-comparators.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/to-comparators.js
 var require_to_comparators = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/to-comparators.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/to-comparators.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var toComparators = (range, options) => new Range(range, options).set.map((comp) => comp.map((c) => c.value).join(" ").trim().split(" "));
@@ -55932,9 +56623,9 @@ var require_to_comparators = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/max-satisfying.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/max-satisfying.js
 var require_max_satisfying = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/max-satisfying.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/max-satisfying.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Range = require_range();
@@ -55961,9 +56652,9 @@ var require_max_satisfying = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/min-satisfying.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/min-satisfying.js
 var require_min_satisfying = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/min-satisfying.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/min-satisfying.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Range = require_range();
@@ -55990,9 +56681,9 @@ var require_min_satisfying = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/min-version.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/min-version.js
 var require_min_version = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/min-version.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/min-version.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Range = require_range();
@@ -56047,9 +56738,9 @@ var require_min_version = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/valid.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/valid.js
 var require_valid2 = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/valid.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/valid.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var validRange = (range, options) => {
@@ -56063,9 +56754,9 @@ var require_valid2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/outside.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/outside.js
 var require_outside = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/outside.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/outside.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
     var Comparator = require_comparator();
@@ -56132,9 +56823,9 @@ var require_outside = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/gtr.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/gtr.js
 var require_gtr = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/gtr.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/gtr.js"(exports2, module2) {
     "use strict";
     var outside = require_outside();
     var gtr = (version, range, options) => outside(version, range, ">", options);
@@ -56142,9 +56833,9 @@ var require_gtr = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/ltr.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/ltr.js
 var require_ltr = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/ltr.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/ltr.js"(exports2, module2) {
     "use strict";
     var outside = require_outside();
     var ltr = (version, range, options) => outside(version, range, "<", options);
@@ -56152,9 +56843,9 @@ var require_ltr = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/intersects.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/intersects.js
 var require_intersects = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/intersects.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/intersects.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var intersects = (r1, r2, options) => {
@@ -56166,9 +56857,9 @@ var require_intersects = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/simplify.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/simplify.js
 var require_simplify = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/simplify.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/simplify.js"(exports2, module2) {
     "use strict";
     var satisfies = require_satisfies();
     var compare = require_compare();
@@ -56216,9 +56907,9 @@ var require_simplify = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/subset.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/subset.js
 var require_subset = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/ranges/subset.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/ranges/subset.js"(exports2, module2) {
     "use strict";
     var Range = require_range();
     var Comparator = require_comparator();
@@ -56327,7 +57018,7 @@ var require_subset = __commonJS({
             if (higher === c && higher !== gt) {
               return false;
             }
-          } else if (gt.operator === ">=" && !satisfies(gt.semver, String(c), options)) {
+          } else if (gt.operator === ">=" && !c.test(gt.semver)) {
             return false;
           }
         }
@@ -56342,7 +57033,7 @@ var require_subset = __commonJS({
             if (lower === c && lower !== lt) {
               return false;
             }
-          } else if (lt.operator === "<=" && !satisfies(lt.semver, String(c), options)) {
+          } else if (lt.operator === "<=" && !c.test(lt.semver)) {
             return false;
           }
         }
@@ -56379,9 +57070,9 @@ var require_subset = __commonJS({
   }
 });
 
-// node_modules/.pnpm/semver@7.7.4/node_modules/semver/index.js
+// node_modules/.pnpm/semver@7.8.5/node_modules/semver/index.js
 var require_semver2 = __commonJS({
-  "node_modules/.pnpm/semver@7.7.4/node_modules/semver/index.js"(exports2, module2) {
+  "node_modules/.pnpm/semver@7.8.5/node_modules/semver/index.js"(exports2, module2) {
     "use strict";
     var internalRe = require_re();
     var constants = require_constants12();
@@ -56410,6 +57101,7 @@ var require_semver2 = __commonJS({
     var lte = require_lte();
     var cmp = require_cmp();
     var coerce = require_coerce();
+    var truncate2 = require_truncate();
     var Comparator = require_comparator();
     var Range = require_range();
     var satisfies = require_satisfies();
@@ -56448,6 +57140,7 @@ var require_semver2 = __commonJS({
       lte,
       cmp,
       coerce,
+      truncate: truncate2,
       Comparator,
       Range,
       satisfies,
@@ -60175,9 +60868,9 @@ var require_smartbuffer = __commonJS({
   }
 });
 
-// node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/common/constants.js
+// node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/common/constants.js
 var require_constants13 = __commonJS({
-  "node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/common/constants.js"(exports2) {
+  "node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/common/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SOCKS5_NO_ACCEPTABLE_AUTH = exports2.SOCKS5_CUSTOM_AUTH_END = exports2.SOCKS5_CUSTOM_AUTH_START = exports2.SOCKS_INCOMING_PACKET_SIZES = exports2.SocksClientState = exports2.Socks5Response = exports2.Socks5HostType = exports2.Socks5Auth = exports2.Socks4Response = exports2.SocksCommand = exports2.ERRORS = exports2.DEFAULT_TIMEOUT = void 0;
@@ -60292,9 +60985,9 @@ var require_constants13 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/common/util.js
+// node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/common/util.js
 var require_util17 = __commonJS({
-  "node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/common/util.js"(exports2) {
+  "node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/common/util.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.shuffleArray = exports2.SocksClientError = void 0;
@@ -60315,24 +61008,44 @@ var require_util17 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/common.js
+// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/address-error.js
+var require_address_error = __commonJS({
+  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/address-error.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AddressError = void 0;
+    var AddressError = class extends Error {
+      constructor(message, parseMessage) {
+        super(message);
+        this.name = "AddressError";
+        this.parseMessage = parseMessage;
+      }
+    };
+    exports2.AddressError = AddressError;
+  }
+});
+
+// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/common.js
 var require_common2 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/common.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/common.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.isInSubnet = isInSubnet;
+    exports2.isHostInSubnet = isHostInSubnet;
     exports2.isCorrect = isCorrect;
+    exports2.prefixLengthFromMask = prefixLengthFromMask;
     exports2.numberToPaddedHex = numberToPaddedHex;
     exports2.stringToPaddedHex = stringToPaddedHex;
     exports2.testBit = testBit;
+    var address_error_1 = require_address_error();
     function isInSubnet(address) {
       if (this.subnetMask < address.subnetMask) {
         return false;
       }
-      if (this.mask(address.subnetMask) === address.mask()) {
-        return true;
-      }
-      return false;
+      return isHostInSubnet.call(this, address);
+    }
+    function isHostInSubnet(address) {
+      return this.mask(address.subnetMask) === address.mask();
     }
     function isCorrect(defaultBits) {
       return function() {
@@ -60344,6 +61057,20 @@ var require_common2 = __commonJS({
         }
         return this.parsedSubnet === String(this.subnetMask);
       };
+    }
+    function prefixLengthFromMask(value, totalBits) {
+      const binary = value.toString(2).padStart(totalBits, "0");
+      if (binary.length > totalBits) {
+        throw new address_error_1.AddressError("Invalid subnet mask.");
+      }
+      const firstZero = binary.indexOf("0");
+      if (firstZero === -1) {
+        return totalBits;
+      }
+      if (binary.slice(firstZero).includes("1")) {
+        throw new address_error_1.AddressError("Invalid subnet mask.");
+      }
+      return firstZero;
     }
     function numberToPaddedHex(number) {
       return number.toString(16).padStart(2, "0");
@@ -60362,39 +61089,22 @@ var require_common2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/v4/constants.js
+// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v4/constants.js
 var require_constants14 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/v4/constants.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v4/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RE_SUBNET_STRING = exports2.RE_ADDRESS = exports2.GROUPS = exports2.BITS = void 0;
     exports2.BITS = 32;
     exports2.GROUPS = 4;
-    exports2.RE_ADDRESS = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/g;
+    exports2.RE_ADDRESS = /^(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$/g;
     exports2.RE_SUBNET_STRING = /\/\d{1,2}$/;
   }
 });
 
-// node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/address-error.js
-var require_address_error = __commonJS({
-  "node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/address-error.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.AddressError = void 0;
-    var AddressError = class extends Error {
-      constructor(message, parseMessage) {
-        super(message);
-        this.name = "AddressError";
-        this.parseMessage = parseMessage;
-      }
-    };
-    exports2.AddressError = AddressError;
-  }
-});
-
-// node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/ipv4.js
+// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv4.js
 var require_ipv4 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/ipv4.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv4.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -60433,16 +61143,19 @@ var require_ipv4 = __commonJS({
     var common = __importStar2(require_common2());
     var constants = __importStar2(require_constants14());
     var address_error_1 = require_address_error();
+    var isCorrect4 = common.isCorrect(constants.BITS);
     var Address4 = class _Address4 {
       constructor(address) {
+        this.addressMinusSuffix = "";
         this.groups = constants.GROUPS;
         this.parsedAddress = [];
         this.parsedSubnet = "";
         this.subnet = "/32";
         this.subnetMask = 32;
         this.v4 = true;
-        this.isCorrect = common.isCorrect(constants.BITS);
+        this.isCorrect = isCorrect4;
         this.isInSubnet = common.isInSubnet;
+        this.isHostInSubnet = common.isHostInSubnet;
         this.address = address;
         const subnet = constants.RE_SUBNET_STRING.exec(address);
         if (subnet) {
@@ -60457,6 +61170,13 @@ var require_ipv4 = __commonJS({
         this.addressMinusSuffix = address;
         this.parsedAddress = this.parse(address);
       }
+      /**
+       * Returns true if the given string is a valid IPv4 address (with optional
+       * CIDR subnet), false otherwise. Host bits in the subnet portion are
+       * allowed (e.g. `192.168.1.5/24` is valid); for strict network-address
+       * validation compare `correctForm()` to `startAddress().correctForm()`,
+       * or use `networkForm()`.
+       */
       static isValid(address) {
         try {
           new _Address4(address);
@@ -60465,56 +61185,125 @@ var require_ipv4 = __commonJS({
           return false;
         }
       }
-      /*
-       * Parses a v4 address
+      /**
+       * Parses an IPv4 address string into its four octet groups and stores the
+       * result on `this.parsedAddress`. Called automatically by the constructor;
+       * you typically don't need to call it directly. Throws `AddressError` if
+       * the input is not a valid IPv4 address.
        */
       parse(address) {
         const groups = address.split(".");
+        if (groups.some((group) => /^0\d/.test(group))) {
+          throw new address_error_1.AddressError("IPv4 addresses can't have leading zeroes.");
+        }
         if (!address.match(constants.RE_ADDRESS)) {
           throw new address_error_1.AddressError("Invalid IPv4 address.");
         }
         return groups;
       }
       /**
-       * Returns the correct form of an address
-       * @memberof Address4
-       * @instance
-       * @returns {String}
+       * Returns the address in correct form: octets joined with `.` and any
+       * leading zeros stripped (e.g. `192.168.1.1`). For IPv4 this matches the
+       * canonical dotted-decimal representation.
        */
       correctForm() {
         return this.parsedAddress.map((part) => parseInt(part, 10)).join(".");
       }
       /**
-       * Converts a hex string to an IPv4 address object
-       * @memberof Address4
-       * @static
+       * Construct an `Address4` from an address and a dotted-decimal subnet
+       * mask given as separate strings (e.g. as returned by Node's
+       * `os.networkInterfaces()`). Throws `AddressError` if the mask is
+       * non-contiguous (e.g. `255.0.255.0`).
+       * @example
+       * var address = Address4.fromAddressAndMask('192.168.1.1', '255.255.255.0');
+       * address.subnetMask; // 24
+       */
+      static fromAddressAndMask(address, mask) {
+        const bits = common.prefixLengthFromMask(new _Address4(mask).bigInt(), constants.BITS);
+        return new _Address4(`${address}/${bits}`);
+      }
+      /**
+       * Construct an `Address4` from an address and a Cisco-style wildcard mask
+       * given as separate strings (e.g. `0.0.0.255` for a `/24`). The wildcard
+       * mask is the bitwise inverse of the subnet mask. Throws `AddressError`
+       * if the mask is non-contiguous (e.g. `0.255.0.255`).
+       * @example
+       * var address = Address4.fromAddressAndWildcardMask('10.0.0.1', '0.0.0.255');
+       * address.subnetMask; // 24
+       */
+      static fromAddressAndWildcardMask(address, wildcardMask) {
+        const wildcard = new _Address4(wildcardMask).bigInt();
+        const allOnes = (BigInt(1) << BigInt(constants.BITS)) - BigInt(1);
+        const mask = wildcard ^ allOnes;
+        const bits = common.prefixLengthFromMask(mask, constants.BITS);
+        return new _Address4(`${address}/${bits}`);
+      }
+      /**
+       * Construct an `Address4` from a wildcard pattern with trailing `*`
+       * octets. The number of trailing wildcards determines the prefix
+       * length: each `*` represents 8 bits.
+       *
+       * Only trailing whole-octet wildcards are supported. Partial-octet
+       * wildcards (e.g. `192.168.0.1*`) and interior wildcards (e.g.
+       * `192.*.0.1`) throw `AddressError`.
+       * @example
+       * Address4.fromWildcard('192.168.0.*').subnet;   // '/24'
+       * Address4.fromWildcard('192.168.*.*').subnet;   // '/16'
+       * Address4.fromWildcard('*.*.*.*').subnet;       // '/0'
+       */
+      static fromWildcard(input) {
+        const groups = input.split(".");
+        if (groups.length !== constants.GROUPS) {
+          throw new address_error_1.AddressError("Wildcard pattern must have 4 octets");
+        }
+        let firstWildcard = -1;
+        for (let i = 0; i < groups.length; i++) {
+          if (groups[i] === "*") {
+            if (firstWildcard === -1) {
+              firstWildcard = i;
+            }
+          } else if (firstWildcard !== -1) {
+            throw new address_error_1.AddressError("Wildcard `*` must only appear in trailing octets (e.g. `192.168.0.*`)");
+          }
+        }
+        const trailing = firstWildcard === -1 ? 0 : groups.length - firstWildcard;
+        const replaced = groups.map((g) => g === "*" ? "0" : g);
+        const subnetBits = constants.BITS - trailing * 8;
+        return new _Address4(`${replaced.join(".")}/${subnetBits}`);
+      }
+      /**
+       * Converts a hex string to an IPv4 address object. Accepts 8 hex digits
+       * with optional `:` separators (e.g. `'7f000001'` or `'7f:00:00:01'`).
+       * Throws `AddressError` for any other length or for non-hex characters.
        * @param {string} hex - a hex string to convert
        * @returns {Address4}
        */
       static fromHex(hex) {
-        const padded = hex.replace(/:/g, "").padStart(8, "0");
+        const stripped = hex.replace(/:/g, "");
+        if (!/^[0-9a-fA-F]{8}$/.test(stripped)) {
+          throw new address_error_1.AddressError("IPv4 hex must be exactly 8 hex digits");
+        }
         const groups = [];
-        let i;
-        for (i = 0; i < 8; i += 2) {
-          const h = padded.slice(i, i + 2);
-          groups.push(parseInt(h, 16));
+        for (let i = 0; i < 8; i += 2) {
+          groups.push(parseInt(stripped.slice(i, i + 2), 16));
         }
         return new _Address4(groups.join("."));
       }
       /**
-       * Converts an integer into a IPv4 address object
-       * @memberof Address4
-       * @static
+       * Converts an integer into a IPv4 address object. The integer must be a
+       * non-negative safe integer in the range `[0, 2**32 - 1]`; otherwise
+       * `AddressError` is thrown.
        * @param {integer} integer - a number to convert
        * @returns {Address4}
        */
       static fromInteger(integer) {
-        return _Address4.fromHex(integer.toString(16));
+        if (!Number.isInteger(integer) || integer < 0 || integer > 4294967295) {
+          throw new address_error_1.AddressError("IPv4 integer must be in the range 0 to 2**32 - 1");
+        }
+        return _Address4.fromHex(integer.toString(16).padStart(8, "0"));
       }
       /**
        * Return an address from in-addr.arpa form
-       * @memberof Address4
-       * @static
        * @param {string} arpaFormAddress - an 'in-addr.arpa' form ipv4 address
        * @returns {Adress4}
        * @example
@@ -60528,17 +61317,15 @@ var require_ipv4 = __commonJS({
       }
       /**
        * Converts an IPv4 address object to a hex string
-       * @memberof Address4
-       * @instance
        * @returns {String}
        */
       toHex() {
         return this.parsedAddress.map((part) => common.stringToPaddedHex(part)).join(":");
       }
       /**
-       * Converts an IPv4 address object to an array of bytes
-       * @memberof Address4
-       * @instance
+       * Converts an IPv4 address object to an array of bytes.
+       *
+       * To get a Node.js `Buffer`, wrap the result: `Buffer.from(address.toArray())`.
        * @returns {Array}
        */
       toArray() {
@@ -60546,8 +61333,6 @@ var require_ipv4 = __commonJS({
       }
       /**
        * Converts an IPv4 address object to an IPv6 address group
-       * @memberof Address4
-       * @instance
        * @returns {String}
        */
       toGroup6() {
@@ -60560,8 +61345,6 @@ var require_ipv4 = __commonJS({
       }
       /**
        * Returns the address as a `bigint`
-       * @memberof Address4
-       * @instance
        * @returns {bigint}
        */
       bigInt() {
@@ -60569,8 +61352,6 @@ var require_ipv4 = __commonJS({
       }
       /**
        * Helper function getting start address.
-       * @memberof Address4
-       * @instance
        * @returns {bigint}
        */
       _startAddress() {
@@ -60579,8 +61360,6 @@ var require_ipv4 = __commonJS({
       /**
        * The first address in the range given by this address' subnet.
        * Often referred to as the Network Address.
-       * @memberof Address4
-       * @instance
        * @returns {Address4}
        */
       startAddress() {
@@ -60589,8 +61368,6 @@ var require_ipv4 = __commonJS({
       /**
        * The first host address in the range given by this address's subnet ie
        * the first address after the Network Address
-       * @memberof Address4
-       * @instance
        * @returns {Address4}
        */
       startAddressExclusive() {
@@ -60599,8 +61376,6 @@ var require_ipv4 = __commonJS({
       }
       /**
        * Helper function getting end address.
-       * @memberof Address4
-       * @instance
        * @returns {bigint}
        */
       _endAddress() {
@@ -60609,8 +61384,6 @@ var require_ipv4 = __commonJS({
       /**
        * The last address in the range given by this address' subnet
        * Often referred to as the Broadcast
-       * @memberof Address4
-       * @instance
        * @returns {Address4}
        */
       endAddress() {
@@ -60619,8 +61392,6 @@ var require_ipv4 = __commonJS({
       /**
        * The last host address in the range given by this address's subnet ie
        * the last address prior to the Broadcast Address
-       * @memberof Address4
-       * @instance
        * @returns {Address4}
        */
       endAddressExclusive() {
@@ -60628,19 +61399,47 @@ var require_ipv4 = __commonJS({
         return _Address4.fromBigInt(this._endAddress() - adjust);
       }
       /**
-       * Converts a BigInt to a v4 address object
-       * @memberof Address4
-       * @static
+       * The dotted-decimal form of the subnet mask, e.g. `255.255.240.0` for
+       * a `/20`. Returns an `Address4`; call `.correctForm()` for the string.
+       * @returns {Address4}
+       */
+      subnetMaskAddress() {
+        return _Address4.fromBigInt(BigInt(`0b${"1".repeat(this.subnetMask)}${"0".repeat(constants.BITS - this.subnetMask)}`));
+      }
+      /**
+       * The Cisco-style wildcard mask, e.g. `0.0.0.255` for a `/24`. This is
+       * the bitwise inverse of `subnetMaskAddress()`. Returns an `Address4`;
+       * call `.correctForm()` for the string.
+       * @returns {Address4}
+       */
+      wildcardMask() {
+        return _Address4.fromBigInt(BigInt(`0b${"0".repeat(this.subnetMask)}${"1".repeat(constants.BITS - this.subnetMask)}`));
+      }
+      /**
+       * The network address in CIDR string form, e.g. `192.168.1.0/24` for
+       * `192.168.1.5/24`. For an address with no explicit subnet the prefix is
+       * `/32`, e.g. `networkForm()` on `192.168.1.5` returns `192.168.1.5/32`.
+       * @returns {string}
+       */
+      networkForm() {
+        return `${this.startAddress().correctForm()}/${this.subnetMask}`;
+      }
+      /**
+       * Converts a BigInt to a v4 address object. The value must be in the
+       * range `[0, 2**32 - 1]`; otherwise `AddressError` is thrown.
        * @param {bigint} bigInt - a BigInt to convert
        * @returns {Address4}
        */
       static fromBigInt(bigInt) {
-        return _Address4.fromHex(bigInt.toString(16));
+        if (bigInt < 0n || bigInt > 0xffffffffn) {
+          throw new address_error_1.AddressError("IPv4 BigInt must be in the range 0 to 2**32 - 1");
+        }
+        return _Address4.fromHex(bigInt.toString(16).padStart(8, "0"));
       }
       /**
-       * Convert a byte array to an Address4 object
-       * @memberof Address4
-       * @static
+       * Convert a byte array to an Address4 object.
+       *
+       * To convert from a Node.js `Buffer`, spread it: `Address4.fromByteArray([...buf])`.
        * @param {Array<number>} bytes - an array of 4 bytes (0-255)
        * @returns {Address4}
        */
@@ -60657,8 +61456,6 @@ var require_ipv4 = __commonJS({
       }
       /**
        * Convert an unsigned byte array to an Address4 object
-       * @memberof Address4
-       * @static
        * @param {Array<number>} bytes - an array of 4 unsigned bytes (0-255)
        * @returns {Address4}
        */
@@ -60672,8 +61469,6 @@ var require_ipv4 = __commonJS({
       /**
        * Returns the first n bits of the address, defaulting to the
        * subnet mask
-       * @memberof Address4
-       * @instance
        * @returns {String}
        */
       mask(mask) {
@@ -60684,8 +61479,6 @@ var require_ipv4 = __commonJS({
       }
       /**
        * Returns the bits in the given range as a base-2 string
-       * @memberof Address4
-       * @instance
        * @returns {string}
        */
       getBitsBase2(start, end) {
@@ -60693,10 +61486,8 @@ var require_ipv4 = __commonJS({
       }
       /**
        * Return the reversed ip6.arpa form of the address
-       * @memberof Address4
        * @param {Object} options
        * @param {boolean} options.omitSuffix - omit the "in-addr.arpa" suffix
-       * @instance
        * @returns {String}
        */
       reverseForm(options) {
@@ -60711,21 +61502,62 @@ var require_ipv4 = __commonJS({
       }
       /**
        * Returns true if the given address is a multicast address
-       * @memberof Address4
-       * @instance
        * @returns {boolean}
        */
       isMulticast() {
-        return this.isInSubnet(new _Address4("224.0.0.0/4"));
+        return this.isHostInSubnet(MULTICAST_V4);
+      }
+      /**
+       * Returns true if the address is in one of the [RFC 1918](https://datatracker.ietf.org/doc/html/rfc1918) private address ranges (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`).
+       * @returns {boolean}
+       */
+      isPrivate() {
+        return PRIVATE_V4.some((subnet) => this.isHostInSubnet(subnet));
+      }
+      /**
+       * Returns true if the address is in the loopback range `127.0.0.0/8` ([RFC 1122](https://datatracker.ietf.org/doc/html/rfc1122)).
+       * @returns {boolean}
+       */
+      isLoopback() {
+        return this.isHostInSubnet(LOOPBACK_V4);
+      }
+      /**
+       * Returns true if the address is in the link-local range `169.254.0.0/16` ([RFC 3927](https://datatracker.ietf.org/doc/html/rfc3927)).
+       * @returns {boolean}
+       */
+      isLinkLocal() {
+        return this.isHostInSubnet(LINK_LOCAL_V4);
+      }
+      /**
+       * Returns true if the address is the unspecified address `0.0.0.0`.
+       * @returns {boolean}
+       */
+      isUnspecified() {
+        return this.isHostInSubnet(UNSPECIFIED_V4);
+      }
+      /**
+       * Returns true if the address is the limited broadcast address `255.255.255.255` ([RFC 919](https://datatracker.ietf.org/doc/html/rfc919)).
+       * @returns {boolean}
+       */
+      isBroadcast() {
+        return this.isHostInSubnet(BROADCAST_V4);
+      }
+      /**
+       * Returns true if the address is in the carrier-grade NAT range `100.64.0.0/10` ([RFC 6598](https://datatracker.ietf.org/doc/html/rfc6598)).
+       * @returns {boolean}
+       */
+      isCGNAT() {
+        return this.isHostInSubnet(CGNAT_V4);
       }
       /**
        * Returns a zero-padded base-2 string representation of the address
-       * @memberof Address4
-       * @instance
        * @returns {string}
        */
       binaryZeroPad() {
-        return this.bigInt().toString(2).padStart(constants.BITS, "0");
+        if (this._binaryZeroPad === void 0) {
+          this._binaryZeroPad = this.bigInt().toString(2).padStart(constants.BITS, "0");
+        }
+        return this._binaryZeroPad;
       }
       /**
        * Groups an IPv4 address for inclusion at the end of an IPv6 address
@@ -60733,16 +61565,27 @@ var require_ipv4 = __commonJS({
        */
       groupForV6() {
         const segments = this.parsedAddress;
-        return this.address.replace(constants.RE_ADDRESS, `<span class="hover-group group-v4 group-6">${segments.slice(0, 2).join(".")}</span>.<span class="hover-group group-v4 group-7">${segments.slice(2, 4).join(".")}</span>`);
+        return this.correctForm().replace(constants.RE_ADDRESS, `<span class="hover-group group-v4 group-6">${segments.slice(0, 2).join(".")}</span>.<span class="hover-group group-v4 group-7">${segments.slice(2, 4).join(".")}</span>`);
       }
     };
     exports2.Address4 = Address4;
+    var MULTICAST_V4 = new Address4("224.0.0.0/4");
+    var PRIVATE_V4 = [
+      new Address4("10.0.0.0/8"),
+      new Address4("172.16.0.0/12"),
+      new Address4("192.168.0.0/16")
+    ];
+    var LOOPBACK_V4 = new Address4("127.0.0.0/8");
+    var LINK_LOCAL_V4 = new Address4("169.254.0.0/16");
+    var UNSPECIFIED_V4 = new Address4("0.0.0.0/32");
+    var BROADCAST_V4 = new Address4("255.255.255.255/32");
+    var CGNAT_V4 = new Address4("100.64.0.0/10");
   }
 });
 
-// node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/v6/constants.js
+// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/constants.js
 var require_constants15 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/v6/constants.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RE_URL_WITH_PORT = exports2.RE_URL = exports2.RE_ZONE_STRING = exports2.RE_SUBNET_STRING = exports2.RE_BAD_ADDRESS = exports2.RE_BAD_CHARACTERS = exports2.TYPES = exports2.SCOPES = exports2.GROUPS = exports2.BITS = void 0;
@@ -60779,36 +61622,46 @@ var require_constants15 = __commonJS({
       "ff05::1:3/128": "Multicast (All DHCP servers in this site)",
       "::/128": "Unspecified",
       "::1/128": "Loopback",
+      "::ffff:0:0/96": "IPv4-mapped",
       "ff00::/8": "Multicast",
-      "fe80::/10": "Link-local unicast"
+      "fe80::/10": "Link-local unicast",
+      "fc00::/7": "Unique local",
+      "2002::/16": "6to4",
+      "2001:db8::/32": "Documentation",
+      "64:ff9b::/96": "NAT64 (well-known)",
+      "64:ff9b:1::/48": "NAT64 (local-use)"
     };
     exports2.RE_BAD_CHARACTERS = /([^0-9a-f:/%])/gi;
     exports2.RE_BAD_ADDRESS = /([0-9a-f]{5,}|:{3,}|[^:]:$|^:[^:]|\/$)/gi;
     exports2.RE_SUBNET_STRING = /\/\d{1,3}(?=%|$)/;
     exports2.RE_ZONE_STRING = /%.*$/;
-    exports2.RE_URL = /^\[{0,1}([0-9a-f:]+)\]{0,1}/;
-    exports2.RE_URL_WITH_PORT = /\[([0-9a-f:]+)\]:([0-9]{1,5})/;
+    exports2.RE_URL = /^(?:\[([0-9a-f:.]+)\]|([0-9a-f:.]+))(?:[/?#].*)?$/i;
+    exports2.RE_URL_WITH_PORT = /^\[([0-9a-f:.]+)\]:([0-9]{1,5})(?:[/?#].*)?$/i;
   }
 });
 
-// node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/v6/helpers.js
+// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/helpers.js
 var require_helpers2 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/v6/helpers.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/helpers.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.escapeHtml = escapeHtml;
     exports2.spanAllZeroes = spanAllZeroes;
     exports2.spanAll = spanAll;
     exports2.spanLeadingZeroes = spanLeadingZeroes;
     exports2.simpleGroup = simpleGroup;
+    function escapeHtml(s) {
+      return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
     function spanAllZeroes(s) {
-      return s.replace(/(0+)/g, '<span class="zero">$1</span>');
+      return escapeHtml(s).replace(/(0+)/g, '<span class="zero">$1</span>');
     }
     function spanAll(s, offset = 0) {
       const letters = s.split("");
-      return letters.map((n, i) => `<span class="digit value-${n} position-${i + offset}">${spanAllZeroes(n)}</span>`).join("");
+      return letters.map((n, i) => `<span class="digit value-${escapeHtml(n)} position-${i + offset}">${spanAllZeroes(n)}</span>`).join("");
     }
     function spanLeadingZeroesSimple(group) {
-      return group.replace(/^(0+)/, '<span class="zero">$1</span>');
+      return escapeHtml(group).replace(/^(0+)/, '<span class="zero">$1</span>');
     }
     function spanLeadingZeroes(address) {
       const groups = address.split(":");
@@ -60826,9 +61679,9 @@ var require_helpers2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/v6/regular-expressions.js
+// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/regular-expressions.js
 var require_regular_expressions = __commonJS({
-  "node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/v6/regular-expressions.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/regular-expressions.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -60923,9 +61776,9 @@ var require_regular_expressions = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/ipv6.js
+// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv6.js
 var require_ipv6 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/ipv6.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv6.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -60969,6 +61822,7 @@ var require_ipv6 = __commonJS({
     var regular_expressions_1 = require_regular_expressions();
     var address_error_1 = require_address_error();
     var common_1 = require_common2();
+    var isCorrect6 = common.isCorrect(constants6.BITS);
     function assert(condition) {
       if (!condition) {
         throw new Error("Assertion failed.");
@@ -61014,7 +61868,8 @@ var require_ipv6 = __commonJS({
         this.v4 = false;
         this.zone = "";
         this.isInSubnet = common.isInSubnet;
-        this.isCorrect = common.isCorrect(constants6.BITS);
+        this.isHostInSubnet = common.isHostInSubnet;
+        this.isCorrect = isCorrect6;
         if (optionalGroups === void 0) {
           this.groups = constants6.GROUPS;
         } else {
@@ -61030,7 +61885,8 @@ var require_ipv6 = __commonJS({
             throw new address_error_1.AddressError("Invalid subnet mask.");
           }
           address = address.replace(constants6.RE_SUBNET_STRING, "");
-        } else if (/\//.test(address)) {
+        }
+        if (/\//.test(address)) {
           throw new address_error_1.AddressError("Invalid subnet mask.");
         }
         const zone = constants6.RE_ZONE_STRING.exec(address);
@@ -61041,6 +61897,13 @@ var require_ipv6 = __commonJS({
         this.addressMinusSuffix = address;
         this.parsedAddress = this.parse(this.addressMinusSuffix);
       }
+      /**
+       * Returns true if the given string is a valid IPv6 address (with optional
+       * CIDR subnet and zone identifier), false otherwise. Host bits in the
+       * subnet portion are allowed (e.g. `2001:db8::1/32` is valid); for strict
+       * network-address validation compare `correctForm()` to
+       * `startAddress().correctForm()`, or use `networkForm()`.
+       */
       static isValid(address) {
         try {
           new _Address6(address);
@@ -61050,9 +61913,8 @@ var require_ipv6 = __commonJS({
         }
       }
       /**
-       * Convert a BigInt to a v6 address object
-       * @memberof Address6
-       * @static
+       * Convert a BigInt to a v6 address object. The value must be in the
+       * range `[0, 2**128 - 1]`; otherwise `AddressError` is thrown.
        * @param {bigint} bigInt - a BigInt to convert
        * @returns {Address6}
        * @example
@@ -61061,19 +61923,21 @@ var require_ipv6 = __commonJS({
        * address.correctForm(); // '::e8:d4a5:1000'
        */
       static fromBigInt(bigInt) {
+        if (bigInt < 0n || bigInt > (1n << BigInt(constants6.BITS)) - 1n) {
+          throw new address_error_1.AddressError("IPv6 BigInt must be in the range 0 to 2**128 - 1");
+        }
         const hex = bigInt.toString(16).padStart(32, "0");
         const groups = [];
-        let i;
-        for (i = 0; i < constants6.GROUPS; i++) {
+        for (let i = 0; i < constants6.GROUPS; i++) {
           groups.push(hex.slice(i * 4, (i + 1) * 4));
         }
         return new _Address6(groups.join(":"));
       }
       /**
-       * Convert a URL (with optional port number) to an address object
-       * @memberof Address6
-       * @static
-       * @param {string} url - a URL with optional port number
+       * Parse a URL (with optional bracketed host and port) into an address and
+       * port. Returns either `{ address, port }` on success or
+       * `{ error, address: null, port: null }` if the URL could not be parsed.
+       * Ports are returned as numbers (or `null` if absent or out of range).
        * @example
        * var addressAndPort = Address6.fromURL('http://[ffff::]:8080/foo/');
        * addressAndPort.address.correctForm(); // 'ffff::'
@@ -61083,8 +61947,9 @@ var require_ipv6 = __commonJS({
         let host;
         let port = null;
         let result;
-        if (url.indexOf("[") !== -1 && url.indexOf("]:") !== -1) {
-          result = constants6.RE_URL_WITH_PORT.exec(url);
+        const stripped = url.replace(/^[a-z][a-z0-9+.-]*:\/\//i, "");
+        if (stripped.indexOf("[") !== -1 && stripped.indexOf("]:") !== -1) {
+          result = constants6.RE_URL_WITH_PORT.exec(stripped);
           if (result === null) {
             return {
               error: "failed to parse address with port",
@@ -61094,9 +61959,8 @@ var require_ipv6 = __commonJS({
           }
           host = result[1];
           port = result[2];
-        } else if (url.indexOf("/") !== -1) {
-          url = url.replace(/^[a-z0-9]+:\/\//, "");
-          result = constants6.RE_URL.exec(url);
+        } else {
+          result = constants6.RE_URL.exec(stripped);
           if (result === null) {
             return {
               error: "failed to parse address from URL",
@@ -61104,13 +61968,11 @@ var require_ipv6 = __commonJS({
               port: null
             };
           }
-          host = result[1];
-        } else {
-          host = url;
+          host = result[1] ?? result[2];
         }
         if (port) {
           port = parseInt(port, 10);
-          if (port < 0 || port > 65536) {
+          if (port < 0 || port > 65535) {
             port = null;
           }
         } else {
@@ -61122,9 +61984,88 @@ var require_ipv6 = __commonJS({
         };
       }
       /**
+       * Construct an `Address6` from an address and a hex subnet mask given as
+       * separate strings (e.g. as returned by Node's `os.networkInterfaces()`).
+       * Throws `AddressError` if the mask is non-contiguous (e.g.
+       * `ffff::ffff`).
+       * @example
+       * var address = Address6.fromAddressAndMask('fe80::1', 'ffff:ffff:ffff:ffff::');
+       * address.subnetMask; // 64
+       */
+      static fromAddressAndMask(address, mask) {
+        const bits = common.prefixLengthFromMask(new _Address6(mask).bigInt(), constants6.BITS);
+        return new _Address6(`${address}/${bits}`);
+      }
+      /**
+       * Construct an `Address6` from an address and a Cisco-style wildcard mask
+       * given as separate strings (e.g. `::ffff:ffff:ffff:ffff` for a `/64`).
+       * The wildcard mask is the bitwise inverse of the subnet mask. Throws
+       * `AddressError` if the mask is non-contiguous.
+       * @example
+       * var address = Address6.fromAddressAndWildcardMask('fe80::1', '::ffff:ffff:ffff:ffff');
+       * address.subnetMask; // 64
+       */
+      static fromAddressAndWildcardMask(address, wildcardMask) {
+        const wildcard = new _Address6(wildcardMask).bigInt();
+        const allOnes = (BigInt(1) << BigInt(constants6.BITS)) - BigInt(1);
+        const mask = wildcard ^ allOnes;
+        const bits = common.prefixLengthFromMask(mask, constants6.BITS);
+        return new _Address6(`${address}/${bits}`);
+      }
+      /**
+       * Construct an `Address6` from a wildcard pattern with trailing `*`
+       * groups. The number of trailing wildcards determines the prefix
+       * length: each `*` represents 16 bits. `::` is expanded to zero groups
+       * (not wildcards) before evaluating trailing wildcards.
+       *
+       * Only trailing whole-group wildcards are supported. Partial-group
+       * wildcards (e.g. `2001:db8::0*`) and interior wildcards (e.g.
+       * `*::1`) throw `AddressError`.
+       * @example
+       * Address6.fromWildcard('2001:db8:*:*:*:*:*:*').subnet;  // '/32'
+       * Address6.fromWildcard('2001:db8::*').subnet;           // '/112'
+       * Address6.fromWildcard('*:*:*:*:*:*:*:*').subnet;       // '/0'
+       */
+      static fromWildcard(input) {
+        if (input.includes("%") || input.includes("/")) {
+          throw new address_error_1.AddressError("Wildcard pattern must not include a zone or CIDR suffix");
+        }
+        const halves = input.split("::");
+        if (halves.length > 2) {
+          throw new address_error_1.AddressError("Wildcard pattern cannot contain more than one '::'");
+        }
+        let groups;
+        if (halves.length === 2) {
+          const left2 = halves[0] === "" ? [] : halves[0].split(":");
+          const right2 = halves[1] === "" ? [] : halves[1].split(":");
+          const remaining = constants6.GROUPS - left2.length - right2.length;
+          if (remaining < 1) {
+            throw new address_error_1.AddressError("Wildcard pattern with '::' has too many groups");
+          }
+          groups = [...left2, ...new Array(remaining).fill("0"), ...right2];
+        } else {
+          groups = input.split(":");
+        }
+        if (groups.length !== constants6.GROUPS) {
+          throw new address_error_1.AddressError("Wildcard pattern must have 8 groups");
+        }
+        let firstWildcard = -1;
+        for (let i = 0; i < groups.length; i++) {
+          if (groups[i] === "*") {
+            if (firstWildcard === -1) {
+              firstWildcard = i;
+            }
+          } else if (firstWildcard !== -1) {
+            throw new address_error_1.AddressError("Wildcard `*` must only appear in trailing groups (e.g. `2001:db8:*:*:*:*:*:*`)");
+          }
+        }
+        const trailing = firstWildcard === -1 ? 0 : groups.length - firstWildcard;
+        const replaced = groups.map((g) => g === "*" ? "0" : g);
+        const subnetBits = constants6.BITS - trailing * 16;
+        return new _Address6(`${replaced.join(":")}/${subnetBits}`);
+      }
+      /**
        * Create an IPv6-mapped address given an IPv4 address
-       * @memberof Address6
-       * @static
        * @param {string} address - An IPv4 address string
        * @returns {Address6}
        * @example
@@ -61139,8 +62080,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Return an address from ip6.arpa form
-       * @memberof Address6
-       * @static
        * @param {string} arpaFormAddress - an 'ip6.arpa' form address
        * @returns {Adress6}
        * @example
@@ -61163,8 +62102,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Return the Microsoft UNC transcription of the address
-       * @memberof Address6
-       * @instance
        * @returns {String} the Microsoft UNC transcription of the address
        */
       microsoftTranscription() {
@@ -61172,8 +62109,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Return the first n bits of the address, defaulting to the subnet mask
-       * @memberof Address6
-       * @instance
        * @param {number} [mask=subnet] - the number of bits to mask
        * @returns {String} the first n bits of the address as a string
        */
@@ -61182,8 +62117,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Return the number of possible subnets of a given size in the address
-       * @memberof Address6
-       * @instance
        * @param {number} [subnetSize=128] - the subnet size
        * @returns {String}
        */
@@ -61199,8 +62132,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Helper function getting start address.
-       * @memberof Address6
-       * @instance
        * @returns {bigint}
        */
       _startAddress() {
@@ -61209,8 +62140,6 @@ var require_ipv6 = __commonJS({
       /**
        * The first address in the range given by this address' subnet
        * Often referred to as the Network Address.
-       * @memberof Address6
-       * @instance
        * @returns {Address6}
        */
       startAddress() {
@@ -61219,8 +62148,6 @@ var require_ipv6 = __commonJS({
       /**
        * The first host address in the range given by this address's subnet ie
        * the first address after the Network Address
-       * @memberof Address6
-       * @instance
        * @returns {Address6}
        */
       startAddressExclusive() {
@@ -61229,8 +62156,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Helper function getting end address.
-       * @memberof Address6
-       * @instance
        * @returns {bigint}
        */
       _endAddress() {
@@ -61239,8 +62164,6 @@ var require_ipv6 = __commonJS({
       /**
        * The last address in the range given by this address' subnet
        * Often referred to as the Broadcast
-       * @memberof Address6
-       * @instance
        * @returns {Address6}
        */
       endAddress() {
@@ -61249,8 +62172,6 @@ var require_ipv6 = __commonJS({
       /**
        * The last host address in the range given by this address's subnet ie
        * the last address prior to the Broadcast Address
-       * @memberof Address6
-       * @instance
        * @returns {Address6}
        */
       endAddressExclusive() {
@@ -61258,36 +62179,69 @@ var require_ipv6 = __commonJS({
         return _Address6.fromBigInt(this._endAddress() - adjust);
       }
       /**
-       * Return the scope of the address
-       * @memberof Address6
-       * @instance
+       * The hex form of the subnet mask, e.g. `ffff:ffff:ffff:ffff::` for a
+       * `/64`. Returns an `Address6`; call `.correctForm()` for the string.
+       * @returns {Address6}
+       */
+      subnetMaskAddress() {
+        return _Address6.fromBigInt(BigInt(`0b${"1".repeat(this.subnetMask)}${"0".repeat(constants6.BITS - this.subnetMask)}`));
+      }
+      /**
+       * The Cisco-style wildcard mask, e.g. `::ffff:ffff:ffff:ffff` for a
+       * `/64`. This is the bitwise inverse of `subnetMaskAddress()`. Returns
+       * an `Address6`; call `.correctForm()` for the string.
+       * @returns {Address6}
+       */
+      wildcardMask() {
+        return _Address6.fromBigInt(BigInt(`0b${"0".repeat(this.subnetMask)}${"1".repeat(constants6.BITS - this.subnetMask)}`));
+      }
+      /**
+       * The network address in CIDR string form, e.g. `2001:db8::/32` for
+       * `2001:db8::1/32`. For an address with no explicit subnet the prefix
+       * is `/128`, e.g. `networkForm()` on `2001:db8::1` returns
+       * `2001:db8::1/128`.
+       * @returns {string}
+       */
+      networkForm() {
+        return `${this.startAddress().correctForm()}/${this.subnetMask}`;
+      }
+      /**
+       * Return the scope of the address. The 4-bit scope field
+       * ([RFC 4291 §2.7](https://datatracker.ietf.org/doc/html/rfc4291#section-2.7))
+       * is only defined for multicast addresses; for unicast addresses the scope
+       * is derived from the address type per
+       * [RFC 4007 §6](https://datatracker.ietf.org/doc/html/rfc4007#section-6).
        * @returns {String}
        */
       getScope() {
-        let scope = constants6.SCOPES[parseInt(this.getBits(12, 16).toString(10), 10)];
-        if (this.getType() === "Global unicast" && scope !== "Link local") {
-          scope = "Global";
+        const type = this.getType();
+        if (type === "Multicast" || type.startsWith("Multicast ")) {
+          const scope = constants6.SCOPES[parseInt(this.getBits(12, 16).toString(10), 10)];
+          return scope || "Unknown";
         }
-        return scope || "Unknown";
+        if (type === "Link-local unicast" || type === "Loopback") {
+          return "Link local";
+        }
+        if (type === "Unspecified") {
+          return "Unknown";
+        }
+        return "Global";
       }
       /**
        * Return the type of the address
-       * @memberof Address6
-       * @instance
        * @returns {String}
        */
       getType() {
-        for (const subnet of Object.keys(constants6.TYPES)) {
-          if (this.isInSubnet(new _Address6(subnet))) {
-            return constants6.TYPES[subnet];
+        for (let i = 0; i < TYPE_SUBNETS.length; i++) {
+          const entry = TYPE_SUBNETS[i];
+          if (this.isHostInSubnet(entry[0])) {
+            return entry[1];
           }
         }
         return "Global unicast";
       }
       /**
        * Return the bits in the given range as a BigInt
-       * @memberof Address6
-       * @instance
        * @returns {bigint}
        */
       getBits(start, end) {
@@ -61295,8 +62249,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Return the bits in the given range as a base-2 string
-       * @memberof Address6
-       * @instance
        * @returns {String}
        */
       getBitsBase2(start, end) {
@@ -61304,8 +62256,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Return the bits in the given range as a base-16 string
-       * @memberof Address6
-       * @instance
        * @returns {String}
        */
       getBitsBase16(start, end) {
@@ -61317,8 +62267,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Return the bits that are set past the subnet mask length
-       * @memberof Address6
-       * @instance
        * @returns {String}
        */
       getBitsPastSubnet() {
@@ -61326,10 +62274,8 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Return the reversed ip6.arpa form of the address
-       * @memberof Address6
        * @param {Object} options
        * @param {boolean} options.omitSuffix - omit the "ip6.arpa" suffix
-       * @instance
        * @returns {String}
        */
       reverseForm(options) {
@@ -61350,10 +62296,10 @@ var require_ipv6 = __commonJS({
         return "ip6.arpa.";
       }
       /**
-       * Return the correct form of the address
-       * @memberof Address6
-       * @instance
-       * @returns {String}
+       * Returns the address in correct form, per
+       * [RFC 5952](https://datatracker.ietf.org/doc/html/rfc5952): leading zeros
+       * stripped, the longest run of zero groups collapsed to `::`, and hex digits
+       * lowercased (e.g. `2001:db8::1`). This is the recommended form for display.
        */
       correctForm() {
         let i;
@@ -61395,8 +62341,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Return a zero-padded base-2 string representation of the address
-       * @memberof Address6
-       * @instance
        * @returns {String}
        * @example
        * var address = new Address6('2001:4860:4001:803::1011');
@@ -61405,27 +62349,51 @@ var require_ipv6 = __commonJS({
        * //  0000000000000000000000000000000000000000000000000001000000010001'
        */
       binaryZeroPad() {
-        return this.bigInt().toString(2).padStart(constants6.BITS, "0");
+        if (this._binaryZeroPad === void 0) {
+          this._binaryZeroPad = this.bigInt().toString(2).padStart(constants6.BITS, "0");
+        }
+        return this._binaryZeroPad;
       }
+      /**
+       * Parses a v4-in-v6 string (e.g. `::ffff:192.168.0.1`) by extracting the
+       * trailing IPv4 address into `this.address4` / `this.parsedAddress4` and
+       * returning the address with the v4 portion converted to two v6 groups.
+       * Used internally by `parse()`.
+       */
       // TODO: Improve the semantics of this helper function
       parse4in6(address) {
+        if (address.indexOf(".") === -1) {
+          return address;
+        }
         const groups = address.split(":");
         const lastGroup = groups.slice(-1)[0];
+        const v4Octets = lastGroup.split(".");
+        if (v4Octets.length === constants4.GROUPS && v4Octets.every((octet) => /^\d{1,3}$/.test(octet))) {
+          if (v4Octets.some((octet) => /^0\d/.test(octet))) {
+            const highlighted = v4Octets.map(spanLeadingZeroes4).join(".");
+            const prefix = groups.slice(0, -1).map(helpers.escapeHtml).join(":");
+            const separator = groups.length > 1 ? ":" : "";
+            throw new address_error_1.AddressError("IPv4 addresses can't have leading zeroes.", `${prefix}${separator}${highlighted}`);
+          }
+        }
         const address4 = lastGroup.match(constants4.RE_ADDRESS);
         if (address4) {
           this.parsedAddress4 = address4[0];
-          this.address4 = new ipv4_1.Address4(this.parsedAddress4);
-          for (let i = 0; i < this.address4.groups; i++) {
-            if (/^0[0-9]+/.test(this.address4.parsedAddress[i])) {
-              throw new address_error_1.AddressError("IPv4 addresses can't have leading zeroes.", address.replace(constants4.RE_ADDRESS, this.address4.parsedAddress.map(spanLeadingZeroes4).join(".")));
-            }
-          }
+          const v4Suffix = this.subnetMask >= 96 ? `/${this.subnetMask - 96}` : "";
+          this.address4 = new ipv4_1.Address4(`${this.parsedAddress4}${v4Suffix}`);
           this.v4 = true;
           groups[groups.length - 1] = this.address4.toGroup6();
           address = groups.join(":");
         }
         return address;
       }
+      /**
+       * Parses an IPv6 address string into its 8 hexadecimal groups (expanding
+       * any `::` elision and any trailing v4-in-v6 portion) and stores the result
+       * on `this.parsedAddress`. Called automatically by the constructor; you
+       * typically don't need to call it directly. Throws `AddressError` if the
+       * input is malformed.
+       */
       // TODO: Make private?
       parse(address) {
         address = this.parse4in6(address);
@@ -61473,18 +62441,16 @@ var require_ipv6 = __commonJS({
         return groups;
       }
       /**
-       * Return the canonical form of the address
-       * @memberof Address6
-       * @instance
-       * @returns {String}
+       * Returns the canonical (fully expanded) form of the address: all 8 groups,
+       * each padded to 4 hex digits, with no `::` collapsing
+       * (e.g. `2001:0db8:0000:0000:0000:0000:0000:0001`). Useful for sorting and
+       * byte-exact comparison.
        */
       canonicalForm() {
         return this.parsedAddress.map(paddedHex).join(":");
       }
       /**
        * Return the decimal form of the address
-       * @memberof Address6
-       * @instance
        * @returns {String}
        */
       decimal() {
@@ -61492,17 +62458,17 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Return the address as a BigInt
-       * @memberof Address6
-       * @instance
        * @returns {bigint}
        */
       bigInt() {
         return BigInt(`0x${this.parsedAddress.map(paddedHex).join("")}`);
       }
       /**
-       * Return the last two groups of this address as an IPv4 address string
-       * @memberof Address6
-       * @instance
+       * Return the last two groups of this address as an IPv4 address string.
+       * If this address carries a CIDR prefix that covers the trailing 32 bits
+       * (i.e. `subnetMask >= 96`), the resulting `Address4` inherits the
+       * corresponding v4 prefix (`subnetMask - 96`); otherwise it defaults to
+       * `/32`.
        * @returns {Address4}
        * @example
        * var address = new Address6('2001:4860:4001::1825:bf11');
@@ -61510,12 +62476,19 @@ var require_ipv6 = __commonJS({
        */
       to4() {
         const binary = this.binaryZeroPad().split("");
-        return ipv4_1.Address4.fromHex(BigInt(`0b${binary.slice(96, 128).join("")}`).toString(16));
+        const hex = BigInt(`0b${binary.slice(96, 128).join("")}`).toString(16).padStart(8, "0");
+        if (this.subnetMask >= 96) {
+          const v4Mask = this.subnetMask - 96;
+          const groups = [];
+          for (let i = 0; i < 8; i += 2) {
+            groups.push(parseInt(hex.slice(i, i + 2), 16));
+          }
+          return new ipv4_1.Address4(`${groups.join(".")}/${v4Mask}`);
+        }
+        return ipv4_1.Address4.fromHex(hex);
       }
       /**
        * Return the v4-in-v6 form of the address
-       * @memberof Address6
-       * @instance
        * @returns {String}
        */
       to4in6() {
@@ -61526,13 +62499,13 @@ var require_ipv6 = __commonJS({
         if (!/:$/.test(correct)) {
           infix = ":";
         }
-        return correct + infix + address4.address;
+        return correct + infix + address4.correctForm();
       }
       /**
-       * Return an object containing the Teredo properties of the address
-       * @memberof Address6
-       * @instance
-       * @returns {Object}
+       * Decodes the Teredo tunneling fields embedded in this address. Returns the
+       * Teredo prefix, server IPv4, client IPv4, raw flag bits, cone-NAT flag,
+       * UDP port, and Microsoft-format flag breakdown (reserved, universal/local,
+       * group/individual, nonce). Only meaningful for addresses in `2001::/32`.
        */
       inspectTeredo() {
         const prefix = this.getBitsBase16(0, 32);
@@ -61540,7 +62513,7 @@ var require_ipv6 = __commonJS({
         const udpPort = (bitsForUdpPort ^ BigInt("0xffff")).toString();
         const server4 = ipv4_1.Address4.fromHex(this.getBitsBase16(32, 64));
         const bitsForClient4 = this.getBits(96, 128);
-        const client4 = ipv4_1.Address4.fromHex((bitsForClient4 ^ BigInt("0xffffffff")).toString(16));
+        const client4 = ipv4_1.Address4.fromHex((bitsForClient4 ^ BigInt("0xffffffff")).toString(16).padStart(8, "0"));
         const flagsBase2 = this.getBitsBase2(64, 80);
         const coneNat = (0, common_1.testBit)(flagsBase2, 15);
         const reserved = (0, common_1.testBit)(flagsBase2, 14);
@@ -61563,10 +62536,9 @@ var require_ipv6 = __commonJS({
         };
       }
       /**
-       * Return an object containing the 6to4 properties of the address
-       * @memberof Address6
-       * @instance
-       * @returns {Object}
+       * Decodes the 6to4 tunneling fields embedded in this address. Returns the
+       * 6to4 prefix and the embedded IPv4 gateway address. Only meaningful for
+       * addresses in `2002::/16`.
        */
       inspect6to4() {
         const prefix = this.getBitsBase16(0, 16);
@@ -61578,8 +62550,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Return a v6 6to4 address from a v6 v4inv6 address
-       * @memberof Address6
-       * @instance
        * @returns {Address6}
        */
       to6to4() {
@@ -61596,15 +62566,77 @@ var require_ipv6 = __commonJS({
         return new _Address6(addr6to4);
       }
       /**
-       * Return a byte array
-       * @memberof Address6
-       * @instance
+       * Embed an IPv4 address into a NAT64 IPv6 address using the encoding
+       * defined by [RFC 6052](https://datatracker.ietf.org/doc/html/rfc6052).
+       * The default prefix is the well-known prefix `64:ff9b::/96`. The prefix
+       * length must be one of 32, 40, 48, 56, 64, or 96; for prefixes shorter
+       * than /64 the IPv4 octets are split around the reserved bits 64–71.
+       * @example
+       * Address6.fromAddress4Nat64('192.0.2.33').correctForm(); // '64:ff9b::c000:221'
+       * Address6.fromAddress4Nat64('192.0.2.33', '2001:db8::/32').correctForm(); // '2001:db8:c000:221::'
+       */
+      static fromAddress4Nat64(address, prefix = "64:ff9b::/96") {
+        const v4 = new ipv4_1.Address4(address);
+        const prefix6 = new _Address6(prefix);
+        const pl = prefix6.subnetMask;
+        if (pl !== 32 && pl !== 40 && pl !== 48 && pl !== 56 && pl !== 64 && pl !== 96) {
+          throw new address_error_1.AddressError("NAT64 prefix length must be 32, 40, 48, 56, 64, or 96");
+        }
+        const prefixBits = prefix6.binaryZeroPad();
+        const v4Bits = v4.binaryZeroPad();
+        let bits;
+        if (pl === 96) {
+          bits = prefixBits.slice(0, 96) + v4Bits;
+        } else {
+          const beforeU = 64 - pl;
+          bits = prefixBits.slice(0, pl) + v4Bits.slice(0, beforeU) + "00000000" + v4Bits.slice(beforeU) + "0".repeat(128 - 72 - (32 - beforeU));
+        }
+        const hex = BigInt(`0b${bits}`).toString(16).padStart(32, "0");
+        const groups = [];
+        for (let i = 0; i < 8; i++) {
+          groups.push(hex.slice(i * 4, (i + 1) * 4));
+        }
+        return new _Address6(groups.join(":"));
+      }
+      /**
+       * Extract the embedded IPv4 address from a NAT64 IPv6 address using the
+       * encoding defined by [RFC 6052](https://datatracker.ietf.org/doc/html/rfc6052).
+       * The default prefix is the well-known prefix `64:ff9b::/96`. Returns
+       * `null` if this address is not contained within the given prefix.
+       * @example
+       * new Address6('64:ff9b::c000:221').toAddress4Nat64()!.correctForm(); // '192.0.2.33'
+       */
+      toAddress4Nat64(prefix = "64:ff9b::/96") {
+        const prefix6 = new _Address6(prefix);
+        const pl = prefix6.subnetMask;
+        if (pl !== 32 && pl !== 40 && pl !== 48 && pl !== 56 && pl !== 64 && pl !== 96) {
+          throw new address_error_1.AddressError("NAT64 prefix length must be 32, 40, 48, 56, 64, or 96");
+        }
+        if (!this.isHostInSubnet(prefix6)) {
+          return null;
+        }
+        const bits = this.binaryZeroPad();
+        let v4Bits;
+        if (pl === 96) {
+          v4Bits = bits.slice(96, 128);
+        } else {
+          const beforeU = 64 - pl;
+          v4Bits = bits.slice(pl, pl + beforeU) + bits.slice(72, 72 + (32 - beforeU));
+        }
+        const octets = [];
+        for (let i = 0; i < 4; i++) {
+          octets.push(parseInt(v4Bits.slice(i * 8, (i + 1) * 8), 2).toString());
+        }
+        return new ipv4_1.Address4(octets.join("."));
+      }
+      /**
+       * Return a byte array.
+       *
+       * To get a Node.js `Buffer`, wrap the result: `Buffer.from(address.toByteArray())`.
        * @returns {Array}
        */
       toByteArray() {
-        const valueWithoutPadding = this.bigInt().toString(16);
-        const leadingPad = "0".repeat(valueWithoutPadding.length % 2);
-        const value = `${leadingPad}${valueWithoutPadding}`;
+        const value = this.bigInt().toString(16).padStart(constants6.BITS / 4, "0");
         const bytes = [];
         for (let i = 0, length = value.length; i < length; i += 2) {
           bytes.push(parseInt(value.substring(i, i + 2), 16));
@@ -61612,27 +62644,27 @@ var require_ipv6 = __commonJS({
         return bytes;
       }
       /**
-       * Return an unsigned byte array
-       * @memberof Address6
-       * @instance
+       * Return an unsigned byte array.
+       *
+       * To get a Node.js `Buffer`, wrap the result: `Buffer.from(address.toUnsignedByteArray())`.
        * @returns {Array}
        */
       toUnsignedByteArray() {
         return this.toByteArray().map(unsignByte);
       }
       /**
-       * Convert a byte array to an Address6 object
-       * @memberof Address6
-       * @static
+       * Convert a byte array to an Address6 object.
+       *
+       * To convert from a Node.js `Buffer`, spread it: `Address6.fromByteArray([...buf])`.
        * @returns {Address6}
        */
       static fromByteArray(bytes) {
         return this.fromUnsignedByteArray(bytes.map(unsignByte));
       }
       /**
-       * Convert an unsigned byte array to an Address6 object
-       * @memberof Address6
-       * @static
+       * Convert an unsigned byte array to an Address6 object.
+       *
+       * To convert from a Node.js `Buffer`, spread it: `Address6.fromUnsignedByteArray([...buf])`.
        * @returns {Address6}
        */
       static fromUnsignedByteArray(bytes) {
@@ -61647,8 +62679,6 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Returns true if the address is in the canonical form, false otherwise
-       * @memberof Address6
-       * @instance
        * @returns {boolean}
        */
       isCanonical() {
@@ -61656,11 +62686,13 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Returns true if the address is a link local address, false otherwise
-       * @memberof Address6
-       * @instance
        * @returns {boolean}
        */
       isLinkLocal() {
+        const embedded = this.embeddedIPv4();
+        if (embedded) {
+          return embedded.isLinkLocal();
+        }
         if (this.getBitsBase2(0, 64) === "1111111010000000000000000000000000000000000000000000000000000000") {
           return true;
         }
@@ -61668,53 +62700,163 @@ var require_ipv6 = __commonJS({
       }
       /**
        * Returns true if the address is a multicast address, false otherwise
-       * @memberof Address6
-       * @instance
        * @returns {boolean}
        */
       isMulticast() {
-        return this.getType() === "Multicast";
+        const embedded = this.embeddedIPv4();
+        if (embedded) {
+          return embedded.isMulticast();
+        }
+        const type = this.getType();
+        return type === "Multicast" || type.startsWith("Multicast ");
       }
       /**
-       * Returns true if the address is a v4-in-v6 address, false otherwise
-       * @memberof Address6
-       * @instance
+       * Returns true if the address was written in v4-in-v6 dotted-quad notation
+       * (e.g. `::ffff:127.0.0.1`), false otherwise. This is a notation-level flag
+       * and does not reflect whether the address bits lie in the IPv4-mapped
+       * (`::ffff:0:0/96`) subnet — for that, see {@link isMapped4}.
        * @returns {boolean}
        */
       is4() {
         return this.v4;
       }
       /**
+       * Returns true if the address is an IPv4-mapped IPv6 address in
+       * `::ffff:0:0/96` ([RFC 4291 §2.5.5.2](https://datatracker.ietf.org/doc/html/rfc4291#section-2.5.5.2)),
+       * false otherwise. Unlike {@link is4}, this checks the underlying address
+       * bits rather than the textual notation, so `::ffff:127.0.0.1` and
+       * `::ffff:7f00:1` both return true.
+       * @returns {boolean}
+       */
+      isMapped4() {
+        return this.isHostInSubnet(IPV4_MAPPED_SUBNET);
+      }
+      /**
+       * If this address embeds a routable IPv4 address — i.e. it is IPv4-mapped
+       * (`::ffff:0:0/96`) or sits in the NAT64 well-known prefix (`64:ff9b::/96`,
+       * [RFC 6052](https://datatracker.ietf.org/doc/html/rfc6052)) — return that
+       * embedded address as an {@link Address4}; otherwise return null.
+       *
+       * The special-property checks (`isLoopback`, `isLinkLocal`, `isMulticast`,
+       * `isUnspecified`, `isPrivate`, `isCGNAT`, `isBroadcast`) call this first and
+       * delegate to the embedded {@link Address4} when present, so a literal such as
+       * `::ffff:127.0.0.1` is classified by what it actually reaches (loopback)
+       * rather than by its IPv6 wrapper (which `getType()` reports as IPv4-mapped).
+       * This matters wherever the checks back a trust-boundary decision (e.g. an
+       * SSRF allow/deny filter): without normalization, `::ffff:10.0.0.1`,
+       * `::ffff:169.254.169.254`, `64:ff9b::7f00:1`, etc. would all read as
+       * non-internal.
+       * @returns {Address4 | null}
+       */
+      embeddedIPv4() {
+        if (this.isMapped4() || this.isHostInSubnet(NAT64_WELL_KNOWN_SUBNET)) {
+          return this.to4();
+        }
+        return null;
+      }
+      /**
        * Returns true if the address is a Teredo address, false otherwise
-       * @memberof Address6
-       * @instance
        * @returns {boolean}
        */
       isTeredo() {
-        return this.isInSubnet(new _Address6("2001::/32"));
+        return this.isHostInSubnet(TEREDO_SUBNET);
       }
       /**
        * Returns true if the address is a 6to4 address, false otherwise
-       * @memberof Address6
-       * @instance
        * @returns {boolean}
        */
       is6to4() {
-        return this.isInSubnet(new _Address6("2002::/16"));
+        return this.isHostInSubnet(SIX_TO_FOUR_SUBNET);
       }
       /**
        * Returns true if the address is a loopback address, false otherwise
-       * @memberof Address6
-       * @instance
        * @returns {boolean}
        */
       isLoopback() {
+        const embedded = this.embeddedIPv4();
+        if (embedded) {
+          return embedded.isLoopback();
+        }
         return this.getType() === "Loopback";
+      }
+      /**
+       * Returns true if the address is a Unique Local Address in `fc00::/7` ([RFC 4193](https://datatracker.ietf.org/doc/html/rfc4193)). ULAs are the IPv6 equivalent of IPv4 [RFC 1918](https://datatracker.ietf.org/doc/html/rfc1918) private addresses.
+       * @returns {boolean}
+       */
+      isULA() {
+        return this.isHostInSubnet(ULA_SUBNET);
+      }
+      /**
+       * Returns true if the address is private, i.e. a Unique Local Address in
+       * `fc00::/7` ([RFC 4193](https://datatracker.ietf.org/doc/html/rfc4193)) or an
+       * IPv4-mapped / NAT64 address whose embedded IPv4 address is in one of the
+       * [RFC 1918](https://datatracker.ietf.org/doc/html/rfc1918) private ranges
+       * (e.g. `::ffff:10.0.0.1`). This is the IPv6 counterpart to
+       * {@link Address4.isPrivate}; use it instead of {@link isULA} when you need to
+       * catch mapped RFC 1918 addresses as well as native ULAs.
+       * @returns {boolean}
+       */
+      isPrivate() {
+        const embedded = this.embeddedIPv4();
+        if (embedded) {
+          return embedded.isPrivate();
+        }
+        return this.isULA();
+      }
+      /**
+       * Returns true if the address is an IPv4-mapped / NAT64 address whose embedded
+       * IPv4 address is in the carrier-grade NAT range `100.64.0.0/10`
+       * ([RFC 6598](https://datatracker.ietf.org/doc/html/rfc6598)), false
+       * otherwise. There is no native IPv6 CGNAT range, so this only ever returns
+       * true for an embedded IPv4 address (e.g. `::ffff:100.64.0.1`).
+       * @returns {boolean}
+       */
+      isCGNAT() {
+        const embedded = this.embeddedIPv4();
+        if (embedded) {
+          return embedded.isCGNAT();
+        }
+        return false;
+      }
+      /**
+       * Returns true if the address is an IPv4-mapped / NAT64 address whose embedded
+       * IPv4 address is the limited broadcast address `255.255.255.255`
+       * ([RFC 919](https://datatracker.ietf.org/doc/html/rfc919)), false otherwise.
+       * There is no IPv6 broadcast, so this only ever returns true for an embedded
+       * IPv4 address (e.g. `::ffff:255.255.255.255`).
+       * @returns {boolean}
+       */
+      isBroadcast() {
+        const embedded = this.embeddedIPv4();
+        if (embedded) {
+          return embedded.isBroadcast();
+        }
+        return false;
+      }
+      /**
+       * Returns true if the address is the unspecified address `::`.
+       * @returns {boolean}
+       */
+      isUnspecified() {
+        const embedded = this.embeddedIPv4();
+        if (embedded) {
+          return embedded.isUnspecified();
+        }
+        return this.getType() === "Unspecified";
+      }
+      /**
+       * Returns true if the address is in the documentation prefix `2001:db8::/32` ([RFC 3849](https://datatracker.ietf.org/doc/html/rfc3849)).
+       * @returns {boolean}
+       */
+      isDocumentation() {
+        return this.isHostInSubnet(DOCUMENTATION_SUBNET);
       }
       // #endregion
       // #region HTML
       /**
-       * @returns {String} the address in link form with a default port of 80
+       * Returns the address as an HTTP URL with the host bracketed, e.g.
+       * `http://[2001:db8::1]/`. If `optionalPort` is provided it is appended,
+       * e.g. `http://[2001:db8::1]:8080/`.
        */
       href(optionalPort) {
         if (optionalPort === void 0) {
@@ -61725,7 +62867,12 @@ var require_ipv6 = __commonJS({
         return `http://[${this.correctForm()}]${optionalPort}/`;
       }
       /**
-       * @returns {String} a link suitable for conveying the address via a URL hash
+       * Returns an HTML `<a>` element whose `href` encodes the address in a URL
+       * hash fragment (default prefix `/#address=`). Useful for linking between
+       * pages of an address-inspector UI.
+       * @param options.className - CSS class for the rendered `<a>` element
+       * @param options.prefix - hash prefix prepended to the address (default `/#address=`)
+       * @param options.v4 - when true, render the address in v4-in-v6 form
        */
       link(options) {
         if (!options) {
@@ -61745,10 +62892,13 @@ var require_ipv6 = __commonJS({
           formFunction = this.to4in6;
         }
         const form = formFunction.call(this);
+        const safeHref = helpers.escapeHtml(`${options.prefix}${form}`);
+        const safeForm = helpers.escapeHtml(form);
         if (options.className) {
-          return `<a href="${options.prefix}${form}" class="${options.className}">${form}</a>`;
+          const safeClass = helpers.escapeHtml(options.className);
+          return `<a href="${safeHref}" class="${safeClass}">${safeForm}</a>`;
         }
-        return `<a href="${options.prefix}${form}">${form}</a>`;
+        return `<a href="${safeHref}">${safeForm}</a>`;
       }
       /**
        * Groups an address
@@ -61756,12 +62906,12 @@ var require_ipv6 = __commonJS({
        */
       group() {
         if (this.elidedGroups === 0) {
-          return helpers.simpleGroup(this.address).join(":");
+          return helpers.simpleGroup(this.addressMinusSuffix).join(":");
         }
         assert(typeof this.elidedGroups === "number");
         assert(typeof this.elisionBegin === "number");
         const output = [];
-        const [left2, right2] = this.address.split("::");
+        const [left2, right2] = this.addressMinusSuffix.split("::");
         if (left2.length) {
           output.push(...helpers.simpleGroup(left2));
         } else {
@@ -61789,8 +62939,6 @@ var require_ipv6 = __commonJS({
       /**
        * Generate a regular expression string that can be used to find or validate
        * all variations of this address
-       * @memberof Address6
-       * @instance
        * @param {boolean} substringSearch
        * @returns {string}
        */
@@ -61829,8 +62977,6 @@ var require_ipv6 = __commonJS({
       /**
        * Generate a regular expression that can be used to find or validate all
        * variations of this address.
-       * @memberof Address6
-       * @instance
        * @param {boolean} substringSearch
        * @returns {RegExp}
        */
@@ -61839,12 +62985,22 @@ var require_ipv6 = __commonJS({
       }
     };
     exports2.Address6 = Address6;
+    var TYPE_SUBNETS = Object.keys(constants6.TYPES).map((subnet) => [
+      new Address6(subnet),
+      constants6.TYPES[subnet]
+    ]);
+    var TEREDO_SUBNET = new Address6("2001::/32");
+    var SIX_TO_FOUR_SUBNET = new Address6("2002::/16");
+    var ULA_SUBNET = new Address6("fc00::/7");
+    var DOCUMENTATION_SUBNET = new Address6("2001:db8::/32");
+    var IPV4_MAPPED_SUBNET = new Address6("::ffff:0:0/96");
+    var NAT64_WELL_KNOWN_SUBNET = new Address6("64:ff9b::/96");
   }
 });
 
-// node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/ip-address.js
+// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ip-address.js
 var require_ip_address = __commonJS({
-  "node_modules/.pnpm/ip-address@10.1.0/node_modules/ip-address/dist/ip-address.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ip-address.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -61897,9 +63053,9 @@ var require_ip_address = __commonJS({
   }
 });
 
-// node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/common/helpers.js
+// node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/common/helpers.js
 var require_helpers3 = __commonJS({
-  "node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/common/helpers.js"(exports2) {
+  "node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/common/helpers.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ipToBuffer = exports2.int32ToIpv4 = exports2.ipv4ToInt32 = exports2.validateSocksClientChainOptions = exports2.validateSocksClientOptions = void 0;
@@ -62004,9 +63160,9 @@ var require_helpers3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/common/receivebuffer.js
+// node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/common/receivebuffer.js
 var require_receivebuffer = __commonJS({
-  "node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/common/receivebuffer.js"(exports2) {
+  "node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/common/receivebuffer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ReceiveBuffer = void 0;
@@ -62052,9 +63208,9 @@ var require_receivebuffer = __commonJS({
   }
 });
 
-// node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/client/socksclient.js
+// node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/client/socksclient.js
 var require_socksclient = __commonJS({
-  "node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/client/socksclient.js"(exports2) {
+  "node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/client/socksclient.js"(exports2) {
     "use strict";
     var __awaiter2 = exports2 && exports2.__awaiter || function(thisArg, _arguments, P, generator) {
       function adopt(value) {
@@ -62731,9 +63887,9 @@ var require_socksclient = __commonJS({
   }
 });
 
-// node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/index.js
+// node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/index.js
 var require_build = __commonJS({
-  "node_modules/.pnpm/socks@2.8.7/node_modules/socks/build/index.js"(exports2) {
+  "node_modules/.pnpm/socks@2.8.9/node_modules/socks/build/index.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -63154,9 +64310,9 @@ var require_file3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseControlResponse.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/parseControlResponse.js
 var require_parseControlResponse = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseControlResponse.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/parseControlResponse.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.parseControlResponse = parseControlResponse;
@@ -63206,9 +64362,9 @@ var require_parseControlResponse = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/FtpContext.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/FtpContext.js
 var require_FtpContext = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/FtpContext.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/FtpContext.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.FTPContext = exports2.FTPError = void 0;
@@ -63224,6 +64380,7 @@ var require_FtpContext = __commonJS({
     exports2.FTPError = FTPError;
     function doNothing() {
     }
+    var maxControlResponseLength = 2 ** 16;
     var FTPContext = class {
       /**
        * Instantiate an FTP context.
@@ -63350,6 +64507,9 @@ var require_FtpContext = __commonJS({
        * Send an FTP command without waiting for or handling the result.
        */
       send(command2) {
+        if (/[\r\n\0]/.test(command2)) {
+          throw new Error(`Invalid command: Contains control characters. (${command2})`);
+        }
         const containsPassword = command2.startsWith("PASS");
         const message = containsPassword ? "> PASS ###" : `> ${command2}`;
         this.log(message);
@@ -63438,6 +64598,10 @@ Closing reason: ${this._closingError.stack}`;
        */
       _onControlSocketData(chunk) {
         this.log(`< ${chunk}`);
+        if (this._partialResponse.length + chunk.length > maxControlResponseLength) {
+          this.closeWithError(new Error("FTP control response exceeded maximum allowed size"));
+          return;
+        }
         const completeResponse = this._partialResponse + chunk;
         const parsed = (0, parseControlResponse_1.parseControlResponse)(completeResponse);
         this._partialResponse = parsed.rest;
@@ -63523,9 +64687,60 @@ Closing reason: ${this._closingError.stack}`;
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/FileInfo.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/netUtils.js
+var require_netUtils = __commonJS({
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/netUtils.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.describeTLS = describeTLS;
+    exports2.describeAddress = describeAddress;
+    exports2.upgradeSocket = upgradeSocket;
+    exports2.ipIsPrivateV4Address = ipIsPrivateV4Address;
+    var tls_1 = require("tls");
+    function describeTLS(socket) {
+      if (socket instanceof tls_1.TLSSocket) {
+        const protocol = socket.getProtocol();
+        return protocol ? protocol : "Server socket or disconnected client socket";
+      }
+      return "No encryption";
+    }
+    function describeAddress(socket) {
+      if (socket.remoteFamily === "IPv6") {
+        return `[${socket.remoteAddress}]:${socket.remotePort}`;
+      }
+      return `${socket.remoteAddress}:${socket.remotePort}`;
+    }
+    function upgradeSocket(socket, options) {
+      return new Promise((resolve5, reject) => {
+        const tlsOptions = Object.assign({}, options, {
+          socket
+        });
+        const tlsSocket = (0, tls_1.connect)(tlsOptions, () => {
+          const expectCertificate = tlsOptions.rejectUnauthorized !== false;
+          if (expectCertificate && !tlsSocket.authorized) {
+            reject(tlsSocket.authorizationError);
+          } else {
+            tlsSocket.removeAllListeners("error");
+            resolve5(tlsSocket);
+          }
+        }).once("error", (error2) => {
+          reject(error2);
+        });
+      });
+    }
+    function ipIsPrivateV4Address(ip = "") {
+      if (ip.startsWith("::ffff:")) {
+        ip = ip.substr(7);
+      }
+      const octets = ip.split(".").map((o) => parseInt(o, 10));
+      return octets[0] === 10 || octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31 || octets[0] === 192 && octets[1] === 168 || ip === "127.0.0.1";
+    }
+  }
+});
+
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/FileInfo.js
 var require_FileInfo = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/FileInfo.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/FileInfo.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.FileInfo = exports2.FileType = void 0;
@@ -63580,9 +64795,9 @@ var require_FileInfo = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListDOS.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/parseListDOS.js
 var require_parseListDOS = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListDOS.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/parseListDOS.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.testLine = testLine;
@@ -63623,9 +64838,9 @@ var require_parseListDOS = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListUnix.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/parseListUnix.js
 var require_parseListUnix = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListUnix.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/parseListUnix.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.testLine = testLine;
@@ -63709,9 +64924,9 @@ var require_parseListUnix = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListMLSD.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/parseListMLSD.js
 var require_parseListMLSD = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseListMLSD.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/parseListMLSD.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.testLine = testLine;
@@ -63872,9 +65087,9 @@ var require_parseListMLSD = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseList.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/parseList.js
 var require_parseList = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/parseList.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/parseList.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -63957,9 +65172,9 @@ var require_parseList = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/ProgressTracker.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/ProgressTracker.js
 var require_ProgressTracker = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/ProgressTracker.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/ProgressTracker.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ProgressTracker = void 0;
@@ -64028,88 +65243,44 @@ var require_ProgressTracker = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/StringWriter.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/StringWriter.js
 var require_StringWriter = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/StringWriter.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/StringWriter.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.StringWriter = void 0;
     var stream_1 = require("stream");
     var StringWriter = class extends stream_1.Writable {
-      constructor() {
-        super(...arguments);
-        this.buf = Buffer.alloc(0);
+      constructor(maxByteLength = 1 * 1024 * 1024) {
+        super();
+        this.maxByteLength = maxByteLength;
+        this.byteLength = 0;
+        this.bufs = [];
       }
       _write(chunk, _, callback) {
-        if (chunk instanceof Buffer) {
-          this.buf = Buffer.concat([this.buf, chunk]);
-          callback(null);
-        } else {
-          callback(new Error("StringWriter expects chunks of type 'Buffer'."));
+        if (!(chunk instanceof Buffer)) {
+          callback(new Error("StringWriter: expects chunks of type 'Buffer'."));
+          return;
         }
+        if (this.byteLength + chunk.byteLength > this.maxByteLength) {
+          callback(new Error(`StringWriter: Maximum bytes exceeded, maxByteLength=${this.maxByteLength}.`));
+          return;
+        }
+        this.byteLength += chunk.byteLength;
+        this.bufs.push(chunk);
+        callback(null);
       }
       getText(encoding) {
-        return this.buf.toString(encoding);
+        return Buffer.concat(this.bufs).toString(encoding);
       }
     };
     exports2.StringWriter = StringWriter;
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/netUtils.js
-var require_netUtils = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/netUtils.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.describeTLS = describeTLS;
-    exports2.describeAddress = describeAddress;
-    exports2.upgradeSocket = upgradeSocket;
-    exports2.ipIsPrivateV4Address = ipIsPrivateV4Address;
-    var tls_1 = require("tls");
-    function describeTLS(socket) {
-      if (socket instanceof tls_1.TLSSocket) {
-        const protocol = socket.getProtocol();
-        return protocol ? protocol : "Server socket or disconnected client socket";
-      }
-      return "No encryption";
-    }
-    function describeAddress(socket) {
-      if (socket.remoteFamily === "IPv6") {
-        return `[${socket.remoteAddress}]:${socket.remotePort}`;
-      }
-      return `${socket.remoteAddress}:${socket.remotePort}`;
-    }
-    function upgradeSocket(socket, options) {
-      return new Promise((resolve5, reject) => {
-        const tlsOptions = Object.assign({}, options, {
-          socket
-        });
-        const tlsSocket = (0, tls_1.connect)(tlsOptions, () => {
-          const expectCertificate = tlsOptions.rejectUnauthorized !== false;
-          if (expectCertificate && !tlsSocket.authorized) {
-            reject(tlsSocket.authorizationError);
-          } else {
-            tlsSocket.removeAllListeners("error");
-            resolve5(tlsSocket);
-          }
-        }).once("error", (error2) => {
-          reject(error2);
-        });
-      });
-    }
-    function ipIsPrivateV4Address(ip = "") {
-      if (ip.startsWith("::ffff:")) {
-        ip = ip.substr(7);
-      }
-      const octets = ip.split(".").map((o) => parseInt(o, 10));
-      return octets[0] === 10 || octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31 || octets[0] === 192 && octets[1] === 168 || ip === "127.0.0.1";
-    }
-  }
-});
-
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/transfer.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/transfer.js
 var require_transfer = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/transfer.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/transfer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.enterPassiveModeIPv6 = enterPassiveModeIPv6;
@@ -64359,9 +65530,9 @@ var require_transfer = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/Client.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/Client.js
 var require_Client = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/Client.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/Client.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Client = void 0;
@@ -64370,13 +65541,13 @@ var require_Client = __commonJS({
     var tls_1 = require("tls");
     var util_1 = require("util");
     var FtpContext_1 = require_FtpContext();
+    var netUtils_1 = require_netUtils();
+    var parseControlResponse_1 = require_parseControlResponse();
     var parseList_1 = require_parseList();
+    var parseListMLSD_1 = require_parseListMLSD();
     var ProgressTracker_1 = require_ProgressTracker();
     var StringWriter_1 = require_StringWriter();
-    var parseListMLSD_1 = require_parseListMLSD();
-    var netUtils_1 = require_netUtils();
     var transfer_1 = require_transfer();
-    var parseControlResponse_1 = require_parseControlResponse();
     var fsReadDir = (0, util_1.promisify)(fs_1.readdir);
     var fsMkDir = (0, util_1.promisify)(fs_1.mkdir);
     var fsStat = (0, util_1.promisify)(fs_1.stat);
@@ -64384,7 +65555,8 @@ var require_Client = __commonJS({
     var fsClose = (0, util_1.promisify)(fs_1.close);
     var fsUnlink = (0, util_1.promisify)(fs_1.unlink);
     var defaultClientOptions = {
-      allowSeparateTransferHost: true
+      allowSeparateTransferHost: true,
+      maxListingBytes: 40 * 1024 * 1024
     };
     var LIST_COMMANDS_DEFAULT = () => ["LIST -a", "LIST"];
     var LIST_COMMANDS_MLSD = () => ["MLSD", "LIST -a", "LIST"];
@@ -64394,13 +65566,15 @@ var require_Client = __commonJS({
        *
        * @param timeout  Timeout in milliseconds, use 0 for no timeout. Optional, default is 30 seconds.
        */
-      constructor(timeout = 3e4, options = defaultClientOptions) {
+      constructor(timeout = 3e4, userOptions = defaultClientOptions) {
         this.availableListCommands = LIST_COMMANDS_DEFAULT();
+        const options = { ...defaultClientOptions, ...userOptions };
         this.ftp = new FtpContext_1.FTPContext(timeout);
         this.prepareTransfer = this._enterFirstCompatibleMode([
           transfer_1.enterPassiveModeIPv6,
           options.allowSeparateTransferHost ? transfer_1.enterPassiveModeIPv4 : transfer_1.enterPassiveModeIPv4_forceControlHostIP
         ]);
+        this.options = options;
         this.parseList = parseList_1.parseList;
         this._progressTracker = new ProgressTracker_1.ProgressTracker();
       }
@@ -64837,7 +66011,7 @@ var require_Client = __commonJS({
        * @protected
        */
       async _requestListWithCommand(command2) {
-        const buffer = new StringWriter_1.StringWriter();
+        const buffer = new StringWriter_1.StringWriter(this.options.maxListingBytes);
         await (0, transfer_1.downloadTo)(buffer, {
           ftp: this.ftp,
           tracker: this._progressTracker,
@@ -65092,17 +66266,17 @@ var require_Client = __commonJS({
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/StringEncoding.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/StringEncoding.js
 var require_StringEncoding = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/StringEncoding.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/StringEncoding.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
   }
 });
 
-// node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/index.js
+// node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/index.js
 var require_dist5 = __commonJS({
-  "node_modules/.pnpm/basic-ftp@5.2.0/node_modules/basic-ftp/dist/index.js"(exports2) {
+  "node_modules/.pnpm/basic-ftp@5.3.1/node_modules/basic-ftp/dist/index.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -78823,9 +79997,9 @@ var require_dnsResolve = __commonJS({
   }
 });
 
-// node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask4.js
+// node_modules/.pnpm/netmask@2.1.1/node_modules/netmask/dist/netmask4.js
 var require_netmask4 = __commonJS({
-  "node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask4.js"(exports2) {
+  "node_modules/.pnpm/netmask@2.1.1/node_modules/netmask/dist/netmask4.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Netmask4Impl = void 0;
@@ -79008,9 +80182,9 @@ var require_netmask4 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask6.js
+// node_modules/.pnpm/netmask@2.1.1/node_modules/netmask/dist/netmask6.js
 var require_netmask6 = __commonJS({
-  "node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask6.js"(exports2) {
+  "node_modules/.pnpm/netmask@2.1.1/node_modules/netmask/dist/netmask6.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Netmask6Impl = void 0;
@@ -79187,13 +80361,19 @@ var require_netmask6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask.js
+// node_modules/.pnpm/netmask@2.1.1/node_modules/netmask/dist/netmask.js
 var require_netmask = __commonJS({
-  "node_modules/.pnpm/netmask@2.1.0/node_modules/netmask/dist/netmask.js"(exports2) {
+  "node_modules/.pnpm/netmask@2.1.1/node_modules/netmask/dist/netmask.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.Netmask = void 0;
+    exports2.long2ip = exports2.ip2long = exports2.Netmask = void 0;
     var netmask4_1 = require_netmask4();
+    Object.defineProperty(exports2, "ip2long", { enumerable: true, get: function() {
+      return netmask4_1.ip2long;
+    } });
+    Object.defineProperty(exports2, "long2ip", { enumerable: true, get: function() {
+      return netmask4_1.long2ip;
+    } });
     var netmask6_1 = require_netmask6();
     var Netmask = class _Netmask {
       constructor(net, mask) {
@@ -79214,6 +80394,13 @@ var require_netmask = __commonJS({
         this.first = this._impl.first;
         this.last = this._impl.last;
         this.broadcast = this._impl.broadcast;
+        if (this._impl instanceof netmask4_1.Netmask4Impl) {
+          this.maskLong = this._impl.maskLong;
+          this.netLong = this._impl.netLong;
+        } else {
+          this.maskLong = 0;
+          this.netLong = 0;
+        }
       }
       contains(ip) {
         if (typeof ip === "string") {
@@ -86522,9 +87709,9 @@ var require_fast_fifo = __commonJS({
   }
 });
 
-// node_modules/.pnpm/b4a@1.8.0/node_modules/b4a/index.js
+// node_modules/.pnpm/b4a@1.8.1/node_modules/b4a/index.js
 var require_b4a = __commonJS({
-  "node_modules/.pnpm/b4a@1.8.0/node_modules/b4a/index.js"(exports2, module2) {
+  "node_modules/.pnpm/b4a@1.8.1/node_modules/b4a/index.js"(exports2, module2) {
     function isBuffer(value) {
       return Buffer.isBuffer(value) || value instanceof Uint8Array;
     }
@@ -86941,14 +88128,55 @@ var require_text_decoder = __commonJS({
   }
 });
 
-// node_modules/.pnpm/streamx@2.25.0/node_modules/streamx/index.js
+// node_modules/.pnpm/streamx@2.28.0/node_modules/streamx/lib/errors.js
+var require_errors5 = __commonJS({
+  "node_modules/.pnpm/streamx@2.28.0/node_modules/streamx/lib/errors.js"(exports2, module2) {
+    module2.exports = class StreamError extends Error {
+      constructor(msg, code, fn = StreamError) {
+        super(msg);
+        this.code = code;
+        if (Error.captureStackTrace) {
+          Error.captureStackTrace(this, fn);
+        }
+      }
+      static isStreamDestroyed(err) {
+        return err && err.code === "STREAM_DESTROYED";
+      }
+      static isPrematureClose(err) {
+        return err && err.code === "PREMATURE_CLOSE";
+      }
+      static isAborted(err) {
+        return err && err.code === "ABORTED";
+      }
+      static isBadArgument(err) {
+        return err && err.code === "BAD_ARGUMENT";
+      }
+      get name() {
+        return "StreamError";
+      }
+      static STREAM_DESTROYED() {
+        return new StreamError("Stream was destroyed", "STREAM_DESTROYED", StreamError.STREAM_DESTROYED);
+      }
+      static PREMATURE_CLOSE(msg = "Premature close") {
+        return new StreamError(msg, "PREMATURE_CLOSE", StreamError.PREMATURE_CLOSE);
+      }
+      static ABORTED() {
+        return new StreamError("Stream aborted", "ABORTED", StreamError.ABORTED);
+      }
+      static BAD_ARGUMENT(msg = "Bad argument") {
+        return new StreamError(msg, "BAD_ARGUMENT", StreamError.BAD_ARGUMENT);
+      }
+    };
+  }
+});
+
+// node_modules/.pnpm/streamx@2.28.0/node_modules/streamx/index.js
 var require_streamx = __commonJS({
-  "node_modules/.pnpm/streamx@2.25.0/node_modules/streamx/index.js"(exports2, module2) {
+  "node_modules/.pnpm/streamx@2.28.0/node_modules/streamx/index.js"(exports2, module2) {
     var { EventEmitter } = require_default();
-    var STREAM_DESTROYED = new Error("Stream was destroyed");
-    var PREMATURE_CLOSE = new Error("Premature close");
     var FIFO = require_fast_fifo();
     var TextDecoder2 = require_text_decoder();
+    var StreamError = require_errors5();
     var qmt = typeof queueMicrotask === "undefined" ? (fn) => global.process.nextTick(fn) : queueMicrotask;
     var MAX = (1 << 29) - 1;
     var OPENING = 1;
@@ -87079,10 +88307,11 @@ var require_streamx = __commonJS({
         return data;
       }
       end(data) {
-        if (typeof data === "function")
+        if (typeof data === "function") {
           this.stream.once("finish", data);
-        else if (data !== void 0 && data !== null)
+        } else if (data !== void 0 && data !== null) {
           this.push(data);
+        }
         this.stream._duplexState = (this.stream._duplexState | WRITE_FINISHING) & WRITE_NON_PRIMARY;
       }
       autoBatch(data, cb) {
@@ -87136,10 +88365,11 @@ var require_streamx = __commonJS({
         return true;
       }
       updateCallback() {
-        if ((this.stream._duplexState & WRITE_UPDATE_SYNC_STATUS) === WRITE_PRIMARY)
+        if ((this.stream._duplexState & WRITE_UPDATE_SYNC_STATUS) === WRITE_PRIMARY) {
           this.update();
-        else
+        } else {
           this.updateNextTick();
+        }
       }
       updateNextTick() {
         if ((this.stream._duplexState & WRITE_NEXT_TICK) !== 0)
@@ -87172,7 +88402,7 @@ var require_streamx = __commonJS({
       }
       pipe(pipeTo, cb) {
         if (this.pipeTo !== null)
-          throw new Error("Can only pipe to one destination");
+          throw StreamError.BAD_ARGUMENT("Can only pipe to one destination");
         if (typeof cb !== "function")
           cb = null;
         this.stream._duplexState |= READ_PIPE_DRAINED;
@@ -87218,8 +88448,9 @@ var require_streamx = __commonJS({
       shift() {
         const data = this.queue.shift();
         this.buffered -= this.byteLength(data);
-        if (this.buffered === 0)
+        if (this.buffered === 0) {
           this.stream._duplexState &= READ_NOT_QUEUED;
+        }
         return data;
       }
       unshift(data) {
@@ -87237,10 +88468,12 @@ var require_streamx = __commonJS({
         const stream = this.stream;
         if ((stream._duplexState & READ_STATUS) === READ_QUEUED) {
           const data = this.shift();
-          if (this.pipeTo !== null && this.pipeTo.write(data) === false)
+          if (this.pipeTo !== null && this.pipeTo.write(data) === false) {
             stream._duplexState &= READ_PIPE_NOT_DRAINED;
-          if ((stream._duplexState & READ_EMIT_DATA) !== 0)
+          }
+          if ((stream._duplexState & READ_EMIT_DATA) !== 0) {
             stream.emit("data", data);
+          }
           return data;
         }
         if (this.readAhead === false) {
@@ -87253,10 +88486,12 @@ var require_streamx = __commonJS({
         const stream = this.stream;
         while ((stream._duplexState & READ_STATUS) === READ_QUEUED && (stream._duplexState & READ_FLOWING) !== 0) {
           const data = this.shift();
-          if (this.pipeTo !== null && this.pipeTo.write(data) === false)
+          if (this.pipeTo !== null && this.pipeTo.write(data) === false) {
             stream._duplexState &= READ_PIPE_NOT_DRAINED;
-          if ((stream._duplexState & READ_EMIT_DATA) !== 0)
+          }
+          if ((stream._duplexState & READ_EMIT_DATA) !== 0) {
             stream.emit("data", data);
+          }
         }
       }
       update() {
@@ -87273,8 +88508,9 @@ var require_streamx = __commonJS({
             stream._duplexState |= READ_EMITTED_READABLE;
             stream.emit("readable");
           }
-          if ((stream._duplexState & READ_PRIMARY_AND_ACTIVE) === 0)
+          if ((stream._duplexState & READ_PRIMARY_AND_ACTIVE) === 0) {
             this.updateNonPrimary();
+          }
         } while (this.continueUpdate() === true);
         stream._duplexState &= READ_NOT_UPDATING;
       }
@@ -87283,10 +88519,12 @@ var require_streamx = __commonJS({
         if ((stream._duplexState & READ_ENDING_STATUS) === READ_ENDING) {
           stream._duplexState = (stream._duplexState | READ_DONE) & READ_NOT_ENDING;
           stream.emit("end");
-          if ((stream._duplexState & AUTO_DESTROY) === DONE)
+          if ((stream._duplexState & AUTO_DESTROY) === DONE) {
             stream._duplexState |= DESTROYING;
-          if (this.pipeTo !== null)
+          }
+          if (this.pipeTo !== null) {
             this.pipeTo.end();
+          }
         }
         if ((stream._duplexState & DESTROY_STATUS) === DESTROYING) {
           if ((stream._duplexState & ACTIVE_OR_TICKING) === 0) {
@@ -87307,10 +88545,11 @@ var require_streamx = __commonJS({
         return true;
       }
       updateCallback() {
-        if ((this.stream._duplexState & READ_UPDATE_SYNC_STATUS) === READ_PRIMARY)
+        if ((this.stream._duplexState & READ_UPDATE_SYNC_STATUS) === READ_PRIMARY) {
           this.update();
-        else
+        } else {
           this.updateNextTick();
+        }
       }
       updateNextTickIfOpen() {
         if ((this.stream._duplexState & READ_NEXT_TICK_OR_OPENING) !== 0)
@@ -87352,7 +88591,7 @@ var require_streamx = __commonJS({
           this.to = null;
           if (this.from !== null) {
             if ((this.from._duplexState & READ_DONE) === 0 || !this.pipeToFinished) {
-              this.from.destroy(this.error || new Error("Writable stream closed prematurely"));
+              this.from.destroy(this.error || StreamError.PREMATURE_CLOSE("Writable stream closed"));
             }
             return;
           }
@@ -87361,7 +88600,7 @@ var require_streamx = __commonJS({
           this.from = null;
           if (this.to !== null) {
             if ((stream._duplexState & READ_DONE) === 0) {
-              this.to.destroy(this.error || new Error("Readable stream closed before ending"));
+              this.to.destroy(this.error || StreamError.PREMATURE_CLOSE("Readable stream closed"));
             }
             return;
           }
@@ -87387,14 +88626,15 @@ var require_streamx = __commonJS({
         stream._duplexState |= DESTROYING;
       }
       stream._duplexState &= WRITE_NOT_FINISHING;
-      if ((stream._duplexState & WRITE_UPDATING) === 0)
+      if ((stream._duplexState & WRITE_UPDATING) === 0) {
         this.update();
-      else
+      } else {
         this.updateNextTick();
+      }
     }
     function afterDestroy(err) {
       const stream = this.stream;
-      if (!err && this.error !== STREAM_DESTROYED)
+      if (!err && !StreamError.isStreamDestroyed(this.error))
         err = this.error;
       if (err)
         stream.emit("error", err);
@@ -87402,13 +88642,16 @@ var require_streamx = __commonJS({
       stream.emit("close");
       const rs = stream._readableState;
       const ws = stream._writableState;
-      if (rs !== null && rs.pipeline !== null)
+      if (rs !== null && rs.pipeline !== null) {
         rs.pipeline.done(stream, err);
+      }
       if (ws !== null) {
-        while (ws.drains !== null && ws.drains.length > 0)
+        while (ws.drains !== null && ws.drains.length > 0) {
           ws.drains.shift().resolve(false);
-        if (ws.pipeline !== null)
+        }
+        if (ws.pipeline !== null) {
           ws.pipeline.done(stream, err);
+        }
       }
     }
     function afterWrite(err) {
@@ -87430,8 +88673,9 @@ var require_streamx = __commonJS({
       if (err)
         this.stream.destroy(err);
       this.stream._duplexState &= READ_NOT_ACTIVE;
-      if (this.readAhead === false && (this.stream._duplexState & READ_RESUMED) === 0)
+      if (this.readAhead === false && (this.stream._duplexState & READ_RESUMED) === 0) {
         this.stream._duplexState &= READ_NO_READ_AHEAD;
+      }
       this.updateCallback();
     }
     function updateReadNT() {
@@ -87459,10 +88703,12 @@ var require_streamx = __commonJS({
       if (err)
         stream.destroy(err);
       if ((stream._duplexState & DESTROYING) === 0) {
-        if ((stream._duplexState & READ_PRIMARY_STATUS) === 0)
+        if ((stream._duplexState & READ_PRIMARY_STATUS) === 0) {
           stream._duplexState |= READ_PRIMARY;
-        if ((stream._duplexState & WRITE_PRIMARY_STATUS) === 0)
+        }
+        if ((stream._duplexState & WRITE_PRIMARY_STATUS) === 0) {
           stream._duplexState |= WRITE_PRIMARY;
+        }
         stream.emit("open");
       }
       stream._duplexState &= NOT_ACTIVE;
@@ -87509,9 +88755,8 @@ var require_streamx = __commonJS({
             this._destroy = opts.destroy;
           if (opts.predestroy)
             this._predestroy = opts.predestroy;
-          if (opts.signal) {
+          if (opts.signal)
             opts.signal.addEventListener("abort", abort.bind(this));
-          }
         }
         this.on("newListener", newListener);
       }
@@ -87538,7 +88783,7 @@ var require_streamx = __commonJS({
       destroy(err) {
         if ((this._duplexState & DESTROY_STATUS) === 0) {
           if (!err)
-            err = STREAM_DESTROYED;
+            err = StreamError.STREAM_DESTROYED();
           this._duplexState = (this._duplexState | DESTROYING) & NON_PRIMARY;
           if (this._readableState !== null) {
             this._readableState.highWaterMark = 0;
@@ -87551,10 +88796,12 @@ var require_streamx = __commonJS({
           this._duplexState |= PREDESTROYING;
           this._predestroy();
           this._duplexState &= NOT_PREDESTROYING;
-          if (this._readableState !== null)
+          if (this._readableState !== null) {
             this._readableState.updateNextTick();
-          if (this._writableState !== null)
+          }
+          if (this._writableState !== null) {
             this._writableState.updateNextTick();
+          }
         }
       }
     };
@@ -87573,6 +88820,17 @@ var require_streamx = __commonJS({
           if (opts.encoding)
             this.setEncoding(opts.encoding);
         }
+      }
+      static deferred(fn, opts) {
+        const out = new PassThrough(opts);
+        fn().then((src) => {
+          if (src === null)
+            return out.end();
+          if (out.destroying)
+            return;
+          pipeline(src, out, noop);
+        }).catch((err) => out.destroy(err));
+        return out;
       }
       setEncoding(encoding) {
         const dec = new TextDecoder2(encoding);
@@ -87702,12 +88960,13 @@ var require_streamx = __commonJS({
         function ondata(data) {
           if (promiseReject === null)
             return;
-          if (error2)
+          if (error2) {
             promiseReject(error2);
-          else if (data === null && (stream._duplexState & READ_DONE) === 0)
-            promiseReject(STREAM_DESTROYED);
-          else
+          } else if (data === null && (stream._duplexState & READ_DONE) === 0) {
+            promiseReject(StreamError.STREAM_DESTROYED());
+          } else {
             promiseResolve({ value: data, done: data === null });
+          }
           promiseReject = promiseResolve = null;
         }
         function destroy(err) {
@@ -87895,7 +89154,7 @@ var require_streamx = __commonJS({
       const all = Array.isArray(stream) ? [...stream, ...streams] : [stream, ...streams];
       const done = all.length && typeof all[all.length - 1] === "function" ? all.pop() : null;
       if (all.length < 2)
-        throw new Error("Pipeline requires at least 2 streams");
+        throw StreamError.BAD_ARGUMENT("Pipeline requires at least 2 streams");
       let src = all[0];
       let dest = null;
       let error2 = null;
@@ -87922,7 +89181,7 @@ var require_streamx = __commonJS({
             done(error2);
         });
         if (autoDestroy) {
-          dest.on("close", () => done(error2 || (fin ? null : PREMATURE_CLOSE)));
+          dest.on("close", () => done(error2 || (fin ? null : StreamError.PREMATURE_CLOSE())));
         }
       }
       return dest;
@@ -87930,10 +89189,12 @@ var require_streamx = __commonJS({
         s.on("error", onerror2);
         s.on("close", onclose);
         function onclose() {
-          if (rd && s._readableState && !s._readableState.ended)
-            return onerror2(PREMATURE_CLOSE);
-          if (wr && s._writableState && !s._writableState.ended)
-            return onerror2(PREMATURE_CLOSE);
+          if (rd && s._readableState && !s._readableState.ended) {
+            return onerror2(StreamError.PREMATURE_CLOSE());
+          }
+          if (wr && s._writableState && !s._writableState.ended) {
+            return onerror2(StreamError.PREMATURE_CLOSE());
+          }
         }
       }
       function onerror(err) {
@@ -87968,7 +89229,7 @@ var require_streamx = __commonJS({
     }
     function getStreamError(stream, opts = {}) {
       const err = stream._readableState && stream._readableState.error || stream._writableState && stream._writableState.error;
-      return !opts.all && err === STREAM_DESTROYED ? null : err;
+      return !opts.all && StreamError.isStreamDestroyed(err) ? null : err;
     }
     function isReadStreamx(stream) {
       return isStreamx(stream) && stream.readable;
@@ -87985,7 +89246,7 @@ var require_streamx = __commonJS({
     function noop() {
     }
     function abort() {
-      this.destroy(new Error("Stream aborted."));
+      this.destroy(StreamError.ABORTED());
     }
     function isWritev(s) {
       return s._writev !== Writable.prototype._writev && s._writev !== Duplex.prototype._writev;
@@ -88012,9 +89273,9 @@ var require_streamx = __commonJS({
   }
 });
 
-// node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/headers.js
+// node_modules/.pnpm/tar-stream@3.2.0/node_modules/tar-stream/headers.js
 var require_headers3 = __commonJS({
-  "node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/headers.js"(exports2) {
+  "node_modules/.pnpm/tar-stream@3.2.0/node_modules/tar-stream/headers.js"(exports2) {
     var b4a = require_b4a();
     var ZEROS = "0000000000000000000";
     var SEVENS = "7777777777777777777";
@@ -88138,6 +89399,7 @@ var require_headers3 = __commonJS({
         uid,
         gid,
         size,
+        byteOffset: 0,
         mtime: new Date(1e3 * mtime),
         type,
         linkname,
@@ -88308,14 +89570,15 @@ var require_headers3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/extract.js
+// node_modules/.pnpm/tar-stream@3.2.0/node_modules/tar-stream/extract.js
 var require_extract = __commonJS({
-  "node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/extract.js"(exports2, module2) {
+  "node_modules/.pnpm/tar-stream@3.2.0/node_modules/tar-stream/extract.js"(exports2, module2) {
     var { Writable, Readable, getStreamError } = require_streamx();
     var FIFO = require_fast_fifo();
     var b4a = require_b4a();
     var headers = require_headers3();
     var EMPTY = b4a.alloc(0);
+    var MAX_HEADER_SIZE = 4 * 1024 * 1024;
     var BufferList = class {
       constructor() {
         this.buffered = 0;
@@ -88328,7 +89591,7 @@ var require_extract = __commonJS({
         this.queue.push(buffer);
       }
       shiftFirst(size) {
-        return this._buffered === 0 ? null : this._next(size);
+        return this.buffered === 0 ? null : this._next(size);
       }
       shift(size) {
         if (size > this.buffered)
@@ -88435,6 +89698,7 @@ var require_extract = __commonJS({
         }
         if (!this._header)
           return true;
+        this._header.byteOffset = this._buffer.shifted;
         switch (this._header.type) {
           case "gnu-long-path":
           case "gnu-long-link-path":
@@ -88442,10 +89706,18 @@ var require_extract = __commonJS({
           case "pax-header":
             this._longHeader = true;
             this._missing = this._header.size;
+            if (this._missing > MAX_HEADER_SIZE) {
+              this._continueWrite(new Error("Header exceeds max size"));
+              return false;
+            }
             return true;
         }
         this._locked = true;
         this._applyLongHeaders();
+        if (!(this._header.size >= 0)) {
+          this._continueWrite(new Error("Invalid header"));
+          return false;
+        }
         if (this._header.size === 0 || this._header.type === "directory") {
           this.emit("entry", this._header, this._createStream(), this._unlockBound);
           return true;
@@ -88667,9 +89939,9 @@ var require_extract = __commonJS({
   }
 });
 
-// node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/constants.js
+// node_modules/.pnpm/tar-stream@3.2.0/node_modules/tar-stream/constants.js
 var require_constants16 = __commonJS({
-  "node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/tar-stream@3.2.0/node_modules/tar-stream/constants.js"(exports2, module2) {
     var constants = {
       // just for envs without fs
       S_IFMT: 61440,
@@ -88687,9 +89959,9 @@ var require_constants16 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/pack.js
+// node_modules/.pnpm/tar-stream@3.2.0/node_modules/tar-stream/pack.js
 var require_pack = __commonJS({
-  "node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/pack.js"(exports2, module2) {
+  "node_modules/.pnpm/tar-stream@3.2.0/node_modules/tar-stream/pack.js"(exports2, module2) {
     var { Readable, Writable, getStreamError } = require_streamx();
     var b4a = require_b4a();
     var constants = require_constants16();
@@ -88946,17 +90218,17 @@ var require_pack = __commonJS({
   }
 });
 
-// node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/index.js
+// node_modules/.pnpm/tar-stream@3.2.0/node_modules/tar-stream/index.js
 var require_tar_stream = __commonJS({
-  "node_modules/.pnpm/tar-stream@3.1.8/node_modules/tar-stream/index.js"(exports2) {
+  "node_modules/.pnpm/tar-stream@3.2.0/node_modules/tar-stream/index.js"(exports2) {
     exports2.extract = require_extract();
     exports2.pack = require_pack();
   }
 });
 
-// node_modules/.pnpm/tar-fs@3.1.2/node_modules/tar-fs/index.js
+// node_modules/.pnpm/tar-fs@3.1.3/node_modules/tar-fs/index.js
 var require_tar_fs = __commonJS({
-  "node_modules/.pnpm/tar-fs@3.1.2/node_modules/tar-fs/index.js"(exports2) {
+  "node_modules/.pnpm/tar-fs@3.1.3/node_modules/tar-fs/index.js"(exports2) {
     var tar = require_tar_stream();
     var pump = require_pump();
     var fs = require("fs");
@@ -89145,6 +90417,8 @@ var require_tar_fs = __commonJS({
         function stat(err) {
           if (err)
             return next(err);
+          if (path.join(name, ".") === path.join(cwd, "."))
+            return next();
           utimes(name, header, function(err2) {
             if (err2)
               return next(err2);
@@ -89158,7 +90432,7 @@ var require_tar_fs = __commonJS({
             return next();
           xfs.unlink(name, function() {
             const dst = path.resolve(path.dirname(name), header.linkname);
-            if (!inCwd(dst) && validateSymLinks)
+            if (!inCwd(dst) && (validateSymLinks || opts.strip))
               return next(new Error(name + " is not a valid symlink"));
             validateNotSymlink(xfs, dst, path.join(cwd, "."), function(err, valid) {
               if (err)
@@ -89191,16 +90465,25 @@ var require_tar_fs = __commonJS({
           return dst === cwd || dst.startsWith(cwd + path.sep);
         }
         function onfile() {
-          const ws = xfs.createWriteStream(name);
-          const rs = mapStream(stream, header);
-          ws.on("error", function(err) {
-            rs.destroy(err);
+          xfs.lstat(name, function(err, st) {
+            if (!err && st.isSymbolicLink())
+              return xfs.unlink(name, onwrite);
+            onwrite();
           });
-          pump(rs, ws, function(err) {
+          function onwrite(err) {
             if (err)
               return next(err);
-            ws.on("close", stat);
-          });
+            const ws = xfs.createWriteStream(name);
+            const rs = mapStream(stream, header);
+            ws.on("error", function(err2) {
+              rs.destroy(err2);
+            });
+            pump(rs, ws, function(err2) {
+              if (err2)
+                return next(err2);
+              ws.on("close", stat);
+            });
+          }
         }
       }
       function utimesParent(name, cb) {
@@ -89230,7 +90513,7 @@ var require_tar_fs = __commonJS({
         const chown = link ? xfs.lchown : xfs.chown;
         if (!chmod)
           return cb();
-        const mode = (header.mode | (header.type === "directory" ? dmode : fmode)) & umask;
+        const mode = (header.mode | (header.type === "directory" ? dmode : fmode)) & umask & 511;
         if (chown && own)
           chown.call(xfs, name, header.uid, header.gid, onchown);
         else
@@ -89281,6 +90564,9 @@ var require_tar_fs = __commonJS({
         cb(null, false);
       });
     }
+    function inside(root, name) {
+      return name === root || name.startsWith(root + path.sep);
+    }
     function noop() {
     }
     function echo(name) {
@@ -89293,11 +90579,14 @@ var require_tar_fs = __commonJS({
       if (!entries)
         entries = ["."];
       const queue = entries.slice(0);
+      const root = path.resolve(cwd);
       return function loop(callback) {
         if (!queue.length)
           return callback(null);
         const next = queue.shift();
         const nextAbs = path.join(cwd, next);
+        if (!inside(root, path.resolve(cwd, next)))
+          return callback(new Error(next + " is not a valid path"));
         stat.call(fs2, nextAbs, function(err, stat2) {
           if (err)
             return callback(entries.indexOf(next) === -1 && err.code === "ENOENT" ? null : err);
@@ -91111,7 +92400,7 @@ var init_lib2 = __esm({
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/process-argv.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/process-argv.js
 function getProcessArgvBinIndex() {
   if (isBundledElectronApp())
     return 0;
@@ -91130,14 +92419,14 @@ function getProcessArgvBin() {
   return process.argv[getProcessArgvBinIndex()];
 }
 var init_process_argv = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/process-argv.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/process-argv.js"() {
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/yerror.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/yerror.js
 var YError;
 var init_yerror = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/yerror.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/yerror.js"() {
     YError = class _YError extends Error {
       constructor(msg) {
         super(msg || "yargs error");
@@ -91353,10 +92642,10 @@ var init_y18n = __esm({
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/lib/platform-shims/esm.mjs
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/lib/platform-shims/esm.mjs
 var import_assert, import_util3, import_fs4, import_url, import_path4, import_meta, REQUIRE_ERROR, REQUIRE_DIRECTORY_ERROR, __dirname2, mainFilename, esm_default;
 var init_esm = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/lib/platform-shims/esm.mjs"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/lib/platform-shims/esm.mjs"() {
     "use strict";
     import_assert = require("assert");
     init_cliui();
@@ -91429,7 +92718,7 @@ var init_esm = __esm({
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/typings/common-types.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/typings/common-types.js
 function assertNotStrictEqual(actual, expected, shim3, message) {
   shim3.assert.notStrictEqual(actual, expected, message);
 }
@@ -91440,20 +92729,20 @@ function objectKeys(object) {
   return Object.keys(object);
 }
 var init_common_types = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/typings/common-types.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/typings/common-types.js"() {
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/is-promise.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/is-promise.js
 function isPromise(maybePromise) {
   return !!maybePromise && !!maybePromise.then && typeof maybePromise.then === "function";
 }
 var init_is_promise = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/is-promise.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/is-promise.js"() {
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/parse-command.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/parse-command.js
 function parseCommand(cmd) {
   const extraSpacesStrippedCommand = cmd.replace(/\s{2,}/g, " ");
   const splitCommand = extraSpacesStrippedCommand.split(/\s+(?![^[]*]|[^<]*>)/);
@@ -91486,11 +92775,11 @@ function parseCommand(cmd) {
   return parsedCommand;
 }
 var init_parse_command = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/parse-command.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/parse-command.js"() {
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/argsert.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/argsert.js
 function argsert(arg1, arg2, arg3) {
   function parseArgs() {
     return typeof arg1 === "object" ? [{ demanded: [], optional: [] }, arg1, arg2] : [
@@ -91548,14 +92837,14 @@ function argumentTypeError(observedType, allowedTypes, position) {
 }
 var positionName;
 var init_argsert = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/argsert.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/argsert.js"() {
     init_yerror();
     init_parse_command();
     positionName = ["first", "second", "third", "fourth", "fifth", "sixth"];
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/middleware.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/middleware.js
 function commandMiddlewareFactory(commandMiddleware) {
   if (!commandMiddleware)
     return [];
@@ -91584,7 +92873,7 @@ function applyMiddleware(argv, yargs, middlewares, beforeValidation) {
 }
 var GlobalMiddleware;
 var init_middleware = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/middleware.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/middleware.js"() {
     init_argsert();
     init_is_promise();
     GlobalMiddleware = class {
@@ -91644,7 +92933,7 @@ var init_middleware = __esm({
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/maybe-async-result.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/maybe-async-result.js
 function maybeAsyncResult(getResult, resultHandler, errorHandler = (err) => {
   throw err;
 }) {
@@ -91659,12 +92948,12 @@ function isFunction(arg) {
   return typeof arg === "function";
 }
 var init_maybe_async_result = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/maybe-async-result.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/maybe-async-result.js"() {
     init_is_promise();
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/which-module.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/which-module.js
 function whichModule(exported) {
   if (typeof require === "undefined")
     return null;
@@ -91676,11 +92965,11 @@ function whichModule(exported) {
   return null;
 }
 var init_which_module = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/which-module.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/which-module.js"() {
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/command.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/command.js
 function command(usage2, validation2, globalMiddleware, shim3) {
   return new CommandInstance(usage2, validation2, globalMiddleware, shim3);
 }
@@ -91701,7 +92990,7 @@ function isCommandHandlerDefinition(cmd) {
 }
 var DEFAULT_MARKER, CommandInstance;
 var init_command = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/command.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/command.js"() {
     init_common_types();
     init_is_promise();
     init_middleware();
@@ -92084,7 +93373,7 @@ var init_command = __esm({
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/obj-filter.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/obj-filter.js
 function objFilter(original = {}, filter = () => true) {
   const obj = {};
   objectKeys(original).forEach((key) => {
@@ -92095,12 +93384,12 @@ function objFilter(original = {}, filter = () => true) {
   return obj;
 }
 var init_obj_filter = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/obj-filter.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/obj-filter.js"() {
     init_common_types();
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/set-blocking.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/set-blocking.js
 function setBlocking(blocking) {
   if (typeof process === "undefined")
     return;
@@ -92112,11 +93401,11 @@ function setBlocking(blocking) {
   });
 }
 var init_set_blocking = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/set-blocking.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/set-blocking.js"() {
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/usage.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/usage.js
 function isBoolean(fail) {
   return typeof fail === "boolean";
 }
@@ -92642,17 +93931,17 @@ function getText(text) {
   return isIndentedText(text) ? text.text : text;
 }
 var init_usage = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/usage.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/usage.js"() {
     init_obj_filter();
     init_yerror();
     init_set_blocking();
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/completion-templates.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/completion-templates.js
 var completionShTemplate, completionZshTemplate;
 var init_completion_templates = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/completion-templates.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/completion-templates.js"() {
     completionShTemplate = `###-begin-{{app_name}}-completions-###
 #
 # yargs command completion script
@@ -92705,7 +93994,7 @@ compdef _{{app_name}}_yargs_completions {{app_name}}
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/completion.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/completion.js
 function completion(yargs, usage2, command2, shim3) {
   return new Completion(yargs, usage2, command2, shim3);
 }
@@ -92717,7 +94006,7 @@ function isFallbackCompletionFunction(completionFunction) {
 }
 var Completion;
 var init_completion = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/completion.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/completion.js"() {
     init_command();
     init_common_types();
     init_completion_templates();
@@ -92928,7 +94217,7 @@ var init_completion = __esm({
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/levenshtein.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/levenshtein.js
 function levenshtein(a, b) {
   if (a.length === 0)
     return b.length;
@@ -92959,11 +94248,11 @@ function levenshtein(a, b) {
   return matrix[b.length][a.length];
 }
 var init_levenshtein = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/levenshtein.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/levenshtein.js"() {
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/validation.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/validation.js
 function validation(yargs, usage2, shim3) {
   const __ = shim3.y18n.__;
   const __n = shim3.y18n.__n;
@@ -93232,7 +94521,7 @@ ${customMsgs.join("\n")}` : "";
 }
 var specialKeys;
 var init_validation = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/validation.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/validation.js"() {
     init_argsert();
     init_common_types();
     init_levenshtein();
@@ -93241,7 +94530,7 @@ var init_validation = __esm({
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/apply-extends.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/apply-extends.js
 function applyExtends(config, cwd, mergeExtends, _shim) {
   shim2 = _shim;
   let defaultConfig = {};
@@ -93293,13 +94582,13 @@ function mergeDeep(config1, config2) {
 }
 var previouslyVisitedConfigs, shim2;
 var init_apply_extends = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/utils/apply-extends.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/utils/apply-extends.js"() {
     init_yerror();
     previouslyVisitedConfigs = [];
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/yargs-factory.js
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/yargs-factory.js
 function YargsFactory(_shim) {
   return (processArgs = [], cwd = _shim.process.cwd(), parentRequire) => {
     const yargs = new YargsInstance(processArgs, cwd, parentRequire, _shim);
@@ -93319,7 +94608,7 @@ function isYargsInstance(y) {
 }
 var __classPrivateFieldSet2, __classPrivateFieldGet2, _YargsInstance_command, _YargsInstance_cwd, _YargsInstance_context, _YargsInstance_completion, _YargsInstance_completionCommand, _YargsInstance_defaultShowHiddenOpt, _YargsInstance_exitError, _YargsInstance_detectLocale, _YargsInstance_emittedWarnings, _YargsInstance_exitProcess, _YargsInstance_frozens, _YargsInstance_globalMiddleware, _YargsInstance_groups, _YargsInstance_hasOutput, _YargsInstance_helpOpt, _YargsInstance_isGlobalContext, _YargsInstance_logger, _YargsInstance_output, _YargsInstance_options, _YargsInstance_parentRequire, _YargsInstance_parserConfig, _YargsInstance_parseFn, _YargsInstance_parseContext, _YargsInstance_pkgs, _YargsInstance_preservedGroups, _YargsInstance_processArgs, _YargsInstance_recommendCommands, _YargsInstance_shim, _YargsInstance_strict, _YargsInstance_strictCommands, _YargsInstance_strictOptions, _YargsInstance_usage, _YargsInstance_usageConfig, _YargsInstance_versionOpt, _YargsInstance_validation, kCopyDoubleDash, kCreateLogger, kDeleteFromParserHintObject, kEmitWarning, kFreeze, kGetDollarZero, kGetParserConfiguration, kGetUsageConfiguration, kGuessLocale, kGuessVersion, kParsePositionalNumbers, kPkgUp, kPopulateParserHintArray, kPopulateParserHintSingleValueDictionary, kPopulateParserHintArrayDictionary, kPopulateParserHintDictionary, kSanitizeKey, kSetKey, kUnfreeze, kValidateAsync, kGetCommandInstance, kGetContext, kGetHasOutput, kGetLoggerInstance, kGetParseContext, kGetUsageInstance, kGetValidationInstance, kHasParseCallback, kIsGlobalContext, kPostProcess, kRebase, kReset, kRunYargsParserAndExecuteCommands, kRunValidation, kSetHasOutput, kTrackManuallySetKeys, YargsInstance;
 var init_yargs_factory = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/build/lib/yargs-factory.js"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/build/lib/yargs-factory.js"() {
     init_command();
     init_common_types();
     init_yerror();
@@ -94781,14 +96070,14 @@ var init_yargs_factory = __esm({
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/index.mjs
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/index.mjs
 var yargs_exports = {};
 __export(yargs_exports, {
   default: () => yargs_default
 });
 var Yargs, yargs_default;
 var init_yargs = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/index.mjs"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/index.mjs"() {
     "use strict";
     init_esm();
     init_yargs_factory();
@@ -94797,7 +96086,7 @@ var init_yargs = __esm({
   }
 });
 
-// node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/helpers/helpers.mjs
+// node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/helpers/helpers.mjs
 var helpers_exports = {};
 __export(helpers_exports, {
   Parser: () => lib_default,
@@ -94806,7 +96095,7 @@ __export(helpers_exports, {
 });
 var applyExtends2;
 var init_helpers = __esm({
-  "node_modules/.pnpm/yargs@17.7.2/node_modules/yargs/helpers/helpers.mjs"() {
+  "node_modules/.pnpm/yargs@17.7.3/node_modules/yargs/helpers/helpers.mjs"() {
     init_apply_extends();
     init_process_argv();
     init_lib2();
@@ -96658,14 +97947,14 @@ var init_revisions = __esm({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
 var require_browser_installer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "8983f129-94b8-58f4-9d68-61934fe6a2e3");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "d47e5ec8-5122-5d6d-adb1-3d33d30c8188");
       } catch (e2) {
       }
     }();
@@ -96853,19 +98142,19 @@ For more help, see: https://pptr.dev/troubleshooting`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/index.js
 var require_dist12 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.287.1/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "e343c1d4-06e4-5354-bcbf-08f39785fcdd");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "d1afec68-6368-5d3c-b88a-f6200e33e20c");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ensureBrowser = exports2.meticulousFetch = exports2.getErrorCode = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getBitbucketPullRequestCommitShaFromCi = exports2.getGitDiff = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
+    exports2.ensureBrowser = exports2.meticulousFetch = exports2.getErrorCode = exports2.computeRetryDelayMs = exports2.getRetryAfterMs = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getStashCreateSha = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.logProgress = exports2.logNotice = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
     var defer_1 = require_defer();
     Object.defineProperty(exports2, "defer", { enumerable: true, get: function() {
       return defer_1.defer;
@@ -96886,6 +98175,12 @@ var require_dist12 = __commonJS({
     } });
     Object.defineProperty(exports2, "initLogger", { enumerable: true, get: function() {
       return console_logger_1.initLogger;
+    } });
+    Object.defineProperty(exports2, "logNotice", { enumerable: true, get: function() {
+      return console_logger_1.logNotice;
+    } });
+    Object.defineProperty(exports2, "logProgress", { enumerable: true, get: function() {
+      return console_logger_1.logProgress;
     } });
     Object.defineProperty(exports2, "setLogLevel", { enumerable: true, get: function() {
       return console_logger_1.setLogLevel;
@@ -96927,11 +98222,14 @@ var require_dist12 = __commonJS({
     Object.defineProperty(exports2, "hasUncommittedChanges", { enumerable: true, get: function() {
       return commit_sha_utils_1.hasUncommittedChanges;
     } });
+    Object.defineProperty(exports2, "getUntrackedFiles", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getUntrackedFiles;
+    } });
     Object.defineProperty(exports2, "getGitDiff", { enumerable: true, get: function() {
       return commit_sha_utils_1.getGitDiff;
     } });
-    Object.defineProperty(exports2, "getBitbucketPullRequestCommitShaFromCi", { enumerable: true, get: function() {
-      return commit_sha_utils_1.getBitbucketPullRequestCommitShaFromCi;
+    Object.defineProperty(exports2, "getStashCreateSha", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getStashCreateSha;
     } });
     var http_retry_utils_1 = require_http_retry_utils();
     Object.defineProperty(exports2, "executeWithRetry", { enumerable: true, get: function() {
@@ -96939,6 +98237,12 @@ var require_dist12 = __commonJS({
     } });
     Object.defineProperty(exports2, "defaultShouldRetry", { enumerable: true, get: function() {
       return http_retry_utils_1.defaultShouldRetry;
+    } });
+    Object.defineProperty(exports2, "getRetryAfterMs", { enumerable: true, get: function() {
+      return http_retry_utils_1.getRetryAfterMs;
+    } });
+    Object.defineProperty(exports2, "computeRetryDelayMs", { enumerable: true, get: function() {
+      return http_retry_utils_1.computeRetryDelayMs;
     } });
     var error_code_utils_1 = require_error_code_utils();
     Object.defineProperty(exports2, "getErrorCode", { enumerable: true, get: function() {
@@ -96955,27 +98259,27 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
 var require_oauth_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "595a4784-6348-5e96-ade9-5fb210f688f6");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "4836117c-ca38-52ca-af60-a97d89220835");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getWebappBaseUrl = exports2.getTokenEndpoint = exports2.OAUTH_SCOPES = exports2.CLI_CLIENT_ID = exports2.KEYCLOAK_ISSUER_URL = void 0;
+    exports2.getWebappBaseUrl = exports2.getDeviceAuthorizationEndpoint = exports2.getTokenEndpoint = exports2.OAUTH_SCOPES = exports2.CLI_CLIENT_ID = exports2.KEYCLOAK_ISSUER_URL = void 0;
     exports2.KEYCLOAK_ISSUER_URL = process.env["METICULOUS_OAUTH_ISSUER_URL"] || "https://app.meticulous.ai/auth/realms/meticulous";
     exports2.CLI_CLIENT_ID = "meticulous-cli";
     exports2.OAUTH_SCOPES = "openid email profile offline_access";
     var WELL_KNOWN_PATH = "/.well-known/openid-configuration";
-    var cachedTokenEndpoint = null;
-    var getTokenEndpoint = async () => {
-      if (cachedTokenEndpoint) {
-        return cachedTokenEndpoint;
+    var cachedOidcConfiguration = null;
+    var getOidcConfiguration = async () => {
+      if (cachedOidcConfiguration) {
+        return cachedOidcConfiguration;
       }
       const response = await fetch(`${exports2.KEYCLOAK_ISSUER_URL}${WELL_KNOWN_PATH}`);
       if (!response.ok) {
@@ -96985,15 +98289,27 @@ var require_oauth_constants = __commonJS({
       if (!config.token_endpoint) {
         throw new Error("OpenID configuration missing token_endpoint");
       }
-      cachedTokenEndpoint = config.token_endpoint;
-      return cachedTokenEndpoint;
+      cachedOidcConfiguration = config;
+      return cachedOidcConfiguration;
+    };
+    var getTokenEndpoint = async () => {
+      const config = await getOidcConfiguration();
+      return config.token_endpoint;
     };
     exports2.getTokenEndpoint = getTokenEndpoint;
+    var getDeviceAuthorizationEndpoint = async () => {
+      const config = await getOidcConfiguration();
+      if (!config.device_authorization_endpoint) {
+        throw new Error(`OpenID configuration missing device_authorization_endpoint. The OAuth 2.0 Device Authorization Grant is not enabled for the meticulous-cli client on this realm (${exports2.KEYCLOAK_ISSUER_URL}).`);
+      }
+      return config.device_authorization_endpoint;
+    };
+    exports2.getDeviceAuthorizationEndpoint = getDeviceAuthorizationEndpoint;
     var DEFAULT_WEBAPP_BASE_URL = "https://app.meticulous.ai";
     var getWebappBaseUrl = () => {
       const apiUrlFromEnv = process.env["METICULOUS_API_URL"];
       if (apiUrlFromEnv && apiUrlFromEnv.includes("localhost")) {
-        return apiUrlFromEnv.replace(/\/api\/?$/, "").replace(":3000", ":3001");
+        return apiUrlFromEnv.replace(/\/api\/?$/, "").replace(/localhost:(\d+)/, (_match, port) => `localhost:${Number(port) + 1}`);
       }
       return DEFAULT_WEBAPP_BASE_URL;
     };
@@ -97001,31 +98317,30 @@ var require_oauth_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
 var require_oauth_token_store = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "e20d44b6-0602-519d-b1ed-198e373925f6");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "0b35ec95-17a4-51ad-8fc0-e555a2a57c7f");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.clearStoredProject = exports2.setStoredProject = exports2.getStoredProject = exports2.getStoredProjectId = exports2.clearOAuthTokens = exports2.storeOAuthTokens = exports2.getStoredOAuthTokens = void 0;
+    exports2.clearOAuthTokens = exports2.storeOAuthTokens = exports2.getStoredOAuthTokens = void 0;
     var fs_1 = require("fs");
-    var os_1 = require("os");
     var path_1 = require("path");
-    var METICULOUS_DIR = (0, path_1.join)((0, os_1.homedir)(), ".meticulous");
-    var TOKEN_FILE_PATH = (0, path_1.join)(METICULOUS_DIR, "oauth-tokens.json");
-    var SELECTED_PROJECT_FILE_PATH = (0, path_1.join)(METICULOUS_DIR, "selected-project.json");
+    var common_1 = require_dist12();
+    var getMeticulousDir = () => (0, common_1.getMeticulousLocalDataDir)();
+    var getTokenFilePath = () => (0, path_1.join)(getMeticulousDir(), "oauth-tokens.json");
     var getStoredOAuthTokens = () => {
       try {
-        if (!(0, fs_1.existsSync)(TOKEN_FILE_PATH)) {
+        if (!(0, fs_1.existsSync)(getTokenFilePath())) {
           return null;
         }
-        const data = (0, fs_1.readFileSync)(TOKEN_FILE_PATH, "utf-8");
+        const data = (0, fs_1.readFileSync)(getTokenFilePath(), "utf-8");
         return JSON.parse(data);
       } catch {
         return null;
@@ -97033,64 +98348,29 @@ var require_oauth_token_store = __commonJS({
     };
     exports2.getStoredOAuthTokens = getStoredOAuthTokens;
     var storeOAuthTokens = (tokens) => {
-      if (!(0, fs_1.existsSync)(METICULOUS_DIR)) {
-        (0, fs_1.mkdirSync)(METICULOUS_DIR, { recursive: true });
+      if (!(0, fs_1.existsSync)(getMeticulousDir())) {
+        (0, fs_1.mkdirSync)(getMeticulousDir(), { recursive: true });
       }
-      (0, fs_1.writeFileSync)(TOKEN_FILE_PATH, JSON.stringify(tokens, null, 2), {
+      (0, fs_1.writeFileSync)(getTokenFilePath(), JSON.stringify(tokens, null, 2), {
         mode: 384
       });
     };
     exports2.storeOAuthTokens = storeOAuthTokens;
     var clearOAuthTokens = () => {
       try {
-        if ((0, fs_1.existsSync)(TOKEN_FILE_PATH)) {
-          (0, fs_1.unlinkSync)(TOKEN_FILE_PATH);
+        if ((0, fs_1.existsSync)(getTokenFilePath())) {
+          (0, fs_1.unlinkSync)(getTokenFilePath());
         }
       } catch {
       }
     };
     exports2.clearOAuthTokens = clearOAuthTokens;
-    var getStoredSelectedProject = () => {
-      try {
-        if (!(0, fs_1.existsSync)(SELECTED_PROJECT_FILE_PATH)) {
-          return null;
-        }
-        const data = (0, fs_1.readFileSync)(SELECTED_PROJECT_FILE_PATH, "utf-8");
-        return JSON.parse(data);
-      } catch {
-        return null;
-      }
-    };
-    var getStoredProjectId = () => {
-      return getStoredSelectedProject()?.projectId ?? null;
-    };
-    exports2.getStoredProjectId = getStoredProjectId;
-    var getStoredProject = () => {
-      return getStoredSelectedProject()?.project ?? null;
-    };
-    exports2.getStoredProject = getStoredProject;
-    var setStoredProject = ({ project, projectId }) => {
-      if (!(0, fs_1.existsSync)(METICULOUS_DIR)) {
-        (0, fs_1.mkdirSync)(METICULOUS_DIR, { recursive: true });
-      }
-      (0, fs_1.writeFileSync)(SELECTED_PROJECT_FILE_PATH, JSON.stringify({ project, projectId }, null, 2), { mode: 384 });
-    };
-    exports2.setStoredProject = setStoredProject;
-    var clearStoredProject = () => {
-      try {
-        if ((0, fs_1.existsSync)(SELECTED_PROJECT_FILE_PATH)) {
-          (0, fs_1.unlinkSync)(SELECTED_PROJECT_FILE_PATH);
-        }
-      } catch {
-      }
-    };
-    exports2.clearStoredProject = clearStoredProject;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
 var require_oauth_refresh = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97152,34 +98432,39 @@ var require_oauth_refresh = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
 var require_api_token_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "62d25f73-01cb-553d-b300-4c910f6c0e42");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "37107461-5cfb-576e-b1a0-79cd9fed02c9");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getAuthToken = exports2.getApiToken = void 0;
+    exports2.getAuthToken = exports2.getApiToken = exports2.readFileBasedToken = void 0;
     var fs_1 = require("fs");
-    var os_1 = require("os");
     var path_1 = require("path");
     var common_1 = require_dist12();
     var oauth_refresh_1 = require_oauth_refresh();
-    var PERSONAL_CONFIG_FILE_PATH = ".meticulous/config.json";
-    var getFileBasedToken = () => {
-      const personalConfigFileAbsolutePath = (0, path_1.join)((0, os_1.homedir)(), PERSONAL_CONFIG_FILE_PATH);
+    var readFileBasedToken = () => {
+      const personalConfigFileAbsolutePath = (0, path_1.join)((0, common_1.getMeticulousLocalDataDir)(), "config.json");
       if ((0, fs_1.existsSync)(personalConfigFileAbsolutePath)) {
         const config = JSON.parse((0, fs_1.readFileSync)(personalConfigFileAbsolutePath).toString("utf-8"));
         if (config.apiToken) {
-          const logger = (0, common_1.initLogger)();
-          logger.info(`Using apiToken from ${personalConfigFileAbsolutePath}`);
-          return config.apiToken;
+          return { token: config.apiToken, path: personalConfigFileAbsolutePath };
         }
+      }
+      return null;
+    };
+    exports2.readFileBasedToken = readFileBasedToken;
+    var getFileBasedToken = () => {
+      const fileToken = (0, exports2.readFileBasedToken)();
+      if (fileToken) {
+        (0, common_1.initLogger)().info(`Using apiToken from ${fileToken.path}`);
+        return fileToken.token;
       }
       return null;
     };
@@ -97194,30 +98479,39 @@ var require_api_token_utils = __commonJS({
     };
     exports2.getApiToken = getApiToken;
     var getAuthToken = async (apiToken) => {
+      const logger = (0, common_1.initLogger)();
       if (apiToken) {
+        logger.debug("Authenticated via --apiToken flag");
         return apiToken;
-      }
-      if (process.env["METICULOUS_API_TOKEN"]) {
-        return process.env["METICULOUS_API_TOKEN"];
       }
       const oauthToken = await (0, oauth_refresh_1.getValidAccessToken)();
       if (oauthToken) {
+        logger.debug("Authenticated via OAuth");
         return oauthToken;
       }
-      return getFileBasedToken();
+      if (process.env["METICULOUS_API_TOKEN"]) {
+        logger.debug("Authenticated via METICULOUS_API_TOKEN environment variable");
+        return process.env["METICULOUS_API_TOKEN"];
+      }
+      const fileToken = (0, exports2.readFileBasedToken)();
+      if (fileToken) {
+        logger.debug(`Authenticated via ${fileToken.path}`);
+        return fileToken.token;
+      }
+      return null;
     };
     exports2.getAuthToken = getAuthToken;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
 var require_oauth_callback_server = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "61c18e10-23a1-543a-a17e-d6c7dce902e5");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "00ad6935-cb6d-59ab-af1e-81a852c76aa4");
       } catch (e2) {
       }
     }();
@@ -97235,7 +98529,7 @@ var require_oauth_callback_server = __commonJS({
   <div style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 24px;">
     <img src="https://app.meticulous.ai/meticulous_logo.svg" alt="Meticulous" width="48" height="51" />
     <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="24" cy="24" r="24" fill="#1AC590"/>
+      <circle cx="24" cy="24" r="24" fill="#22c55e"/>
       <path d="M14 24.5L21 31.5L34 18.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     <h2 style="margin: 0; font-size: 24px; font-weight: 600;">Authentication successful</h2>
@@ -97304,9 +98598,9 @@ var require_oauth_callback_server = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
 var require_oauth_pkce = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97333,14 +98627,14 @@ var require_oauth_pkce = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
 var require_oauth_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "f6988c17-701c-5878-aa62-fb95bd3b0784");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "c730468e-5f07-535a-9a44-f7e9c4d95bb7");
       } catch (e2) {
       }
     }();
@@ -97352,7 +98646,7 @@ var require_oauth_login = __commonJS({
     var oauth_constants_1 = require_oauth_constants();
     var oauth_pkce_1 = require_oauth_pkce();
     var oauth_token_store_1 = require_oauth_token_store();
-    var performOAuthLogin = async () => {
+    var performOAuthLogin = async ({ openBrowserAutomatically = true } = {}) => {
       const logger = (0, common_1.initLogger)();
       const codeVerifier = (0, oauth_pkce_1.generateCodeVerifier)();
       const codeChallenge = (0, oauth_pkce_1.generateCodeChallenge)(codeVerifier);
@@ -97364,9 +98658,14 @@ var require_oauth_login = __commonJS({
         state,
         redirectUri
       });
-      logger.info("Opening browser for authentication...");
-      logger.info(`If the browser does not open, visit: ${authUrl}`);
-      openBrowser(authUrl);
+      if (openBrowserAutomatically) {
+        logger.info("Opening browser for authentication...");
+        logger.info(`If the browser does not open, visit: ${authUrl}`);
+        openBrowser(authUrl);
+      } else {
+        logger.info(`To authenticate, open this URL in a browser on this machine (login completes via a local callback on 127.0.0.1, so a browser on another machine cannot finish it):
+${authUrl}`);
+      }
       const { code, state: returnedState } = await callbackServer.waitForCallback();
       if (returnedState !== state) {
         throw new Error("OAuth state mismatch. This could indicate a CSRF attack. Please try again.");
@@ -97431,9 +98730,117 @@ var require_oauth_login = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/version.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
+var require_oauth_utils = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
+    "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "ea51a673-cdc7-51d7-9ba9-48e73c9fd271");
+      } catch (e2) {
+      }
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.isJwtExpired = exports2.getJwtClaims = exports2.isOAuthJwt = void 0;
+    var PROJECT_API_TOKEN_PREFIX = "prat-";
+    var TEST_RUN_API_TOKEN_PREFIX = "trat";
+    var isOAuthJwt = (token) => {
+      if (!token || token.startsWith(PROJECT_API_TOKEN_PREFIX) || token.startsWith(TEST_RUN_API_TOKEN_PREFIX)) {
+        return false;
+      }
+      const parts = token.split(".");
+      return parts.length === 3 && parts.every((part) => part.length > 0);
+    };
+    exports2.isOAuthJwt = isOAuthJwt;
+    var getJwtClaims = (token) => {
+      try {
+        const parts = token.split(".");
+        if (parts.length !== 3) {
+          return null;
+        }
+        const payload = Buffer.from(parts[1], "base64url").toString("utf-8");
+        return JSON.parse(payload);
+      } catch {
+        return null;
+      }
+    };
+    exports2.getJwtClaims = getJwtClaims;
+    var isJwtExpired = (token) => {
+      const claims = (0, exports2.getJwtClaims)(token);
+      const exp = claims?.["exp"];
+      if (typeof exp !== "number") {
+        return false;
+      }
+      return exp * 1e3 < Date.now();
+    };
+    exports2.isJwtExpired = isJwtExpired;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js
+var require_legacy_project_migration = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js"(exports2) {
+    "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "c7e49da8-9122-5869-b62c-7de95f9953a3");
+      } catch (e2) {
+      }
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.migrateLegacySelectedProjectIfPresent = void 0;
+    var fs_1 = require("fs");
+    var path_1 = require("path");
+    var common_1 = require_dist12();
+    var oauth_api_1 = require_oauth_api();
+    var client_1 = require_client3();
+    var getLegacySelectedProjectFilePath = () => (0, path_1.join)((0, common_1.getMeticulousLocalDataDir)(), "selected-project.json");
+    var migrateLegacySelectedProjectIfPresent = async (apiToken, logger, appInfo) => {
+      const filePath = getLegacySelectedProjectFilePath();
+      if (!(0, fs_1.existsSync)(filePath)) {
+        return;
+      }
+      let legacyProjectId;
+      try {
+        const raw = (0, fs_1.readFileSync)(filePath, "utf-8");
+        legacyProjectId = JSON.parse(raw).projectId;
+      } catch {
+        removeLegacyFile(filePath);
+        return;
+      }
+      try {
+        if (legacyProjectId) {
+          const client = (0, client_1.buildClient)(apiToken, logger, appInfo);
+          const { projectId: storedDefault } = await (0, oauth_api_1.getOAuthDefaultProject)(client, {
+            includeAutoPick: false
+          });
+          if (!storedDefault) {
+            await (0, oauth_api_1.setOAuthDefaultProject)(client, legacyProjectId);
+            logger.debug(`Migrated local default project ${legacyProjectId} to your Meticulous account settings.`);
+          }
+        }
+      } catch {
+        return;
+      }
+      removeLegacyFile(filePath);
+    };
+    exports2.migrateLegacySelectedProjectIfPresent = migrateLegacySelectedProjectIfPresent;
+    var removeLegacyFile = (filePath) => {
+      try {
+        if ((0, fs_1.existsSync)(filePath)) {
+          (0, fs_1.unlinkSync)(filePath);
+        }
+      } catch {
+      }
+    };
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/version.js
 var require_version2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97444,28 +98851,30 @@ var require_version2 = __commonJS({
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.VERSION = void 0;
-    exports2.VERSION = "2.289.2";
+    exports2.VERSION = "2.322.0";
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/client.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/client.js
 var require_client3 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "af79d0c2-4021-56e8-8cee-e32a4cc3a1a6");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "d29d6926-fa1e-5372-9343-c0f8ab304540");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.createClientWithOAuth = exports2.resolveApiTokenWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.makeRequest = exports2.buildUserAgent = void 0;
+    exports2.createClientWithOAuth = exports2.resolveApiTokenWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.buildClient = exports2.makeRequest = exports2.declareClientAppInfo = exports2.buildUserAgent = void 0;
     var common_1 = require_dist12();
-    var oauth_api_1 = require_oauth_api();
     var api_token_utils_1 = require_api_token_utils();
+    var errors_1 = require_errors2();
     var oauth_login_1 = require_oauth_login();
     var oauth_token_store_1 = require_oauth_token_store();
+    var oauth_utils_1 = require_oauth_utils();
+    var legacy_project_migration_1 = require_legacy_project_migration();
     var version_1 = require_version2();
     var DEFAULT_TIMEOUT = 6e4;
     var BASE_API_URL = "https://app.meticulous.ai/api/";
@@ -97476,6 +98885,12 @@ var require_client3 = __commonJS({
       return suffix ? `${USER_AGENT} ${suffix}` : USER_AGENT;
     };
     exports2.buildUserAgent = buildUserAgent;
+    var declareClientAppInfo = (appInfo) => {
+      if (!process.env[USER_AGENT_SUFFIX_ENV_VAR]?.trim()) {
+        process.env[USER_AGENT_SUFFIX_ENV_VAR] = appInfo;
+      }
+    };
+    exports2.declareClientAppInfo = declareClientAppInfo;
     var makeSingleRequest = async (url, options, timeout) => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => {
@@ -97551,18 +98966,26 @@ var require_client3 = __commonJS({
     exports2.makeRequest = makeRequest;
     var buildClient = (token, logger, appInfo) => {
       const userAgent = (0, exports2.buildUserAgent)(appInfo);
+      const getToken = typeof token === "function" ? token : () => Promise.resolve(token);
       const makeRequestWithToken = async (url, options = {}, config) => {
+        const resolvedToken = await getToken();
         const headers = {
-          authorization: token,
           "user-agent": userAgent
         };
-        return (0, exports2.makeRequest)({
-          url,
-          headers,
-          options,
-          config: config || {},
-          logger
-        });
+        if (resolvedToken) {
+          headers.authorization = resolvedToken;
+        }
+        try {
+          return await (0, exports2.makeRequest)({
+            url,
+            headers,
+            options,
+            config: config || {},
+            logger
+          });
+        } catch (error2) {
+          throw (0, errors_1.maybeEnrichMissingAuthFetchError)(error2, Boolean(resolvedToken));
+        }
       };
       return {
         get: (url, config) => {
@@ -97583,17 +99006,20 @@ var require_client3 = __commonJS({
             requestOptions.body = body;
           }
           return makeRequestWithToken(url, requestOptions, config);
+        },
+        delete: (url, config) => {
+          return makeRequestWithToken(url, { method: "DELETE" }, config);
         }
       };
     };
+    exports2.buildClient = buildClient;
     var createClient2 = ({ apiToken: apiToken_, appInfo }) => {
       const logger = (0, common_1.initLogger)();
       const apiToken = (0, api_token_utils_1.getApiToken)(apiToken_);
       if (!apiToken) {
-        logger.error("You must provide an API token by using the --apiToken parameter");
-        process.exit(1);
+        (0, common_1.logProgress)("No API token found; proceeding with unauthenticated requests");
       }
-      return buildClient(apiToken, logger, appInfo);
+      return (0, exports2.buildClient)(apiToken, logger, appInfo);
     };
     exports2.createClient = createClient2;
     var isInteractiveContext = () => process.stdin.isTTY === true && !process.env["CI"];
@@ -97605,36 +99031,22 @@ var require_client3 = __commonJS({
       if (!apiToken && isInteractive) {
         const tokens = await (0, oauth_login_1.performOAuthLogin)();
         apiToken = tokens.accessToken;
-        await maybeAutoSelectProject(apiToken, logger, options.appInfo);
       }
       if (!apiToken) {
-        const message = isInteractive ? "No authentication found. Use --apiToken, set METICULOUS_API_TOKEN, or log in via browser." : "No authentication found. Set METICULOUS_API_TOKEN or pass --apiToken.";
-        logger.error(message);
-        return process.exit(1);
+        (0, common_1.logProgress)("No API token found; proceeding with unauthenticated requests");
+        return null;
+      }
+      if ((0, oauth_utils_1.isOAuthJwt)(apiToken)) {
+        await (0, legacy_project_migration_1.migrateLegacySelectedProjectIfPresent)(apiToken, logger, options.appInfo);
       }
       return apiToken;
     };
     exports2.resolveApiTokenWithOAuth = resolveApiTokenWithOAuth;
-    var maybeAutoSelectProject = async (apiToken, logger, appInfo) => {
-      if ((0, oauth_token_store_1.getStoredProjectId)()) {
-        return;
-      }
-      try {
-        const client = buildClient(apiToken, logger, appInfo);
-        const projects = await (0, oauth_api_1.getOAuthProjects)(client);
-        if (projects.length === 1) {
-          const only = projects[0];
-          const projectSlug = `${only.organization.name}/${only.name}`;
-          (0, oauth_token_store_1.setStoredProject)({ project: projectSlug, projectId: only.id });
-          logger.info(`Selected project: ${projectSlug}`);
-        }
-      } catch (error2) {
-        logger.debug(`Skipping auto-project selection after login: ${error2}`);
-      }
-    };
     var createClientWithOAuth = async (options) => {
       const apiToken = await (0, exports2.resolveApiTokenWithOAuth)(options);
-      return buildClient(apiToken, (0, common_1.initLogger)(), options.appInfo);
+      const usingOAuth = !options.apiToken && (0, oauth_token_store_1.getStoredOAuthTokens)() != null;
+      const token = usingOAuth ? async () => await (0, api_token_utils_1.getAuthToken)(options.apiToken) ?? apiToken : apiToken;
+      return (0, exports2.buildClient)(token, (0, common_1.initLogger)(), options.appInfo);
     };
     exports2.createClientWithOAuth = createClientWithOAuth;
     var getApiUrl = () => {
@@ -97646,57 +99058,192 @@ var require_client3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
-var require_oauth_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js
+var require_oauth_device_login = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "ed20803a-47be-594d-9cd5-c73622e4649e");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "7e3c44b3-7ebc-54d6-95d7-0b15297d4ec3");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.isJwtExpired = exports2.getJwtClaims = exports2.isOAuthJwt = void 0;
-    var PROJECT_API_TOKEN_PREFIX = "prat-";
-    var TEST_RUN_API_TOKEN_PREFIX = "trat";
-    var isOAuthJwt = (token) => {
-      if (!token || token.startsWith(PROJECT_API_TOKEN_PREFIX) || token.startsWith(TEST_RUN_API_TOKEN_PREFIX)) {
-        return false;
-      }
-      const parts = token.split(".");
-      return parts.length === 3 && parts.every((part) => part.length > 0);
+    exports2.performDeviceLogin = void 0;
+    var common_1 = require_dist12();
+    var oauth_constants_1 = require_oauth_constants();
+    var oauth_pkce_1 = require_oauth_pkce();
+    var oauth_token_store_1 = require_oauth_token_store();
+    var DEFAULT_POLL_INTERVAL_SECONDS = 5;
+    var SLOW_DOWN_INCREMENT_SECONDS = 5;
+    var performDeviceLogin = async () => {
+      const logger = (0, common_1.initLogger)();
+      const codeVerifier = (0, oauth_pkce_1.generateCodeVerifier)();
+      const authorization = await requestDeviceAuthorization({
+        codeChallenge: (0, oauth_pkce_1.generateCodeChallenge)(codeVerifier)
+      });
+      const webappBaseUrl = (0, oauth_constants_1.getWebappBaseUrl)();
+      const cliLoginParams = new URLSearchParams({
+        user_code: authorization.user_code,
+        issuer: oauth_constants_1.KEYCLOAK_ISSUER_URL
+      });
+      logger.info(`On any device, open the URL below and confirm the code ${authorization.user_code}:`);
+      logger.info(`${webappBaseUrl}/cli-device-login?${cliLoginParams.toString()}`);
+      logger.info(authorization.verification_uri_complete ? `If that doesn't work, open ${authorization.verification_uri_complete}` : `If that doesn't work, open ${authorization.verification_uri} and enter the code manually: ${authorization.user_code}`);
+      const tokens = await pollForTokens({ authorization, codeVerifier });
+      (0, oauth_token_store_1.storeOAuthTokens)(tokens);
+      logger.info("Authentication successful.");
+      return tokens;
     };
-    exports2.isOAuthJwt = isOAuthJwt;
-    var getJwtClaims = (token) => {
-      try {
-        const parts = token.split(".");
-        if (parts.length !== 3) {
-          return null;
+    exports2.performDeviceLogin = performDeviceLogin;
+    var requestDeviceAuthorization = async ({ codeChallenge }) => {
+      const deviceAuthorizationEndpoint = await (0, oauth_constants_1.getDeviceAuthorizationEndpoint)();
+      const body = new URLSearchParams({
+        client_id: oauth_constants_1.CLI_CLIENT_ID,
+        scope: oauth_constants_1.OAUTH_SCOPES,
+        code_challenge: codeChallenge,
+        code_challenge_method: "S256"
+      });
+      const response = await fetch(deviceAuthorizationEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString()
+      });
+      const bodyText = await response.text();
+      if (!response.ok) {
+        if (parseOAuthErrorCode(bodyText) === "unauthorized_client") {
+          throw new Error(`The OAuth 2.0 Device Authorization Grant is not enabled for the meticulous-cli client on this realm (${oauth_constants_1.KEYCLOAK_ISSUER_URL}).`);
         }
-        const payload = Buffer.from(parts[1], "base64url").toString("utf-8");
-        return JSON.parse(payload);
+        throw new Error(`Device authorization request failed: ${response.status} ${bodyText}`);
+      }
+      return parseDeviceAuthorizationResponse(bodyText);
+    };
+    var REQUIRED_DEVICE_AUTHORIZATION_STRING_FIELDS = [
+      "device_code",
+      "user_code",
+      "verification_uri"
+    ];
+    var parseDeviceAuthorizationResponse = (bodyText) => {
+      const data = JSON.parse(bodyText);
+      for (const field of REQUIRED_DEVICE_AUTHORIZATION_STRING_FIELDS) {
+        if (typeof data[field] !== "string" || data[field].length === 0) {
+          throw new Error(`Device authorization response missing required field "${field}".`);
+        }
+      }
+      if (typeof data.expires_in !== "number" || !Number.isFinite(data.expires_in)) {
+        throw new Error('Device authorization response missing a valid "expires_in".');
+      }
+      return data;
+    };
+    var pollForTokens = async ({ authorization, codeVerifier }) => {
+      const tokenEndpoint = await (0, oauth_constants_1.getTokenEndpoint)();
+      const deadline = Date.now() + authorization.expires_in * 1e3;
+      let intervalSeconds = authorization.interval ?? DEFAULT_POLL_INTERVAL_SECONDS;
+      for (; ; ) {
+        const remainingMs = deadline - Date.now();
+        if (remainingMs <= 0) {
+          throw new Error("Device code expired, run login again.");
+        }
+        await sleep(Math.min(intervalSeconds * 1e3, remainingMs));
+        const result = await requestDeviceToken({
+          tokenEndpoint,
+          deviceCode: authorization.device_code,
+          codeVerifier
+        });
+        if (result.kind === "success") {
+          return result.tokens;
+        }
+        if (result.kind === "slow_down") {
+          intervalSeconds += SLOW_DOWN_INCREMENT_SECONDS;
+        }
+      }
+    };
+    var requestDeviceToken = async ({ tokenEndpoint, deviceCode, codeVerifier }) => {
+      const body = new URLSearchParams({
+        grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+        device_code: deviceCode,
+        client_id: oauth_constants_1.CLI_CLIENT_ID,
+        code_verifier: codeVerifier
+      });
+      let response;
+      let bodyText;
+      try {
+        response = await fetch(tokenEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body.toString()
+        });
+        bodyText = await response.text();
       } catch {
-        return null;
+        return { kind: "pending" };
+      }
+      if (response.ok) {
+        const data = JSON.parse(bodyText);
+        return { kind: "success", tokens: mapTokenResponse(data) };
+      }
+      if (response.status >= 500) {
+        return { kind: "pending" };
+      }
+      const errorCode = parseOAuthErrorCode(bodyText);
+      if (errorCode === "authorization_pending") {
+        return { kind: "pending" };
+      }
+      if (errorCode === "slow_down") {
+        return { kind: "slow_down" };
+      }
+      if (errorCode === "access_denied") {
+        throw new Error("Login was denied.");
+      }
+      if (errorCode === "expired_token") {
+        throw new Error("Device code expired, run login again.");
+      }
+      throw new Error(`Device token request failed: ${response.status} ${bodyText}`);
+    };
+    var parseOAuthErrorCode = (bodyText) => {
+      try {
+        return JSON.parse(bodyText).error;
+      } catch {
+        return void 0;
       }
     };
-    exports2.getJwtClaims = getJwtClaims;
-    var isJwtExpired = (token) => {
-      const claims = (0, exports2.getJwtClaims)(token);
-      const exp = claims?.["exp"];
-      if (typeof exp !== "number") {
-        return false;
-      }
-      return exp * 1e3 < Date.now();
-    };
-    exports2.isJwtExpired = isJwtExpired;
+    var mapTokenResponse = (data) => ({
+      accessToken: data.access_token,
+      refreshToken: data.refresh_token,
+      expiresAt: Math.floor(Date.now() / 1e3) + data.expires_in,
+      idToken: data.id_token
+    });
+    var sleep = (ms) => new Promise((resolve5) => setTimeout(resolve5, ms));
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js
+var require_default_project = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js"(exports2) {
+    "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "eaa2f10e-b3e0-5c6f-b19a-9071d9383525");
+      } catch (e2) {
+      }
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.resolveDefaultProjectId = void 0;
+    var oauth_api_1 = require_oauth_api();
+    var client_1 = require_client3();
+    var resolveDefaultProjectId = async (apiToken, logger, appInfo) => {
+      const client = (0, client_1.buildClient)(apiToken, logger, appInfo);
+      const { projectId } = await (0, oauth_api_1.getOAuthDefaultProject)(client);
+      return projectId;
+    };
+    exports2.resolveDefaultProjectId = resolveDefaultProjectId;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
 var require_get_proxy_agent = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97717,14 +99264,14 @@ var require_get_proxy_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
 var require_retry_transient_upload_errors = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "a5523637-fe92-513e-a53e-f2a08a935232");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "9d221384-9790-5105-bdbe-15d2309a2601");
       } catch (e2) {
       }
     }();
@@ -97794,27 +99341,29 @@ ${responseBody}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
 var require_put_file_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "2ace32ed-bc6c-58a2-8d61-e7cc107dc6a8");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "73dd0131-13f4-5dd2-a764-52d3f6fa7160");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.putFileToSignedUrl = void 0;
     var fs_1 = require("fs");
+    var http_1 = require("http");
     var https_1 = require("https");
     var get_proxy_agent_1 = require_get_proxy_agent();
     var retry_transient_upload_errors_1 = require_retry_transient_upload_errors();
     var putFileToSignedUrl = async ({ filePath, signedUrl, size, contentType }) => {
       return new Promise((resolve5, reject) => {
         const fileStream = (0, fs_1.createReadStream)(filePath);
-        const req = (0, https_1.request)(signedUrl, {
+        const requestFn = signedUrl.startsWith("https:") ? https_1.request : http_1.request;
+        const req = requestFn(signedUrl, {
           agent: (0, get_proxy_agent_1.getProxyAgent)(),
           method: "PUT",
           headers: {
@@ -97839,7 +99388,7 @@ var require_put_file_to_signed_url = __commonJS({
         });
         fileStream.on("error", (error2) => {
           req.destroy(error2);
-          reject(error2);
+          reject(error2 instanceof Error ? error2 : new Error(String(error2)));
         });
         fileStream.pipe(req);
       });
@@ -97848,55 +99397,82 @@ var require_put_file_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
 var require_project_deployments_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "c357c753-b913-5d21-b6b9-fd931f908c99");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "a9beefa5-4547-5b87-841b-ac687cf68f47");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = void 0;
+    exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.projectIdQuery = void 0;
     var projectIdQuery = (projectId) => projectId ? { params: { projectId } } : void 0;
+    exports2.projectIdQuery = projectIdQuery;
+    var rejectLegacyProjectId = (body) => {
+      if ("projectId" in body) {
+        throw new Error("`projectId` is not supported by the agent SDK methods \u2014 pass `project` instead (a project id, `organization/name` slug, or unique project name), or omit it to use your default project.");
+      }
+    };
+    var projectQuery = (project) => project ? { params: { project } } : void 0;
     var requestAssetUpload = async ({ client, projectId, ...body }) => {
-      const { data } = await client.post("project-deployments/request-asset-upload", body, projectIdQuery(projectId));
+      const { data } = await client.post("project-deployments/request-asset-upload", body, (0, exports2.projectIdQuery)(projectId));
       return data;
     };
     exports2.requestAssetUpload = requestAssetUpload;
     var requestMultipartAssetUpload = async ({ client, projectId, ...body }) => {
-      const { data } = await client.post("project-deployments/request-multipart-asset-upload", body, projectIdQuery(projectId));
+      const { data } = await client.post("project-deployments/request-multipart-asset-upload", body, (0, exports2.projectIdQuery)(projectId));
       return data;
     };
     exports2.requestMultipartAssetUpload = requestMultipartAssetUpload;
     var requestUploadPart = async ({ client, projectId, ...body }) => {
-      const { data } = await client.post("project-deployments/request-upload-part", body, projectIdQuery(projectId));
+      const { data } = await client.post("project-deployments/request-upload-part", body, (0, exports2.projectIdQuery)(projectId));
       return data;
     };
     exports2.requestUploadPart = requestUploadPart;
     var requestGitDiffUpload = async ({ client, projectId, ...body }) => {
-      const { data } = await client.post("project-deployments/request-git-diff-upload", body, projectIdQuery(projectId));
+      const { data } = await client.post("project-deployments/request-git-diff-upload", body, (0, exports2.projectIdQuery)(projectId));
       return data;
     };
     exports2.requestGitDiffUpload = requestGitDiffUpload;
     var triggerRunOnDeployment = async ({ client, projectId, ...body }) => {
-      const { data } = await client.post("project-deployments/trigger-run", body, projectIdQuery(projectId));
+      const { data } = await client.post("project-deployments/trigger-run", body, (0, exports2.projectIdQuery)(projectId));
       return data;
     };
     exports2.triggerRunOnDeployment = triggerRunOnDeployment;
     var completeAssetUpload = async ({ client, projectId, ...body }) => {
-      const { data } = await client.post("project-deployments/complete-asset-upload-and-maybe-trigger-run", body, projectIdQuery(projectId));
+      const { data } = await client.post("project-deployments/complete-asset-upload-and-maybe-trigger-run", body, (0, exports2.projectIdQuery)(projectId));
       return data;
     };
     exports2.completeAssetUpload = completeAssetUpload;
     var completeContainerUpload = async ({ client, projectId, ...body }) => {
-      const { data } = await client.post("project-deployments/complete-container-upload", body, projectIdQuery(projectId));
+      const { data } = await client.post("project-deployments/complete-container-upload", body, (0, exports2.projectIdQuery)(projectId));
       return data;
     };
     exports2.completeContainerUpload = completeContainerUpload;
+    var createRunWithUploadedAssetChunks = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("project-deployments/create-run-with-uploaded-asset-chunks", body, (0, exports2.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.createRunWithUploadedAssetChunks = createRunWithUploadedAssetChunks;
+    var triggerRunWithUploadedAssetChunks = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("project-deployments/trigger-run-with-uploaded-asset-chunks", body, (0, exports2.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.triggerRunWithUploadedAssetChunks = triggerRunWithUploadedAssetChunks;
+    var requestAssetChunkUpload = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("project-deployments/request-asset-chunk-upload", body, (0, exports2.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.requestAssetChunkUpload = requestAssetChunkUpload;
+    var completeAssetChunkUpload = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("project-deployments/complete-asset-chunk-upload", body, (0, exports2.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.completeAssetChunkUpload = completeAssetChunkUpload;
     var downloadProjectDeployment = async ({ client, deploymentUploadId }) => {
       const { data } = await client.get(`project-deployments/${deploymentUploadId}`);
       return data;
@@ -97907,12 +99483,273 @@ var require_project_deployments_api = __commonJS({
       return data;
     };
     exports2.getContainerDeployment = getContainerDeployment;
+    var agentUploadAssetBuild = async ({ client, project, ...body }) => {
+      rejectLegacyProjectId(body);
+      const { data } = await client.post("agent/upload-build/asset", body, projectQuery(project));
+      return data;
+    };
+    exports2.agentUploadAssetBuild = agentUploadAssetBuild;
+    var agentUploadContainerBuild = async ({ client, project, ...body }) => {
+      rejectLegacyProjectId(body);
+      const { data } = await client.post("agent/upload-build/container", body, projectQuery(project));
+      return data;
+    };
+    exports2.agentUploadContainerBuild = agentUploadContainerBuild;
+    var agentUploadGitDiffBuild = async ({ client, project, ...body }) => {
+      rejectLegacyProjectId(body);
+      const { data } = await client.post("agent/upload-build/git-diff", body, projectQuery(project));
+      return data;
+    };
+    exports2.agentUploadGitDiffBuild = agentUploadGitDiffBuild;
+    var agentTriggerTestRun = async ({ client, project, ...body }) => {
+      rejectLegacyProjectId(body);
+      const { data } = await client.post("agent/trigger-test-run", body, projectQuery(project));
+      return data;
+    };
+    exports2.agentTriggerTestRun = agentTriggerTestRun;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js
+var require_agentic_session_generation_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js"(exports2) {
+    "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "8d73291e-66f4-50c0-8eda-ed6e35d9cb39");
+      } catch (e2) {
+      }
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.releaseAgenticRepoLease = exports2.heartbeatAgenticRepoLease = exports2.getAgenticRepoLeaseStatus = exports2.acquireAgenticRepoLease = exports2.listAgenticRepoTree = exports2.getAgenticFileChanges = exports2.searchAgenticRepoCode = exports2.getAgenticRepoFile = exports2.getAgenticChangedFiles = exports2.getAgenticRunCoverage = exports2.requestAgenticArtifactUploads = exports2.isAgenticRunCancelled = exports2.reportAgenticRunResult = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = void 0;
+    var project_deployments_api_1 = require_project_deployments_api();
+    var requestAgenticInstructionsUpload = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/request-instructions-upload", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.requestAgenticInstructionsUpload = requestAgenticInstructionsUpload;
+    var completeAgenticSessionGeneration = async ({ client, projectId, ...body }) => {
+      try {
+        const { data } = await client.post("agentic-session-generation/launch", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+        return data;
+      } catch (error2) {
+        redactLaunchCredentials(error2, body.appTarget);
+        throw error2;
+      }
+    };
+    exports2.completeAgenticSessionGeneration = completeAgenticSessionGeneration;
+    var redactLaunchCredentials = (error2, appTarget) => {
+      const password = appTarget?.type === "assets" ? appTarget.backend?.password : void 0;
+      if (!password || typeof error2 !== "object" || error2 === null) {
+        return;
+      }
+      const config = error2.config;
+      if (typeof config?.data === "string") {
+        config.data = config.data.split(password).join("[REDACTED]");
+      } else if (typeof config?.data === "object" && config.data !== null) {
+        const target = config.data;
+        if (target.appTarget?.backend?.password) {
+          target.appTarget.backend.password = "[REDACTED]";
+        }
+      }
+    };
+    var reportAgenticRunResult = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/result", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.reportAgenticRunResult = reportAgenticRunResult;
+    var isAgenticRunCancelled = async ({ client, projectId, agenticRunId }) => {
+      const { data } = await client.get("agentic-session-generation/run-cancelled", {
+        params: {
+          ...projectId ? { projectId } : {},
+          agenticRunId
+        }
+      });
+      return data;
+    };
+    exports2.isAgenticRunCancelled = isAgenticRunCancelled;
+    var requestAgenticArtifactUploads = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/request-artifact-uploads", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.requestAgenticArtifactUploads = requestAgenticArtifactUploads;
+    var getAgenticRunCoverage = async ({ client, projectId, agenticRunId }) => {
+      const { data } = await client.get(`agentic-session-generation/runs/${agenticRunId}/js-coverage`, {
+        params: projectId ? { projectId } : {}
+      });
+      return data;
+    };
+    exports2.getAgenticRunCoverage = getAgenticRunCoverage;
+    var getAgenticChangedFiles = async ({ client, projectId, commitSha, runId }) => {
+      const { data } = await client.get("agentic-session-generation/changed-files", {
+        params: {
+          ...projectId ? { projectId } : {},
+          commitSha,
+          ...runId ? { runId } : {}
+        }
+      });
+      return data;
+    };
+    exports2.getAgenticChangedFiles = getAgenticChangedFiles;
+    var getAgenticRepoFile = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/repo/file", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.getAgenticRepoFile = getAgenticRepoFile;
+    var searchAgenticRepoCode = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/repo/search", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.searchAgenticRepoCode = searchAgenticRepoCode;
+    var getAgenticFileChanges = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/repo/file-changes", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.getAgenticFileChanges = getAgenticFileChanges;
+    var listAgenticRepoTree = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/repo/ls-tree", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.listAgenticRepoTree = listAgenticRepoTree;
+    var acquireAgenticRepoLease = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/repo/lease/acquire", body, {
+        ...(0, project_deployments_api_1.projectIdQuery)(projectId),
+        // The acquire endpoint blocks server-side up to ~6 min bringing a cold pod
+        // up (backend REPO_SERVER_ACQUIRE_REQUEST_TIMEOUT_MS). Wait that out in a
+        // single attempt — with a little headroom so the server's own response
+        // lands first — rather than aborting at the client's 60s default and
+        // retrying, which fires several redundant bring-ups.
+        timeout: 6.5 * 60 * 1e3
+      });
+      return data;
+    };
+    exports2.acquireAgenticRepoLease = acquireAgenticRepoLease;
+    var getAgenticRepoLeaseStatus = async ({ client, projectId, podInstanceId }) => {
+      const { data } = await client.get("agentic-session-generation/repo/lease/status", {
+        params: {
+          ...projectId ? { projectId } : {},
+          ...podInstanceId ? { podInstanceId } : {}
+        }
+      });
+      return data;
+    };
+    exports2.getAgenticRepoLeaseStatus = getAgenticRepoLeaseStatus;
+    var heartbeatAgenticRepoLease = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/repo/lease/heartbeat", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.heartbeatAgenticRepoLease = heartbeatAgenticRepoLease;
+    var releaseAgenticRepoLease = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/repo/lease/release", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.releaseAgenticRepoLease = releaseAgenticRepoLease;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/session-transform-discovery.api.js
+var require_session_transform_discovery_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/session-transform-discovery.api.js"(exports2) {
+    "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "37de2631-1abe-5f0c-a001-01c8bebdf309");
+      } catch (e2) {
+      }
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.releaseDiscoveryRepoLease = exports2.heartbeatDiscoveryRepoLease = exports2.getDiscoveryRepoLeaseStatus = exports2.acquireDiscoveryRepoLease = exports2.listDiscoveryRepoTree = exports2.searchDiscoveryRepoCode = exports2.getDiscoveryRepoFile = void 0;
+    var project_deployments_api_1 = require_project_deployments_api();
+    var getDiscoveryRepoFile = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("session-transform-discovery/repo/file", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.getDiscoveryRepoFile = getDiscoveryRepoFile;
+    var searchDiscoveryRepoCode = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("session-transform-discovery/repo/search", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.searchDiscoveryRepoCode = searchDiscoveryRepoCode;
+    var listDiscoveryRepoTree = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("session-transform-discovery/repo/ls-tree", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.listDiscoveryRepoTree = listDiscoveryRepoTree;
+    var acquireDiscoveryRepoLease = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("session-transform-discovery/repo/lease/acquire", body, {
+        ...(0, project_deployments_api_1.projectIdQuery)(projectId),
+        // The acquire endpoint blocks server-side up to ~6 min bringing a cold
+        // pod up; wait that out in a single attempt (matches the agentic client).
+        timeout: 6.5 * 60 * 1e3
+      });
+      return data;
+    };
+    exports2.acquireDiscoveryRepoLease = acquireDiscoveryRepoLease;
+    var getDiscoveryRepoLeaseStatus = async ({ client, projectId, podInstanceId }) => {
+      const { data } = await client.get("session-transform-discovery/repo/lease/status", {
+        params: {
+          ...projectId ? { projectId } : {},
+          ...podInstanceId ? { podInstanceId } : {}
+        }
+      });
+      return data;
+    };
+    exports2.getDiscoveryRepoLeaseStatus = getDiscoveryRepoLeaseStatus;
+    var heartbeatDiscoveryRepoLease = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("session-transform-discovery/repo/lease/heartbeat", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.heartbeatDiscoveryRepoLease = heartbeatDiscoveryRepoLease;
+    var releaseDiscoveryRepoLease = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("session-transform-discovery/repo/lease/release", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.releaseDiscoveryRepoLease = releaseDiscoveryRepoLease;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js
+var require_catalog_maintenance_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js"(exports2) {
+    "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "74a5dfe0-7bcd-53e4-90df-ce412e5b46fd");
+      } catch (e2) {
+      }
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.requestCatalogMaintenanceProposalUpload = exports2.getCatalogMaintenanceWorkflowStatus = exports2.launchCatalogMaintenance = void 0;
+    var project_deployments_api_1 = require_project_deployments_api();
+    var launchCatalogMaintenance = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("catalog-maintenance/launch", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.launchCatalogMaintenance = launchCatalogMaintenance;
+    var getCatalogMaintenanceWorkflowStatus = async ({ client, projectId, workflowName }) => {
+      const { data } = await client.get("catalog-maintenance/status", {
+        params: {
+          workflowName,
+          ...projectId ? { projectId } : {}
+        }
+      });
+      return data;
+    };
+    exports2.getCatalogMaintenanceWorkflowStatus = getCatalogMaintenanceWorkflowStatus;
+    var requestCatalogMaintenanceProposalUpload = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("catalog-maintenance/request-proposal-upload", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.requestCatalogMaintenanceProposalUpload = requestCatalogMaintenanceProposalUpload;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
 var require_registry_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -97931,14 +99768,14 @@ var require_registry_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
 var require_local_changes_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "7d66d605-a913-55ce-a5f7-3c26e143f4b0");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "518b5142-2fac-5a4d-9714-af36c0a99150");
       } catch (e2) {
       }
     }();
@@ -97963,14 +99800,14 @@ var require_local_changes_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/index.js
 var require_dist13 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.289.2/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "ba2ed0e7-7e96-57f1-9f8b-a23eb8d7a02e");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "6c4ef2a6-18e7-583a-84e0-b1afba7b097c");
       } catch (e2) {
       }
     }();
@@ -97995,23 +99832,54 @@ var require_dist13 = __commonJS({
           __createBinding2(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.setStoredProject = exports2.getStoredProjectId = exports2.getStoredProject = exports2.getStoredOAuthTokens = exports2.clearStoredProject = exports2.clearOAuthTokens = exports2.getValidAccessToken = exports2.performOAuthLogin = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.createClientWithOAuth = exports2.createClient = exports2.getAuthToken = exports2.getApiToken = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.getIsLocked = exports2.getSnapshotsFromTestRun = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunReplayDiffs = exports2.getTestRunData = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = exports2.getPrDescriptionForTestRun = exports2.getReplayDiff = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = exports2.getOAuthProjects = exports2.getWhoami = exports2.trackAgentFeatureUsage = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummary = exports2.getStructuredSessionData = void 0;
-    exports2.getRelevantSessions = exports2.isFetchError = exports2.getRegistryAuth = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putFileToSignedUrl = exports2.getProxyAgent = void 0;
+    exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = exports2.getIsLocked = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunReplayDiffs = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = exports2.getPrDescriptionForTestRun = exports2.getReplayDiff = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.createCrawlerTestRun = exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = exports2.trackAgentFeatureUsage = exports2.submitAgentFeedback = exports2.getSessions = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.getTestRunForCommit = exports2.getScreenshotDomDiff = exports2.getDiffComments = exports2.getTestRunDiffsSummaryCounts = exports2.getTestRunDiffsSummary = exports2.getStructuredSessionData = exports2.shouldDefaultToExecutedRanges = void 0;
+    exports2.listAgenticRepoTree = exports2.getAgenticFileChanges = exports2.searchAgenticRepoCode = exports2.getAgenticRepoFile = exports2.getAgenticChangedFiles = exports2.getAgenticRunCoverage = exports2.requestAgenticArtifactUploads = exports2.reportAgenticRunResult = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putFileToSignedUrl = exports2.getProxyAgent = exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.migrateLegacySelectedProjectIfPresent = exports2.resolveDefaultProjectId = exports2.getStoredOAuthTokens = exports2.clearOAuthTokens = exports2.getValidAccessToken = exports2.performDeviceLogin = exports2.performOAuthLogin = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.declareClientAppInfo = exports2.createClientWithOAuth = exports2.createClient = exports2.readFileBasedToken = exports2.getAuthToken = exports2.getApiToken = void 0;
+    exports2.getRelevantSessions = exports2.MISSING_AUTH_GUIDANCE = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isFetchError = exports2.isAuthFailureStatus = exports2.getRegistryAuth = exports2.requestCatalogMaintenanceProposalUpload = exports2.launchCatalogMaintenance = exports2.getCatalogMaintenanceWorkflowStatus = exports2.releaseDiscoveryRepoLease = exports2.heartbeatDiscoveryRepoLease = exports2.getDiscoveryRepoLeaseStatus = exports2.acquireDiscoveryRepoLease = exports2.listDiscoveryRepoTree = exports2.searchDiscoveryRepoCode = exports2.getDiscoveryRepoFile = exports2.isAgenticRunCancelled = exports2.releaseAgenticRepoLease = exports2.heartbeatAgenticRepoLease = exports2.getAgenticRepoLeaseStatus = exports2.acquireAgenticRepoLease = void 0;
     var agent_api_1 = require_agent_api();
+    Object.defineProperty(exports2, "shouldDefaultToExecutedRanges", { enumerable: true, get: function() {
+      return agent_api_1.shouldDefaultToExecutedRanges;
+    } });
     Object.defineProperty(exports2, "getStructuredSessionData", { enumerable: true, get: function() {
       return agent_api_1.getStructuredSessionData;
     } });
     Object.defineProperty(exports2, "getTestRunDiffsSummary", { enumerable: true, get: function() {
       return agent_api_1.getTestRunDiffsSummary;
     } });
+    Object.defineProperty(exports2, "getTestRunDiffsSummaryCounts", { enumerable: true, get: function() {
+      return agent_api_1.getTestRunDiffsSummaryCounts;
+    } });
+    Object.defineProperty(exports2, "getDiffComments", { enumerable: true, get: function() {
+      return agent_api_1.getDiffComments;
+    } });
     Object.defineProperty(exports2, "getScreenshotDomDiff", { enumerable: true, get: function() {
       return agent_api_1.getScreenshotDomDiff;
+    } });
+    Object.defineProperty(exports2, "getTestRunForCommit", { enumerable: true, get: function() {
+      return agent_api_1.getTestRunForCommit;
+    } });
+    Object.defineProperty(exports2, "getTestRunJsCoverage", { enumerable: true, get: function() {
+      return agent_api_1.getTestRunJsCoverage;
+    } });
+    Object.defineProperty(exports2, "getProjectJsCoverage", { enumerable: true, get: function() {
+      return agent_api_1.getProjectJsCoverage;
+    } });
+    Object.defineProperty(exports2, "getReplayJsCoverage", { enumerable: true, get: function() {
+      return agent_api_1.getReplayJsCoverage;
+    } });
+    Object.defineProperty(exports2, "getReplayDiffJsCoverage", { enumerable: true, get: function() {
+      return agent_api_1.getReplayDiffJsCoverage;
     } });
     Object.defineProperty(exports2, "getScreenshotUrls", { enumerable: true, get: function() {
       return agent_api_1.getScreenshotUrls;
     } });
     Object.defineProperty(exports2, "getTimelineDiff", { enumerable: true, get: function() {
       return agent_api_1.getTimelineDiff;
+    } });
+    Object.defineProperty(exports2, "getSessions", { enumerable: true, get: function() {
+      return agent_api_1.getSessions;
+    } });
+    Object.defineProperty(exports2, "submitAgentFeedback", { enumerable: true, get: function() {
+      return agent_api_1.submitAgentFeedback;
     } });
     Object.defineProperty(exports2, "trackAgentFeatureUsage", { enumerable: true, get: function() {
       return agent_api_1.trackAgentFeatureUsage;
@@ -98023,6 +99891,15 @@ var require_dist13 = __commonJS({
     } });
     Object.defineProperty(exports2, "getOAuthProjects", { enumerable: true, get: function() {
       return oauth_api_1.getOAuthProjects;
+    } });
+    Object.defineProperty(exports2, "getOAuthDefaultProject", { enumerable: true, get: function() {
+      return oauth_api_1.getOAuthDefaultProject;
+    } });
+    Object.defineProperty(exports2, "setOAuthDefaultProject", { enumerable: true, get: function() {
+      return oauth_api_1.setOAuthDefaultProject;
+    } });
+    Object.defineProperty(exports2, "clearOAuthDefaultProject", { enumerable: true, get: function() {
+      return oauth_api_1.clearOAuthDefaultProject;
     } });
     var project_api_1 = require_project_api();
     Object.defineProperty(exports2, "getProject", { enumerable: true, get: function() {
@@ -98036,6 +99913,10 @@ var require_dist13 = __commonJS({
     } });
     Object.defineProperty(exports2, "requestSourceCodeUploadUrl", { enumerable: true, get: function() {
       return project_api_1.requestSourceCodeUploadUrl;
+    } });
+    var crawler_api_1 = require_crawler_api();
+    Object.defineProperty(exports2, "createCrawlerTestRun", { enumerable: true, get: function() {
+      return crawler_api_1.createCrawlerTestRun;
     } });
     var replay_api_1 = require_replay_api();
     Object.defineProperty(exports2, "getReplay", { enumerable: true, get: function() {
@@ -98053,6 +99934,9 @@ var require_dist13 = __commonJS({
     } });
     Object.defineProperty(exports2, "getRecordedSessionData", { enumerable: true, get: function() {
       return session_api_1.getRecordedSessionData;
+    } });
+    Object.defineProperty(exports2, "getBackendReplayEnv", { enumerable: true, get: function() {
+      return session_api_1.getBackendReplayEnv;
     } });
     Object.defineProperty(exports2, "getRecordingCommandId", { enumerable: true, get: function() {
       return session_api_1.getRecordingCommandId;
@@ -98081,6 +99965,12 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "getTestRun", { enumerable: true, get: function() {
       return test_run_api_1.getTestRun;
     } });
+    Object.defineProperty(exports2, "getTestRunNetworkPatchingResult", { enumerable: true, get: function() {
+      return test_run_api_1.getTestRunNetworkPatchingResult;
+    } });
+    Object.defineProperty(exports2, "markTestRunExpectsCustomChecks", { enumerable: true, get: function() {
+      return test_run_api_1.markTestRunExpectsCustomChecks;
+    } });
     Object.defineProperty(exports2, "getTestRunData", { enumerable: true, get: function() {
       return test_run_api_1.getTestRunData;
     } });
@@ -98093,12 +99983,16 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "emitTelemetry", { enumerable: true, get: function() {
       return test_run_api_1.emitTelemetry;
     } });
-    Object.defineProperty(exports2, "getSnapshotsFromTestRun", { enumerable: true, get: function() {
-      return test_run_api_1.getSnapshotsFromTestRun;
-    } });
     var deployment_lock_api_1 = require_deployment_lock_api();
     Object.defineProperty(exports2, "getIsLocked", { enumerable: true, get: function() {
       return deployment_lock_api_1.getIsLocked;
+    } });
+    var commit_label_api_1 = require_commit_label_api();
+    Object.defineProperty(exports2, "COMMIT_LABEL_TYPES", { enumerable: true, get: function() {
+      return commit_label_api_1.COMMIT_LABEL_TYPES;
+    } });
+    Object.defineProperty(exports2, "labelCommit", { enumerable: true, get: function() {
+      return commit_label_api_1.labelCommit;
     } });
     var test_run_constants_1 = require_test_run_constants();
     Object.defineProperty(exports2, "IN_PROGRESS_TEST_RUN_STATUS", { enumerable: true, get: function() {
@@ -98111,12 +100005,18 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "getAuthToken", { enumerable: true, get: function() {
       return api_token_utils_1.getAuthToken;
     } });
+    Object.defineProperty(exports2, "readFileBasedToken", { enumerable: true, get: function() {
+      return api_token_utils_1.readFileBasedToken;
+    } });
     var client_1 = require_client3();
     Object.defineProperty(exports2, "createClient", { enumerable: true, get: function() {
       return client_1.createClient;
     } });
     Object.defineProperty(exports2, "createClientWithOAuth", { enumerable: true, get: function() {
       return client_1.createClientWithOAuth;
+    } });
+    Object.defineProperty(exports2, "declareClientAppInfo", { enumerable: true, get: function() {
+      return client_1.declareClientAppInfo;
     } });
     Object.defineProperty(exports2, "isInteractiveContext", { enumerable: true, get: function() {
       return client_1.isInteractiveContext;
@@ -98131,6 +100031,10 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "performOAuthLogin", { enumerable: true, get: function() {
       return oauth_login_1.performOAuthLogin;
     } });
+    var oauth_device_login_1 = require_oauth_device_login();
+    Object.defineProperty(exports2, "performDeviceLogin", { enumerable: true, get: function() {
+      return oauth_device_login_1.performDeviceLogin;
+    } });
     var oauth_refresh_1 = require_oauth_refresh();
     Object.defineProperty(exports2, "getValidAccessToken", { enumerable: true, get: function() {
       return oauth_refresh_1.getValidAccessToken;
@@ -98139,20 +100043,16 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "clearOAuthTokens", { enumerable: true, get: function() {
       return oauth_token_store_1.clearOAuthTokens;
     } });
-    Object.defineProperty(exports2, "clearStoredProject", { enumerable: true, get: function() {
-      return oauth_token_store_1.clearStoredProject;
-    } });
     Object.defineProperty(exports2, "getStoredOAuthTokens", { enumerable: true, get: function() {
       return oauth_token_store_1.getStoredOAuthTokens;
     } });
-    Object.defineProperty(exports2, "getStoredProject", { enumerable: true, get: function() {
-      return oauth_token_store_1.getStoredProject;
+    var default_project_1 = require_default_project();
+    Object.defineProperty(exports2, "resolveDefaultProjectId", { enumerable: true, get: function() {
+      return default_project_1.resolveDefaultProjectId;
     } });
-    Object.defineProperty(exports2, "getStoredProjectId", { enumerable: true, get: function() {
-      return oauth_token_store_1.getStoredProjectId;
-    } });
-    Object.defineProperty(exports2, "setStoredProject", { enumerable: true, get: function() {
-      return oauth_token_store_1.setStoredProject;
+    var legacy_project_migration_1 = require_legacy_project_migration();
+    Object.defineProperty(exports2, "migrateLegacySelectedProjectIfPresent", { enumerable: true, get: function() {
+      return legacy_project_migration_1.migrateLegacySelectedProjectIfPresent;
     } });
     var oauth_utils_1 = require_oauth_utils();
     Object.defineProperty(exports2, "getJwtClaims", { enumerable: true, get: function() {
@@ -98201,19 +100101,133 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "completeContainerUpload", { enumerable: true, get: function() {
       return project_deployments_api_1.completeContainerUpload;
     } });
+    Object.defineProperty(exports2, "createRunWithUploadedAssetChunks", { enumerable: true, get: function() {
+      return project_deployments_api_1.createRunWithUploadedAssetChunks;
+    } });
+    Object.defineProperty(exports2, "triggerRunWithUploadedAssetChunks", { enumerable: true, get: function() {
+      return project_deployments_api_1.triggerRunWithUploadedAssetChunks;
+    } });
+    Object.defineProperty(exports2, "requestAssetChunkUpload", { enumerable: true, get: function() {
+      return project_deployments_api_1.requestAssetChunkUpload;
+    } });
+    Object.defineProperty(exports2, "completeAssetChunkUpload", { enumerable: true, get: function() {
+      return project_deployments_api_1.completeAssetChunkUpload;
+    } });
     Object.defineProperty(exports2, "downloadProjectDeployment", { enumerable: true, get: function() {
       return project_deployments_api_1.downloadProjectDeployment;
     } });
     Object.defineProperty(exports2, "getContainerDeployment", { enumerable: true, get: function() {
       return project_deployments_api_1.getContainerDeployment;
     } });
+    Object.defineProperty(exports2, "agentUploadAssetBuild", { enumerable: true, get: function() {
+      return project_deployments_api_1.agentUploadAssetBuild;
+    } });
+    Object.defineProperty(exports2, "agentUploadContainerBuild", { enumerable: true, get: function() {
+      return project_deployments_api_1.agentUploadContainerBuild;
+    } });
+    Object.defineProperty(exports2, "agentUploadGitDiffBuild", { enumerable: true, get: function() {
+      return project_deployments_api_1.agentUploadGitDiffBuild;
+    } });
+    Object.defineProperty(exports2, "agentTriggerTestRun", { enumerable: true, get: function() {
+      return project_deployments_api_1.agentTriggerTestRun;
+    } });
+    var agentic_session_generation_api_1 = require_agentic_session_generation_api();
+    Object.defineProperty(exports2, "requestAgenticInstructionsUpload", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.requestAgenticInstructionsUpload;
+    } });
+    Object.defineProperty(exports2, "completeAgenticSessionGeneration", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.completeAgenticSessionGeneration;
+    } });
+    Object.defineProperty(exports2, "reportAgenticRunResult", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.reportAgenticRunResult;
+    } });
+    Object.defineProperty(exports2, "requestAgenticArtifactUploads", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.requestAgenticArtifactUploads;
+    } });
+    Object.defineProperty(exports2, "getAgenticRunCoverage", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.getAgenticRunCoverage;
+    } });
+    Object.defineProperty(exports2, "getAgenticChangedFiles", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.getAgenticChangedFiles;
+    } });
+    Object.defineProperty(exports2, "getAgenticRepoFile", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.getAgenticRepoFile;
+    } });
+    Object.defineProperty(exports2, "searchAgenticRepoCode", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.searchAgenticRepoCode;
+    } });
+    Object.defineProperty(exports2, "getAgenticFileChanges", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.getAgenticFileChanges;
+    } });
+    Object.defineProperty(exports2, "listAgenticRepoTree", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.listAgenticRepoTree;
+    } });
+    Object.defineProperty(exports2, "acquireAgenticRepoLease", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.acquireAgenticRepoLease;
+    } });
+    Object.defineProperty(exports2, "getAgenticRepoLeaseStatus", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.getAgenticRepoLeaseStatus;
+    } });
+    Object.defineProperty(exports2, "heartbeatAgenticRepoLease", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.heartbeatAgenticRepoLease;
+    } });
+    Object.defineProperty(exports2, "releaseAgenticRepoLease", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.releaseAgenticRepoLease;
+    } });
+    Object.defineProperty(exports2, "isAgenticRunCancelled", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.isAgenticRunCancelled;
+    } });
+    var session_transform_discovery_api_1 = require_session_transform_discovery_api();
+    Object.defineProperty(exports2, "getDiscoveryRepoFile", { enumerable: true, get: function() {
+      return session_transform_discovery_api_1.getDiscoveryRepoFile;
+    } });
+    Object.defineProperty(exports2, "searchDiscoveryRepoCode", { enumerable: true, get: function() {
+      return session_transform_discovery_api_1.searchDiscoveryRepoCode;
+    } });
+    Object.defineProperty(exports2, "listDiscoveryRepoTree", { enumerable: true, get: function() {
+      return session_transform_discovery_api_1.listDiscoveryRepoTree;
+    } });
+    Object.defineProperty(exports2, "acquireDiscoveryRepoLease", { enumerable: true, get: function() {
+      return session_transform_discovery_api_1.acquireDiscoveryRepoLease;
+    } });
+    Object.defineProperty(exports2, "getDiscoveryRepoLeaseStatus", { enumerable: true, get: function() {
+      return session_transform_discovery_api_1.getDiscoveryRepoLeaseStatus;
+    } });
+    Object.defineProperty(exports2, "heartbeatDiscoveryRepoLease", { enumerable: true, get: function() {
+      return session_transform_discovery_api_1.heartbeatDiscoveryRepoLease;
+    } });
+    Object.defineProperty(exports2, "releaseDiscoveryRepoLease", { enumerable: true, get: function() {
+      return session_transform_discovery_api_1.releaseDiscoveryRepoLease;
+    } });
+    var catalog_maintenance_api_1 = require_catalog_maintenance_api();
+    Object.defineProperty(exports2, "getCatalogMaintenanceWorkflowStatus", { enumerable: true, get: function() {
+      return catalog_maintenance_api_1.getCatalogMaintenanceWorkflowStatus;
+    } });
+    Object.defineProperty(exports2, "launchCatalogMaintenance", { enumerable: true, get: function() {
+      return catalog_maintenance_api_1.launchCatalogMaintenance;
+    } });
+    Object.defineProperty(exports2, "requestCatalogMaintenanceProposalUpload", { enumerable: true, get: function() {
+      return catalog_maintenance_api_1.requestCatalogMaintenanceProposalUpload;
+    } });
     var registry_api_1 = require_registry_api();
     Object.defineProperty(exports2, "getRegistryAuth", { enumerable: true, get: function() {
       return registry_api_1.getRegistryAuth;
     } });
     var errors_1 = require_errors2();
+    Object.defineProperty(exports2, "isAuthFailureStatus", { enumerable: true, get: function() {
+      return errors_1.isAuthFailureStatus;
+    } });
     Object.defineProperty(exports2, "isFetchError", { enumerable: true, get: function() {
       return errors_1.isFetchError;
+    } });
+    Object.defineProperty(exports2, "maybeEnrichFetchError", { enumerable: true, get: function() {
+      return errors_1.maybeEnrichFetchError;
+    } });
+    Object.defineProperty(exports2, "maybeEnrichMissingAuthFetchError", { enumerable: true, get: function() {
+      return errors_1.maybeEnrichMissingAuthFetchError;
+    } });
+    Object.defineProperty(exports2, "MISSING_AUTH_GUIDANCE", { enumerable: true, get: function() {
+      return errors_1.MISSING_AUTH_GUIDANCE;
     } });
     var local_changes_api_1 = require_local_changes_api();
     Object.defineProperty(exports2, "getRelevantSessions", { enumerable: true, get: function() {
