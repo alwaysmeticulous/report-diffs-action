@@ -34,6 +34,27 @@ inputs:
       from the checked-out git repository, falling back to the GITHUB_SHA environment variable. Provide this
       explicitly when running without 'actions/checkout' (e.g. in a job that only builds or pulls a Docker image).
     required: false
+  companion-assets-folder:
+    description: |
+      The folder to upload companion assets from. This is typically not needed. At most one of
+      'companion-assets-folder', 'companion-assets-zip' and 'companion-assets-path-in-image' may be provided.
+    required: false
+  companion-assets-zip:
+    description: |
+      The path to a zip file to upload companion assets from. This is typically not needed. At most one of
+      'companion-assets-folder', 'companion-assets-zip' and 'companion-assets-path-in-image' may be provided.
+    required: false
+  companion-assets-path-in-image:
+    description: |
+      A path to a file or directory inside the uploaded Docker image (e.g. '/app/dist') to extract and serve as
+      the companion assets bundle. This is typically not needed. At most one of 'companion-assets-folder',
+      'companion-assets-zip' and 'companion-assets-path-in-image' may be provided.
+    required: false
+  companion-assets-regex:
+    description: |
+      The regex to check when deciding if a request should be served from the companion assets. Required if any
+      of 'companion-assets-folder', 'companion-assets-zip' or 'companion-assets-path-in-image' is provided.
+    required: false
 
 outputs: {}
 runs:
