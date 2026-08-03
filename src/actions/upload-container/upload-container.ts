@@ -38,6 +38,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           containerEnv,
           containerHealthCheckEndpoint,
           commitSha: commitShaInput,
+          companionAssets,
         } = getUploadContainerInputs();
         const event = getCodeChangeEvent(context.eventName, context.payload);
         const octokit = getOctokitOrFail(githubToken);
@@ -94,6 +95,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           ...(containerHealthCheckEndpoint != null
             ? { containerHealthCheckEndpoint }
             : {}),
+          ...(companionAssets != null ? { companionAssets } : {}),
         });
         span.setStatus({ code: 1, message: "ok" });
         return 0;

@@ -1,6 +1,15 @@
 import { getInput } from "@actions/core";
 import { ContainerEnvVariable } from "@alwaysmeticulous/client";
 
+// Not exported from `@alwaysmeticulous/remote-replay-launcher`, so re-declared here to match
+// `CompanionAssetsOptions` structurally.
+export interface CompanionAssetsOptions {
+  folder?: string;
+  zip?: string;
+  pathInImage?: string;
+  regex: string;
+}
+
 export interface UploadContainerInputs {
   apiToken: string;
   githubToken: string;
@@ -9,6 +18,7 @@ export interface UploadContainerInputs {
   containerEnv: ContainerEnvVariable[] | undefined;
   containerHealthCheckEndpoint: string | undefined;
   commitSha?: string;
+  companionAssets: CompanionAssetsOptions | undefined;
 }
 
 export const getUploadContainerInputs = (): UploadContainerInputs => {
@@ -21,6 +31,15 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
     "container-health-check-endpoint"
   );
   const commitSha = getInput("commit-sha", { required: false }) || undefined;
+  const companionAssetsFolder =
+    getInput("companion-assets-folder", { required: false }) || undefined;
+  const companionAssetsZip =
+    getInput("companion-assets-zip", { required: false }) || undefined;
+  const companionAssetsPathInImage =
+    getInput("companion-assets-path-in-image", { required: false }) ||
+    undefined;
+  const companionAssetsRegex =
+    getInput("companion-assets-regex", { required: false }) || undefined;
 
   if (!imageTag || imageTag.trim() === "") {
     throw new Error("image-tag must be a non-empty string");
@@ -57,6 +76,47 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
       ? containerHealthCheckEndpointStr.trim()
       : undefined;
 
+  const companionAssetsSources = [
+    companionAssetsFolder,
+    companionAssetsZip,
+    companionAssetsPathInImage,
+  ].filter((value) => value != null);
+
+  if (companionAssetsSources.length > 1) {
+    throw new Error(
+      "At most one of 'companion-assets-folder', 'companion-assets-zip' and " +
+        "'companion-assets-path-in-image' may be provided"
+    );
+  }
+
+  if (companionAssetsSources.length > 0 && !companionAssetsRegex) {
+    throw new Error(
+      "'companion-assets-regex' must be provided if 'companion-assets-folder', " +
+        "'companion-assets-zip' or 'companion-assets-path-in-image' is provided"
+    );
+  }
+
+  if (companionAssetsSources.length === 0 && companionAssetsRegex) {
+    throw new Error(
+      "'companion-assets-regex' was provided but none of 'companion-assets-folder', " +
+        "'companion-assets-zip' or 'companion-assets-path-in-image' was provided"
+    );
+  }
+
+  const companionAssets: CompanionAssetsOptions | undefined =
+    companionAssetsSources.length > 0
+      ? {
+          ...(companionAssetsFolder != null
+            ? { folder: companionAssetsFolder }
+            : {}),
+          ...(companionAssetsZip != null ? { zip: companionAssetsZip } : {}),
+          ...(companionAssetsPathInImage != null
+            ? { pathInImage: companionAssetsPathInImage }
+            : {}),
+          regex: companionAssetsRegex as string,
+        }
+      : undefined;
+
   return {
     apiToken,
     githubToken,
@@ -65,5 +125,6 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
     containerEnv,
     containerHealthCheckEndpoint,
     commitSha,
+    companionAssets,
   };
 };
