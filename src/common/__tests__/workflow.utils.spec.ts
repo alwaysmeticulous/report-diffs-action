@@ -58,6 +58,54 @@ describe("startNewWorkflowRun", () => {
     });
   });
 
+  it("asks for the run id, without which the API answers an empty 204", async () => {
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockResolvedValue({ data: { workflow_run_id: 99 } });
+
+    await startRun(buildOctokit({ createWorkflowDispatch }));
+
+    expect(createWorkflowDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({ return_run_details: true })
+    );
+  });
+
+  it("dispatches without the run-id request when the API rejects it", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2024-05-01T12:00:00Z"));
+
+    // GitHub Enterprise Server 3.20 and earlier reject unknown body fields.
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockRejectedValueOnce(
+        Object.assign(new Error("Bad Request"), { status: 400 })
+      )
+      .mockResolvedValue({ status: 204 });
+    const listWorkflowRuns = vi.fn().mockResolvedValue({
+      data: {
+        workflow_runs: [{ id: 5, created_at: "2024-05-01T11:59:59Z" }],
+      },
+    });
+
+    const resultPromise = startRun(
+      buildOctokit({ createWorkflowDispatch, listWorkflowRuns })
+    );
+    await vi.advanceTimersByTimeAsync(LISTING_AFTER_DISPATCH_DELAY_MS);
+
+    expect(createWorkflowDispatch).toHaveBeenCalledTimes(2);
+    expect(createWorkflowDispatch.mock.calls[1][0]).not.toHaveProperty(
+      "return_run_details"
+    );
+    // The commit is still pinned on the retry, so the base we wanted is still what gets built.
+    expect(createWorkflowDispatch.mock.calls[1][0]).toHaveProperty("inputs", {
+      [COMMIT_SHA_WORKFLOW_INPUT]: BASE_SHA,
+    });
+    expect(await resultPromise).toEqual({
+      type: "started",
+      workflowRun: expect.objectContaining({ workflowRunId: 5 }),
+    });
+  });
+
   it("sends no inputs when not pinning", async () => {
     const createWorkflowDispatch = vi
       .fn()

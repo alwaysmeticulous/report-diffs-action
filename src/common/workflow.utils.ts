@@ -96,16 +96,16 @@ export const startNewWorkflowRun = async ({
   let dispatchedRunId: number | undefined;
 
   try {
-    const response = await octokit.rest.actions.createWorkflowDispatch({
+    dispatchedRunId = await dispatchAndReadRunId({
       owner,
       repo,
-      workflow_id: workflowId,
+      workflowId,
       ref,
-      ...(pinCommitSha
-        ? { inputs: { [COMMIT_SHA_WORKFLOW_INPUT]: commitSha } }
-        : {}),
+      commitSha,
+      pinCommitSha,
+      octokit,
+      logger,
     });
-    dispatchedRunId = readDispatchedWorkflowRunId(response);
   } catch (err: unknown) {
     const message = (err as { message?: string } | null)?.message ?? "";
     // A workflow that doesn't declare the input is rejected with 422 "Unexpected inputs
@@ -199,8 +199,66 @@ export const startNewWorkflowRun = async ({
 };
 
 /**
- * Newer GitHub API versions answer a dispatch with the id of the run they created. Older ones,
- * and GitHub Enterprise Server, answer 204 with no body, in which case we have to go and find it.
+ * Dispatches the workflow and reports the id of the run it created, where the API will say.
+ *
+ * `return_run_details` is what makes it say: without that flag the endpoint answers an empty
+ * `204` and the run has to be picked out of a listing afterwards, which is guesswork whenever
+ * more than one dispatch lands at once. GitHub Enterprise Server 3.20 and earlier reject
+ * unknown body fields outright, so a `400` sends us round again without the flag — back to
+ * guesswork, but that beats failing a dispatch that would otherwise have worked.
+ */
+const dispatchAndReadRunId = async ({
+  owner,
+  repo,
+  workflowId,
+  ref,
+  commitSha,
+  pinCommitSha,
+  octokit,
+  logger,
+}: {
+  owner: string;
+  repo: string;
+  workflowId: number;
+  ref: string;
+  commitSha: string;
+  pinCommitSha: boolean;
+  octokit: InstanceType<typeof GitHub>;
+  logger: log.Logger;
+}): Promise<number | undefined> => {
+  const dispatch = {
+    owner,
+    repo,
+    workflow_id: workflowId,
+    ref,
+    ...(pinCommitSha
+      ? { inputs: { [COMMIT_SHA_WORKFLOW_INPUT]: commitSha } }
+      : {}),
+  };
+
+  try {
+    // Assigned before the call so that `return_run_details`, which postdates the
+    // @octokit/openapi-types we pin, isn't rejected as an excess property.
+    const withRunDetails = { ...dispatch, return_run_details: true };
+    return readDispatchedWorkflowRunId(
+      await octokit.rest.actions.createWorkflowDispatch(withRunDetails)
+    );
+  } catch (err: unknown) {
+    if ((err as { status?: number } | null)?.status !== 400) {
+      throw err;
+    }
+    logger.debug(
+      `This GitHub API rejected 'return_run_details', so the run dispatched on '${ref}' will have to be searched for.`
+    );
+  }
+
+  await octokit.rest.actions.createWorkflowDispatch(dispatch);
+  return undefined;
+};
+
+/**
+ * Reads the run id out of a dispatch response. Only there when the request asked for it with
+ * `return_run_details` and the API honoured it; otherwise the response is an empty `204`.
  */
 const readDispatchedWorkflowRunId = (response: unknown): number | undefined => {
   const runId = (
