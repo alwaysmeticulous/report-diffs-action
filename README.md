@@ -94,7 +94,7 @@ on:
   pull_request: {}
   workflow_dispatch:
     inputs:
-      meticulous-commit-sha: # Required for base commit comparison
+      meticulous-commit-sha:
         description: Commit Meticulous has asked this run to build. Defaults to the branch head.
         required: false
 
@@ -110,27 +110,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # Hyphenated inputs need index syntax, and reading them off `github.event`
+          # keeps this valid on `push` and `pull_request` runs too.
           ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
 ```
 
-Note the index syntax: a hyphenated name can't be read with `inputs.meticulous-commit-sha`,
-because the expression parser reads the hyphens as subtraction. Reading it off `github.event`
-also keeps the expression valid on `push` and `pull_request` runs, where it resolves to
-`github.sha`.
-
-### Why the `meticulous-commit-sha` input matters
-
-When a PR's base commit hasn't been tested yet, Meticulous dispatches this workflow to build
-it. GitHub only accepts a **branch or tag** as a dispatch ref — never a commit — so the commit
-travels as an input and your `actions/checkout` step is what targets it.
-
-Without the input, the dispatched run can only build whatever the base branch points at right
-now. That is the wrong commit whenever the base branch has moved on, and there is no branch at
-all pointing at the commit we need for a stacked PR, whose base is another PR's merge ref. In
-both cases Meticulous has to skip the comparison and reports no diffs for the run.
-
-Adding the input is backwards compatible: the action detects workflows that don't declare it
-and falls back to the previous branch-head behaviour.
+`meticulous-commit-sha` lets Meticulous ask this workflow to build a specific commit when a
+PR's base hasn't been tested yet. Without it a dispatched run can only build whatever the base
+branch points at now, so the comparison is skipped when that branch has moved on, and always
+for stacked PRs, whose base commit no branch points at. Workflows that don't declare the input
+keep their existing behaviour.
 
 ## Documentation
 
