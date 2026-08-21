@@ -108,10 +108,18 @@ export const startNewWorkflowRun = async ({
     dispatchedRunId = readDispatchedWorkflowRunId(response);
   } catch (err: unknown) {
     const message = (err as { message?: string } | null)?.message ?? "";
-    if (pinCommitSha && message.includes("Unexpected inputs provided")) {
+    // A workflow that doesn't declare the input is rejected with 422 "Unexpected inputs
+    // provided". We key off the status rather than the wording alone so that a rephrasing on
+    // GitHub's side degrades to the branch-head behaviour we had before pinning, rather than
+    // failing outright.
+    const status = (err as { status?: number } | null)?.status;
+    if (
+      pinCommitSha &&
+      (status === 422 || message.includes("Unexpected inputs provided"))
+    ) {
       logger.debug(
-        `The Meticulous workflow on '${ref}' does not declare the '${COMMIT_SHA_WORKFLOW_INPUT}' input,` +
-          ` so it can only build whatever that branch currently points at.`
+        `The Meticulous workflow on '${ref}' did not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input,` +
+          ` so it can only build whatever that branch currently points at. ${message}`
       );
       return { type: "commit-pinning-unsupported" };
     }
@@ -227,12 +235,23 @@ const findRecentlyDispatchedRun = async ({
       branch: ref,
       per_page: MAX_DISPATCHED_RUNS_TO_SEARCH,
     });
-    const mostRecent = data.workflow_runs
-      .filter((run) => DateTime.fromISO(run.created_at) >= dispatchedAfter)
-      .sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
-    return mostRecent
-      ? { ...mostRecent, workflowRunId: mostRecent.id }
-      : undefined;
+    const candidates = data.workflow_runs.filter(
+      (run) => DateTime.fromISO(run.created_at) >= dispatchedAfter
+    );
+    // Nothing in a run identifies the commit it was asked to build, so with more than one
+    // candidate we cannot tell ours apart from a concurrent dispatch. Waiting on the wrong run
+    // would have us report a base that was never built, so give up instead.
+    if (candidates.length !== 1) {
+      logger.warn(
+        `Found ${
+          candidates.length
+        } workflow runs dispatched on '${ref}' since ${dispatchedAfter.toISO()},` +
+          ` so cannot tell which one is building the base commit.`
+      );
+      return undefined;
+    }
+    const [run] = candidates;
+    return { ...run, workflowRunId: run.id };
   } catch (err) {
     logger.warn(
       `Encountered an error while searching for the dispatched workflow run: ${err}`

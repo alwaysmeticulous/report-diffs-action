@@ -110,8 +110,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.meticulous-commit-sha || github.sha }}
+          ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
 ```
+
+Note the index syntax: a hyphenated name can't be read with `inputs.meticulous-commit-sha`,
+because the expression parser reads the hyphens as subtraction. Reading it off `github.event`
+also keeps the expression valid on `push` and `pull_request` runs, where it resolves to
+`github.sha`.
 
 ### Why the `meticulous-commit-sha` input matters
 

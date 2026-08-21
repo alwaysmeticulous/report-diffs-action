@@ -84,6 +84,18 @@ describe("startNewWorkflowRun", () => {
     expect(result).toEqual({ type: "commit-pinning-unsupported" });
   });
 
+  it("falls back to the branch head on any 422, whatever GitHub calls it", async () => {
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockRejectedValue(
+        Object.assign(new Error("Reworded by GitHub"), { status: 422 })
+      );
+
+    const result = await startRun(buildOctokit({ createWorkflowDispatch }));
+
+    expect(result).toEqual({ type: "commit-pinning-unsupported" });
+  });
+
   it("treats an unexpected-inputs rejection as a plain failure when not pinning", async () => {
     const createWorkflowDispatch = vi
       .fn()
@@ -123,6 +135,31 @@ describe("startNewWorkflowRun", () => {
     expect(result).toEqual({
       type: "started",
       workflowRun: expect.objectContaining({ workflowRunId: 2 }),
+    });
+  });
+
+  it("gives up rather than guessing when several runs were dispatched in the window", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2024-05-01T12:00:00Z"));
+
+    const createWorkflowDispatch = vi.fn().mockResolvedValue({ status: 204 });
+    const listWorkflowRuns = vi.fn().mockResolvedValue({
+      data: {
+        workflow_runs: [
+          { id: 2, created_at: "2024-05-01T11:59:59Z" },
+          { id: 3, created_at: "2024-05-01T11:59:58Z" },
+        ],
+      },
+    });
+
+    const resultPromise = startRun(
+      buildOctokit({ createWorkflowDispatch, listWorkflowRuns })
+    );
+    await vi.advanceTimersByTimeAsync(LISTING_AFTER_DISPATCH_DELAY_MS);
+
+    expect(await resultPromise).toEqual({
+      type: "started",
+      workflowRun: undefined,
     });
   });
 });
