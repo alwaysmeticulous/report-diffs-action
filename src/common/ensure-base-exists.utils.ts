@@ -6,6 +6,7 @@ import { TestRun } from "@alwaysmeticulous/client";
 import log from "loglevel";
 import { Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
+import { COMMIT_SHA_WORKFLOW_INPUT, DOCS_URL } from "./constants";
 import {
   DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
   isGithubPermissionsError,
@@ -177,49 +178,67 @@ const waitOnWorkflowRun = async (
     return { baseTestRunExists: false };
   }
 
-  // We can only trigger a workflow_run against the head of the base branch
-  // This will give some spurious diffs if it's different from `base`, but it's the best we can do
+  // A dispatch ref can only be a branch or a tag, so we ask the workflow on the base branch to
+  // build `base` by naming it in an input. Workflows that don't declare that input build their
+  // branch head instead, which is the commit we want only while the branch hasn't moved on.
   const baseRef = event.payload.pull_request.base.ref;
 
   logger.debug(JSON.stringify({ base, baseRef }, null, 2));
 
-  const currentBaseSha = await getHeadCommitForRef({
-    owner,
-    repo,
-    ref: baseRef,
-    octokit,
-    logger,
-  });
-
-  logger.debug(
-    JSON.stringify({ owner, repo, base, baseRef, currentBaseSha }, null, 2)
-  );
-  if (base !== currentBaseSha) {
-    const message = `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
-    In addition we were not able to trigger a run on ${base} since the '${baseRef}' branch is now pointing to ${currentBaseSha}.
-    Therefore no diffs will be reported for this run. Re-running the tests may fix this.`;
-    logger.warn(message);
-    ghWarning(message);
-    return {
-      baseTestRunExists: false,
-      baseResolutionDetails: {
-        type: "required-new-workflow-run-but-failed-due-to-new-commit-to-base-branch",
-        baseRef,
-        targetBaseCommitSha: base,
-        currentLastestBaseCommitSha: currentBaseSha,
-      },
-    };
-  }
-
-  const workflowRun = await startNewWorkflowRun({
+  let dispatch = await startNewWorkflowRun({
     owner,
     repo,
     workflowId,
     ref: baseRef,
     commitSha: base,
+    pinCommitSha: true,
     octokit,
     logger,
   });
+
+  if (dispatch.type === "commit-pinning-unsupported") {
+    const currentBaseSha = await getHeadCommitForRef({
+      owner,
+      repo,
+      ref: baseRef,
+      octokit,
+      logger,
+    });
+
+    logger.debug(
+      JSON.stringify({ owner, repo, base, baseRef, currentBaseSha }, null, 2)
+    );
+    if (base !== currentBaseSha) {
+      const message = `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
+    In addition we were not able to trigger a run on ${base} since the '${baseRef}' branch is now pointing to ${currentBaseSha}, and the Meticulous workflow on '${baseRef}' does not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input that would let us ask for ${base} specifically.
+    Therefore no diffs will be reported for this run. Re-running the tests may fix this, as would adding the input: see ${DOCS_URL}.`;
+      logger.warn(message);
+      ghWarning(message);
+      return {
+        baseTestRunExists: false,
+        baseResolutionDetails: {
+          type: "required-new-workflow-run-but-failed-due-to-new-commit-to-base-branch",
+          baseRef,
+          targetBaseCommitSha: base,
+          currentLastestBaseCommitSha: currentBaseSha,
+        },
+      };
+    }
+
+    dispatch = await startNewWorkflowRun({
+      owner,
+      repo,
+      workflowId,
+      ref: baseRef,
+      commitSha: base,
+      pinCommitSha: false,
+      octokit,
+      logger,
+    });
+  }
+
+  const workflowRun =
+    dispatch.type === "started" ? dispatch.workflowRun : undefined;
 
   if (workflowRun == null) {
     const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${base}.`;

@@ -2,7 +2,7 @@ import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
 import log from "loglevel";
 import { DateTime, Duration } from "luxon";
-import { DOCS_URL } from "./constants";
+import { COMMIT_SHA_WORKFLOW_INPUT, DOCS_URL } from "./constants";
 import {
   isGithubPermissionsError,
   getDetailedGitHubPermissionsError,
@@ -11,6 +11,11 @@ import { shortSha } from "./logger.utils";
 
 // The GitHub REST API will not list a workflow run immediately after it has been dispatched
 const LISTING_AFTER_DISPATCH_DELAY = Duration.fromObject({ seconds: 10 });
+
+// Our clock and GitHub's need not agree, so widen the window we accept a dispatched run in.
+const DISPATCH_CLOCK_SKEW_ALLOWANCE = Duration.fromObject({ seconds: 30 });
+
+const MAX_DISPATCHED_RUNS_TO_SEARCH = 20;
 
 const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL = Duration.fromObject({ seconds: 5 });
 
@@ -52,12 +57,23 @@ export const getCurrentWorkflowId = async ({
   }
 };
 
+export interface WorkflowRunHandle {
+  workflowRunId: number;
+  [key: string]: unknown;
+}
+
+export type StartWorkflowRunResult =
+  | { type: "started"; workflowRun: WorkflowRunHandle | undefined }
+  | { type: "commit-pinning-unsupported" }
+  | { type: "failed" };
+
 export const startNewWorkflowRun = async ({
   owner,
   repo,
   workflowId,
   ref,
   commitSha,
+  pinCommitSha,
   octokit,
   logger,
 }: {
@@ -66,18 +82,39 @@ export const startNewWorkflowRun = async ({
   workflowId: number;
   ref: string;
   commitSha: string;
+  /**
+   * Ask the workflow to build `commitSha` rather than whatever `ref` currently points at.
+   * Only workflows declaring the {@link COMMIT_SHA_WORKFLOW_INPUT} input can honour this;
+   * against any other workflow the dispatch is rejected and we report
+   * `commit-pinning-unsupported` so the caller can decide whether the branch head will do.
+   */
+  pinCommitSha: boolean;
   octokit: InstanceType<typeof GitHub>;
   logger: log.Logger;
-}): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
+}): Promise<StartWorkflowRunResult> => {
+  const dispatchedAfter = DateTime.utc().minus(DISPATCH_CLOCK_SKEW_ALLOWANCE);
+  let dispatchedRunId: number | undefined;
+
   try {
-    await octokit.rest.actions.createWorkflowDispatch({
+    const response = await octokit.rest.actions.createWorkflowDispatch({
       owner,
       repo,
       workflow_id: workflowId,
       ref,
+      ...(pinCommitSha
+        ? { inputs: { [COMMIT_SHA_WORKFLOW_INPUT]: commitSha } }
+        : {}),
     });
+    dispatchedRunId = readDispatchedWorkflowRunId(response);
   } catch (err: unknown) {
     const message = (err as { message?: string } | null)?.message ?? "";
+    if (pinCommitSha && message.includes("Unexpected inputs provided")) {
+      logger.debug(
+        `The Meticulous workflow on '${ref}' does not declare the '${COMMIT_SHA_WORKFLOW_INPUT}' input,` +
+          ` so it can only build whatever that branch currently points at.`
+      );
+      return { type: "commit-pinning-unsupported" };
+    }
     if (
       message.includes("Workflow does not have 'workflow_dispatch' trigger")
     ) {
@@ -91,7 +128,7 @@ export const startNewWorkflowRun = async ({
           ` See ${DOCS_URL} for the correct setup.`
       );
       logger.debug(err);
-      return undefined;
+      return { type: "failed" };
     }
     if (isGithubPermissionsError(err)) {
       // https://docs.github.com/en/rest/overview/permissions-required-for-github-apps?apiVersion=2022-11-28#repository-permissions-for-actions
@@ -104,7 +141,7 @@ export const startNewWorkflowRun = async ({
           ` Visual snapshots of the new flows will be taken, but no comparisons will be made.\n\n${detailedError}`
       );
       logger.debug(err);
-      return undefined;
+      return { type: "failed" };
     }
 
     logger.error(
@@ -116,21 +153,92 @@ export const startNewWorkflowRun = async ({
         ` See ${DOCS_URL} for the correct setup.`,
       err
     );
-    return undefined;
+    return { type: "failed" };
+  }
+
+  if (dispatchedRunId != null) {
+    return {
+      type: "started",
+      workflowRun: { workflowRunId: dispatchedRunId },
+    };
   }
 
   // Wait before listing again
   await delay(LISTING_AFTER_DISPATCH_DELAY);
 
-  const newRun = await getPendingWorkflowRun({
-    owner,
-    repo,
-    workflowId,
-    commitSha,
-    octokit,
-    logger,
-  });
-  return newRun;
+  // A pinned run can't be found by commit: it was dispatched against a branch, so its head_sha
+  // is that branch's head rather than the commit it was asked to check out.
+  const workflowRun = pinCommitSha
+    ? await findRecentlyDispatchedRun({
+        owner,
+        repo,
+        workflowId,
+        ref,
+        dispatchedAfter,
+        octokit,
+        logger,
+      })
+    : await getPendingWorkflowRun({
+        owner,
+        repo,
+        workflowId,
+        commitSha,
+        octokit,
+        logger,
+      });
+
+  return { type: "started", workflowRun };
+};
+
+/**
+ * Newer GitHub API versions answer a dispatch with the id of the run they created. Older ones,
+ * and GitHub Enterprise Server, answer 204 with no body, in which case we have to go and find it.
+ */
+const readDispatchedWorkflowRunId = (response: unknown): number | undefined => {
+  const runId = (
+    response as { data?: { workflow_run_id?: unknown } } | null | undefined
+  )?.data?.workflow_run_id;
+  return typeof runId === "number" ? runId : undefined;
+};
+
+const findRecentlyDispatchedRun = async ({
+  owner,
+  repo,
+  workflowId,
+  ref,
+  dispatchedAfter,
+  octokit,
+  logger,
+}: {
+  owner: string;
+  repo: string;
+  workflowId: number;
+  ref: string;
+  dispatchedAfter: DateTime;
+  octokit: InstanceType<typeof GitHub>;
+  logger: log.Logger;
+}): Promise<WorkflowRunHandle | undefined> => {
+  try {
+    const { data } = await octokit.rest.actions.listWorkflowRuns({
+      owner,
+      repo,
+      workflow_id: workflowId,
+      event: "workflow_dispatch",
+      branch: ref,
+      per_page: MAX_DISPATCHED_RUNS_TO_SEARCH,
+    });
+    const mostRecent = data.workflow_runs
+      .filter((run) => DateTime.fromISO(run.created_at) >= dispatchedAfter)
+      .sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
+    return mostRecent
+      ? { ...mostRecent, workflowRunId: mostRecent.id }
+      : undefined;
+  } catch (err) {
+    logger.warn(
+      `Encountered an error while searching for the dispatched workflow run: ${err}`
+    );
+    return undefined;
+  }
 };
 
 export const waitForWorkflowCompletion = async ({
