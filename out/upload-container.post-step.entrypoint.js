@@ -22152,14 +22152,14 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/errors.js
 var require_errors2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "c24aac2d-9e75-5ea1-ab2c-dee44b890631");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "7e85b61c-3cdd-5f34-8644-d9770519bb1a");
       } catch (e2) {
       }
     }();
@@ -22256,21 +22256,41 @@ ${requestAndResponse}`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
 var require_agent_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "6bc825eb-59a7-5fa2-8231-ef23e5d816ec");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "af527722-2b83-54ba-b793-a15ef5c6473b");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getSessions = exports2.getStructuredSessionData = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.getTestRunForCommit = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummaryCounts = exports2.getDiffComments = exports2.getTestRunDiffsSummary = exports2.submitAgentFeedback = exports2.trackAgentFeatureUsage = exports2.shouldDefaultToExecutedRanges = exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = exports2.DIFFS_SUMMARY_CLIENT_VERSION = void 0;
+    exports2.getSessions = exports2.getStructuredSessionData = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.completeBaseRun = exports2.getTestRunForCommit = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummaryCounts = exports2.replyToDiffComment = exports2.createDiffComment = exports2.ignoreDiff = exports2.rejectDiff = exports2.getDiffComments = exports2.getTestRunDiffsSummary = exports2.submitAgentFeedback = exports2.trackAgentFeatureUsage = exports2.shouldDefaultToExecutedRanges = exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = void 0;
     var errors_1 = require_errors2();
-    exports2.DIFFS_SUMMARY_CLIENT_VERSION = 3;
+    var getTestRunCheckReport = async (client, testRunId, checkId, options = {}) => {
+      const params = {};
+      if (options.checkType != null && options.checkType !== "builtin") {
+        params.checkType = options.checkType;
+      }
+      const { data } = await client.get(`agent/test-runs/${testRunId}/checks/${encodeURIComponent(checkId)}`, {
+        params
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunCheckReport = getTestRunCheckReport;
+    var getTestRunCheckAvailableIds = async (client, testRunId) => {
+      const { data } = await client.get(`agent/test-runs/${testRunId}/checks`).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunCheckAvailableIds = getTestRunCheckAvailableIds;
+    exports2.DIFFS_SUMMARY_CLIENT_VERSION = 4;
     exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = 2;
     var shouldDefaultToExecutedRanges = (columnFlags) => columnFlags.includeExecutedRanges || !(columnFlags.includeExecutableRanges || columnFlags.includeUncoveredRanges || columnFlags.includeCoveragePercentage);
     exports2.shouldDefaultToExecutedRanges = shouldDefaultToExecutedRanges;
@@ -22321,26 +22341,29 @@ var require_agent_api = __commonJS({
       if (options?.onlyRejected) {
         params.onlyRejected = "true";
       }
-      if (options?.retrigger) {
-        params.retrigger = "true";
+      if (options?.onlyWithComments) {
+        params.onlyWithComments = "true";
       }
       const { data } = await client.get(`agent/test-runs/${testRunId}/diffs-summary`, { params }).catch((error2) => {
         throw (0, errors_1.maybeEnrichFetchError)(error2);
       });
-      return normalizeDiffsSummaryResponse(data, options?.includeMismatchFraction ?? false);
+      return normalizeDiffsSummaryResponse(data, options);
     };
     exports2.getTestRunDiffsSummary = getTestRunDiffsSummary;
-    var normalizeDiffsSummaryResponse = (response, includeMismatchFraction) => {
+    var normalizeDiffsSummaryResponse = (response, options) => {
       const { data, ...metadata } = response;
-      if (data == null || data.length === 0 || !("screenshots" in data[0])) {
+      if (data == null) {
         return response;
+      }
+      if (data.length === 0 || !("screenshots" in data[0])) {
+        return normalizeCurrentDiffsResponse(metadata, data, options);
       }
       const entries = data.flatMap((replayDiff) => replayDiff.screenshots.map((screenshot) => ({
         index: screenshot.index,
         diff: {
           replayDiffId: replayDiff.replayDiffId,
           screenshotName: screenshot.screenshotName,
-          ...includeMismatchFraction && screenshot.mismatchFraction != null ? { mismatchFraction: screenshot.mismatchFraction } : {},
+          ...options?.includeMismatchFraction && screenshot.mismatchFraction != null ? { mismatchFraction: screenshot.mismatchFraction } : {},
           ...screenshot.domDiffIds != null ? { domDiffIds: screenshot.domDiffIds } : {},
           ...screenshot.isSelected != null ? { isSelected: screenshot.isSelected } : {},
           ...screenshot.decision != null ? { decision: screenshot.decision } : {},
@@ -22349,9 +22372,36 @@ var require_agent_api = __commonJS({
           ...replayDiff.headReplayId != null ? { headReplayId: replayDiff.headReplayId } : {}
         }
       }))).sort((a, b) => a.index - b.index);
+      return normalizeCurrentDiffsResponse(metadata, entries.map(({ diff }) => diff), options);
+    };
+    var LEGACY_REPRESENTATIVE_SELECTION_THRESHOLD = 5;
+    var normalizeCurrentDiffsResponse = (metadata, data, options) => {
+      const isOldBackend = metadata.selectionApplied == null;
+      const canCapToRepresentativeSubset = isOldBackend && options?.includeAllDiffs !== true && // onlyRejected/onlyWithComments always return every matching difference —
+      // never subject to the representative-subset cap (see the backend's
+      // agent.diffs-summary.utils.ts) — so an old backend's response to either
+      // is already complete and must not be re-capped here.
+      options?.onlyRejected !== true && options?.onlyWithComments !== true && data.length > LEGACY_REPRESENTATIVE_SELECTION_THRESHOLD && // Only cap when every row reports isSelected. A partially-present field
+      // would otherwise arm the filter below and then silently drop rows where
+      // it happens to be missing — requiring it on every row is the safe
+      // direction: worst case we skip capping, never wrongly drop a diff.
+      data.every((diff) => diff.isSelected != null);
+      let selectedData = data;
+      let cappingApplied = false;
+      if (canCapToRepresentativeSubset) {
+        const selected = data.filter((diff) => diff.isSelected === true);
+        if (selected.length > 0) {
+          selectedData = selected;
+          cappingApplied = selected.length < data.length;
+        }
+      }
+      const selectionApplied = metadata.selectionApplied ?? (cappingApplied || void 0);
+      const numMatchingDiffs = metadata.numMatchingDiffs ?? (cappingApplied ? data.length : void 0);
       return {
         ...metadata,
-        data: entries.map(({ diff }) => diff)
+        ...selectionApplied != null ? { selectionApplied } : {},
+        ...numMatchingDiffs != null ? { numMatchingDiffs } : {},
+        data: selectedData.map(({ isSelected: _isSelected, ...diff }) => diff)
       };
     };
     var getDiffComments = async (client, replayDiffId, screenshotName, options = {}) => {
@@ -22365,6 +22415,36 @@ var require_agent_api = __commonJS({
       return data;
     };
     exports2.getDiffComments = getDiffComments;
+    var rejectDiff = async ({ client, replayDiffId, screenshotName, reason, x, y }) => {
+      const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/reject`, { reason, x, y }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.rejectDiff = rejectDiff;
+    var ignoreDiff = async ({ client, replayDiffId, screenshotName, reason, x, y }) => {
+      const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/ignore`, { reason, x, y }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.ignoreDiff = ignoreDiff;
+    var createDiffComment = async ({ client, replayDiffId, screenshotName, text, x, y }) => {
+      const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/comments`, { text, x, y }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.createDiffComment = createDiffComment;
+    var replyToDiffComment = async ({ client, commentId, text }) => {
+      const { data } = await client.post(`agent/diff-comments/${commentId}/replies`, {
+        text
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.replyToDiffComment = replyToDiffComment;
     var getTestRunDiffsSummaryCounts = async (client, testRunId) => {
       const { data } = await client.get(`agent/test-runs/${testRunId}/diffs-summary/counts`).catch((error2) => {
         throw (0, errors_1.maybeEnrichFetchError)(error2);
@@ -22383,6 +22463,36 @@ var require_agent_api = __commonJS({
       return data;
     };
     exports2.getScreenshotDomDiff = getScreenshotDomDiff;
+    var getAgentWhoami = async (client) => {
+      const { data } = await client.get("agent/whoami").catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getAgentWhoami = getAgentWhoami;
+    var getAgentProjects = async (client) => {
+      const { data } = await client.get("agent/projects").catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getAgentProjects = getAgentProjects;
+    var getAgentCurrentProject = async (client) => {
+      const { data } = await client.get("agent/project").catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getAgentCurrentProject = getAgentCurrentProject;
+    var setAgentCurrentProject = async (client, project) => {
+      const { data } = await client.put("agent/project", {
+        project
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.setAgentCurrentProject = setAgentCurrentProject;
     var getTestRunForCommit = async (client, commitSha, options) => {
       const params = { commitSha };
       if (options?.project != null) {
@@ -22394,6 +22504,13 @@ var require_agent_api = __commonJS({
       return data;
     };
     exports2.getTestRunForCommit = getTestRunForCommit;
+    var completeBaseRun = async (client, testRunId) => {
+      const { data } = await client.post(`agent/test-runs/${testRunId}/complete-base-run`).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.completeBaseRun = completeBaseRun;
     var getTestRunJsCoverage = async (client, testRunId, options) => {
       const params = {
         clientVersion: String(exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION)
@@ -22541,6 +22658,15 @@ var require_agent_api = __commonJS({
       if (options?.visitedUrlFilter != null) {
         params.visitedUrlFilter = options.visitedUrlFilter;
       }
+      if (options?.includeDurationSeconds) {
+        params.includeDurationSeconds = "true";
+      }
+      if (options?.includeNumberUserEvents) {
+        params.includeNumberUserEvents = "true";
+      }
+      if (options?.includeNumberUrlsVisited) {
+        params.includeNumberUrlsVisited = "true";
+      }
       if (options?.includeStartUrl) {
         params.includeStartUrl = "true";
       }
@@ -22562,14 +22688,14 @@ var require_agent_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
 var require_github_cloud_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "eaee6f3e-5e01-5d00-87ce-af5bb060d69b");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "b88447e0-b929-5ded-9600-f2c22e5dcfb8");
       } catch (e2) {
       }
     }();
@@ -22588,14 +22714,14 @@ var require_github_cloud_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
 var require_oauth_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "9cde7ff5-4e09-5b26-b3a0-91010ab2b2c6");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "8665ca99-1cf5-543f-88c9-6844fe13c138");
       } catch (e2) {
       }
     }();
@@ -22630,14 +22756,14 @@ var require_oauth_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
 var require_project_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "739e8cc3-c5e4-5ec1-b35c-7eb0fc12cd31");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "2022f42a-f4bc-5010-835b-bbd86445dc91");
       } catch (e2) {
       }
     }();
@@ -22687,14 +22813,14 @@ var require_project_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js
 var require_crawler_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "3a945a27-aedf-5a8a-bc2f-6fa484b52a1b");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "80a1fd6b-8524-52e5-9404-40a9396109dd");
       } catch (e2) {
       }
     }();
@@ -22721,14 +22847,14 @@ var require_crawler_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
 var require_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "880ba7cb-e40b-55a9-98be-5643b2fdf69a");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "ded1f9fd-094e-5049-9acc-927249c691aa");
       } catch (e2) {
       }
     }();
@@ -22763,6 +22889,9 @@ var require_replay_api = __commonJS({
       if (options?.includeDiffs === false) {
         params["includeDiffs"] = "false";
       }
+      if (options?.includeAppContainerLogs === true) {
+        params["includeAppContainerLogs"] = "true";
+      }
       const { data } = await client.get(`replays/${replayId}/download-urls`, {
         params
       }).catch((error2) => {
@@ -22777,14 +22906,14 @@ var require_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
 var require_session_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "7d9be07f-feb5-5111-be74-80045e9057c8");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "9fedbc35-de28-53b7-a0ed-cec87ea6de2a");
       } catch (e2) {
       }
     }();
@@ -22836,14 +22965,14 @@ var require_session_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
 var require_replay_diff_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "faa4c441-357c-511c-81a6-9b5d3f0c3542");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "7bc618a4-cb1c-5161-a2cb-87841101eca0");
       } catch (e2) {
       }
     }();
@@ -22863,14 +22992,14 @@ var require_replay_diff_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
 var require_source_code_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "f3e307be-0207-5a3f-a66f-b455ebf57e5d");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "a6bc17b1-40c3-5ed6-b33b-243ed4876288");
       } catch (e2) {
       }
     }();
@@ -22894,20 +23023,38 @@ var require_source_code_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
-var require_test_run_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js
+var require_test_run_status_client_version = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "dc5c8860-9207-5a3c-8639-6b6edf1d5be6");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "1a65611b-7891-54ab-b09d-55179b27c47d");
+      } catch (e2) {
+      }
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.TEST_RUN_STATUS_CLIENT_VERSION = void 0;
+    exports2.TEST_RUN_STATUS_CLIENT_VERSION = 1;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
+var require_test_run_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+    "use strict";
+    !function() {
+      try {
+        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "55943417-6084-52a7-9c1b-83500b4c4507");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.emitTelemetry = exports2.getTestRunReplayDiffs = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = void 0;
     var errors_1 = require_errors2();
+    var test_run_status_client_version_1 = require_test_run_status_client_version();
     var executeSecureTunnelTestRun = async ({ client, headSha, tunnelUrl, basicAuthUser, basicAuthPassword, environment, isLockable, companionAssetsInfo, pullRequestHostingProviderId, postComment, debugContext }) => {
       const { data } = await client.post("test-runs/trigger-secure-tunnel-test-run-v2", {
         headSha,
@@ -22927,7 +23074,9 @@ var require_test_run_api = __commonJS({
     };
     exports2.executeSecureTunnelTestRun = executeSecureTunnelTestRun;
     var getTestRun = async ({ client, testRunId }) => {
-      const { data } = await client.get(`test-runs/${testRunId}`);
+      const { data } = await client.get(`test-runs/${testRunId}`, {
+        params: { clientVersion: String(test_run_status_client_version_1.TEST_RUN_STATUS_CLIENT_VERSION) }
+      });
       return data;
     };
     exports2.getTestRun = getTestRun;
@@ -22998,14 +23147,14 @@ var require_test_run_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
 var require_deployment_lock_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "cc2c4870-e909-5297-97e7-cf6efc4a111a");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "761937b9-0340-5bd6-a6d9-992f5b0d1f3a");
       } catch (e2) {
       }
     }();
@@ -23024,14 +23173,14 @@ var require_deployment_lock_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js
 var require_commit_label_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "2ea57afa-529d-55ad-8c02-4b44558e0ccd");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "b86d6bda-de0a-5122-bc30-ecddb42bd50f");
       } catch (e2) {
       }
     }();
@@ -23049,14 +23198,14 @@ var require_commit_label_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
 var require_test_run_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "5e15a073-50e2-5788-9e86-7d3775ea4a52");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "d60bd2d7-eeb5-5e4a-b784-8c80d53d2f3e");
       } catch (e2) {
       }
     }();
@@ -23071,9 +23220,9 @@ var require_test_run_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/defer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/defer.js
 var require_defer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -23364,9 +23513,9 @@ var require_loglevel = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
 var require_console_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -23443,9 +23592,9 @@ var require_console_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
 var require_local_data = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -30300,9 +30449,9 @@ var require_luxon = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
 var require_logs = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -30326,9 +30475,9 @@ var require_logs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
 var require_debug_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -30428,19 +30577,19 @@ var require_debug_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/constants.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/constants.js
 var require_constants6 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "3032fcd6-c8a6-5691-9bb6-25916e985749");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "4b64323f-2bb1-5053-9ae8-4f37a4cce1e9");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.COMMON_CHROMIUM_FLAGS = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = void 0;
+    exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = void 0;
     exports2.BASE_SNIPPETS_URL = "https://snippet.meticulous.ai/";
     exports2.IS_METICULOUS_SUPER_USER = !!process.env["METICULOUS_SUPER_USER"];
     exports2.DEFAULT_EXECUTION_OPTIONS = {
@@ -30467,61 +30616,12 @@ var require_constants6 = __commonJS({
         diffPixelThreshold: 0.01
       }
     };
-    exports2.COMMON_CHROMIUM_FLAGS = [
-      // WebFontsCacheAwareTimeoutAdaption - font request interception caching might trigger
-      // a double requestPaused CDP event which triggers "request" Puppeteer event to be emitted twice
-      // which breaks tracking of in-flight requests. See https://bugs.chromium.org/p/chromium/issues/detail?id=1196004 and
-      // https://github.com/puppeteer/puppeteer/issues/7475.
-      "--disable-features=Translate,WebFontsCacheAwareTimeoutAdaption",
-      // Disable task throttling of timer tasks from background pages.
-      "--disable-background-timer-throttling",
-      // Prevent renderer process backgrounding when set.
-      "--disable-renderer-backgrounding",
-      // Disable backgrounding renders for occluded windows. Done for tests to avoid
-      // nondeterministic behavior.
-      "--disable-backgrounding-occluded-windows",
-      // Disables crash reporting. ↪
-      "--disable-breakpad",
-      "--disable-client-side-phishing-detection",
-      // Disables installation of default apps on first run, e.g. gmail
-      "--disable-default-apps",
-      // The /dev/shm partition is too small in certain VM environments, causing
-      // Chrome to fail or crash (see http://crbug.com/715363). Use this flag to
-      // work-around this issue (a temporary directory will always be used to create
-      // anonymous shared memory files).
-      "--disable-dev-shm-usage",
-      "--disable-extensions",
-      // Suppresses hang monitor dialogs in renderer processes.
-      // This may allow slow unload handlers on a page to prevent the tab from closing,
-      // but the Task Manager can be used to terminate the offending process in this case.
-      "--disable-hang-monitor",
-      // Disables the IPC flooding protection.
-      // It is activated by default. Some javascript functions can be used to flood
-      // the browser process with IPC. This protection limits the rate at which they
-      // can be used.
-      "--disable-ipc-flooding-protection",
-      // Disables the Web Notification and the Push APIs.
-      "--disable-notifications",
-      // Normally when the user attempts to navigate to a page that was the result of a post
-      // we prompt to make sure they want to. This switch may be used to disable that check.
-      "--disable-prompt-on-repost",
-      "--disable-sync",
-      // Skip First Run tasks, like importing history or bookmarks.
-      // See https://www.chromium.org/developers/design-documents/first-run-customizations/
-      "--no-first-run",
-      // Disable image animations (including SVG animations).
-      // See https://chromium.googlesource.com/chromium/src/+/23d6a478c76d5e31c8bb47fa31bd53f619b536bd/third_party/WebKit/Source/platform/graphics/ImageAnimationPolicy.h
-      "--blink-settings=imageAnimationPolicy=2",
-      // Disable smooth scrolling, since this can result in flakes if screenshot is taken mid-scroll
-      // See https://github.com/alwaysmeticulous/meticulous/pull/1360 for more details
-      "--disable-smooth-scrolling"
-    ];
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
 var require_version_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -30547,9 +30647,9 @@ var require_version_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
 var require_commit_sha_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -30745,9 +30845,9 @@ var require_commit_sha_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js
 var require_error_code_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -30779,14 +30879,14 @@ var require_error_code_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
 var require_http_retry_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "727322cf-ab15-5eaf-8ab8-a374436b02d3");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "5d6224ca-13b5-55e5-9114-57bafa5d1ccb");
       } catch (e2) {
       }
     }();
@@ -30874,7 +30974,7 @@ var require_http_retry_utils = __commonJS({
               retryAfterMs: (0, exports2.getRetryAfterMs)(error2)
             });
             if (logger) {
-              logger.warn(`Operation failed, retrying in ${Math.round(delay)}ms (attempt ${attempt + 2} of ${maxRetries + 1})`);
+              logger.warn(`Operation failed, retrying in ${Math.round(delay)}ms (attempt ${attempt + 2} of ${maxRetries + 1}): ${describeRetriedError(error2)}`);
             }
             await new Promise((resolve5) => setTimeout(resolve5, delay));
           } else {
@@ -30885,6 +30985,7 @@ var require_http_retry_utils = __commonJS({
       throw lastError;
     };
     exports2.executeWithRetry = executeWithRetry;
+    var describeRetriedError = (error2) => error2 instanceof Error ? error2.message : String(error2);
   }
 });
 
@@ -49459,9 +49560,9 @@ var require_undici2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js
 var require_fetch_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -55455,9 +55556,9 @@ var require_util17 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/address-error.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/address-error.js
 var require_address_error = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/address-error.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/address-error.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.AddressError = void 0;
@@ -55472,15 +55573,16 @@ var require_address_error = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/common.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/common.js
 var require_common2 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/common.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/common.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.isInSubnet = isInSubnet;
     exports2.isHostInSubnet = isHostInSubnet;
     exports2.isCorrect = isCorrect;
     exports2.prefixLengthFromMask = prefixLengthFromMask;
+    exports2.assertByteArray = assertByteArray;
     exports2.numberToPaddedHex = numberToPaddedHex;
     exports2.stringToPaddedHex = stringToPaddedHex;
     exports2.testBit = testBit;
@@ -55495,7 +55597,7 @@ var require_common2 = __commonJS({
       return this.mask(address.subnetMask) === address.mask();
     }
     function isCorrect(defaultBits) {
-      return function() {
+      return function isCorrectForm() {
         if (this.addressMinusSuffix !== this.correctForm()) {
           return false;
         }
@@ -55519,6 +55621,16 @@ var require_common2 = __commonJS({
       }
       return firstZero;
     }
+    function assertByteArray(bytes, byteCount, family, minimum) {
+      if (bytes.length !== byteCount) {
+        throw new address_error_1.AddressError(`${family} addresses require exactly ${byteCount} bytes`);
+      }
+      for (let i = 0; i < bytes.length; i++) {
+        if (!Number.isInteger(bytes[i]) || bytes[i] < minimum || bytes[i] > 255) {
+          throw new address_error_1.AddressError(`All bytes must be integers between ${minimum} and 255`);
+        }
+      }
+    }
     function numberToPaddedHex(number) {
       return number.toString(16).padStart(2, "0");
     }
@@ -55536,9 +55648,9 @@ var require_common2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v4/constants.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v4/constants.js
 var require_constants14 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v4/constants.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v4/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RE_SUBNET_STRING = exports2.RE_ADDRESS = exports2.GROUPS = exports2.BITS = void 0;
@@ -55549,9 +55661,9 @@ var require_constants14 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv4.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ipv4.js
 var require_ipv4 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv4.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ipv4.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -55628,7 +55740,7 @@ var require_ipv4 = __commonJS({
         try {
           new _Address4(address);
           return true;
-        } catch (e) {
+        } catch {
           return false;
         }
       }
@@ -55878,31 +55990,32 @@ var require_ipv4 = __commonJS({
        * @returns {Address4}
        */
       static fromBigInt(bigInt) {
-        if (bigInt < 0n || bigInt > 0xffffffffn) {
+        if (bigInt < BigInt(0) || bigInt > BigInt(4294967295)) {
           throw new address_error_1.AddressError("IPv4 BigInt must be in the range 0 to 2**32 - 1");
         }
         return _Address4.fromHex(bigInt.toString(16).padStart(8, "0"));
       }
       /**
-       * Convert a byte array to an Address4 object.
+       * Convert a byte array to an Address4 object. Throws `AddressError` unless
+       * given exactly 4 integers from 0 to 255. Signed bytes are rejected, so
+       * this differs from `Address6.fromByteArray`, which folds them; the two
+       * contracts converge on this stricter form in the next major version.
        *
        * To convert from a Node.js `Buffer`, spread it: `Address4.fromByteArray([...buf])`.
        * @param {Array<number>} bytes - an array of 4 bytes (0-255)
        * @returns {Address4}
        */
       static fromByteArray(bytes) {
-        if (bytes.length !== 4) {
-          throw new address_error_1.AddressError("IPv4 addresses require exactly 4 bytes");
-        }
-        for (let i = 0; i < bytes.length; i++) {
-          if (!Number.isInteger(bytes[i]) || bytes[i] < 0 || bytes[i] > 255) {
-            throw new address_error_1.AddressError("All bytes must be integers between 0 and 255");
-          }
-        }
+        common.assertByteArray(bytes, 4, "IPv4", 0);
         return this.fromUnsignedByteArray(bytes);
       }
       /**
-       * Convert an unsigned byte array to an Address4 object
+       * Convert an unsigned byte array to an Address4 object. Throws
+       * `AddressError` unless given exactly 4 bytes, and rejects values outside
+       * 0 to 255 when parsing the resulting address.
+       *
+       * To convert from a Node.js `Buffer`, spread it:
+       * `Address4.fromUnsignedByteArray([...buf])`.
        * @param {Array<number>} bytes - an array of 4 unsigned bytes (0-255)
        * @returns {Address4}
        */
@@ -55932,7 +56045,8 @@ var require_ipv4 = __commonJS({
         return this.binaryZeroPad().slice(start, end);
       }
       /**
-       * Return the reversed ip6.arpa form of the address
+       * Return the reversed in-addr.arpa form of the address, e.g.
+       * `42.2.0.192.in-addr.arpa.` for `192.0.2.42`.
        * @param {Object} options
        * @param {boolean} options.omitSuffix - omit the "in-addr.arpa" suffix
        * @returns {String}
@@ -56007,7 +56121,12 @@ var require_ipv4 = __commonJS({
         return this._binaryZeroPad;
       }
       /**
-       * Groups an IPv4 address for inclusion at the end of an IPv6 address
+       * Groups an IPv4 address for inclusion at the end of an IPv6 address.
+       *
+       * Returns an HTML fragment: each half of the address is wrapped in a
+       * `<span>` carrying the group classes an address-inspector UI hovers on.
+       * The address content is HTML-escaped; anything you concatenate around it
+       * is your responsibility.
        * @returns {String}
        */
       groupForV6() {
@@ -56030,9 +56149,9 @@ var require_ipv4 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/constants.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/constants.js
 var require_constants15 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/constants.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RE_URL_WITH_PORT = exports2.RE_URL = exports2.RE_ZONE_STRING = exports2.RE_SUBNET_STRING = exports2.RE_BAD_ADDRESS = exports2.RE_BAD_CHARACTERS = exports2.TYPES = exports2.SCOPES = exports2.GROUPS = exports2.BITS = void 0;
@@ -56087,9 +56206,9 @@ var require_constants15 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/helpers.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/helpers.js
 var require_helpers2 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/helpers.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/helpers.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.escapeHtml = escapeHtml;
@@ -56126,9 +56245,9 @@ var require_helpers2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/regular-expressions.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/regular-expressions.js
 var require_regular_expressions = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/regular-expressions.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/regular-expressions.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -56223,9 +56342,9 @@ var require_regular_expressions = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv6.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ipv6.js
 var require_ipv6 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv6.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ipv6.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -56355,7 +56474,7 @@ var require_ipv6 = __commonJS({
         try {
           new _Address6(address);
           return true;
-        } catch (e) {
+        } catch {
           return false;
         }
       }
@@ -56370,7 +56489,7 @@ var require_ipv6 = __commonJS({
        * address.correctForm(); // '::e8:d4a5:1000'
        */
       static fromBigInt(bigInt) {
-        if (bigInt < 0n || bigInt > (1n << BigInt(constants6.BITS)) - 1n) {
+        if (bigInt < BigInt(0) || bigInt > (BigInt(1) << BigInt(constants6.BITS)) - BigInt(1)) {
           throw new address_error_1.AddressError("IPv6 BigInt must be in the range 0 to 2**128 - 1");
         }
         const hex = bigInt.toString(16).padStart(32, "0");
@@ -56391,31 +56510,27 @@ var require_ipv6 = __commonJS({
        * addressAndPort.port; // 8080
        */
       static fromURL(url) {
+        var _a2;
         let host;
         let port = null;
         let result;
+        let error2;
         const stripped = url.replace(/^[a-z][a-z0-9+.-]*:\/\//i, "");
         if (stripped.indexOf("[") !== -1 && stripped.indexOf("]:") !== -1) {
+          error2 = "failed to parse address with port";
           result = constants6.RE_URL_WITH_PORT.exec(stripped);
           if (result === null) {
-            return {
-              error: "failed to parse address with port",
-              address: null,
-              port: null
-            };
+            return { error: error2, address: null, port: null };
           }
           host = result[1];
           port = result[2];
         } else {
+          error2 = "failed to parse address from URL";
           result = constants6.RE_URL.exec(stripped);
           if (result === null) {
-            return {
-              error: "failed to parse address from URL",
-              address: null,
-              port: null
-            };
+            return { error: error2, address: null, port: null };
           }
-          host = result[1] ?? result[2];
+          host = (_a2 = result[1]) !== null && _a2 !== void 0 ? _a2 : result[2];
         }
         if (port) {
           port = parseInt(port, 10);
@@ -56425,10 +56540,13 @@ var require_ipv6 = __commonJS({
         } else {
           port = null;
         }
-        return {
-          address: new _Address6(host),
-          port
-        };
+        let address;
+        try {
+          address = new _Address6(host);
+        } catch {
+          return { error: error2, address: null, port: null };
+        }
+        return { address, port };
       }
       /**
        * Construct an `Address6` from an address and a hex subnet mask given as
@@ -57036,7 +57154,14 @@ var require_ipv6 = __commonJS({
           bits = prefixBits.slice(0, 96) + v4Bits;
         } else {
           const beforeU = 64 - pl;
-          bits = prefixBits.slice(0, pl) + v4Bits.slice(0, beforeU) + "00000000" + v4Bits.slice(beforeU) + "0".repeat(128 - 72 - (32 - beforeU));
+          bits = [
+            prefixBits.slice(0, pl),
+            v4Bits.slice(0, beforeU),
+            // Bits 64 to 71 are the reserved u octet and are always zero.
+            "00000000",
+            v4Bits.slice(beforeU),
+            "0".repeat(128 - 72 - (32 - beforeU))
+          ].join("");
         }
         const hex = BigInt(`0b${bits}`).toString(16).padStart(32, "0");
         const groups = [];
@@ -57102,19 +57227,28 @@ var require_ipv6 = __commonJS({
       /**
        * Convert a byte array to an Address6 object.
        *
+       * Accepts unsigned bytes (0 to 255) or signed bytes (-128 to 127, as an
+       * `Int8Array` or a Java `byte[]` holds them), folding signed values to their
+       * unsigned equivalent. Throws `AddressError` unless given exactly 16
+       * integers from -128 to 255.
+       *
        * To convert from a Node.js `Buffer`, spread it: `Address6.fromByteArray([...buf])`.
        * @returns {Address6}
        */
       static fromByteArray(bytes) {
+        common.assertByteArray(bytes, 16, "IPv6", -128);
         return this.fromUnsignedByteArray(bytes.map(unsignByte));
       }
       /**
        * Convert an unsigned byte array to an Address6 object.
        *
+       * Throws `AddressError` unless given exactly 16 integers from 0 to 255.
+       *
        * To convert from a Node.js `Buffer`, spread it: `Address6.fromUnsignedByteArray([...buf])`.
        * @returns {Address6}
        */
       static fromUnsignedByteArray(bytes) {
+        common.assertByteArray(bytes, 16, "IPv6", 0);
         const BYTE_MAX = BigInt("256");
         let result = BigInt("0");
         let multiplier = BigInt("1");
@@ -57348,7 +57482,12 @@ var require_ipv6 = __commonJS({
         return `<a href="${safeHref}">${safeForm}</a>`;
       }
       /**
-       * Groups an address
+       * Groups an address.
+       *
+       * Returns an HTML fragment: each group is wrapped in a `<span>` carrying
+       * the group classes an address-inspector UI hovers on. The address content
+       * is HTML-escaped; anything you concatenate around it is your
+       * responsibility.
        * @returns {String}
        */
       group() {
@@ -57445,9 +57584,9 @@ var require_ipv6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ip-address.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ip-address.js
 var require_ip_address = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ip-address.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ip-address.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -92440,44 +92579,44 @@ var require_source = __commonJS({
   }
 });
 
-// node_modules/.pnpm/puppeteer-core@24.14.0/node_modules/puppeteer-core/lib/cjs/puppeteer/revisions.js
+// node_modules/.pnpm/puppeteer-core@24.42.0/node_modules/puppeteer-core/lib/cjs/puppeteer/revisions.js
 var require_revisions = __commonJS({
-  "node_modules/.pnpm/puppeteer-core@24.14.0/node_modules/puppeteer-core/lib/cjs/puppeteer/revisions.js"(exports2) {
+  "node_modules/.pnpm/puppeteer-core@24.42.0/node_modules/puppeteer-core/lib/cjs/puppeteer/revisions.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PUPPETEER_REVISIONS = void 0;
     exports2.PUPPETEER_REVISIONS = Object.freeze({
-      chrome: "138.0.7204.157",
-      "chrome-headless-shell": "138.0.7204.157",
-      firefox: "stable_140.0.4"
+      chrome: "147.0.7727.57",
+      "chrome-headless-shell": "147.0.7727.57",
+      firefox: "stable_149.0.2"
     });
   }
 });
 
-// node_modules/.pnpm/puppeteer-core@24.14.0/node_modules/puppeteer-core/lib/esm/puppeteer/revisions.js
+// node_modules/.pnpm/puppeteer-core@24.42.0/node_modules/puppeteer-core/lib/esm/puppeteer/revisions.js
 var revisions_exports = {};
 __export(revisions_exports, {
   PUPPETEER_REVISIONS: () => PUPPETEER_REVISIONS
 });
 var PUPPETEER_REVISIONS;
 var init_revisions = __esm({
-  "node_modules/.pnpm/puppeteer-core@24.14.0/node_modules/puppeteer-core/lib/esm/puppeteer/revisions.js"() {
+  "node_modules/.pnpm/puppeteer-core@24.42.0/node_modules/puppeteer-core/lib/esm/puppeteer/revisions.js"() {
     PUPPETEER_REVISIONS = Object.freeze({
-      chrome: "138.0.7204.157",
-      "chrome-headless-shell": "138.0.7204.157",
-      firefox: "stable_140.0.4"
+      chrome: "147.0.7727.57",
+      "chrome-headless-shell": "147.0.7727.57",
+      firefox: "stable_149.0.2"
     });
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
 var require_browser_installer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "d47e5ec8-5122-5d6d-adb1-3d33d30c8188");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "5a584eb2-10c4-550c-99f8-ab87f1a9e8f3");
       } catch (e2) {
       }
     }();
@@ -92550,6 +92689,10 @@ var require_browser_installer = __commonJS({
     }
     var INSTALL_TIMEOUT_MS = 5 * 60 * 1e3;
     var MAX_INSTALL_RETRIES = 3;
+    function getOverrideChromeBuildId() {
+      const override = process.env.METICULOUS_CHROME_BUILD_ID?.trim();
+      return override ? override : void 0;
+    }
     function validateCacheDir(cacheDir) {
       if (!cacheDir)
         return void 0;
@@ -92587,13 +92730,27 @@ var require_browser_installer = __commonJS({
       }
       throw lastError || new Error("Browser installation failed after all retries");
     }
+    var getExplicitExecutablePath = () => {
+      const explicit = process.env.PUPPETEER_EXECUTABLE_PATH?.trim();
+      return explicit ? explicit : void 0;
+    };
     async function ensureBrowser(browserType = browsers_1.Browser.CHROME) {
+      const explicitExecutable = getExplicitExecutablePath();
+      if (explicitExecutable) {
+        if (!fs.existsSync(explicitExecutable)) {
+          throw new Error(`PUPPETEER_EXECUTABLE_PATH is set to ${explicitExecutable} but no file exists there. Ensure the browser package is installed, or unset the variable to allow automatic installation.`);
+        }
+        if (!process.env.METICULOUS_IS_CLOUD_REPLAY) {
+          console.log(chalk_1.default.gray(`Using browser from PUPPETEER_EXECUTABLE_PATH: ${explicitExecutable}`));
+        }
+        return explicitExecutable;
+      }
       const platform = (0, browsers_1.detectBrowserPlatform)();
       if (platform) {
         const validatedCacheDir2 = validateCacheDir(process.env.PUPPETEER_CACHE_DIR);
         const cacheDir2 = validatedCacheDir2 || path.join(os.homedir(), ".cache", "puppeteer");
         const revisions2 = await loadPuppeteerRevisions();
-        const expectedVersion2 = revisions2?.chrome;
+        const expectedVersion2 = getOverrideChromeBuildId() ?? revisions2?.chrome;
         try {
           const installedBrowsers = await (0, browsers_1.getInstalledBrowsers)({ cacheDir: cacheDir2 });
           const matchingBrowser = installedBrowsers.find((browser) => browser.browser === browserType && browser.platform === platform && (!expectedVersion2 || browser.buildId === expectedVersion2));
@@ -92621,11 +92778,13 @@ var require_browser_installer = __commonJS({
       }
       const validatedCacheDir = validateCacheDir(process.env.PUPPETEER_CACHE_DIR);
       const cacheDir = validatedCacheDir || path.join(os.homedir(), ".cache", "puppeteer");
+      fs.mkdirSync(cacheDir, { recursive: true });
       let buildId;
       const revisions = await loadPuppeteerRevisions();
-      const expectedVersion = revisions?.chrome;
+      const overrideBuildId = getOverrideChromeBuildId();
+      const expectedVersion = overrideBuildId ?? revisions?.chrome;
       if (expectedVersion) {
-        console.log(chalk_1.default.gray(`Using Chrome version from puppeteer-core: ${expectedVersion}`));
+        console.log(chalk_1.default.gray(overrideBuildId ? `Using Chrome version from METICULOUS_CHROME_BUILD_ID: ${expectedVersion}` : `Using Chrome version from puppeteer-core: ${expectedVersion}`));
         buildId = expectedVersion;
       } else {
         console.log(chalk_1.default.gray("Falling back to latest stable Chrome version"));
@@ -92665,19 +92824,19 @@ For more help, see: https://pptr.dev/troubleshooting`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/index.js
 var require_dist12 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "d1afec68-6368-5d3c-b88a-f6200e33e20c");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "ac1638f6-d887-5ab6-a9f5-4fb7cb09d87e");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ensureBrowser = exports2.meticulousFetch = exports2.getErrorCode = exports2.computeRetryDelayMs = exports2.getRetryAfterMs = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getStashCreateSha = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.logProgress = exports2.logNotice = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
+    exports2.ensureBrowser = exports2.meticulousFetch = exports2.getErrorCode = exports2.computeRetryDelayMs = exports2.getRetryAfterMs = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getStashCreateSha = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.logProgress = exports2.logNotice = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
     var defer_1 = require_defer();
     Object.defineProperty(exports2, "defer", { enumerable: true, get: function() {
       return defer_1.defer;
@@ -92721,9 +92880,6 @@ var require_dist12 = __commonJS({
     } });
     Object.defineProperty(exports2, "BASE_SNIPPETS_URL", { enumerable: true, get: function() {
       return constants_1.BASE_SNIPPETS_URL;
-    } });
-    Object.defineProperty(exports2, "COMMON_CHROMIUM_FLAGS", { enumerable: true, get: function() {
-      return constants_1.COMMON_CHROMIUM_FLAGS;
     } });
     Object.defineProperty(exports2, "IS_METICULOUS_SUPER_USER", { enumerable: true, get: function() {
       return constants_1.IS_METICULOUS_SUPER_USER;
@@ -92782,14 +92938,14 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
 var require_oauth_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "4836117c-ca38-52ca-af60-a97d89220835");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "95fa8852-7a90-5c4f-9026-55b9235427a0");
       } catch (e2) {
       }
     }();
@@ -92840,14 +92996,14 @@ var require_oauth_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
 var require_oauth_token_store = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "0b35ec95-17a4-51ad-8fc0-e555a2a57c7f");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "d355ae60-9b8a-5f87-8c77-d6afca238630");
       } catch (e2) {
       }
     }();
@@ -92891,14 +93047,14 @@ var require_oauth_token_store = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
 var require_oauth_refresh = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "5f487ff7-9872-562a-9ebc-1bcc9b263301");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "fca90cde-9636-50c9-9f66-02f16c64f849");
       } catch (e2) {
       }
     }();
@@ -92955,14 +93111,14 @@ var require_oauth_refresh = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
 var require_api_token_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "37107461-5cfb-576e-b1a0-79cd9fed02c9");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "25aa47ce-8058-5e42-907f-ce08276f58a9");
       } catch (e2) {
       }
     }();
@@ -93027,14 +93183,14 @@ var require_api_token_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
 var require_oauth_callback_server = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "00ad6935-cb6d-59ab-af1e-81a852c76aa4");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "8957600a-25f6-5e85-83da-bb5e2c08634f");
       } catch (e2) {
       }
     }();
@@ -93057,6 +93213,20 @@ var require_oauth_callback_server = __commonJS({
     </svg>
     <h2 style="margin: 0; font-size: 24px; font-weight: 600;">Authentication successful</h2>
     <p style="margin: 0; font-size: 16px; color: #a1a1aa;">You can close this tab and return to the terminal.</p>
+    <div style="margin-top: 16px; padding: 20px 24px; max-width: 720px; border: 1px solid #27272a; border-radius: 12px; display: flex; flex-direction: column; gap: 20px; text-align: left;">
+      <p style="margin: 0; font-size: 14px; color: #e4e4e7; font-weight: 500;">Using an AI coding agent? Set Meticulous up for it:</p>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <p style="margin: 0; font-size: 13px; color: #a1a1aa;">1. Install the Meticulous CLI:</p>
+        <code style="display: block; padding: 10px 14px; background: #27272a; border-radius: 8px; font-size: 13px; color: #e4e4e7; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere;">npm install --global @alwaysmeticulous/cli@latest</code>
+        <p style="margin: 6px 0 0; font-size: 13px; color: #a1a1aa;">or, alternatively, add the Meticulous MCP server:</p>
+        <code style="display: block; padding: 10px 14px; background: #27272a; border-radius: 8px; font-size: 13px; color: #e4e4e7; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere;">https://app.meticulous.ai/api/mcp</code>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <p style="margin: 0; font-size: 13px; color: #a1a1aa;">2. Either way, install the Meticulous agent skills:</p>
+        <code style="display: block; padding: 10px 14px; background: #27272a; border-radius: 8px; font-size: 13px; color: #e4e4e7; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere;">npx skills add alwaysmeticulous/skills --skill "*" --agent claude-code --agent codex --agent cursor -y</code>
+      </div>
+      <p style="margin: 0; font-size: 13px; color: #a1a1aa;">See the <a href="https://app.meticulous.ai/docs/agents/setup" style="color: #a5b4fc;">agent setup docs</a> for details.</p>
+    </div>
   </div>
 </body>
 </html>`;
@@ -93121,14 +93291,14 @@ var require_oauth_callback_server = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
 var require_oauth_pkce = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "ec1a3572-633e-5f7a-b1b5-7d29f8a4befd");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "a7bfcc3e-c4d4-57b1-8821-29345c1448ca");
       } catch (e2) {
       }
     }();
@@ -93150,14 +93320,14 @@ var require_oauth_pkce = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
 var require_oauth_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "c730468e-5f07-535a-9a44-f7e9c4d95bb7");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "308b0c76-0717-53d0-9e7c-90cbd847d107");
       } catch (e2) {
       }
     }();
@@ -93253,14 +93423,14 @@ ${authUrl}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
 var require_oauth_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "ea51a673-cdc7-51d7-9ba9-48e73c9fd271");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "00695429-9b48-5d6d-968e-ad8a3a779651");
       } catch (e2) {
       }
     }();
@@ -93301,14 +93471,14 @@ var require_oauth_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js
 var require_legacy_project_migration = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "c7e49da8-9122-5869-b62c-7de95f9953a3");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "5439c3b9-b3a1-5eb2-b9ff-c8a86633c388");
       } catch (e2) {
       }
     }();
@@ -93361,31 +93531,31 @@ var require_legacy_project_migration = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/version.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/version.js
 var require_version2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "ac10f4cc-7a38-5615-8b9d-956b50ad79da");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "41252744-fb87-5536-a6d1-03c9cee8bf2d");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.VERSION = void 0;
-    exports2.VERSION = "2.322.0";
+    exports2.VERSION = "2.331.1";
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/client.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/client.js
 var require_client3 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "d29d6926-fa1e-5372-9343-c0f8ab304540");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "82593adb-314f-5092-bd94-9bc8493cd633");
       } catch (e2) {
       }
     }();
@@ -93581,14 +93751,14 @@ var require_client3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js
 var require_oauth_device_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "7e3c44b3-7ebc-54d6-95d7-0b15297d4ec3");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "10b213de-4215-5432-9c3b-32f7fba05ff3");
       } catch (e2) {
       }
     }();
@@ -93740,14 +93910,14 @@ var require_oauth_device_login = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js
 var require_default_project = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "eaa2f10e-b3e0-5c6f-b19a-9071d9383525");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "7d61b877-5da8-5e00-9ecc-dfdd0c6cd8ee");
       } catch (e2) {
       }
     }();
@@ -93764,14 +93934,14 @@ var require_default_project = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
 var require_get_proxy_agent = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "5c0b1834-fb99-5151-888e-fa6d722167b6");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "6bc9eeb8-a2cb-58e2-80bf-c82262cbe4fd");
       } catch (e2) {
       }
     }();
@@ -93787,14 +93957,14 @@ var require_get_proxy_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
 var require_retry_transient_upload_errors = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "9d221384-9790-5105-bdbe-15d2309a2601");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "941f39d0-50b4-5915-91a0-7d1afe24760d");
       } catch (e2) {
       }
     }();
@@ -93864,14 +94034,14 @@ ${responseBody}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
 var require_put_file_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "73dd0131-13f4-5dd2-a764-52d3f6fa7160");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "17f151b7-f09c-5d80-93a8-7e9aa3376eb1");
       } catch (e2) {
       }
     }();
@@ -93920,19 +94090,20 @@ var require_put_file_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
 var require_project_deployments_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "a9beefa5-4547-5b87-841b-ac687cf68f47");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "c99640f2-24a6-5694-9a9d-a42c1c3f2c97");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.projectIdQuery = void 0;
+    var errors_1 = require_errors2();
     var projectIdQuery = (projectId) => projectId ? { params: { projectId } } : void 0;
     exports2.projectIdQuery = projectIdQuery;
     var rejectLegacyProjectId = (body) => {
@@ -93972,8 +94143,12 @@ var require_project_deployments_api = __commonJS({
     };
     exports2.completeAssetUpload = completeAssetUpload;
     var completeContainerUpload = async ({ client, projectId, ...body }) => {
-      const { data } = await client.post("project-deployments/complete-container-upload", body, (0, exports2.projectIdQuery)(projectId));
-      return data;
+      try {
+        const { data } = await client.post("project-deployments/complete-container-upload", body, (0, exports2.projectIdQuery)(projectId));
+        return data;
+      } catch (error2) {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      }
     };
     exports2.completeContainerUpload = completeContainerUpload;
     var createRunWithUploadedAssetChunks = async ({ client, projectId, ...body }) => {
@@ -94033,19 +94208,19 @@ var require_project_deployments_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js
 var require_agentic_session_generation_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "8d73291e-66f4-50c0-8eda-ed6e35d9cb39");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "4b446484-9663-59cc-a439-d55139c304cc");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.releaseAgenticRepoLease = exports2.heartbeatAgenticRepoLease = exports2.getAgenticRepoLeaseStatus = exports2.acquireAgenticRepoLease = exports2.listAgenticRepoTree = exports2.getAgenticFileChanges = exports2.searchAgenticRepoCode = exports2.getAgenticRepoFile = exports2.getAgenticChangedFiles = exports2.getAgenticRunCoverage = exports2.requestAgenticArtifactUploads = exports2.isAgenticRunCancelled = exports2.reportAgenticRunResult = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = void 0;
+    exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.releaseAgenticRepoLease = exports2.heartbeatAgenticRepoLease = exports2.getAgenticRepoLeaseStatus = exports2.acquireAgenticRepoLease = exports2.listAgenticRepoSourceFiles = exports2.listAgenticRepoTree = exports2.getAgenticFileChanges = exports2.searchAgenticRepoCode = exports2.getAgenticRepoFile = exports2.getAgenticChangedFiles = exports2.getAgenticRunCoverage = exports2.requestAgenticArtifactUploads = exports2.requestAgenticTestcasesUpload = exports2.isAgenticRunCancelled = exports2.requestAgenticProgressUpload = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = void 0;
     var project_deployments_api_1 = require_project_deployments_api();
     var requestAgenticInstructionsUpload = async ({ client, projectId, ...body }) => {
       const { data } = await client.post("agentic-session-generation/request-instructions-upload", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
@@ -94063,25 +94238,54 @@ var require_agentic_session_generation_api = __commonJS({
     };
     exports2.completeAgenticSessionGeneration = completeAgenticSessionGeneration;
     var redactLaunchCredentials = (error2, appTarget) => {
-      const password = appTarget?.type === "assets" ? appTarget.backend?.password : void 0;
-      if (!password || typeof error2 !== "object" || error2 === null) {
+      const secrets = appTarget?.type === "assets" ? Object.values(appTarget.backend?.loginOptions ?? {}).filter(Boolean) : [];
+      if (secrets.length === 0 || typeof error2 !== "object" || error2 === null) {
         return;
       }
       const config = error2.config;
       if (typeof config?.data === "string") {
-        config.data = config.data.split(password).join("[REDACTED]");
+        let redacted = config.data;
+        for (const secret of secrets) {
+          redacted = redacted.split(secret).join("[REDACTED]");
+        }
+        config.data = redacted;
       } else if (typeof config?.data === "object" && config.data !== null) {
         const target = config.data;
-        if (target.appTarget?.backend?.password) {
-          target.appTarget.backend.password = "[REDACTED]";
+        const loginOptions = target.appTarget?.backend?.loginOptions;
+        if (loginOptions != null) {
+          for (const key of Object.keys(loginOptions)) {
+            loginOptions[key] = "[REDACTED]";
+          }
         }
       }
     };
-    var reportAgenticRunResult = async ({ client, projectId, ...body }) => {
-      const { data } = await client.post("agentic-session-generation/result", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+    exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = [
+      "infrastructure",
+      "build-or-tooling",
+      "backend-only",
+      "docs-or-config",
+      "no-reachable-ui"
+    ];
+    var requestAgenticResultUpload = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/request-result-upload", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
       return data;
     };
-    exports2.reportAgenticRunResult = reportAgenticRunResult;
+    exports2.requestAgenticResultUpload = requestAgenticResultUpload;
+    var completeAgenticRunResult = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/complete-result", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.completeAgenticRunResult = completeAgenticRunResult;
+    var reportAgenticRunFailure = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/report-failure", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.reportAgenticRunFailure = reportAgenticRunFailure;
+    var requestAgenticProgressUpload = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/request-progress-upload", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.requestAgenticProgressUpload = requestAgenticProgressUpload;
     var isAgenticRunCancelled = async ({ client, projectId, agenticRunId }) => {
       const { data } = await client.get("agentic-session-generation/run-cancelled", {
         params: {
@@ -94092,6 +94296,11 @@ var require_agentic_session_generation_api = __commonJS({
       return data;
     };
     exports2.isAgenticRunCancelled = isAgenticRunCancelled;
+    var requestAgenticTestcasesUpload = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/request-testcases-upload", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.requestAgenticTestcasesUpload = requestAgenticTestcasesUpload;
     var requestAgenticArtifactUploads = async ({ client, projectId, ...body }) => {
       const { data } = await client.post("agentic-session-generation/request-artifact-uploads", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
       return data;
@@ -94135,6 +94344,11 @@ var require_agentic_session_generation_api = __commonJS({
       return data;
     };
     exports2.listAgenticRepoTree = listAgenticRepoTree;
+    var listAgenticRepoSourceFiles = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/repo/source-files", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.listAgenticRepoSourceFiles = listAgenticRepoSourceFiles;
     var acquireAgenticRepoLease = async ({ client, projectId, ...body }) => {
       const { data } = await client.post("agentic-session-generation/repo/lease/acquire", body, {
         ...(0, project_deployments_api_1.projectIdQuery)(projectId),
@@ -94168,17 +94382,27 @@ var require_agentic_session_generation_api = __commonJS({
       return data;
     };
     exports2.releaseAgenticRepoLease = releaseAgenticRepoLease;
+    var searchRecordedRequests = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/recorded-requests/search", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.searchRecordedRequests = searchRecordedRequests;
+    var getRecordedRequest = async ({ client, projectId, sessionId, hash }) => {
+      const { data } = await client.get(`agentic-session-generation/recorded-requests/${encodeURIComponent(sessionId)}/${encodeURIComponent(hash)}`, { params: { ...projectId ? { projectId } : {} } });
+      return data;
+    };
+    exports2.getRecordedRequest = getRecordedRequest;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/session-transform-discovery.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/session-transform-discovery.api.js
 var require_session_transform_discovery_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/session-transform-discovery.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/session-transform-discovery.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "37de2631-1abe-5f0c-a001-01c8bebdf309");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "38677f57-1407-5009-92bf-837a7a5cfa54");
       } catch (e2) {
       }
     }();
@@ -94233,14 +94457,14 @@ var require_session_transform_discovery_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js
 var require_catalog_maintenance_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "74a5dfe0-7bcd-53e4-90df-ce412e5b46fd");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "90d148ac-b413-5e23-87ab-a4cfee7e6c7e");
       } catch (e2) {
       }
     }();
@@ -94270,14 +94494,14 @@ var require_catalog_maintenance_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
 var require_registry_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "8adf4573-b125-5494-8c23-be48bf8db732");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "0fdc36c3-b88b-58e5-9eab-c8d106039a18");
       } catch (e2) {
       }
     }();
@@ -94291,14 +94515,14 @@ var require_registry_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
 var require_local_changes_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "518b5142-2fac-5a4d-9714-af36c0a99150");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "61d58f2a-161c-5982-b710-d087b379dde9");
       } catch (e2) {
       }
     }();
@@ -94323,14 +94547,14 @@ var require_local_changes_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/index.js
 var require_dist13 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.322.0/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "6c4ef2a6-18e7-583a-84e0-b1afba7b097c");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "9c3ae004-59fb-5a1d-af35-eafa532586d8");
       } catch (e2) {
       }
     }();
@@ -94355,10 +94579,22 @@ var require_dist13 = __commonJS({
           __createBinding2(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = exports2.getIsLocked = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunReplayDiffs = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = exports2.getPrDescriptionForTestRun = exports2.getReplayDiff = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.createCrawlerTestRun = exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = exports2.trackAgentFeatureUsage = exports2.submitAgentFeedback = exports2.getSessions = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.getTestRunForCommit = exports2.getScreenshotDomDiff = exports2.getDiffComments = exports2.getTestRunDiffsSummaryCounts = exports2.getTestRunDiffsSummary = exports2.getStructuredSessionData = exports2.shouldDefaultToExecutedRanges = void 0;
-    exports2.listAgenticRepoTree = exports2.getAgenticFileChanges = exports2.searchAgenticRepoCode = exports2.getAgenticRepoFile = exports2.getAgenticChangedFiles = exports2.getAgenticRunCoverage = exports2.requestAgenticArtifactUploads = exports2.reportAgenticRunResult = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putFileToSignedUrl = exports2.getProxyAgent = exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.migrateLegacySelectedProjectIfPresent = exports2.resolveDefaultProjectId = exports2.getStoredOAuthTokens = exports2.clearOAuthTokens = exports2.getValidAccessToken = exports2.performDeviceLogin = exports2.performOAuthLogin = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.declareClientAppInfo = exports2.createClientWithOAuth = exports2.createClient = exports2.readFileBasedToken = exports2.getAuthToken = exports2.getApiToken = void 0;
-    exports2.getRelevantSessions = exports2.MISSING_AUTH_GUIDANCE = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isFetchError = exports2.isAuthFailureStatus = exports2.getRegistryAuth = exports2.requestCatalogMaintenanceProposalUpload = exports2.launchCatalogMaintenance = exports2.getCatalogMaintenanceWorkflowStatus = exports2.releaseDiscoveryRepoLease = exports2.heartbeatDiscoveryRepoLease = exports2.getDiscoveryRepoLeaseStatus = exports2.acquireDiscoveryRepoLease = exports2.listDiscoveryRepoTree = exports2.searchDiscoveryRepoCode = exports2.getDiscoveryRepoFile = exports2.isAgenticRunCancelled = exports2.releaseAgenticRepoLease = exports2.heartbeatAgenticRepoLease = exports2.getAgenticRepoLeaseStatus = exports2.acquireAgenticRepoLease = void 0;
+    exports2.executeSecureTunnelTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = exports2.getPrDescriptionForTestRun = exports2.getReplayDiff = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.createCrawlerTestRun = exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = exports2.trackAgentFeatureUsage = exports2.submitAgentFeedback = exports2.getSessions = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = exports2.completeBaseRun = exports2.getTestRunForCommit = exports2.getScreenshotDomDiff = exports2.ignoreDiff = exports2.rejectDiff = exports2.replyToDiffComment = exports2.createDiffComment = exports2.getDiffComments = exports2.getTestRunDiffsSummaryCounts = exports2.getTestRunDiffsSummary = exports2.getStructuredSessionData = exports2.shouldDefaultToExecutedRanges = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = void 0;
+    exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putFileToSignedUrl = exports2.getProxyAgent = exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.migrateLegacySelectedProjectIfPresent = exports2.resolveDefaultProjectId = exports2.getStoredOAuthTokens = exports2.clearOAuthTokens = exports2.getValidAccessToken = exports2.performDeviceLogin = exports2.performOAuthLogin = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.declareClientAppInfo = exports2.createClientWithOAuth = exports2.createClient = exports2.readFileBasedToken = exports2.getAuthToken = exports2.getApiToken = exports2.TEST_RUN_STATUS_CLIENT_VERSION = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = exports2.getIsLocked = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunReplayDiffs = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = void 0;
+    exports2.getRelevantSessions = exports2.MISSING_AUTH_GUIDANCE = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isFetchError = exports2.isAuthFailureStatus = exports2.getRegistryAuth = exports2.requestCatalogMaintenanceProposalUpload = exports2.launchCatalogMaintenance = exports2.getCatalogMaintenanceWorkflowStatus = exports2.releaseDiscoveryRepoLease = exports2.heartbeatDiscoveryRepoLease = exports2.getDiscoveryRepoLeaseStatus = exports2.acquireDiscoveryRepoLease = exports2.listDiscoveryRepoTree = exports2.searchDiscoveryRepoCode = exports2.getDiscoveryRepoFile = exports2.requestAgenticProgressUpload = exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.isAgenticRunCancelled = exports2.releaseAgenticRepoLease = exports2.heartbeatAgenticRepoLease = exports2.getAgenticRepoLeaseStatus = exports2.acquireAgenticRepoLease = exports2.listAgenticRepoSourceFiles = exports2.listAgenticRepoTree = exports2.getAgenticFileChanges = exports2.searchAgenticRepoCode = exports2.getAgenticRepoFile = exports2.getAgenticChangedFiles = exports2.getAgenticRunCoverage = exports2.requestAgenticTestcasesUpload = exports2.requestAgenticArtifactUploads = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = void 0;
     var agent_api_1 = require_agent_api();
+    Object.defineProperty(exports2, "getAgentWhoami", { enumerable: true, get: function() {
+      return agent_api_1.getAgentWhoami;
+    } });
+    Object.defineProperty(exports2, "getAgentProjects", { enumerable: true, get: function() {
+      return agent_api_1.getAgentProjects;
+    } });
+    Object.defineProperty(exports2, "getAgentCurrentProject", { enumerable: true, get: function() {
+      return agent_api_1.getAgentCurrentProject;
+    } });
+    Object.defineProperty(exports2, "setAgentCurrentProject", { enumerable: true, get: function() {
+      return agent_api_1.setAgentCurrentProject;
+    } });
     Object.defineProperty(exports2, "shouldDefaultToExecutedRanges", { enumerable: true, get: function() {
       return agent_api_1.shouldDefaultToExecutedRanges;
     } });
@@ -94374,11 +94610,32 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "getDiffComments", { enumerable: true, get: function() {
       return agent_api_1.getDiffComments;
     } });
+    Object.defineProperty(exports2, "createDiffComment", { enumerable: true, get: function() {
+      return agent_api_1.createDiffComment;
+    } });
+    Object.defineProperty(exports2, "replyToDiffComment", { enumerable: true, get: function() {
+      return agent_api_1.replyToDiffComment;
+    } });
+    Object.defineProperty(exports2, "rejectDiff", { enumerable: true, get: function() {
+      return agent_api_1.rejectDiff;
+    } });
+    Object.defineProperty(exports2, "ignoreDiff", { enumerable: true, get: function() {
+      return agent_api_1.ignoreDiff;
+    } });
     Object.defineProperty(exports2, "getScreenshotDomDiff", { enumerable: true, get: function() {
       return agent_api_1.getScreenshotDomDiff;
     } });
     Object.defineProperty(exports2, "getTestRunForCommit", { enumerable: true, get: function() {
       return agent_api_1.getTestRunForCommit;
+    } });
+    Object.defineProperty(exports2, "completeBaseRun", { enumerable: true, get: function() {
+      return agent_api_1.completeBaseRun;
+    } });
+    Object.defineProperty(exports2, "getTestRunCheckReport", { enumerable: true, get: function() {
+      return agent_api_1.getTestRunCheckReport;
+    } });
+    Object.defineProperty(exports2, "getTestRunCheckAvailableIds", { enumerable: true, get: function() {
+      return agent_api_1.getTestRunCheckAvailableIds;
     } });
     Object.defineProperty(exports2, "getTestRunJsCoverage", { enumerable: true, get: function() {
       return agent_api_1.getTestRunJsCoverage;
@@ -94521,6 +94778,10 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "IN_PROGRESS_TEST_RUN_STATUS", { enumerable: true, get: function() {
       return test_run_constants_1.IN_PROGRESS_TEST_RUN_STATUS;
     } });
+    var test_run_status_client_version_1 = require_test_run_status_client_version();
+    Object.defineProperty(exports2, "TEST_RUN_STATUS_CLIENT_VERSION", { enumerable: true, get: function() {
+      return test_run_status_client_version_1.TEST_RUN_STATUS_CLIENT_VERSION;
+    } });
     var api_token_utils_1 = require_api_token_utils();
     Object.defineProperty(exports2, "getApiToken", { enumerable: true, get: function() {
       return api_token_utils_1.getApiToken;
@@ -94661,11 +94922,23 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "completeAgenticSessionGeneration", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.completeAgenticSessionGeneration;
     } });
-    Object.defineProperty(exports2, "reportAgenticRunResult", { enumerable: true, get: function() {
-      return agentic_session_generation_api_1.reportAgenticRunResult;
+    Object.defineProperty(exports2, "AGENTIC_RUN_NOT_TESTABLE_CATEGORIES", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES;
+    } });
+    Object.defineProperty(exports2, "requestAgenticResultUpload", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.requestAgenticResultUpload;
+    } });
+    Object.defineProperty(exports2, "completeAgenticRunResult", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.completeAgenticRunResult;
+    } });
+    Object.defineProperty(exports2, "reportAgenticRunFailure", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.reportAgenticRunFailure;
     } });
     Object.defineProperty(exports2, "requestAgenticArtifactUploads", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.requestAgenticArtifactUploads;
+    } });
+    Object.defineProperty(exports2, "requestAgenticTestcasesUpload", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.requestAgenticTestcasesUpload;
     } });
     Object.defineProperty(exports2, "getAgenticRunCoverage", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.getAgenticRunCoverage;
@@ -94685,6 +94958,9 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "listAgenticRepoTree", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.listAgenticRepoTree;
     } });
+    Object.defineProperty(exports2, "listAgenticRepoSourceFiles", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.listAgenticRepoSourceFiles;
+    } });
     Object.defineProperty(exports2, "acquireAgenticRepoLease", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.acquireAgenticRepoLease;
     } });
@@ -94699,6 +94975,15 @@ var require_dist13 = __commonJS({
     } });
     Object.defineProperty(exports2, "isAgenticRunCancelled", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.isAgenticRunCancelled;
+    } });
+    Object.defineProperty(exports2, "searchRecordedRequests", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.searchRecordedRequests;
+    } });
+    Object.defineProperty(exports2, "getRecordedRequest", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.getRecordedRequest;
+    } });
+    Object.defineProperty(exports2, "requestAgenticProgressUpload", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.requestAgenticProgressUpload;
     } });
     var session_transform_discovery_api_1 = require_session_transform_discovery_api();
     Object.defineProperty(exports2, "getDiscoveryRepoFile", { enumerable: true, get: function() {
