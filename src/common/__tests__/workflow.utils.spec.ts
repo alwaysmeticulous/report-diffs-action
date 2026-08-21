@@ -106,6 +106,60 @@ describe("startNewWorkflowRun", () => {
     });
   });
 
+  it("keeps pinning when a strict server refuses the run-id request with 422", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2024-05-01T12:00:00Z"));
+
+    // A 422 that says nothing about inputs is the body field being refused, not the workflow
+    // declining to be pinned — dropping the pinning here would build the wrong commit.
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockRejectedValueOnce(
+        Object.assign(new Error("Invalid request body"), { status: 422 })
+      )
+      .mockResolvedValue({ status: 204 });
+    const listWorkflowRuns = vi.fn().mockResolvedValue({
+      data: {
+        workflow_runs: [{ id: 8, created_at: "2024-05-01T11:59:59Z" }],
+      },
+    });
+
+    const resultPromise = startRun(
+      buildOctokit({ createWorkflowDispatch, listWorkflowRuns })
+    );
+    await vi.advanceTimersByTimeAsync(LISTING_AFTER_DISPATCH_DELAY_MS);
+
+    expect(createWorkflowDispatch).toHaveBeenCalledTimes(2);
+    expect(createWorkflowDispatch.mock.calls[1][0]).not.toHaveProperty(
+      "return_run_details"
+    );
+    expect(createWorkflowDispatch.mock.calls[1][0]).toHaveProperty("inputs", {
+      [COMMIT_SHA_WORKFLOW_INPUT]: BASE_SHA,
+    });
+    expect(await resultPromise).toEqual({
+      type: "started",
+      workflowRun: expect.objectContaining({ workflowRunId: 8 }),
+    });
+  });
+
+  it("does not retry when the 422 is the workflow declining the input", async () => {
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockRejectedValue(
+        Object.assign(
+          new Error(
+            `Unexpected inputs provided: ["${COMMIT_SHA_WORKFLOW_INPUT}"]`
+          ),
+          { status: 422 }
+        )
+      );
+
+    const result = await startRun(buildOctokit({ createWorkflowDispatch }));
+
+    expect(createWorkflowDispatch).toHaveBeenCalledTimes(1);
+    expect(result).toEqual({ type: "commit-pinning-unsupported" });
+  });
+
   it("sends no inputs when not pinning", async () => {
     const createWorkflowDispatch = vi
       .fn()

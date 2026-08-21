@@ -17,6 +17,9 @@ const DISPATCH_CLOCK_SKEW_ALLOWANCE = Duration.fromObject({ seconds: 30 });
 
 const MAX_DISPATCHED_RUNS_TO_SEARCH = 20;
 
+// How GitHub refuses a dispatch that names an input the workflow doesn't declare.
+const UNEXPECTED_INPUTS_MESSAGE = "Unexpected inputs provided";
+
 const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL = Duration.fromObject({ seconds: 5 });
 
 const WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL = Duration.fromObject({ hours: 1 });
@@ -115,7 +118,7 @@ export const startNewWorkflowRun = async ({
     const status = (err as { status?: number } | null)?.status;
     if (
       pinCommitSha &&
-      (status === 422 || message.includes("Unexpected inputs provided"))
+      (status === 422 || message.includes(UNEXPECTED_INPUTS_MESSAGE))
     ) {
       logger.debug(
         `The Meticulous workflow on '${ref}' did not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input,` +
@@ -204,8 +207,8 @@ export const startNewWorkflowRun = async ({
  * `return_run_details` is what makes it say: without that flag the endpoint answers an empty
  * `204` and the run has to be picked out of a listing afterwards, which is guesswork whenever
  * more than one dispatch lands at once. GitHub Enterprise Server 3.20 and earlier reject
- * unknown body fields outright, so a `400` sends us round again without the flag — back to
- * guesswork, but that beats failing a dispatch that would otherwise have worked.
+ * unknown body fields, so a refusal sends us round again without the flag — back to guesswork,
+ * but that beats failing a dispatch that would otherwise have worked.
  */
 const dispatchAndReadRunId = async ({
   owner,
@@ -244,7 +247,7 @@ const dispatchAndReadRunId = async ({
       await octokit.rest.actions.createWorkflowDispatch(withRunDetails)
     );
   } catch (err: unknown) {
-    if ((err as { status?: number } | null)?.status !== 400) {
+    if (!isUnknownBodyFieldRefusal(err)) {
       throw err;
     }
     logger.debug(
@@ -254,6 +257,24 @@ const dispatchAndReadRunId = async ({
 
   await octokit.rest.actions.createWorkflowDispatch(dispatch);
   return undefined;
+};
+
+/**
+ * Whether a dispatch was refused for carrying `return_run_details`, rather than for naming a
+ * workflow input the workflow doesn't declare.
+ *
+ * They have to be told apart by message, not status. A server that validates the body strictly
+ * answers `400` on some versions and `422` on others, and `422` is also what an undeclared
+ * input produces. Going by status alone, a strict server would look like a workflow that can't
+ * be pinned, and we would drop the commit pinning that workflow was perfectly willing to honour.
+ */
+const isUnknownBodyFieldRefusal = (err: unknown): boolean => {
+  const status = (err as { status?: number } | null)?.status;
+  if (status === 400) {
+    return true;
+  }
+  const message = (err as { message?: string } | null)?.message ?? "";
+  return status === 422 && !message.includes(UNEXPECTED_INPUTS_MESSAGE);
 };
 
 /**
