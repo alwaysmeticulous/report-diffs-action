@@ -106,6 +106,23 @@ describe("startNewWorkflowRun", () => {
     });
   });
 
+  it("carries the run's url through, which the caller logs to click into", async () => {
+    const createWorkflowDispatch = vi.fn().mockResolvedValue({
+      data: {
+        workflow_run_id: 42,
+        html_url: "https://github.com/o/r/actions/runs/42",
+      },
+    });
+
+    expect(await startRun(buildOctokit({ createWorkflowDispatch }))).toEqual({
+      type: "started",
+      workflowRun: {
+        workflowRunId: 42,
+        html_url: "https://github.com/o/r/actions/runs/42",
+      },
+    });
+  });
+
   it("keeps pinning when a strict server refuses the run-id request with 422", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2024-05-01T12:00:00Z"));

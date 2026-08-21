@@ -253,7 +253,11 @@ const waitOnWorkflowRun = async (
     };
   }
 
-  logger.info(`Waiting on workflow run: ${workflowRun.html_url}`);
+  logger.info(
+    `Waiting on workflow run: ${
+      workflowRun.html_url ?? workflowRun.workflowRunId
+    }`
+  );
   const waitStartMs = Date.now();
   await waitForWorkflowCompletionAndThrowIfFailed({
     owner,

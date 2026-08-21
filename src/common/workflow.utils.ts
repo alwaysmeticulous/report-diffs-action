@@ -96,10 +96,10 @@ export const startNewWorkflowRun = async ({
   logger: log.Logger;
 }): Promise<StartWorkflowRunResult> => {
   const dispatchedAfter = DateTime.utc().minus(DISPATCH_CLOCK_SKEW_ALLOWANCE);
-  let dispatchedRunId: number | undefined;
+  let dispatchedRun: WorkflowRunHandle | undefined;
 
   try {
-    dispatchedRunId = await dispatchAndReadRunId({
+    dispatchedRun = await dispatchAndReadRun({
       owner,
       repo,
       workflowId,
@@ -167,11 +167,8 @@ export const startNewWorkflowRun = async ({
     return { type: "failed" };
   }
 
-  if (dispatchedRunId != null) {
-    return {
-      type: "started",
-      workflowRun: { workflowRunId: dispatchedRunId },
-    };
+  if (dispatchedRun != null) {
+    return { type: "started", workflowRun: dispatchedRun };
   }
 
   // Wait before listing again
@@ -202,7 +199,7 @@ export const startNewWorkflowRun = async ({
 };
 
 /**
- * Dispatches the workflow and reports the id of the run it created, where the API will say.
+ * Dispatches the workflow and reports the run it created, where the API will say.
  *
  * `return_run_details` is what makes it say: without that flag the endpoint answers an empty
  * `204` and the run has to be picked out of a listing afterwards, which is guesswork whenever
@@ -210,7 +207,7 @@ export const startNewWorkflowRun = async ({
  * unknown body fields, so a refusal sends us round again without the flag — back to guesswork,
  * but that beats failing a dispatch that would otherwise have worked.
  */
-const dispatchAndReadRunId = async ({
+const dispatchAndReadRun = async ({
   owner,
   repo,
   workflowId,
@@ -228,7 +225,7 @@ const dispatchAndReadRunId = async ({
   pinCommitSha: boolean;
   octokit: InstanceType<typeof GitHub>;
   logger: log.Logger;
-}): Promise<number | undefined> => {
+}): Promise<WorkflowRunHandle | undefined> => {
   const dispatch = {
     owner,
     repo,
@@ -243,7 +240,7 @@ const dispatchAndReadRunId = async ({
     // Assigned before the call so that `return_run_details`, which postdates the
     // @octokit/openapi-types we pin, isn't rejected as an excess property.
     const withRunDetails = { ...dispatch, return_run_details: true };
-    return readDispatchedWorkflowRunId(
+    return readDispatchedWorkflowRun(
       await octokit.rest.actions.createWorkflowDispatch(withRunDetails)
     );
   } catch (err: unknown) {
@@ -278,14 +275,28 @@ const isUnknownBodyFieldRefusal = (err: unknown): boolean => {
 };
 
 /**
- * Reads the run id out of a dispatch response. Only there when the request asked for it with
+ * Reads the run out of a dispatch response. Only there when the request asked for it with
  * `return_run_details` and the API honoured it; otherwise the response is an empty `204`.
+ *
+ * The `html_url` comes along because the handle is logged for the user to click through to,
+ * and this path never lists the run, so this response is the only chance to learn it.
  */
-const readDispatchedWorkflowRunId = (response: unknown): number | undefined => {
-  const runId = (
-    response as { data?: { workflow_run_id?: unknown } } | null | undefined
-  )?.data?.workflow_run_id;
-  return typeof runId === "number" ? runId : undefined;
+const readDispatchedWorkflowRun = (
+  response: unknown
+): WorkflowRunHandle | undefined => {
+  const data = (
+    response as
+      | { data?: { workflow_run_id?: unknown; html_url?: unknown } }
+      | null
+      | undefined
+  )?.data;
+  if (typeof data?.workflow_run_id !== "number") {
+    return undefined;
+  }
+  return {
+    workflowRunId: data.workflow_run_id,
+    ...(typeof data.html_url === "string" ? { html_url: data.html_url } : {}),
+  };
 };
 
 const findRecentlyDispatchedRun = async ({
