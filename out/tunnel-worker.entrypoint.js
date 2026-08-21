@@ -33,9 +33,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/defer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/defer.js
 var require_defer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -326,9 +326,9 @@ var require_loglevel = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
 var require_console_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -405,9 +405,9 @@ var require_console_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
 var require_local_data = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -7262,9 +7262,9 @@ var require_luxon = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
 var require_logs = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -7288,9 +7288,9 @@ var require_logs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
 var require_debug_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -7390,19 +7390,19 @@ var require_debug_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/constants.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/constants.js
 var require_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "3032fcd6-c8a6-5691-9bb6-25916e985749");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "4b64323f-2bb1-5053-9ae8-4f37a4cce1e9");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.COMMON_CHROMIUM_FLAGS = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = void 0;
+    exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = void 0;
     exports2.BASE_SNIPPETS_URL = "https://snippet.meticulous.ai/";
     exports2.IS_METICULOUS_SUPER_USER = !!process.env["METICULOUS_SUPER_USER"];
     exports2.DEFAULT_EXECUTION_OPTIONS = {
@@ -7429,61 +7429,12 @@ var require_constants = __commonJS({
         diffPixelThreshold: 0.01
       }
     };
-    exports2.COMMON_CHROMIUM_FLAGS = [
-      // WebFontsCacheAwareTimeoutAdaption - font request interception caching might trigger
-      // a double requestPaused CDP event which triggers "request" Puppeteer event to be emitted twice
-      // which breaks tracking of in-flight requests. See https://bugs.chromium.org/p/chromium/issues/detail?id=1196004 and
-      // https://github.com/puppeteer/puppeteer/issues/7475.
-      "--disable-features=Translate,WebFontsCacheAwareTimeoutAdaption",
-      // Disable task throttling of timer tasks from background pages.
-      "--disable-background-timer-throttling",
-      // Prevent renderer process backgrounding when set.
-      "--disable-renderer-backgrounding",
-      // Disable backgrounding renders for occluded windows. Done for tests to avoid
-      // nondeterministic behavior.
-      "--disable-backgrounding-occluded-windows",
-      // Disables crash reporting. ↪
-      "--disable-breakpad",
-      "--disable-client-side-phishing-detection",
-      // Disables installation of default apps on first run, e.g. gmail
-      "--disable-default-apps",
-      // The /dev/shm partition is too small in certain VM environments, causing
-      // Chrome to fail or crash (see http://crbug.com/715363). Use this flag to
-      // work-around this issue (a temporary directory will always be used to create
-      // anonymous shared memory files).
-      "--disable-dev-shm-usage",
-      "--disable-extensions",
-      // Suppresses hang monitor dialogs in renderer processes.
-      // This may allow slow unload handlers on a page to prevent the tab from closing,
-      // but the Task Manager can be used to terminate the offending process in this case.
-      "--disable-hang-monitor",
-      // Disables the IPC flooding protection.
-      // It is activated by default. Some javascript functions can be used to flood
-      // the browser process with IPC. This protection limits the rate at which they
-      // can be used.
-      "--disable-ipc-flooding-protection",
-      // Disables the Web Notification and the Push APIs.
-      "--disable-notifications",
-      // Normally when the user attempts to navigate to a page that was the result of a post
-      // we prompt to make sure they want to. This switch may be used to disable that check.
-      "--disable-prompt-on-repost",
-      "--disable-sync",
-      // Skip First Run tasks, like importing history or bookmarks.
-      // See https://www.chromium.org/developers/design-documents/first-run-customizations/
-      "--no-first-run",
-      // Disable image animations (including SVG animations).
-      // See https://chromium.googlesource.com/chromium/src/+/23d6a478c76d5e31c8bb47fa31bd53f619b536bd/third_party/WebKit/Source/platform/graphics/ImageAnimationPolicy.h
-      "--blink-settings=imageAnimationPolicy=2",
-      // Disable smooth scrolling, since this can result in flakes if screenshot is taken mid-scroll
-      // See https://github.com/alwaysmeticulous/meticulous/pull/1360 for more details
-      "--disable-smooth-scrolling"
-    ];
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
 var require_version_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -7509,9 +7460,9 @@ var require_version_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
 var require_commit_sha_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -7707,9 +7658,9 @@ var require_commit_sha_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js
 var require_error_code_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -7741,14 +7692,14 @@ var require_error_code_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
 var require_http_retry_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "727322cf-ab15-5eaf-8ab8-a374436b02d3");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "5d6224ca-13b5-55e5-9114-57bafa5d1ccb");
       } catch (e2) {
       }
     }();
@@ -7836,7 +7787,7 @@ var require_http_retry_utils = __commonJS({
               retryAfterMs: (0, exports2.getRetryAfterMs)(error)
             });
             if (logger) {
-              logger.warn(`Operation failed, retrying in ${Math.round(delay)}ms (attempt ${attempt + 2} of ${maxRetries + 1})`);
+              logger.warn(`Operation failed, retrying in ${Math.round(delay)}ms (attempt ${attempt + 2} of ${maxRetries + 1}): ${describeRetriedError(error)}`);
             }
             await new Promise((resolve5) => setTimeout(resolve5, delay));
           } else {
@@ -7847,6 +7798,7 @@ var require_http_retry_utils = __commonJS({
       throw lastError;
     };
     exports2.executeWithRetry = executeWithRetry;
+    var describeRetriedError = (error) => error instanceof Error ? error.message : String(error);
   }
 });
 
@@ -26421,9 +26373,9 @@ var require_undici = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js
 var require_fetch_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -32417,9 +32369,9 @@ var require_util9 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/address-error.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/address-error.js
 var require_address_error = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/address-error.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/address-error.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.AddressError = void 0;
@@ -32434,15 +32386,16 @@ var require_address_error = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/common.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/common.js
 var require_common2 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/common.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/common.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.isInSubnet = isInSubnet;
     exports2.isHostInSubnet = isHostInSubnet;
     exports2.isCorrect = isCorrect;
     exports2.prefixLengthFromMask = prefixLengthFromMask;
+    exports2.assertByteArray = assertByteArray;
     exports2.numberToPaddedHex = numberToPaddedHex;
     exports2.stringToPaddedHex = stringToPaddedHex;
     exports2.testBit = testBit;
@@ -32457,7 +32410,7 @@ var require_common2 = __commonJS({
       return this.mask(address.subnetMask) === address.mask();
     }
     function isCorrect(defaultBits) {
-      return function() {
+      return function isCorrectForm() {
         if (this.addressMinusSuffix !== this.correctForm()) {
           return false;
         }
@@ -32481,6 +32434,16 @@ var require_common2 = __commonJS({
       }
       return firstZero;
     }
+    function assertByteArray(bytes, byteCount, family, minimum) {
+      if (bytes.length !== byteCount) {
+        throw new address_error_1.AddressError(`${family} addresses require exactly ${byteCount} bytes`);
+      }
+      for (let i = 0; i < bytes.length; i++) {
+        if (!Number.isInteger(bytes[i]) || bytes[i] < minimum || bytes[i] > 255) {
+          throw new address_error_1.AddressError(`All bytes must be integers between ${minimum} and 255`);
+        }
+      }
+    }
     function numberToPaddedHex(number) {
       return number.toString(16).padStart(2, "0");
     }
@@ -32498,9 +32461,9 @@ var require_common2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v4/constants.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v4/constants.js
 var require_constants9 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v4/constants.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v4/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RE_SUBNET_STRING = exports2.RE_ADDRESS = exports2.GROUPS = exports2.BITS = void 0;
@@ -32511,9 +32474,9 @@ var require_constants9 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv4.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ipv4.js
 var require_ipv4 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv4.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ipv4.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -32590,7 +32553,7 @@ var require_ipv4 = __commonJS({
         try {
           new _Address4(address);
           return true;
-        } catch (e) {
+        } catch {
           return false;
         }
       }
@@ -32840,31 +32803,32 @@ var require_ipv4 = __commonJS({
        * @returns {Address4}
        */
       static fromBigInt(bigInt) {
-        if (bigInt < 0n || bigInt > 0xffffffffn) {
+        if (bigInt < BigInt(0) || bigInt > BigInt(4294967295)) {
           throw new address_error_1.AddressError("IPv4 BigInt must be in the range 0 to 2**32 - 1");
         }
         return _Address4.fromHex(bigInt.toString(16).padStart(8, "0"));
       }
       /**
-       * Convert a byte array to an Address4 object.
+       * Convert a byte array to an Address4 object. Throws `AddressError` unless
+       * given exactly 4 integers from 0 to 255. Signed bytes are rejected, so
+       * this differs from `Address6.fromByteArray`, which folds them; the two
+       * contracts converge on this stricter form in the next major version.
        *
        * To convert from a Node.js `Buffer`, spread it: `Address4.fromByteArray([...buf])`.
        * @param {Array<number>} bytes - an array of 4 bytes (0-255)
        * @returns {Address4}
        */
       static fromByteArray(bytes) {
-        if (bytes.length !== 4) {
-          throw new address_error_1.AddressError("IPv4 addresses require exactly 4 bytes");
-        }
-        for (let i = 0; i < bytes.length; i++) {
-          if (!Number.isInteger(bytes[i]) || bytes[i] < 0 || bytes[i] > 255) {
-            throw new address_error_1.AddressError("All bytes must be integers between 0 and 255");
-          }
-        }
+        common.assertByteArray(bytes, 4, "IPv4", 0);
         return this.fromUnsignedByteArray(bytes);
       }
       /**
-       * Convert an unsigned byte array to an Address4 object
+       * Convert an unsigned byte array to an Address4 object. Throws
+       * `AddressError` unless given exactly 4 bytes, and rejects values outside
+       * 0 to 255 when parsing the resulting address.
+       *
+       * To convert from a Node.js `Buffer`, spread it:
+       * `Address4.fromUnsignedByteArray([...buf])`.
        * @param {Array<number>} bytes - an array of 4 unsigned bytes (0-255)
        * @returns {Address4}
        */
@@ -32894,7 +32858,8 @@ var require_ipv4 = __commonJS({
         return this.binaryZeroPad().slice(start, end);
       }
       /**
-       * Return the reversed ip6.arpa form of the address
+       * Return the reversed in-addr.arpa form of the address, e.g.
+       * `42.2.0.192.in-addr.arpa.` for `192.0.2.42`.
        * @param {Object} options
        * @param {boolean} options.omitSuffix - omit the "in-addr.arpa" suffix
        * @returns {String}
@@ -32969,7 +32934,12 @@ var require_ipv4 = __commonJS({
         return this._binaryZeroPad;
       }
       /**
-       * Groups an IPv4 address for inclusion at the end of an IPv6 address
+       * Groups an IPv4 address for inclusion at the end of an IPv6 address.
+       *
+       * Returns an HTML fragment: each half of the address is wrapped in a
+       * `<span>` carrying the group classes an address-inspector UI hovers on.
+       * The address content is HTML-escaped; anything you concatenate around it
+       * is your responsibility.
        * @returns {String}
        */
       groupForV6() {
@@ -32992,9 +32962,9 @@ var require_ipv4 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/constants.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/constants.js
 var require_constants10 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/constants.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RE_URL_WITH_PORT = exports2.RE_URL = exports2.RE_ZONE_STRING = exports2.RE_SUBNET_STRING = exports2.RE_BAD_ADDRESS = exports2.RE_BAD_CHARACTERS = exports2.TYPES = exports2.SCOPES = exports2.GROUPS = exports2.BITS = void 0;
@@ -33049,9 +33019,9 @@ var require_constants10 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/helpers.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/helpers.js
 var require_helpers2 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/helpers.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/helpers.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.escapeHtml = escapeHtml;
@@ -33088,9 +33058,9 @@ var require_helpers2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/regular-expressions.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/regular-expressions.js
 var require_regular_expressions = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/v6/regular-expressions.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/v6/regular-expressions.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -33185,9 +33155,9 @@ var require_regular_expressions = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv6.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ipv6.js
 var require_ipv6 = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ipv6.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ipv6.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -33317,7 +33287,7 @@ var require_ipv6 = __commonJS({
         try {
           new _Address6(address);
           return true;
-        } catch (e) {
+        } catch {
           return false;
         }
       }
@@ -33332,7 +33302,7 @@ var require_ipv6 = __commonJS({
        * address.correctForm(); // '::e8:d4a5:1000'
        */
       static fromBigInt(bigInt) {
-        if (bigInt < 0n || bigInt > (1n << BigInt(constants6.BITS)) - 1n) {
+        if (bigInt < BigInt(0) || bigInt > (BigInt(1) << BigInt(constants6.BITS)) - BigInt(1)) {
           throw new address_error_1.AddressError("IPv6 BigInt must be in the range 0 to 2**128 - 1");
         }
         const hex = bigInt.toString(16).padStart(32, "0");
@@ -33353,31 +33323,27 @@ var require_ipv6 = __commonJS({
        * addressAndPort.port; // 8080
        */
       static fromURL(url) {
+        var _a2;
         let host;
         let port = null;
         let result;
+        let error;
         const stripped = url.replace(/^[a-z][a-z0-9+.-]*:\/\//i, "");
         if (stripped.indexOf("[") !== -1 && stripped.indexOf("]:") !== -1) {
+          error = "failed to parse address with port";
           result = constants6.RE_URL_WITH_PORT.exec(stripped);
           if (result === null) {
-            return {
-              error: "failed to parse address with port",
-              address: null,
-              port: null
-            };
+            return { error, address: null, port: null };
           }
           host = result[1];
           port = result[2];
         } else {
+          error = "failed to parse address from URL";
           result = constants6.RE_URL.exec(stripped);
           if (result === null) {
-            return {
-              error: "failed to parse address from URL",
-              address: null,
-              port: null
-            };
+            return { error, address: null, port: null };
           }
-          host = result[1] ?? result[2];
+          host = (_a2 = result[1]) !== null && _a2 !== void 0 ? _a2 : result[2];
         }
         if (port) {
           port = parseInt(port, 10);
@@ -33387,10 +33353,13 @@ var require_ipv6 = __commonJS({
         } else {
           port = null;
         }
-        return {
-          address: new _Address6(host),
-          port
-        };
+        let address;
+        try {
+          address = new _Address6(host);
+        } catch {
+          return { error, address: null, port: null };
+        }
+        return { address, port };
       }
       /**
        * Construct an `Address6` from an address and a hex subnet mask given as
@@ -33998,7 +33967,14 @@ var require_ipv6 = __commonJS({
           bits = prefixBits.slice(0, 96) + v4Bits;
         } else {
           const beforeU = 64 - pl;
-          bits = prefixBits.slice(0, pl) + v4Bits.slice(0, beforeU) + "00000000" + v4Bits.slice(beforeU) + "0".repeat(128 - 72 - (32 - beforeU));
+          bits = [
+            prefixBits.slice(0, pl),
+            v4Bits.slice(0, beforeU),
+            // Bits 64 to 71 are the reserved u octet and are always zero.
+            "00000000",
+            v4Bits.slice(beforeU),
+            "0".repeat(128 - 72 - (32 - beforeU))
+          ].join("");
         }
         const hex = BigInt(`0b${bits}`).toString(16).padStart(32, "0");
         const groups = [];
@@ -34064,19 +34040,28 @@ var require_ipv6 = __commonJS({
       /**
        * Convert a byte array to an Address6 object.
        *
+       * Accepts unsigned bytes (0 to 255) or signed bytes (-128 to 127, as an
+       * `Int8Array` or a Java `byte[]` holds them), folding signed values to their
+       * unsigned equivalent. Throws `AddressError` unless given exactly 16
+       * integers from -128 to 255.
+       *
        * To convert from a Node.js `Buffer`, spread it: `Address6.fromByteArray([...buf])`.
        * @returns {Address6}
        */
       static fromByteArray(bytes) {
+        common.assertByteArray(bytes, 16, "IPv6", -128);
         return this.fromUnsignedByteArray(bytes.map(unsignByte));
       }
       /**
        * Convert an unsigned byte array to an Address6 object.
        *
+       * Throws `AddressError` unless given exactly 16 integers from 0 to 255.
+       *
        * To convert from a Node.js `Buffer`, spread it: `Address6.fromUnsignedByteArray([...buf])`.
        * @returns {Address6}
        */
       static fromUnsignedByteArray(bytes) {
+        common.assertByteArray(bytes, 16, "IPv6", 0);
         const BYTE_MAX = BigInt("256");
         let result = BigInt("0");
         let multiplier = BigInt("1");
@@ -34310,7 +34295,12 @@ var require_ipv6 = __commonJS({
         return `<a href="${safeHref}">${safeForm}</a>`;
       }
       /**
-       * Groups an address
+       * Groups an address.
+       *
+       * Returns an HTML fragment: each group is wrapped in a `<span>` carrying
+       * the group classes an address-inspector UI hovers on. The address content
+       * is HTML-escaped; anything you concatenate around it is your
+       * responsibility.
        * @returns {String}
        */
       group() {
@@ -34407,9 +34397,9 @@ var require_ipv6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ip-address.js
+// node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ip-address.js
 var require_ip_address = __commonJS({
-  "node_modules/.pnpm/ip-address@10.3.1/node_modules/ip-address/dist/ip-address.js"(exports2) {
+  "node_modules/.pnpm/ip-address@10.5.0/node_modules/ip-address/dist/ip-address.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -71150,44 +71140,44 @@ var require_source = __commonJS({
   }
 });
 
-// node_modules/.pnpm/puppeteer-core@24.14.0/node_modules/puppeteer-core/lib/cjs/puppeteer/revisions.js
+// node_modules/.pnpm/puppeteer-core@24.42.0/node_modules/puppeteer-core/lib/cjs/puppeteer/revisions.js
 var require_revisions = __commonJS({
-  "node_modules/.pnpm/puppeteer-core@24.14.0/node_modules/puppeteer-core/lib/cjs/puppeteer/revisions.js"(exports2) {
+  "node_modules/.pnpm/puppeteer-core@24.42.0/node_modules/puppeteer-core/lib/cjs/puppeteer/revisions.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.PUPPETEER_REVISIONS = void 0;
     exports2.PUPPETEER_REVISIONS = Object.freeze({
-      chrome: "138.0.7204.157",
-      "chrome-headless-shell": "138.0.7204.157",
-      firefox: "stable_140.0.4"
+      chrome: "147.0.7727.57",
+      "chrome-headless-shell": "147.0.7727.57",
+      firefox: "stable_149.0.2"
     });
   }
 });
 
-// node_modules/.pnpm/puppeteer-core@24.14.0/node_modules/puppeteer-core/lib/esm/puppeteer/revisions.js
+// node_modules/.pnpm/puppeteer-core@24.42.0/node_modules/puppeteer-core/lib/esm/puppeteer/revisions.js
 var revisions_exports = {};
 __export(revisions_exports, {
   PUPPETEER_REVISIONS: () => PUPPETEER_REVISIONS
 });
 var PUPPETEER_REVISIONS;
 var init_revisions = __esm({
-  "node_modules/.pnpm/puppeteer-core@24.14.0/node_modules/puppeteer-core/lib/esm/puppeteer/revisions.js"() {
+  "node_modules/.pnpm/puppeteer-core@24.42.0/node_modules/puppeteer-core/lib/esm/puppeteer/revisions.js"() {
     PUPPETEER_REVISIONS = Object.freeze({
-      chrome: "138.0.7204.157",
-      "chrome-headless-shell": "138.0.7204.157",
-      firefox: "stable_140.0.4"
+      chrome: "147.0.7727.57",
+      "chrome-headless-shell": "147.0.7727.57",
+      firefox: "stable_149.0.2"
     });
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
 var require_browser_installer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "d47e5ec8-5122-5d6d-adb1-3d33d30c8188");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "5a584eb2-10c4-550c-99f8-ab87f1a9e8f3");
       } catch (e2) {
       }
     }();
@@ -71260,6 +71250,10 @@ var require_browser_installer = __commonJS({
     }
     var INSTALL_TIMEOUT_MS = 5 * 60 * 1e3;
     var MAX_INSTALL_RETRIES = 3;
+    function getOverrideChromeBuildId() {
+      const override = process.env.METICULOUS_CHROME_BUILD_ID?.trim();
+      return override ? override : void 0;
+    }
     function validateCacheDir(cacheDir) {
       if (!cacheDir)
         return void 0;
@@ -71297,13 +71291,27 @@ var require_browser_installer = __commonJS({
       }
       throw lastError || new Error("Browser installation failed after all retries");
     }
+    var getExplicitExecutablePath = () => {
+      const explicit = process.env.PUPPETEER_EXECUTABLE_PATH?.trim();
+      return explicit ? explicit : void 0;
+    };
     async function ensureBrowser(browserType = browsers_1.Browser.CHROME) {
+      const explicitExecutable = getExplicitExecutablePath();
+      if (explicitExecutable) {
+        if (!fs.existsSync(explicitExecutable)) {
+          throw new Error(`PUPPETEER_EXECUTABLE_PATH is set to ${explicitExecutable} but no file exists there. Ensure the browser package is installed, or unset the variable to allow automatic installation.`);
+        }
+        if (!process.env.METICULOUS_IS_CLOUD_REPLAY) {
+          console.log(chalk_1.default.gray(`Using browser from PUPPETEER_EXECUTABLE_PATH: ${explicitExecutable}`));
+        }
+        return explicitExecutable;
+      }
       const platform = (0, browsers_1.detectBrowserPlatform)();
       if (platform) {
         const validatedCacheDir2 = validateCacheDir(process.env.PUPPETEER_CACHE_DIR);
         const cacheDir2 = validatedCacheDir2 || path.join(os.homedir(), ".cache", "puppeteer");
         const revisions2 = await loadPuppeteerRevisions();
-        const expectedVersion2 = revisions2?.chrome;
+        const expectedVersion2 = getOverrideChromeBuildId() ?? revisions2?.chrome;
         try {
           const installedBrowsers = await (0, browsers_1.getInstalledBrowsers)({ cacheDir: cacheDir2 });
           const matchingBrowser = installedBrowsers.find((browser) => browser.browser === browserType && browser.platform === platform && (!expectedVersion2 || browser.buildId === expectedVersion2));
@@ -71331,11 +71339,13 @@ var require_browser_installer = __commonJS({
       }
       const validatedCacheDir = validateCacheDir(process.env.PUPPETEER_CACHE_DIR);
       const cacheDir = validatedCacheDir || path.join(os.homedir(), ".cache", "puppeteer");
+      fs.mkdirSync(cacheDir, { recursive: true });
       let buildId;
       const revisions = await loadPuppeteerRevisions();
-      const expectedVersion = revisions?.chrome;
+      const overrideBuildId = getOverrideChromeBuildId();
+      const expectedVersion = overrideBuildId ?? revisions?.chrome;
       if (expectedVersion) {
-        console.log(chalk_1.default.gray(`Using Chrome version from puppeteer-core: ${expectedVersion}`));
+        console.log(chalk_1.default.gray(overrideBuildId ? `Using Chrome version from METICULOUS_CHROME_BUILD_ID: ${expectedVersion}` : `Using Chrome version from puppeteer-core: ${expectedVersion}`));
         buildId = expectedVersion;
       } else {
         console.log(chalk_1.default.gray("Falling back to latest stable Chrome version"));
@@ -71375,19 +71385,19 @@ For more help, see: https://pptr.dev/troubleshooting`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/index.js
 var require_dist12 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@2.321.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.326.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
     "use strict";
     !function() {
       try {
         var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
-        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "d1afec68-6368-5d3c-b88a-f6200e33e20c");
+        n && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n] = "ac1638f6-d887-5ab6-a9f5-4fb7cb09d87e");
       } catch (e2) {
       }
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.ensureBrowser = exports2.meticulousFetch = exports2.getErrorCode = exports2.computeRetryDelayMs = exports2.getRetryAfterMs = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getStashCreateSha = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.COMMON_CHROMIUM_FLAGS = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.logProgress = exports2.logNotice = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
+    exports2.ensureBrowser = exports2.meticulousFetch = exports2.getErrorCode = exports2.computeRetryDelayMs = exports2.getRetryAfterMs = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getStashCreateSha = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.logProgress = exports2.logNotice = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
     var defer_1 = require_defer();
     Object.defineProperty(exports2, "defer", { enumerable: true, get: function() {
       return defer_1.defer;
@@ -71431,9 +71441,6 @@ var require_dist12 = __commonJS({
     } });
     Object.defineProperty(exports2, "BASE_SNIPPETS_URL", { enumerable: true, get: function() {
       return constants_1.BASE_SNIPPETS_URL;
-    } });
-    Object.defineProperty(exports2, "COMMON_CHROMIUM_FLAGS", { enumerable: true, get: function() {
-      return constants_1.COMMON_CHROMIUM_FLAGS;
     } });
     Object.defineProperty(exports2, "IS_METICULOUS_SUPER_USER", { enumerable: true, get: function() {
       return constants_1.IS_METICULOUS_SUPER_USER;
@@ -71492,9 +71499,9 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.321.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js
 var require_open_socket = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.321.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -72409,9 +72416,9 @@ var require_source2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.321.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js
 var require_get_local_address = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.321.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -72433,9 +72440,9 @@ var require_get_local_address = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.321.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js
 var require_tunnel_http2_cluster = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.321.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js"(exports2) {
     "use strict";
     !function() {
       try {
@@ -72649,7 +72656,7 @@ var require_tunnel_http2_cluster = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.321.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js
 !function() {
   try {
     var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n = new e.Error().stack;
