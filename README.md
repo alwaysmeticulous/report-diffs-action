@@ -7,13 +7,14 @@ A GitHub Action that performs visual regression testing by comparing screenshots
 ## Available Actions
 
 | Action                | Use Case                                                                                                             |
-|-----------------------|----------------------------------------------------------------------------------------------------------------------|
+| --------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `upload-assets`       | Upload built static assets for Meticulous to test **(recommended for static sites)**                                 |
 | `upload-container`    | Upload a built Docker image for Meticulous to host and test **(recommended for server-rendered apps, e.g. Next.js)** |
 | `cloud-compute`       | Test a locally-served app via a secure tunnel (last resort)                                                          |
 | `report-diffs-action` | Run tests in GitHub Actions runner (legacy)                                                                          |
 
 > **Recommendation:** Pick the first approach that fits your app:
+>
 > 1. **`upload-assets`** if your app can be served as a folder of static assets (HTML/JS/CSS).
 > 2. **`upload-container`** if your app is server-rendered (Next.js, Nuxt, etc.) — build a Docker image and let Meticulous host it.
 > 3. **`cloud-compute`** only if neither of the above work — it serves the app from CI and connects via a secure tunnel, which is more brittle.
@@ -26,7 +27,7 @@ A GitHub Action that performs visual regression testing by comparing screenshots
 - uses: alwaysmeticulous/report-diffs-action/upload-assets@v1
   with:
     api-token: ${{ secrets.METICULOUS_API_TOKEN }}
-    app-directory: "dist"  # Your build output directory
+    app-directory: "dist" # Your build output directory
 ```
 
 ### Server-Rendered Apps (Recommended)
@@ -54,6 +55,7 @@ Build a Docker image of your app and upload it. Meticulous runs the container in
 ```
 
 The container must:
+
 - Be built for `linux/amd64`
 - Listen on the `PORT` env var (or set `container-port` to the hard-coded port)
 - Respond `2xx` to the health-check endpoint (defaults to `GET /`, override with `container-health-check-endpoint`)
@@ -90,7 +92,11 @@ on:
   push:
     branches: [main]
   pull_request: {}
-  workflow_dispatch: {}  # Required for base commit comparison
+  workflow_dispatch:
+    inputs:
+      meticulous-commit-sha:
+        description: Commit Meticulous has asked this run to build. Defaults to the branch head.
+        required: false
 
 permissions:
   actions: write
@@ -98,7 +104,22 @@ permissions:
   issues: write
   pull-requests: write
   statuses: read
+
+jobs:
+  test:
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Hyphenated inputs need index syntax, and reading them off `github.event`
+          # keeps this valid on `push` and `pull_request` runs too.
+          ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
 ```
+
+`meticulous-commit-sha` lets Meticulous ask this workflow to build a specific commit when a
+PR's base hasn't been tested yet. Without it a dispatched run can only build whatever the base
+branch points at now, so the comparison is skipped when that branch has moved on, and always
+for stacked PRs, whose base commit no branch points at. Workflows that don't declare the input
+keep their existing behaviour.
 
 ## Documentation
 
