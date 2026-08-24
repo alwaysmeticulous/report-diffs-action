@@ -250841,6 +250841,7 @@ function friendlyDateTime(dateTimeish) {
 // src/common/constants.ts
 var METICULIOUS_APP_URL = "https://app.meticulous.ai";
 var DOCS_URL = `${METICULIOUS_APP_URL}/docs/github-actions-v2`;
+var COMMIT_SHA_WORKFLOW_INPUT = "meticulous-commit-sha";
 
 // src/common/error.utils.ts
 var isGithubPermissionsError = (error2) => {
@@ -250990,6 +250991,9 @@ var shortSha = (sha) => sha.slice(0, 7);
 
 // src/common/workflow.utils.ts
 var LISTING_AFTER_DISPATCH_DELAY = Duration.fromObject({ seconds: 10 });
+var DISPATCH_CLOCK_SKEW_ALLOWANCE = Duration.fromObject({ seconds: 30 });
+var MAX_DISPATCHED_RUNS_TO_SEARCH = 20;
+var UNEXPECTED_INPUTS_MESSAGE = "Unexpected inputs provided";
 var WORKFLOW_RUN_UPDATE_STATUS_INTERVAL = Duration.fromObject({ seconds: 5 });
 var WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL = Duration.fromObject({ hours: 1 });
 var GITHUB_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
@@ -251026,18 +251030,32 @@ var startNewWorkflowRun = async ({
   workflowId,
   ref,
   commitSha,
+  pinCommitSha,
   octokit,
   logger
 }) => {
+  const dispatchedAfter = DateTime.utc().minus(DISPATCH_CLOCK_SKEW_ALLOWANCE);
+  let dispatchedRun;
   try {
-    await octokit.rest.actions.createWorkflowDispatch({
+    dispatchedRun = await dispatchAndReadRun({
       owner,
       repo,
-      workflow_id: workflowId,
-      ref
+      workflowId,
+      ref,
+      commitSha,
+      pinCommitSha,
+      octokit,
+      logger
     });
   } catch (err) {
     const message = err?.message ?? "";
+    const status = err?.status;
+    if (pinCommitSha && (status === 422 || message.includes(UNEXPECTED_INPUTS_MESSAGE))) {
+      logger.debug(
+        `The Meticulous workflow on '${ref}' did not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input, so it can only build whatever that branch currently points at. ${message}`
+      );
+      return { type: "commit-pinning-unsupported" };
+    }
     if (message.includes("Workflow does not have 'workflow_dispatch' trigger")) {
       logger.error(
         `Could not trigger a workflow run on commit ${shortSha(
@@ -251045,7 +251063,7 @@ var startNewWorkflowRun = async ({
         )} of the base branch (${ref}) to compare against, because there was no Meticulous workflow with the 'workflow_dispatch' trigger on the ${ref} branch. Visual snapshots of the new flows will be taken, but no comparisons will be made. If you haven't merged the PR to setup Meticulous in Github Actions to the ${ref} branch yet then this is expected. Otherwise please check that Meticulous is running on the ${ref} branch, that it has a 'workflow_dispatch' trigger, and has the appropiate permissions. See ${DOCS_URL} for the correct setup.`
       );
       logger.debug(err);
-      return void 0;
+      return { type: "failed" };
     }
     if (isGithubPermissionsError(err)) {
       const detailedError = getDetailedGitHubPermissionsError(err, {
@@ -251058,7 +251076,7 @@ var startNewWorkflowRun = async ({
 ${detailedError}`
       );
       logger.debug(err);
-      return void 0;
+      return { type: "failed" };
     }
     logger.error(
       `Could not trigger a workflow run on commit ${shortSha(
@@ -251066,10 +251084,21 @@ ${detailedError}`
       )} of the base branch (${ref}) to compare against. Visual snapshots of the new flows will be taken, but no comparisons will be made. Please check that Meticulous is running on the ${ref} branch, that it has a 'workflow_dispatch' trigger, and has the appropiate permissions. See ${DOCS_URL} for the correct setup.`,
       err
     );
-    return void 0;
+    return { type: "failed" };
+  }
+  if (dispatchedRun != null) {
+    return { type: "started", workflowRun: dispatchedRun };
   }
   await delay(LISTING_AFTER_DISPATCH_DELAY);
-  const newRun = await getPendingWorkflowRun({
+  const workflowRun = pinCommitSha ? await findRecentlyDispatchedRun({
+    owner,
+    repo,
+    workflowId,
+    ref,
+    dispatchedAfter,
+    octokit,
+    logger
+  }) : await getPendingWorkflowRun({
     owner,
     repo,
     workflowId,
@@ -251077,7 +251106,94 @@ ${detailedError}`
     octokit,
     logger
   });
-  return newRun;
+  return { type: "started", workflowRun };
+};
+var dispatchAndReadRun = async ({
+  owner,
+  repo,
+  workflowId,
+  ref,
+  commitSha,
+  pinCommitSha,
+  octokit,
+  logger
+}) => {
+  const dispatch = {
+    owner,
+    repo,
+    workflow_id: workflowId,
+    ref,
+    ...pinCommitSha ? { inputs: { [COMMIT_SHA_WORKFLOW_INPUT]: commitSha } } : {}
+  };
+  try {
+    const withRunDetails = { ...dispatch, return_run_details: true };
+    return readDispatchedWorkflowRun(
+      await octokit.rest.actions.createWorkflowDispatch(withRunDetails)
+    );
+  } catch (err) {
+    if (!isUnknownBodyFieldRefusal(err)) {
+      throw err;
+    }
+    logger.debug(
+      `This GitHub API rejected 'return_run_details', so the run dispatched on '${ref}' will have to be searched for.`
+    );
+  }
+  await octokit.rest.actions.createWorkflowDispatch(dispatch);
+  return void 0;
+};
+var isUnknownBodyFieldRefusal = (err) => {
+  const status = err?.status;
+  if (status === 400) {
+    return true;
+  }
+  const message = err?.message ?? "";
+  return status === 422 && !message.includes(UNEXPECTED_INPUTS_MESSAGE);
+};
+var readDispatchedWorkflowRun = (response) => {
+  const data = response?.data;
+  if (typeof data?.workflow_run_id !== "number") {
+    return void 0;
+  }
+  return {
+    workflowRunId: data.workflow_run_id,
+    ...typeof data.html_url === "string" ? { html_url: data.html_url } : {}
+  };
+};
+var findRecentlyDispatchedRun = async ({
+  owner,
+  repo,
+  workflowId,
+  ref,
+  dispatchedAfter,
+  octokit,
+  logger
+}) => {
+  try {
+    const { data } = await octokit.rest.actions.listWorkflowRuns({
+      owner,
+      repo,
+      workflow_id: workflowId,
+      event: "workflow_dispatch",
+      branch: ref,
+      per_page: MAX_DISPATCHED_RUNS_TO_SEARCH
+    });
+    const candidates = data.workflow_runs.filter(
+      (run2) => DateTime.fromISO(run2.created_at) >= dispatchedAfter
+    );
+    if (candidates.length !== 1) {
+      logger.warn(
+        `Found ${candidates.length} workflow runs dispatched on '${ref}' since ${dispatchedAfter.toISO()}, so cannot tell which one is building the base commit.`
+      );
+      return void 0;
+    }
+    const [run] = candidates;
+    return { ...run, workflowRunId: run.id };
+  } catch (err) {
+    logger.warn(
+      `Encountered an error while searching for the dispatched workflow run: ${err}`
+    );
+    return void 0;
+  }
 };
 var waitForWorkflowCompletion = async ({
   owner,
@@ -251318,41 +251434,55 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
   }
   const baseRef = event.payload.pull_request.base.ref;
   logger.debug(JSON.stringify({ base, baseRef }, null, 2));
-  const currentBaseSha = await getHeadCommitForRef({
-    owner,
-    repo,
-    ref: baseRef,
-    octokit,
-    logger
-  });
-  logger.debug(
-    JSON.stringify({ owner, repo, base, baseRef, currentBaseSha }, null, 2)
-  );
-  if (base !== currentBaseSha) {
-    const message = `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
-    In addition we were not able to trigger a run on ${base} since the '${baseRef}' branch is now pointing to ${currentBaseSha}.
-    Therefore no diffs will be reported for this run. Re-running the tests may fix this.`;
-    logger.warn(message);
-    (0, import_core2.warning)(message);
-    return {
-      baseTestRunExists: false,
-      baseResolutionDetails: {
-        type: "required-new-workflow-run-but-failed-due-to-new-commit-to-base-branch",
-        baseRef,
-        targetBaseCommitSha: base,
-        currentLastestBaseCommitSha: currentBaseSha
-      }
-    };
-  }
-  const workflowRun = await startNewWorkflowRun({
+  let dispatch = await startNewWorkflowRun({
     owner,
     repo,
     workflowId,
     ref: baseRef,
     commitSha: base,
+    pinCommitSha: true,
     octokit,
     logger
   });
+  if (dispatch.type === "commit-pinning-unsupported") {
+    const currentBaseSha = await getHeadCommitForRef({
+      owner,
+      repo,
+      ref: baseRef,
+      octokit,
+      logger
+    });
+    logger.debug(
+      JSON.stringify({ owner, repo, base, baseRef, currentBaseSha }, null, 2)
+    );
+    if (base !== currentBaseSha) {
+      const message = `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
+    In addition we were not able to trigger a run on ${base} since the '${baseRef}' branch is now pointing to ${currentBaseSha}, and the Meticulous workflow on '${baseRef}' does not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input that would let us ask for ${base} specifically.
+    Therefore no diffs will be reported for this run. Re-running the tests may fix this, as would adding the input: see ${DOCS_URL}.`;
+      logger.warn(message);
+      (0, import_core2.warning)(message);
+      return {
+        baseTestRunExists: false,
+        baseResolutionDetails: {
+          type: "required-new-workflow-run-but-failed-due-to-new-commit-to-base-branch",
+          baseRef,
+          targetBaseCommitSha: base,
+          currentLastestBaseCommitSha: currentBaseSha
+        }
+      };
+    }
+    dispatch = await startNewWorkflowRun({
+      owner,
+      repo,
+      workflowId,
+      ref: baseRef,
+      commitSha: base,
+      pinCommitSha: false,
+      octokit,
+      logger
+    });
+  }
+  const workflowRun = dispatch.type === "started" ? dispatch.workflowRun : void 0;
   if (workflowRun == null) {
     const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${base}.`;
     logger.warn(message);
@@ -251365,7 +251495,9 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
       }
     };
   }
-  logger.info(`Waiting on workflow run: ${workflowRun.html_url}`);
+  logger.info(
+    `Waiting on workflow run: ${workflowRun.html_url ?? workflowRun.workflowRunId}`
+  );
   const waitStartMs = Date.now();
   await waitForWorkflowCompletionAndThrowIfFailed({
     owner,
