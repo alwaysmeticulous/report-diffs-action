@@ -405,6 +405,17 @@ const waitOnAnotherCallersBuild = async ({
     WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as("milliseconds");
 
   while (Date.now() < giveUpAtMs) {
+    // Look only once GitHub has had time to list the holder's dispatch. Reading the listing while
+    // that run is still missing is what would let some unrelated dispatch of the same workflow
+    // stand alone in the window and be taken for the build we're waiting on; once the holder's
+    // run is listed, an unrelated one alongside it is a pair we can't tell apart, and we
+    // correctly wait on neither.
+    await new Promise((resolve) =>
+      setTimeout(
+        resolve,
+        POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL.as("milliseconds")
+      )
+    );
     if (isCancelled()) {
       return { baseTestRunExists: false };
     }
@@ -435,12 +446,6 @@ const waitOnAnotherCallersBuild = async ({
         });
       }
     }
-    await new Promise((resolve) =>
-      setTimeout(
-        resolve,
-        POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL.as("milliseconds")
-      )
-    );
   }
 
   const message = `Another job was asked to build the base commit ${base}, but nothing to compare against appeared in time. No diffs will be reported for this run.`;

@@ -256384,6 +256384,12 @@ var waitOnAnotherCallersBuild = async ({
   const stopLookingAtMs = startedAtMs + BASE_DISPATCH_LEASE_DURATION.as("milliseconds");
   const giveUpAtMs = startedAtMs + WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as("milliseconds");
   while (Date.now() < giveUpAtMs) {
+    await new Promise(
+      (resolve5) => setTimeout(
+        resolve5,
+        POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL.as("milliseconds")
+      )
+    );
     if (isCancelled()) {
       return { baseTestRunExists: false };
     }
@@ -256412,12 +256418,6 @@ var waitOnAnotherCallersBuild = async ({
         });
       }
     }
-    await new Promise(
-      (resolve5) => setTimeout(
-        resolve5,
-        POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL.as("milliseconds")
-      )
-    );
   }
   const message = `Another job was asked to build the base commit ${base}, but nothing to compare against appeared in time. No diffs will be reported for this run.`;
   logger.warn(message);

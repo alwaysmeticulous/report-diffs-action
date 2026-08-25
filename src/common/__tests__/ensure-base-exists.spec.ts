@@ -323,13 +323,45 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
       context,
       octokit,
     });
-    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+    await vi.advanceTimersByTimeAsync(
+      POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL_MS +
+        WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS
+    );
 
     expect(await resultPromise).toEqual({
       baseTestRunExists: true,
       baseResolutionDetails: expect.objectContaining({
         type: "waited-for-existing-workflow-run",
         workflowId: "11",
+      }),
+    });
+  });
+
+  it("doesn't mistake an unrelated dispatch for the build while the holder's is unlisted", async () => {
+    vi.useFakeTimers();
+    takeBaseWorkflowDispatchLease.mockResolvedValue(false);
+    // Some other pull request's base, dispatched a minute ago against the same branch.
+    const dispatchedRuns: unknown[] = [dispatchedRun(11, 60)];
+    const octokit = buildOctokit({ dispatchedRuns });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit,
+      getBaseTestRun: vi.fn().mockResolvedValue(null),
+    });
+    // GitHub starts listing the lease holder's run a few seconds in, before we first look.
+    await vi.advanceTimersByTimeAsync(5_000);
+    dispatchedRuns.push(dispatchedRun(12));
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_COMPLETION_TIMEOUT_MS);
+
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: false,
+      baseResolutionDetails: expect.objectContaining({
+        type: "failed-for-other-reason",
       }),
     });
   });
