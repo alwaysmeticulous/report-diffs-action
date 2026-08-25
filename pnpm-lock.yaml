@@ -15,8 +15,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       '@alwaysmeticulous/client':
-        specifier: ^2.331.1
-        version: 2.331.1
+        specifier: ^2.332.0
+        version: 2.332.0
       '@alwaysmeticulous/common':
         specifier: ^2.326.0
         version: 2.326.0
@@ -136,12 +136,24 @@ packages:
     resolution: {integrity: sha512-EqbjYPLuZRAS+H4Tf9LP98lM9ugbHvzaMticrGyHrp4SNv6GXIuI2uPxSePtyJpxZksrmt5W9E3bsRd75VdgUA==}
     engines: {node: '>= 18'}
 
+  '@alwaysmeticulous/api@2.332.0':
+    resolution: {integrity: sha512-IRqAPOGCwZOeVwYfm0gl7teMn83Ixpr9OwyxeooVPE0k1G7PcBJK9uui5Mn7ZyDRwpDuAYdPAIDl2UmUXLy0hg==}
+    engines: {node: '>= 18'}
+
   '@alwaysmeticulous/client@2.331.1':
     resolution: {integrity: sha512-9ozCPlmk6sw2Dz3rB9LrCklMCjHw5yqrJ7kxGGeNMvrk0vORUkHbHacc5DAGDwuX19L6EvzzItgFIq9/d3VXBQ==}
     engines: {node: '>= 18'}
 
+  '@alwaysmeticulous/client@2.332.0':
+    resolution: {integrity: sha512-WDqcXPgAnPjCIJtsULJlkHKchrAOk9I1Antg7QcKbVopHAr93oVN6+ICWmKwzrhlYhCWmLhZwCh004QRMDy3cg==}
+    engines: {node: '>= 18'}
+
   '@alwaysmeticulous/common@2.326.0':
     resolution: {integrity: sha512-6eOrR9B36AU4uhY2D08uzs0w6pYjSvA99+fgmymYt4eLDZ8BSOOfoxHmFRDmDb/gSgAUQ91WmrO+7/lDHbHTIg==}
+    engines: {node: '>= 18'}
+
+  '@alwaysmeticulous/common@2.332.0':
+    resolution: {integrity: sha512-3/oJ/wYhp6SyvvB5krh4eihd/IdQTLbD8cKQZrUOyr0n9l5VJEDE0dE6ketSglDCbFpOLYDdAzTpczaqgllSCA==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/downloading-helpers@2.331.1':
@@ -3475,6 +3487,8 @@ snapshots:
 
   '@alwaysmeticulous/api@2.327.0': {}
 
+  '@alwaysmeticulous/api@2.332.0': {}
+
   '@alwaysmeticulous/client@2.331.1':
     dependencies:
       '@alwaysmeticulous/api': 2.327.0
@@ -3490,7 +3504,38 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  '@alwaysmeticulous/client@2.332.0':
+    dependencies:
+      '@alwaysmeticulous/api': 2.332.0
+      '@alwaysmeticulous/common': 2.332.0
+      loglevel: 1.9.2
+      proxy-agent: 6.5.0
+      undici: 6.28.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bufferutil
+      - react-native-b4a
+      - supports-color
+      - utf-8-validate
+
   '@alwaysmeticulous/common@2.326.0':
+    dependencies:
+      '@puppeteer/browsers': 2.10.6
+      chalk: 4.1.2
+      loglevel: 1.9.2
+      luxon: 3.7.2
+      puppeteer-core: 24.42.0
+      undici: 6.28.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bufferutil
+      - react-native-b4a
+      - supports-color
+      - utf-8-validate
+
+  '@alwaysmeticulous/common@2.332.0':
     dependencies:
       '@puppeteer/browsers': 2.10.6
       chalk: 4.1.2

@@ -132,6 +132,7 @@ export const runOneTestRun = async ({
         await tryTriggerTestsWorkflowOnBase({
           logger,
           event,
+          apiToken,
           base: codeChangeBase,
           getBaseTestRun: async () => {
             const { baseTestRun } = await getCloudReplayBaseTestRun({

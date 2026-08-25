@@ -2,13 +2,22 @@ import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
 import { TestRun } from "@alwaysmeticulous/client";
 import log from "loglevel";
-import { describe, it, expect, vi, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { CodeChangeEvent } from "../../types";
 import { COMMIT_SHA_WORKFLOW_INPUT } from "../constants";
 import {
   ensureBaseTestsExists,
   tryTriggerTestsWorkflowOnBase,
 } from "../ensure-base-exists.utils";
+
+const { takeBaseWorkflowDispatchLease } = vi.hoisted(() => ({
+  takeBaseWorkflowDispatchLease: vi.fn(),
+}));
+
+vi.mock("@alwaysmeticulous/client", () => ({
+  createClient: vi.fn().mockReturnValue({}),
+  takeBaseWorkflowDispatchLease,
+}));
 
 const BASE_SHA = "1111111111111111111111111111111111111111";
 const ANCESTOR_SHA = "2222222222222222222222222222222222222222";
@@ -18,6 +27,10 @@ const WORKFLOW_ID = 42;
 const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS = 5_000;
 
 const POLL_FOR_BASE_TEST_RUN_INTERVAL_MS = 10_000;
+
+const POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL_MS = 10_000;
+
+const WORKFLOW_RUN_COMPLETION_TIMEOUT_MS = 30 * 60 * 1_000;
 
 const logger = log.getLogger("ensure-base-exists.spec");
 logger.setLevel("silent");
@@ -40,6 +53,8 @@ const context = {
   runId: 7,
 } as unknown as Context;
 
+// The array is read on every listing, so a test can push a run into it to have one appear
+// partway through, the way GitHub starts listing a run some seconds after it was dispatched.
 const buildOctokit = ({
   workflowRuns = [],
   // The base's ancestry, as the commit listing would report it. Kept faithful so that a test
@@ -95,6 +110,10 @@ const pushRun = (headSha: string, status: string, id: number) => ({
 });
 
 describe("tryTriggerTestsWorkflowOnBase", () => {
+  beforeEach(() => {
+    takeBaseWorkflowDispatchLease.mockReset().mockResolvedValue(true);
+  });
+
   afterEach(() => {
     vi.useRealTimers();
   });
@@ -114,6 +133,7 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     const resultPromise = tryTriggerTestsWorkflowOnBase({
       logger,
       event,
+      apiToken: "token",
       base: BASE_SHA,
       context,
       octokit,
@@ -124,6 +144,12 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
       expect.objectContaining({
         ref: "main",
         inputs: { [COMMIT_SHA_WORKFLOW_INPUT]: BASE_SHA },
+      })
+    );
+    expect(takeBaseWorkflowDispatchLease).toHaveBeenCalledWith(
+      expect.objectContaining({
+        baseCommitSha: BASE_SHA,
+        workflowId: `${WORKFLOW_ID}`,
       })
     );
     expect(await resultPromise).toEqual({
@@ -145,6 +171,7 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     const resultPromise = tryTriggerTestsWorkflowOnBase({
       logger,
       event,
+      apiToken: "token",
       base: BASE_SHA,
       context,
       octokit,
@@ -180,6 +207,7 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     const resultPromise = tryTriggerTestsWorkflowOnBase({
       logger,
       event,
+      apiToken: "token",
       base: BASE_SHA,
       context,
       octokit,
@@ -188,6 +216,98 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     await resultPromise;
 
     expect(createWorkflowDispatch).toHaveBeenCalled();
+  });
+
+  it("waits on another job's build rather than dispatching a second one", async () => {
+    vi.useFakeTimers();
+    takeBaseWorkflowDispatchLease.mockResolvedValue(false);
+    const createWorkflowDispatch = vi.fn();
+    const workflowRuns: unknown[] = [];
+    const octokit = buildOctokit({ workflowRuns, createWorkflowDispatch });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit,
+    });
+
+    // GitHub doesn't list the other job's run for several seconds after it dispatched it.
+    await vi.advanceTimersByTimeAsync(POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL_MS);
+    expect(createWorkflowDispatch).not.toHaveBeenCalled();
+
+    workflowRuns.push(pushRun(BASE_SHA, "in_progress", 11));
+    await vi.advanceTimersByTimeAsync(
+      POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL_MS +
+        WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS
+    );
+
+    expect(createWorkflowDispatch).not.toHaveBeenCalled();
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: expect.objectContaining({
+        type: "waited-for-existing-workflow-run",
+        workflowId: "11",
+        baseCommitSha: BASE_SHA,
+      }),
+    });
+  });
+
+  it("gives up rather than dispatching a duplicate when the other job's build never appears", async () => {
+    vi.useFakeTimers();
+    takeBaseWorkflowDispatchLease.mockResolvedValue(false);
+    const createWorkflowDispatch = vi.fn();
+    const octokit = buildOctokit({ createWorkflowDispatch });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit,
+    });
+    await vi.advanceTimersByTimeAsync(
+      WORKFLOW_RUN_COMPLETION_TIMEOUT_MS +
+        POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL_MS
+    );
+
+    expect(createWorkflowDispatch).not.toHaveBeenCalled();
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: false,
+      baseResolutionDetails: expect.objectContaining({
+        type: "failed-for-other-reason",
+      }),
+    });
+    // Listing runs is a paginated read against a job-scoped rate limit, so the search gives up
+    // long before the wait does: half an hour of it would be hundreds of requests.
+    expect(
+      vi.mocked(octokit.paginate.iterator).mock.calls.length
+    ).toBeLessThanOrEqual(15);
+  });
+
+  it("doesn't take a lease it isn't going to use", async () => {
+    vi.useFakeTimers();
+    // Something is already building the base, so we wait on that rather than asking for a lease
+    // we'd only hold off other callers with.
+    const octokit = buildOctokit({
+      workflowRuns: [pushRun(BASE_SHA, "queued", 12)],
+    });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit,
+    });
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+    await resultPromise;
+
+    expect(takeBaseWorkflowDispatchLease).not.toHaveBeenCalled();
   });
 
   it("dispatches when the base's own run has already finished", async () => {
@@ -203,6 +323,7 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     const resultPromise = tryTriggerTestsWorkflowOnBase({
       logger,
       event,
+      apiToken: "token",
       base: BASE_SHA,
       context,
       octokit,
@@ -215,6 +336,10 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
 });
 
 describe("ensureBaseTestsExists", () => {
+  beforeEach(() => {
+    takeBaseWorkflowDispatchLease.mockReset().mockResolvedValue(true);
+  });
+
   afterEach(() => {
     vi.useRealTimers();
   });

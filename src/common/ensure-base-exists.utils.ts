@@ -2,7 +2,11 @@ import { warning as ghWarning } from "@actions/core";
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
 import { BaseResolutionDetails } from "@alwaysmeticulous/api";
-import { TestRun } from "@alwaysmeticulous/client";
+import {
+  createClient,
+  takeBaseWorkflowDispatchLease,
+  TestRun,
+} from "@alwaysmeticulous/client";
 import log from "loglevel";
 import { Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
@@ -27,6 +31,18 @@ const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST = Duration.fromObject({
 const POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
   seconds: 10,
 });
+
+const POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL = Duration.fromObject({
+  seconds: 10,
+});
+
+/**
+ * How long a run dispatched by whoever holds the lease has to become visible to us before we
+ * stop looking for it. Matches the lease's own lifetime: the lease exists to cover the seconds
+ * in which GitHub won't yet list a dispatched run, so a run we still can't see once it has
+ * expired is one we were never going to recognise.
+ */
+const LOOK_FOR_ANOTHER_CALLERS_RUN_WINDOW = Duration.fromObject({ minutes: 2 });
 
 export interface BaseTestsResolutionResult {
   baseTestRunExists: boolean;
@@ -55,6 +71,7 @@ export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
 
 export const ensureBaseTestsExists = async ({
   event,
+  apiToken,
   base, // from the PR event
   context,
   octokit,
@@ -115,6 +132,7 @@ export const ensureBaseTestsExists = async ({
   return await tryTriggerTestsWorkflowOnBase({
     logger,
     event,
+    apiToken,
     base,
     context,
     octokit,
@@ -128,6 +146,7 @@ export const ensureBaseTestsExists = async ({
 export interface TryTriggerTestsWorkflowOnBaseOpts {
   logger: log.Logger;
   event: CodeChangeEvent;
+  apiToken: string;
   base: string;
   getBaseTestRun?: () => Promise<TestRun | null>;
   context: Context;
@@ -162,7 +181,7 @@ const waitOnWorkflowRun = async (
   opts: TryTriggerTestsWorkflowOnBaseOpts,
   isCancelled: () => boolean
 ): Promise<BaseTestsResolutionResult> => {
-  const { logger, event, base, context, octokit } = opts;
+  const { logger, event, apiToken, base, context, octokit } = opts;
   const { owner, repo } = context.repo;
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
 
@@ -180,26 +199,15 @@ const waitOnWorkflowRun = async (
     );
 
     if (event.type === "pull_request") {
-      const waitStartMs = Date.now();
-      await waitForWorkflowCompletionAndThrowIfFailed({
+      return await waitOnRunBuildingTheBase({
         owner,
         repo,
-        workflowRunId: alreadyPending.workflowRunId,
+        workflowRun: alreadyPending,
+        base,
         octokit,
-        commitSha: base,
-        timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
         isCancelled,
         logger,
       });
-      return {
-        baseTestRunExists: true,
-        baseResolutionDetails: {
-          type: "waited-for-existing-workflow-run",
-          workflowId: `${alreadyPending.workflowRunId}`,
-          baseCommitSha: base,
-          msTaken: Date.now() - waitStartMs,
-        },
-      };
     }
     // If we are not a PR event, then it's unlikely anyone will be looking at the comparisons. However,
     // it is very possible that someone is waiting for _us_ to complete. So let's not delay the workflow
@@ -210,6 +218,34 @@ const waitOnWorkflowRun = async (
   // Running missing tests on base is only supported for Pull Request events
   if (event.type !== "pull_request") {
     return { baseTestRunExists: false };
+  }
+
+  // Several projects can share a workflow and each runs this action independently, so a missing
+  // base has them all deciding to build the same commit at the same moment — and none of their
+  // checks above can see the others, because GitHub doesn't list a run for several seconds after
+  // it's dispatched. The backend is the only participant that sees them all, so it picks one.
+  //
+  // Asked here rather than earlier on purpose: a lease taken and then not used holds every other
+  // caller off a commit that nothing goes on to build.
+  const shouldDispatch = await takeBaseWorkflowDispatchLease({
+    client: createClient({ apiToken }),
+    baseCommitSha: base,
+    workflowId: `${workflowId}`,
+  });
+
+  if (!shouldDispatch) {
+    logger.info(
+      `Another job is already building the base commit (${base}), so waiting for it rather than building the same commit twice`
+    );
+    return await waitOnAnotherCallersBuild({
+      owner,
+      repo,
+      workflowId,
+      base,
+      octokit,
+      isCancelled,
+      logger,
+    });
   }
 
   // A dispatch ref can only be a branch or a tag, so we ask the workflow on the base branch to
@@ -309,6 +345,130 @@ const waitOnWorkflowRun = async (
     baseResolutionDetails: {
       type: "triggered-new-workflow-run-successfully",
       workflowId: `${workflowRun.workflowRunId}`,
+      msTaken: Date.now() - waitStartMs,
+    },
+  };
+};
+
+/**
+ * Waits out a build of the base that we were told not to make ourselves.
+ *
+ * The caller holding the lease dispatched at about the moment we asked for it, and GitHub takes
+ * a few seconds to list a run, so we look again for a short while and then wait on whatever
+ * turns up as we would any other run. A dispatch pinned to a commit is listed under the head of
+ * the branch it was dispatched against, though, so the run building our base can't always be
+ * recognised by its commit — when it can't, the poll for the base test run racing alongside is
+ * what resolves this, and all we do here is stay out of its way until it does.
+ */
+const waitOnAnotherCallersBuild = async ({
+  owner,
+  repo,
+  workflowId,
+  base,
+  octokit,
+  isCancelled,
+  logger,
+}: {
+  owner: string;
+  repo: string;
+  workflowId: number;
+  base: string;
+  octokit: InstanceType<typeof GitHub>;
+  isCancelled: () => boolean;
+  logger: log.Logger;
+}): Promise<BaseTestsResolutionResult> => {
+  const startedAtMs = Date.now();
+  const stopLookingAtMs =
+    startedAtMs + LOOK_FOR_ANOTHER_CALLERS_RUN_WINDOW.as("milliseconds");
+  const giveUpAtMs =
+    startedAtMs +
+    WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as("milliseconds");
+
+  while (Date.now() < giveUpAtMs) {
+    if (isCancelled()) {
+      return { baseTestRunExists: false };
+    }
+    // Listing runs is a paginated read, so only do it while the other job's run could still be
+    // turning up. Past that we're waiting on the test run, and hammering the API would only cost
+    // the job its rate limit.
+    if (Date.now() < stopLookingAtMs) {
+      const workflowRun = await getPendingWorkflowRun({
+        owner,
+        repo,
+        workflowId,
+        commitSha: base,
+        octokit,
+        logger,
+      });
+      if (workflowRun != null) {
+        logger.info(
+          `Waiting on the workflow run building the base commit (${base}): ${workflowRun.html_url}`
+        );
+        return await waitOnRunBuildingTheBase({
+          owner,
+          repo,
+          workflowRun,
+          base,
+          octokit,
+          isCancelled,
+          logger,
+        });
+      }
+    }
+    await new Promise((resolve) =>
+      setTimeout(
+        resolve,
+        POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL.as("milliseconds")
+      )
+    );
+  }
+
+  const message = `Another job was asked to build the base commit ${base}, but nothing to compare against appeared in time. No diffs will be reported for this run.`;
+  logger.warn(message);
+  ghWarning(message);
+  return {
+    baseTestRunExists: false,
+    baseResolutionDetails: {
+      type: "failed-for-other-reason",
+      message,
+    },
+  };
+};
+
+const waitOnRunBuildingTheBase = async ({
+  owner,
+  repo,
+  workflowRun,
+  base,
+  octokit,
+  isCancelled,
+  logger,
+}: {
+  owner: string;
+  repo: string;
+  workflowRun: { workflowRunId: number };
+  base: string;
+  octokit: InstanceType<typeof GitHub>;
+  isCancelled: () => boolean;
+  logger: log.Logger;
+}): Promise<BaseTestsResolutionResult> => {
+  const waitStartMs = Date.now();
+  await waitForWorkflowCompletionAndThrowIfFailed({
+    owner,
+    repo,
+    workflowRunId: workflowRun.workflowRunId,
+    octokit,
+    commitSha: base,
+    timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+    isCancelled,
+    logger,
+  });
+  return {
+    baseTestRunExists: true,
+    baseResolutionDetails: {
+      type: "waited-for-existing-workflow-run",
+      workflowId: `${workflowRun.workflowRunId}`,
+      baseCommitSha: base,
       msTaken: Date.now() - waitStartMs,
     },
   };
