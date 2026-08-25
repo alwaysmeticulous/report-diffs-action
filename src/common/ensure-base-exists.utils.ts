@@ -34,8 +34,15 @@ const POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
   seconds: 10,
 });
 
+/**
+ * How long to leave between looks for a run another caller dispatched, and so also how long we
+ * leave before the first one. Comfortably longer than the delay before GitHub lists a dispatched
+ * run, because that delay is what decides whether the listing shows us the holder's run or only
+ * whatever else happens to be in the window, and we're waiting out a dispatch whose exact moment
+ * we don't know.
+ */
 const POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL = Duration.fromObject({
-  seconds: 10,
+  seconds: 30,
 });
 
 /**
@@ -435,15 +442,32 @@ const waitOnAnotherCallersBuild = async ({
         logger.info(
           `Waiting on the workflow run building the base commit (${base}): ${workflowRun.html_url}`
         );
-        return await waitOnRunBuildingTheBase({
-          owner,
-          repo,
-          workflowRun,
-          base,
-          octokit,
-          isCancelled,
-          logger,
-        });
+        try {
+          return await waitOnRunBuildingTheBase({
+            owner,
+            repo,
+            workflowRun,
+            base,
+            octokit,
+            isCancelled,
+            logger,
+          });
+        } catch (error) {
+          // A run we found pending on the base was building it beyond doubt, and its failure is
+          // the caller's to hear about. This one we only inferred, from it being the sole
+          // dispatch in the window, so report the outcome we're sure of — no base — rather than
+          // failing the job over a run that might have been building something else.
+          const message = `The workflow run we understood to be building the base commit ${base} did not complete successfully, so no diffs will be reported for this run: ${error}`;
+          logger.warn(message);
+          ghWarning(message);
+          return {
+            baseTestRunExists: false,
+            baseResolutionDetails: {
+              type: "failed-for-other-reason",
+              message,
+            },
+          };
+        }
       }
     }
   }

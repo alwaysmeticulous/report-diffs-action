@@ -28,7 +28,7 @@ const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS = 5_000;
 
 const POLL_FOR_BASE_TEST_RUN_INTERVAL_MS = 10_000;
 
-const POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL_MS = 10_000;
+const POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL_MS = 30_000;
 
 const WORKFLOW_RUN_COMPLETION_TIMEOUT_MS = 30 * 60 * 1_000;
 
@@ -333,6 +333,35 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
       baseResolutionDetails: expect.objectContaining({
         type: "waited-for-existing-workflow-run",
         workflowId: "11",
+      }),
+    });
+  });
+
+  it("doesn't fail the job when a build it inferred was the holder's fails", async () => {
+    vi.useFakeTimers();
+    takeBaseWorkflowDispatchLease.mockResolvedValue(false);
+    const octokit = buildOctokit({
+      dispatchedRuns: [dispatchedRun(11, 60)],
+      dispatchedRunStatus: { status: "completed", conclusion: "failure" },
+    });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit,
+    });
+    await vi.advanceTimersByTimeAsync(
+      POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL_MS +
+        WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS
+    );
+
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: false,
+      baseResolutionDetails: expect.objectContaining({
+        type: "failed-for-other-reason",
       }),
     });
   });

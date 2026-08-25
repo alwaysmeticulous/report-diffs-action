@@ -274715,7 +274715,7 @@ var POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
   seconds: 10
 });
 var POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL = Duration.fromObject({
-  seconds: 10
+  seconds: 30
 });
 var BASE_DISPATCH_LEASE_DURATION = Duration.fromObject({ minutes: 2 });
 var tryTriggerTestsWorkflowOnBase = async (opts) => {
@@ -274915,15 +274915,28 @@ var waitOnAnotherCallersBuild = async ({
         logger.info(
           `Waiting on the workflow run building the base commit (${base}): ${workflowRun.html_url}`
         );
-        return await waitOnRunBuildingTheBase({
-          owner,
-          repo,
-          workflowRun,
-          base,
-          octokit,
-          isCancelled,
-          logger
-        });
+        try {
+          return await waitOnRunBuildingTheBase({
+            owner,
+            repo,
+            workflowRun,
+            base,
+            octokit,
+            isCancelled,
+            logger
+          });
+        } catch (error2) {
+          const message2 = `The workflow run we understood to be building the base commit ${base} did not complete successfully, so no diffs will be reported for this run: ${error2}`;
+          logger.warn(message2);
+          (0, import_core3.warning)(message2);
+          return {
+            baseTestRunExists: false,
+            baseResolutionDetails: {
+              type: "failed-for-other-reason",
+              message: message2
+            }
+          };
+        }
       }
     }
   }
