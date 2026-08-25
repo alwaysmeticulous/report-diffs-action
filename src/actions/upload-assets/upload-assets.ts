@@ -7,6 +7,7 @@ import {
 import { uploadAssetsAndTriggerTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import * as Sentry from "@sentry/node";
+import { getBaseTestRunResolvedByBackend } from "../../common/cloud-replay-base.utils";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import {
   getBaseAndHeadCommitShas,
@@ -54,7 +55,7 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           return;
         }
 
-        const { base } = await getBaseAndHeadCommitShas(
+        const { base, head } = await getBaseAndHeadCommitShas(
           event,
           { useDeploymentUrl: false },
           logger
@@ -72,6 +73,12 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
               // We deliberately don't filter by environment version here because when static assets are uploaded,
               // the backend can trigger a re-run. So we don't care whether we have a valid base now,
               // just whether the commit was tested at some point which means we have the assets.
+            }),
+          getBaseTestRunResolvedByBackend: async () =>
+            await getBaseTestRunResolvedByBackend({
+              apiToken,
+              headCommitSha: head,
+              logger,
             }),
           logger,
         });

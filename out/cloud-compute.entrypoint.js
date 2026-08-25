@@ -263362,6 +263362,19 @@ async function fetchWithTimeout(url) {
   return response;
 }
 
+// src/common/cloud-replay-base.utils.ts
+var import_client = __toESM(require_dist15());
+var getCloudReplayBaseTestRun = async ({
+  apiToken,
+  headCommitSha
+}) => {
+  const client = (0, import_client.createClient)({ apiToken });
+  return await (0, import_client.getGitHubCloudReplayBaseTestRun)({
+    client,
+    headCommitSha
+  });
+};
+
 // src/common/constants.ts
 var METICULIOUS_APP_URL = "https://app.meticulous.ai";
 var DOCS_URL = `${METICULIOUS_APP_URL}/docs/github-actions-v2`;
@@ -270659,19 +270672,6 @@ var DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION = Duration.fromObject({
   minutes: 45
 });
 
-// src/actions/cloud-compute/get-cloud-compute-base-test-run.ts
-var import_client = __toESM(require_dist15());
-var getCloudComputeBaseTestRun = async ({
-  apiToken,
-  headCommitSha
-}) => {
-  const client = (0, import_client.createClient)({ apiToken });
-  return await (0, import_client.getGitHubCloudReplayBaseTestRun)({
-    client,
-    headCommitSha
-  });
-};
-
 // src/actions/cloud-compute/get-pull-request-id.ts
 var getPullRequestId = (event) => {
   if (!event || event.type !== "pull_request") {
@@ -270720,7 +270720,7 @@ var runOneTestRun = async ({
     return;
   }
   logger.warn("Head commit SHA: ", headSha);
-  const { baseCommitSha, baseTestRun } = await getCloudComputeBaseTestRun({
+  const { baseCommitSha, baseTestRun } = await getCloudReplayBaseTestRun({
     apiToken,
     headCommitSha: headSha
   });
@@ -270749,7 +270749,7 @@ var runOneTestRun = async ({
         event,
         base: codeChangeBase,
         getBaseTestRun: async () => {
-          const { baseTestRun: baseTestRun2 } = await getCloudComputeBaseTestRun({
+          const { baseTestRun: baseTestRun2 } = await getCloudReplayBaseTestRun({
             apiToken,
             headCommitSha: headSha
           });
