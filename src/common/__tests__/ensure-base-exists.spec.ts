@@ -109,12 +109,12 @@ const buildOctokit = ({
 
 // A run someone asked the workflow to start. Its head is the branch it was dispatched against,
 // which for a commit-pinned dispatch is not the commit it is building.
-const dispatchedRun = (id: number) => ({
+const dispatchedRun = (id: number, secondsAgo = 0) => ({
   id,
   head_sha: "4444444444444444444444444444444444444444",
   event: "workflow_dispatch",
   status: "in_progress",
-  created_at: new Date().toISOString(),
+  created_at: new Date(Date.now() - secondsAgo * 1_000).toISOString(),
   html_url: `https://github.com/alwaysmeticulous/meticulous/actions/runs/${id}`,
 });
 
@@ -304,6 +304,34 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     expect(
       vi.mocked(octokit.rest.actions.listWorkflowRuns).mock.calls.length
     ).toBeLessThanOrEqual(15);
+  });
+
+  it("finds the build of a lease taken a while before we asked", async () => {
+    vi.useFakeTimers();
+    takeBaseWorkflowDispatchLease.mockResolvedValue(false);
+    // A refusal comes at any point in the lease's two-minute life, so the dispatch we're being
+    // held off can already be most of that old by the time we hear about it.
+    const octokit = buildOctokit({
+      dispatchedRuns: [dispatchedRun(11, 110)],
+    });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit,
+    });
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: expect.objectContaining({
+        type: "waited-for-existing-workflow-run",
+        workflowId: "11",
+      }),
+    });
   });
 
   it("doesn't wait on a run it can't tell is building the base", async () => {

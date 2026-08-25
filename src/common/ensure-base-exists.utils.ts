@@ -39,12 +39,13 @@ const POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL = Duration.fromObject({
 });
 
 /**
- * How long a run dispatched by whoever holds the lease has to become visible to us before we
- * stop looking for it. Matches the lease's own lifetime: the lease exists to cover the seconds
- * in which GitHub won't yet list a dispatched run, so a run we still can't see once it has
- * expired is one we were never going to recognise.
+ * How long the backend holds a dispatch lease for, and so both how old the dispatch we were
+ * refused for can already be, and how long a dispatch has to become visible to us before we
+ * stop looking for it: the lease exists to cover the seconds in which GitHub won't yet list a
+ * dispatched run, so a run we still can't see once it has expired is one we were never going to
+ * recognise. Kept in step with `LEASE_DURATION` on the backend.
  */
-const LOOK_FOR_ANOTHER_CALLERS_RUN_WINDOW = Duration.fromObject({ minutes: 2 });
+const BASE_DISPATCH_LEASE_DURATION = Duration.fromObject({ minutes: 2 });
 
 export interface BaseTestsResolutionResult {
   baseTestRunExists: boolean;
@@ -234,7 +235,12 @@ const waitOnWorkflowRun = async (
   //
   // Asked here rather than earlier on purpose: a lease taken and then not used holds every other
   // caller off a commit that nothing goes on to build.
-  const askedForLeaseAt = DateTime.utc().minus(DISPATCH_CLOCK_SKEW_ALLOWANCE);
+  // A refusal can come at any point in the lease's life, so the dispatch we'd be refused for can
+  // already be that old. Anything older than that can't be it — and looking back further than we
+  // must only makes an unrelated dispatch more likely to muddy the search.
+  const couldHaveBeenDispatchedSince = DateTime.utc()
+    .minus(BASE_DISPATCH_LEASE_DURATION)
+    .minus(DISPATCH_CLOCK_SKEW_ALLOWANCE);
   const shouldDispatch = await takeBaseWorkflowDispatchLease({
     client: createClient({ apiToken }),
     baseCommitSha: base,
@@ -250,7 +256,7 @@ const waitOnWorkflowRun = async (
       repo,
       workflowId,
       baseRef,
-      dispatchedAfter: askedForLeaseAt,
+      dispatchedAfter: couldHaveBeenDispatchedSince,
       base,
       octokit,
       isCancelled,
@@ -393,7 +399,7 @@ const waitOnAnotherCallersBuild = async ({
 }): Promise<BaseTestsResolutionResult> => {
   const startedAtMs = Date.now();
   const stopLookingAtMs =
-    startedAtMs + LOOK_FOR_ANOTHER_CALLERS_RUN_WINDOW.as("milliseconds");
+    startedAtMs + BASE_DISPATCH_LEASE_DURATION.as("milliseconds");
   const giveUpAtMs =
     startedAtMs +
     WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as("milliseconds");

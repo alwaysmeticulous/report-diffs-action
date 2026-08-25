@@ -274717,7 +274717,7 @@ var POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
 var POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL = Duration.fromObject({
   seconds: 10
 });
-var LOOK_FOR_ANOTHER_CALLERS_RUN_WINDOW = Duration.fromObject({ minutes: 2 });
+var BASE_DISPATCH_LEASE_DURATION = Duration.fromObject({ minutes: 2 });
 var tryTriggerTestsWorkflowOnBase = async (opts) => {
   let isDone = false;
   const isCancelled = () => {
@@ -274770,7 +274770,7 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     return { baseTestRunExists: false };
   }
   const baseRef = event.payload.pull_request.base.ref;
-  const askedForLeaseAt = DateTime.utc().minus(DISPATCH_CLOCK_SKEW_ALLOWANCE);
+  const couldHaveBeenDispatchedSince = DateTime.utc().minus(BASE_DISPATCH_LEASE_DURATION).minus(DISPATCH_CLOCK_SKEW_ALLOWANCE);
   const shouldDispatch = await (0, import_client2.takeBaseWorkflowDispatchLease)({
     client: (0, import_client2.createClient)({ apiToken }),
     baseCommitSha: base,
@@ -274785,7 +274785,7 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
       repo,
       workflowId,
       baseRef,
-      dispatchedAfter: askedForLeaseAt,
+      dispatchedAfter: couldHaveBeenDispatchedSince,
       base,
       octokit,
       isCancelled,
@@ -274889,7 +274889,7 @@ var waitOnAnotherCallersBuild = async ({
   logger
 }) => {
   const startedAtMs = Date.now();
-  const stopLookingAtMs = startedAtMs + LOOK_FOR_ANOTHER_CALLERS_RUN_WINDOW.as("milliseconds");
+  const stopLookingAtMs = startedAtMs + BASE_DISPATCH_LEASE_DURATION.as("milliseconds");
   const giveUpAtMs = startedAtMs + WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as("milliseconds");
   while (Date.now() < giveUpAtMs) {
     if (isCancelled()) {
