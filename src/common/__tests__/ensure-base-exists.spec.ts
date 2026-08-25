@@ -64,6 +64,9 @@ const buildOctokit = ({
     { sha: BASE_SHA, parents: [{ sha: ANCESTOR_SHA }] },
     { sha: ANCESTOR_SHA, parents: [] },
   ],
+  // Runs the workflow has been asked to start, as the dispatched-run listing would report them.
+  // Also read on every call, so a test can have one turn up partway through.
+  dispatchedRuns = [],
   createWorkflowDispatch = vi
     .fn()
     .mockResolvedValue({ data: { workflow_run_id: 99 } }),
@@ -71,6 +74,7 @@ const buildOctokit = ({
 }: {
   workflowRuns?: unknown[];
   commits?: unknown[];
+  dispatchedRuns?: unknown[];
   createWorkflowDispatch?: ReturnType<typeof vi.fn>;
   dispatchedRunStatus?: { status: string; conclusion: string | null };
 } = {}) => {
@@ -89,7 +93,9 @@ const buildOctokit = ({
           data: { workflow_id: WORKFLOW_ID, id: 99, ...dispatchedRunStatus },
         }),
         createWorkflowDispatch,
-        listWorkflowRuns: vi.fn(),
+        listWorkflowRuns: vi.fn().mockImplementation(async () => ({
+          data: { workflow_runs: dispatchedRuns },
+        })),
       },
       repos: {
         listCommits,
@@ -100,6 +106,17 @@ const buildOctokit = ({
     },
   } as unknown as InstanceType<typeof GitHub>;
 };
+
+// A run someone asked the workflow to start. Its head is the branch it was dispatched against,
+// which for a commit-pinned dispatch is not the commit it is building.
+const dispatchedRun = (id: number) => ({
+  id,
+  head_sha: "4444444444444444444444444444444444444444",
+  event: "workflow_dispatch",
+  status: "in_progress",
+  created_at: new Date().toISOString(),
+  html_url: `https://github.com/alwaysmeticulous/meticulous/actions/runs/${id}`,
+});
 
 const pushRun = (headSha: string, status: string, id: number) => ({
   id,
@@ -222,8 +239,8 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     vi.useFakeTimers();
     takeBaseWorkflowDispatchLease.mockResolvedValue(false);
     const createWorkflowDispatch = vi.fn();
-    const workflowRuns: unknown[] = [];
-    const octokit = buildOctokit({ workflowRuns, createWorkflowDispatch });
+    const dispatchedRuns: unknown[] = [];
+    const octokit = buildOctokit({ dispatchedRuns, createWorkflowDispatch });
 
     const resultPromise = tryTriggerTestsWorkflowOnBase({
       logger,
@@ -238,7 +255,9 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     await vi.advanceTimersByTimeAsync(POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL_MS);
     expect(createWorkflowDispatch).not.toHaveBeenCalled();
 
-    workflowRuns.push(pushRun(BASE_SHA, "in_progress", 11));
+    // It was pinned to the base commit, so it is listed under the branch head — nothing about it
+    // says which commit it is building, and we wait on it all the same.
+    dispatchedRuns.push(dispatchedRun(11));
     await vi.advanceTimersByTimeAsync(
       POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL_MS +
         WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS
@@ -281,11 +300,45 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
         type: "failed-for-other-reason",
       }),
     });
-    // Listing runs is a paginated read against a job-scoped rate limit, so the search gives up
-    // long before the wait does: half an hour of it would be hundreds of requests.
+    // Listing runs costs the job's rate limit, so the search gives up long before the wait does.
     expect(
-      vi.mocked(octokit.paginate.iterator).mock.calls.length
+      vi.mocked(octokit.rest.actions.listWorkflowRuns).mock.calls.length
     ).toBeLessThanOrEqual(15);
+  });
+
+  it("doesn't wait on a run it can't tell is building the base", async () => {
+    vi.useFakeTimers();
+    takeBaseWorkflowDispatchLease.mockResolvedValue(false);
+    // Two dispatches in the same window, and nothing in either says which commit it is building.
+    // Waiting on the wrong one would have us report a base that was never built.
+    const octokit = buildOctokit({
+      dispatchedRuns: [dispatchedRun(11), dispatchedRun(12)],
+    });
+    const getBaseTestRun = vi.fn().mockResolvedValue(null);
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit,
+      getBaseTestRun,
+    });
+    await vi.advanceTimersByTimeAsync(
+      WORKFLOW_RUN_COMPLETION_TIMEOUT_MS +
+        POLL_FOR_ANOTHER_CALLERS_RUN_INTERVAL_MS
+    );
+
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: false,
+      baseResolutionDetails: expect.objectContaining({
+        type: "failed-for-other-reason",
+      }),
+    });
+    // It kept looking for the base test run throughout, which is the only thing that can tell it
+    // one of those runs built the base.
+    expect(getBaseTestRun.mock.calls.length).toBeGreaterThan(100);
   });
 
   it("doesn't take a lease it isn't going to use", async () => {

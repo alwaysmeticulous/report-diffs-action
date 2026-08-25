@@ -274413,7 +274413,9 @@ For complete setup instructions, see: ${DOCS_URL}
 
 // src/common/workflow.utils.ts
 var LISTING_AFTER_DISPATCH_DELAY = Duration.fromObject({ seconds: 10 });
-var DISPATCH_CLOCK_SKEW_ALLOWANCE = Duration.fromObject({ seconds: 30 });
+var DISPATCH_CLOCK_SKEW_ALLOWANCE = Duration.fromObject({
+  seconds: 30
+});
 var MAX_DISPATCHED_RUNS_TO_SEARCH = 20;
 var UNEXPECTED_INPUTS_MESSAGE = "Unexpected inputs provided";
 var WORKFLOW_RUN_UPDATE_STATUS_INTERVAL = Duration.fromObject({ seconds: 5 });
@@ -274767,6 +274769,8 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
   if (event.type !== "pull_request") {
     return { baseTestRunExists: false };
   }
+  const baseRef = event.payload.pull_request.base.ref;
+  const askedForLeaseAt = DateTime.utc().minus(DISPATCH_CLOCK_SKEW_ALLOWANCE);
   const shouldDispatch = await (0, import_client2.takeBaseWorkflowDispatchLease)({
     client: (0, import_client2.createClient)({ apiToken }),
     baseCommitSha: base,
@@ -274780,13 +274784,14 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
       owner,
       repo,
       workflowId,
+      baseRef,
+      dispatchedAfter: askedForLeaseAt,
       base,
       octokit,
       isCancelled,
       logger
     });
   }
-  const baseRef = event.payload.pull_request.base.ref;
   logger.debug(JSON.stringify({ base, baseRef }, null, 2));
   let dispatch = await startNewWorkflowRun({
     owner,
@@ -274876,6 +274881,8 @@ var waitOnAnotherCallersBuild = async ({
   owner,
   repo,
   workflowId,
+  baseRef,
+  dispatchedAfter,
   base,
   octokit,
   isCancelled,
@@ -274889,11 +274896,12 @@ var waitOnAnotherCallersBuild = async ({
       return { baseTestRunExists: false };
     }
     if (Date.now() < stopLookingAtMs) {
-      const workflowRun = await getPendingWorkflowRun({
+      const workflowRun = await findRecentlyDispatchedRun({
         owner,
         repo,
         workflowId,
-        commitSha: base,
+        ref: baseRef,
+        dispatchedAfter,
         octokit,
         logger
       });

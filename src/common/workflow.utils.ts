@@ -13,7 +13,9 @@ import { shortSha } from "./logger.utils";
 const LISTING_AFTER_DISPATCH_DELAY = Duration.fromObject({ seconds: 10 });
 
 // Our clock and GitHub's need not agree, so widen the window we accept a dispatched run in.
-const DISPATCH_CLOCK_SKEW_ALLOWANCE = Duration.fromObject({ seconds: 30 });
+export const DISPATCH_CLOCK_SKEW_ALLOWANCE = Duration.fromObject({
+  seconds: 30,
+});
 
 const MAX_DISPATCHED_RUNS_TO_SEARCH = 20;
 
@@ -297,7 +299,14 @@ const readDispatchedWorkflowRun = (
   };
 };
 
-const findRecentlyDispatchedRun = async ({
+/**
+ * The single run this workflow has been asked to start on `ref` since `dispatchedAfter`.
+ *
+ * Exported because it is also how a caller finds a run someone else dispatched: looking for a
+ * dispatch rather than for the commit is the only thing that works when the dispatch was pinned,
+ * since such a run is listed under the head of the branch it was dispatched against.
+ */
+export const findRecentlyDispatchedRun = async ({
   owner,
   repo,
   workflowId,

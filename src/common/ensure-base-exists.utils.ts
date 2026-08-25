@@ -8,7 +8,7 @@ import {
   TestRun,
 } from "@alwaysmeticulous/client";
 import log from "loglevel";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
 import { COMMIT_SHA_WORKFLOW_INPUT, DOCS_URL } from "./constants";
 import {
@@ -17,6 +17,8 @@ import {
   getDetailedGitHubPermissionsError,
 } from "./error.utils";
 import {
+  DISPATCH_CLOCK_SKEW_ALLOWANCE,
+  findRecentlyDispatchedRun,
   getCurrentWorkflowId,
   getPendingWorkflowRun,
   isPendingStatus,
@@ -220,6 +222,11 @@ const waitOnWorkflowRun = async (
     return { baseTestRunExists: false };
   }
 
+  // A dispatch ref can only be a branch or a tag, so we ask the workflow on the base branch to
+  // build `base` by naming it in an input. Workflows that don't declare that input build their
+  // branch head instead, which is the commit we want only while the branch hasn't moved on.
+  const baseRef = event.payload.pull_request.base.ref;
+
   // Several projects can share a workflow and each runs this action independently, so a missing
   // base has them all deciding to build the same commit at the same moment — and none of their
   // checks above can see the others, because GitHub doesn't list a run for several seconds after
@@ -227,6 +234,7 @@ const waitOnWorkflowRun = async (
   //
   // Asked here rather than earlier on purpose: a lease taken and then not used holds every other
   // caller off a commit that nothing goes on to build.
+  const askedForLeaseAt = DateTime.utc().minus(DISPATCH_CLOCK_SKEW_ALLOWANCE);
   const shouldDispatch = await takeBaseWorkflowDispatchLease({
     client: createClient({ apiToken }),
     baseCommitSha: base,
@@ -241,17 +249,14 @@ const waitOnWorkflowRun = async (
       owner,
       repo,
       workflowId,
+      baseRef,
+      dispatchedAfter: askedForLeaseAt,
       base,
       octokit,
       isCancelled,
       logger,
     });
   }
-
-  // A dispatch ref can only be a branch or a tag, so we ask the workflow on the base branch to
-  // build `base` by naming it in an input. Workflows that don't declare that input build their
-  // branch head instead, which is the commit we want only while the branch hasn't moved on.
-  const baseRef = event.payload.pull_request.base.ref;
 
   logger.debug(JSON.stringify({ base, baseRef }, null, 2));
 
@@ -354,16 +359,23 @@ const waitOnWorkflowRun = async (
  * Waits out a build of the base that we were told not to make ourselves.
  *
  * The caller holding the lease dispatched at about the moment we asked for it, and GitHub takes
- * a few seconds to list a run, so we look again for a short while and then wait on whatever
- * turns up as we would any other run. A dispatch pinned to a commit is listed under the head of
- * the branch it was dispatched against, though, so the run building our base can't always be
- * recognised by its commit — when it can't, the poll for the base test run racing alongside is
- * what resolves this, and all we do here is stay out of its way until it does.
+ * a few seconds to list a run, so we look again for a short while and then wait on what it
+ * dispatched as we would any run we'd found already pending. We look for a dispatch rather than
+ * for our commit because a pinned dispatch is listed under the head of the branch it was
+ * dispatched against, so the run building the base often can't be recognised by the base.
+ *
+ * Where the listing can't say — several dispatches in the same window are indistinguishable, and
+ * a holder that failed to dispatch leaves none at all — the poll for the base test run racing
+ * alongside is what resolves this, and all we do here is stay out of its way until it does. That
+ * costs a job whose lease holder failed to dispatch the wait it would otherwise have spent
+ * failing; it ends up without a base either way.
  */
 const waitOnAnotherCallersBuild = async ({
   owner,
   repo,
   workflowId,
+  baseRef,
+  dispatchedAfter,
   base,
   octokit,
   isCancelled,
@@ -372,6 +384,8 @@ const waitOnAnotherCallersBuild = async ({
   owner: string;
   repo: string;
   workflowId: number;
+  baseRef: string;
+  dispatchedAfter: DateTime;
   base: string;
   octokit: InstanceType<typeof GitHub>;
   isCancelled: () => boolean;
@@ -388,15 +402,15 @@ const waitOnAnotherCallersBuild = async ({
     if (isCancelled()) {
       return { baseTestRunExists: false };
     }
-    // Listing runs is a paginated read, so only do it while the other job's run could still be
-    // turning up. Past that we're waiting on the test run, and hammering the API would only cost
-    // the job its rate limit.
+    // Only look while the run could still be turning up: past that we're waiting on the test run,
+    // and listing on a loop for half an hour would spend the job's rate limit on nothing.
     if (Date.now() < stopLookingAtMs) {
-      const workflowRun = await getPendingWorkflowRun({
+      const workflowRun = await findRecentlyDispatchedRun({
         owner,
         repo,
         workflowId,
-        commitSha: base,
+        ref: baseRef,
+        dispatchedAfter,
         octokit,
         logger,
       });
