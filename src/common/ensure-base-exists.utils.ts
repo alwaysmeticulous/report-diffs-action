@@ -123,9 +123,13 @@ export const tryTriggerTestsWorkflowOnBase = async (
     opts.getBaseTestRun,
     isCancelled
   );
-  const result = await Promise.race([workflowRunPromise, baseTestRunPromise]);
-  isDone = true;
-  return result;
+  try {
+    return await Promise.race([workflowRunPromise, baseTestRunPromise]);
+  } finally {
+    // A workflow run that fails or times out throws, and the poll has no timeout of its own, so
+    // cancelling only on the happy path leaves it running until the job exits.
+    isDone = true;
+  }
 };
 
 const waitOnWorkflowRun = async (

@@ -270340,9 +270340,11 @@ var tryTriggerTestsWorkflowOnBase = async (opts) => {
     opts.getBaseTestRun,
     isCancelled
   );
-  const result = await Promise.race([workflowRunPromise, baseTestRunPromise]);
-  isDone = true;
-  return result;
+  try {
+    return await Promise.race([workflowRunPromise, baseTestRunPromise]);
+  } finally {
+    isDone = true;
+  }
 };
 var waitOnWorkflowRun = async (opts, isCancelled) => {
   const { logger, event, base, context: context5, octokit } = opts;

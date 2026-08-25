@@ -17,6 +17,8 @@ const WORKFLOW_ID = 42;
 
 const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS = 5_000;
 
+const POLL_FOR_BASE_TEST_RUN_INTERVAL_MS = 10_000;
+
 const logger = log.getLogger("ensure-base-exists.spec");
 logger.setLevel("silent");
 
@@ -252,5 +254,38 @@ describe("ensureBaseTestsExists", () => {
 
     // Let the workflow arm notice it has been cancelled rather than leaving its poll pending.
     await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+  });
+
+  it("stops polling once the base workflow has failed", async () => {
+    vi.useFakeTimers();
+    const getBaseTestRun = vi.fn().mockResolvedValue(null);
+    const octokit = buildOctokit({
+      workflowRuns: [pushRun(BASE_SHA, "in_progress", 10)],
+      dispatchedRunStatus: { status: "completed", conclusion: "failure" },
+    });
+
+    // Attached before the timers advance so the rejection is never momentarily unhandled.
+    const rejection = expect(
+      ensureBaseTestsExists({
+        event,
+        apiToken: "token",
+        base: BASE_SHA,
+        context,
+        octokit,
+        getBaseTestRun,
+        logger,
+      })
+    ).rejects.toThrow("did not complete successfully");
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+    await rejection;
+
+    // The poll wakes from its sleep once more to notice it has been cancelled, and then stops.
+    await vi.advanceTimersByTimeAsync(POLL_FOR_BASE_TEST_RUN_INTERVAL_MS);
+    const callsOnceCancellationWasNoticed = getBaseTestRun.mock.calls.length;
+    await vi.advanceTimersByTimeAsync(POLL_FOR_BASE_TEST_RUN_INTERVAL_MS * 100);
+
+    expect(getBaseTestRun.mock.calls.length).toBe(
+      callsOnceCancellationWasNoticed
+    );
   });
 });
