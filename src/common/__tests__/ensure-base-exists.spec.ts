@@ -330,6 +330,27 @@ describe("ensureBaseTestsExists", () => {
     expect(getBaseTestRunResolvedByBackend).not.toHaveBeenCalled();
   });
 
+  it("doesn't ask the backend outside a pull request, where we'd never build a base anyway", async () => {
+    const getBaseTestRunResolvedByBackend = vi.fn();
+
+    const result = await ensureBaseTestsExists({
+      event: {
+        type: "push",
+        payload: { before: ANCESTOR_SHA, after: BASE_SHA, ref: "main" },
+      },
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit: buildOctokit(),
+      getBaseTestRun: vi.fn().mockResolvedValue(null),
+      getBaseTestRunResolvedByBackend,
+      logger,
+    });
+
+    expect(getBaseTestRunResolvedByBackend).not.toHaveBeenCalled();
+    expect(result).toEqual({ baseTestRunExists: false });
+  });
+
   it("stops polling once the base workflow has failed", async () => {
     vi.useFakeTimers();
     const getBaseTestRun = vi.fn().mockResolvedValue(null);

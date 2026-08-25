@@ -251803,18 +251803,20 @@ var ensureBaseTestsExists = async ({
       }
     };
   }
-  const backendResolvedTestRun = await getBaseTestRunResolvedByBackend2?.();
-  if (backendResolvedTestRun != null) {
-    logger.info(
-      `No tests exist for commit ${base}, but this pull request already has a base test run to compare against (${backendResolvedTestRun.id})`
-    );
-    return {
-      baseTestRunExists: true,
-      baseResolutionDetails: {
-        type: "suitable-test-run-already-existed",
-        testRunId: backendResolvedTestRun.id
-      }
-    };
+  if (event.type === "pull_request") {
+    const backendResolvedTestRun = await getBaseTestRunResolvedByBackend2?.();
+    if (backendResolvedTestRun != null) {
+      logger.info(
+        `No tests exist for commit ${base}, but this pull request already has a base test run to compare against (${backendResolvedTestRun.id})`
+      );
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "suitable-test-run-already-existed",
+          testRunId: backendResolvedTestRun.id
+        }
+      };
+    }
   }
   return await tryTriggerTestsWorkflowOnBase({
     logger,
