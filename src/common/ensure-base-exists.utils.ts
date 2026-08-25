@@ -92,6 +92,10 @@ export const ensureBaseTestsExists = async ({
     base,
     context,
     octokit,
+    // Racing the workflow against a poll for the test run lets someone else's build of the same
+    // base finish the job for us, which matters when two dispatches land close enough together
+    // that neither can tell which run is its own.
+    getBaseTestRun: () => getBaseTestRun({ baseSha: base }),
   });
 };
 
