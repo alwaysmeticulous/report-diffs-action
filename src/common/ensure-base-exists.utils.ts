@@ -16,6 +16,7 @@ import {
   getCurrentWorkflowId,
   getPendingWorkflowRun,
   isPendingStatus,
+  StartWorkflowRunResult,
   startNewWorkflowRun,
   waitForWorkflowCompletion,
 } from "./workflow.utils";
@@ -230,6 +231,30 @@ const waitOnWorkflowRun = async (
     logger,
   });
 
+  if (dispatch.type === "ref-not-found") {
+    const fallback = await dispatchPinnedOnDefaultBranch({
+      owner,
+      repo,
+      workflowId,
+      base,
+      baseRef,
+      octokit,
+      logger,
+    });
+    if (fallback.type === "gave-up") {
+      logger.warn(fallback.message);
+      ghWarning(fallback.message);
+      return {
+        baseTestRunExists: false,
+        baseResolutionDetails: {
+          type: "failed-for-other-reason",
+          message: fallback.message,
+        },
+      };
+    }
+    dispatch = fallback;
+  }
+
   if (dispatch.type === "commit-pinning-unsupported") {
     const currentBaseSha = await getHeadCommitForRef({
       owner,
@@ -312,6 +337,96 @@ const waitOnWorkflowRun = async (
       msTaken: Date.now() - waitStartMs,
     },
   };
+};
+
+/**
+ * Asks the workflow on the repository's default branch to build the base commit, for when the
+ * PR's base branch is gone.
+ *
+ * A stacked PR's base branch is deleted by the very merge that produces its base commit, so the
+ * branch we'd naturally dispatch on is the one most likely to have just disappeared. Since the
+ * commit is named in an input, the ref only has to be somewhere the workflow file lives, and the
+ * default branch always is. Pinning is not optional here: the default branch's head is not the
+ * commit we want, so a workflow that can't accept the input has nothing useful to build.
+ */
+const dispatchPinnedOnDefaultBranch = async ({
+  owner,
+  repo,
+  workflowId,
+  base,
+  baseRef,
+  octokit,
+  logger,
+}: {
+  owner: string;
+  repo: string;
+  workflowId: number;
+  base: string;
+  baseRef: string;
+  octokit: InstanceType<typeof GitHub>;
+  logger: log.Logger;
+}): Promise<StartWorkflowRunResult | { type: "gave-up"; message: string }> => {
+  const defaultBranch = await getDefaultBranch({
+    owner,
+    repo,
+    octokit,
+    logger,
+  });
+
+  if (defaultBranch == null || defaultBranch === baseRef) {
+    return {
+      type: "gave-up",
+      message: `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
+    In addition we were not able to trigger a run on ${base}, since the '${baseRef}' branch it was on no longer exists.
+    Therefore no diffs will be reported for this run.`,
+    };
+  }
+
+  logger.info(
+    `The '${baseRef}' branch no longer exists, so asking the Meticulous workflow on '${defaultBranch}' to build ${base} instead.`
+  );
+
+  const dispatch = await startNewWorkflowRun({
+    owner,
+    repo,
+    workflowId,
+    ref: defaultBranch,
+    commitSha: base,
+    pinCommitSha: true,
+    octokit,
+    logger,
+  });
+
+  if (dispatch.type === "commit-pinning-unsupported") {
+    return {
+      type: "gave-up",
+      message: `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
+    In addition we were not able to trigger a run on ${base}: the '${baseRef}' branch it was on no longer exists, and the Meticulous workflow on '${defaultBranch}' does not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input that would let us ask for ${base} specifically.
+    Therefore no diffs will be reported for this run. Adding the input will fix this: see ${DOCS_URL}.`,
+    };
+  }
+
+  return dispatch;
+};
+
+const getDefaultBranch = async ({
+  owner,
+  repo,
+  octokit,
+  logger,
+}: {
+  owner: string;
+  repo: string;
+  octokit: InstanceType<typeof GitHub>;
+  logger: log.Logger;
+}): Promise<string | null> => {
+  try {
+    const { data } = await octokit.rest.repos.get({ owner, repo });
+    return data.default_branch;
+  } catch (err: unknown) {
+    logger.debug(`Could not look up the repository's default branch: ${err}`);
+    return null;
+  }
 };
 
 const waitOnBaseTestRun = async (

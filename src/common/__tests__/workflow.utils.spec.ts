@@ -215,6 +215,20 @@ describe("startNewWorkflowRun", () => {
     expect(result).toEqual({ type: "commit-pinning-unsupported" });
   });
 
+  it("tells a deleted branch apart from a workflow that cannot pin", async () => {
+    // GitHub refuses both with a 422, and they want opposite responses: a workflow that can't
+    // pin can still build its branch head, whereas a branch that's gone has no head to build.
+    const createWorkflowDispatch = vi.fn().mockRejectedValue(
+      Object.assign(new Error("No ref found for: refs/heads/deleted-branch"), {
+        status: 422,
+      })
+    );
+
+    const result = await startRun(buildOctokit({ createWorkflowDispatch }));
+
+    expect(result).toEqual({ type: "ref-not-found" });
+  });
+
   it("treats an unexpected-inputs rejection as a plain failure when not pinning", async () => {
     const createWorkflowDispatch = vi
       .fn()
