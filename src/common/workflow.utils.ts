@@ -66,7 +66,11 @@ export interface WorkflowRunHandle {
 export type StartWorkflowRunResult =
   | { type: "started"; workflowRun: WorkflowRunHandle | undefined }
   | { type: "commit-pinning-unsupported" }
+  | { type: "ref-not-found" }
   | { type: "failed" };
+
+/** How GitHub refuses a dispatch naming a branch that doesn't exist. */
+const REF_NOT_FOUND_MESSAGE = "No ref found for";
 
 export const startNewWorkflowRun = async ({
   owner,
@@ -109,11 +113,22 @@ export const startNewWorkflowRun = async ({
     });
   } catch (err: unknown) {
     const message = (err as { message?: string } | null)?.message ?? "";
+    const status = (err as { status?: number } | null)?.status;
+
+    // A branch that no longer exists is refused with a 422 too, so it has to be told apart from
+    // the missing-input refusal below — otherwise a deleted branch looks like a workflow that
+    // can't pin, and the caller goes looking for a branch head that isn't there.
+    if (message.includes(REF_NOT_FOUND_MESSAGE)) {
+      logger.debug(
+        `There is no '${ref}' branch to dispatch the Meticulous workflow on. ${message}`
+      );
+      return { type: "ref-not-found" };
+    }
+
     // A workflow that doesn't declare the input is rejected with 422 "Unexpected inputs
     // provided". We key off the status rather than the wording alone so that a rephrasing on
     // GitHub's side degrades to the branch-head behaviour we had before pinning, rather than
     // failing outright.
-    const status = (err as { status?: number } | null)?.status;
     if (
       pinCommitSha &&
       (status === 422 || message.includes(UNEXPECTED_INPUTS_MESSAGE))
@@ -260,15 +275,19 @@ const dispatchAndReadRun = async ({
  *
  * They have to be told apart by message, not status. A server that validates the body strictly
  * answers `400` on some versions and `422` on others, and `422` is also what an undeclared
- * input produces. Going by status alone, a strict server would look like a workflow that can't
- * be pinned, and we would drop the commit pinning that workflow was perfectly willing to honour.
+ * input — or a branch that doesn't exist — produces. Going by status alone, a strict server
+ * would look like a workflow that can't be pinned, and we would drop the commit pinning that
+ * workflow was perfectly willing to honour.
  */
 const isUnknownBodyFieldRefusal = (err: unknown): boolean => {
   const status = (err as { status?: number } | null)?.status;
+  const message = (err as { message?: string } | null)?.message ?? "";
+  if (message.includes(REF_NOT_FOUND_MESSAGE)) {
+    return false;
+  }
   if (status === 400) {
     return true;
   }
-  const message = (err as { message?: string } | null)?.message ?? "";
   return status === 422 && !message.includes(UNEXPECTED_INPUTS_MESSAGE);
 };
 

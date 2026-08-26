@@ -35,6 +35,25 @@ const event: CodeChangeEvent = {
   },
 };
 
+/** A stacked PR: based on another feature branch rather than on the default branch. */
+const stackedEvent: CodeChangeEvent = {
+  type: "pull_request",
+  payload: {
+    pull_request: {
+      number: 2,
+      head: { sha: "4444444444444444444444444444444444444444", ref: "child" },
+      base: { sha: BASE_SHA, ref: "parent-branch" },
+      title: "A stacked pull request",
+      html_url: "https://github.com/alwaysmeticulous/meticulous/pull/2",
+    },
+  },
+};
+
+const refNotFound = () =>
+  Object.assign(new Error("No ref found for: refs/heads/parent-branch"), {
+    status: 422,
+  });
+
 const context = {
   repo: { owner: "alwaysmeticulous", repo: "meticulous" },
   runId: 7,
@@ -81,6 +100,7 @@ const buildOctokit = ({
         getBranch: vi
           .fn()
           .mockResolvedValue({ data: { commit: { sha: BASE_SHA } } }),
+        get: vi.fn().mockResolvedValue({ data: { default_branch: "main" } }),
       },
     },
   } as unknown as InstanceType<typeof GitHub>;
@@ -132,6 +152,73 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
         type: "triggered-new-workflow-run-successfully",
       }),
     });
+  });
+
+  it("builds the base from the default branch when the base branch is gone", async () => {
+    vi.useFakeTimers();
+    // A stacked PR's base branch is deleted by the very merge that produces its base commit, so
+    // the branch we'd naturally dispatch on is the one most likely to have just disappeared.
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockRejectedValueOnce(refNotFound())
+      .mockResolvedValue({ data: { workflow_run_id: 99 } });
+    const octokit = buildOctokit({ createWorkflowDispatch });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event: stackedEvent,
+      base: BASE_SHA,
+      context,
+      octokit,
+    });
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+
+    expect(createWorkflowDispatch).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        ref: "main",
+        inputs: { [COMMIT_SHA_WORKFLOW_INPUT]: BASE_SHA },
+      })
+    );
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: expect.objectContaining({
+        type: "triggered-new-workflow-run-successfully",
+      }),
+    });
+  });
+
+  it("won't build the default branch's head in place of a base whose branch is gone", async () => {
+    vi.useFakeTimers();
+    // Without the input the default branch can only build its own head, which is not the commit
+    // we need — comparing against it would report diffs that aren't the PR's.
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockRejectedValueOnce(refNotFound())
+      .mockRejectedValue(
+        new Error(
+          `Unexpected inputs provided: ["${COMMIT_SHA_WORKFLOW_INPUT}"]`
+        )
+      );
+    const octokit = buildOctokit({ createWorkflowDispatch });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event: stackedEvent,
+      base: BASE_SHA,
+      context,
+      octokit,
+    });
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: false,
+      baseResolutionDetails: expect.objectContaining({
+        type: "failed-for-other-reason",
+      }),
+    });
+    for (const [dispatch] of createWorkflowDispatch.mock.calls) {
+      expect(dispatch).toHaveProperty("inputs");
+    }
   });
 
   it("waits on a pending run that is building the base commit itself", async () => {

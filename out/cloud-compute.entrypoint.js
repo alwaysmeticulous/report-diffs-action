@@ -270073,6 +270073,7 @@ var getCurrentWorkflowId = async ({
     throw err;
   }
 };
+var REF_NOT_FOUND_MESSAGE = "No ref found for";
 var startNewWorkflowRun = async ({
   owner,
   repo,
@@ -270099,6 +270100,12 @@ var startNewWorkflowRun = async ({
   } catch (err) {
     const message = err?.message ?? "";
     const status = err?.status;
+    if (message.includes(REF_NOT_FOUND_MESSAGE)) {
+      logger.debug(
+        `There is no '${ref}' branch to dispatch the Meticulous workflow on. ${message}`
+      );
+      return { type: "ref-not-found" };
+    }
     if (pinCommitSha && (status === 422 || message.includes(UNEXPECTED_INPUTS_MESSAGE))) {
       logger.debug(
         `The Meticulous workflow on '${ref}' did not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input, so it can only build whatever that branch currently points at. ${message}`
@@ -270192,10 +270199,13 @@ var dispatchAndReadRun = async ({
 };
 var isUnknownBodyFieldRefusal = (err) => {
   const status = err?.status;
+  const message = err?.message ?? "";
+  if (message.includes(REF_NOT_FOUND_MESSAGE)) {
+    return false;
+  }
   if (status === 400) {
     return true;
   }
-  const message = err?.message ?? "";
   return status === 422 && !message.includes(UNEXPECTED_INPUTS_MESSAGE);
 };
 var readDispatchedWorkflowRun = (response) => {
@@ -270414,6 +270424,29 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     octokit,
     logger
   });
+  if (dispatch.type === "ref-not-found") {
+    const fallback = await dispatchPinnedOnDefaultBranch({
+      owner,
+      repo,
+      workflowId,
+      base,
+      baseRef,
+      octokit,
+      logger
+    });
+    if (fallback.type === "gave-up") {
+      logger.warn(fallback.message);
+      (0, import_core3.warning)(fallback.message);
+      return {
+        baseTestRunExists: false,
+        baseResolutionDetails: {
+          type: "failed-for-other-reason",
+          message: fallback.message
+        }
+      };
+    }
+    dispatch = fallback;
+  }
   if (dispatch.type === "commit-pinning-unsupported") {
     const currentBaseSha = await getHeadCommitForRef({
       owner,
@@ -270487,6 +270520,66 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
       msTaken: Date.now() - waitStartMs
     }
   };
+};
+var dispatchPinnedOnDefaultBranch = async ({
+  owner,
+  repo,
+  workflowId,
+  base,
+  baseRef,
+  octokit,
+  logger
+}) => {
+  const defaultBranch = await getDefaultBranch({
+    owner,
+    repo,
+    octokit,
+    logger
+  });
+  if (defaultBranch == null || defaultBranch === baseRef) {
+    return {
+      type: "gave-up",
+      message: `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
+    In addition we were not able to trigger a run on ${base}, since the '${baseRef}' branch it was on no longer exists.
+    Therefore no diffs will be reported for this run.`
+    };
+  }
+  logger.info(
+    `The '${baseRef}' branch no longer exists, so asking the Meticulous workflow on '${defaultBranch}' to build ${base} instead.`
+  );
+  const dispatch = await startNewWorkflowRun({
+    owner,
+    repo,
+    workflowId,
+    ref: defaultBranch,
+    commitSha: base,
+    pinCommitSha: true,
+    octokit,
+    logger
+  });
+  if (dispatch.type === "commit-pinning-unsupported") {
+    return {
+      type: "gave-up",
+      message: `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
+    In addition we were not able to trigger a run on ${base}: the '${baseRef}' branch it was on no longer exists, and the Meticulous workflow on '${defaultBranch}' does not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input that would let us ask for ${base} specifically.
+    Therefore no diffs will be reported for this run. Adding the input will fix this: see ${DOCS_URL}.`
+    };
+  }
+  return dispatch;
+};
+var getDefaultBranch = async ({
+  owner,
+  repo,
+  octokit,
+  logger
+}) => {
+  try {
+    const { data } = await octokit.rest.repos.get({ owner, repo });
+    return data.default_branch;
+  } catch (err) {
+    logger.debug(`Could not look up the repository's default branch: ${err}`);
+    return null;
+  }
 };
 var waitOnBaseTestRun = async (getBaseTestRun, isCancelled) => {
   let baseTestRun = await getBaseTestRun();
