@@ -251797,7 +251797,7 @@ var ensureBaseTestsExists = async ({
   octokit,
   getBaseTestRun,
   getBaseTestRunResolvedByBackend: getBaseTestRunResolvedByBackend2,
-  dispatchedRunReportsCheckedOutCommit,
+  dispatchedRunReportsCheckedOutCommit = false,
   logger
 }) => {
   if (!base) {

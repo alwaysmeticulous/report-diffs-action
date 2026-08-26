@@ -61,7 +61,7 @@ export const ensureBaseTestsExists = async ({
   octokit,
   getBaseTestRun,
   getBaseTestRunResolvedByBackend,
-  dispatchedRunReportsCheckedOutCommit,
+  dispatchedRunReportsCheckedOutCommit = false,
   logger,
 }: {
   event: CodeChangeEvent;
