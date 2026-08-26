@@ -59,6 +59,7 @@ export const ensureBaseTestsExists = async ({
   context,
   octokit,
   getBaseTestRun,
+  getBaseTestRunResolvedByBackend,
   logger,
 }: {
   event: CodeChangeEvent;
@@ -67,6 +68,13 @@ export const ensureBaseTestsExists = async ({
   context: Context;
   octokit: InstanceType<typeof GitHub>;
   getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
+  /**
+   * A second, optional source of an already-usable base, asked only if nothing has been tested at
+   * `base` itself. Callers that can reach the backend's own base resolution pass it so that a base
+   * only the backend knows about — an older tested ancestor, under a monorepo setup — still counts
+   * as covered, rather than us building a commit it was never going to compare against.
+   */
+  getBaseTestRunResolvedByBackend?: () => Promise<TestRun | null>;
   logger: log.Logger;
 }): Promise<BaseTestsResolutionResult> => {
   if (!base) {
@@ -84,6 +92,24 @@ export const ensureBaseTestsExists = async ({
         testRunId: testRun.id,
       },
     };
+  }
+
+  // Only worth asking on a pull request, since that's the only event we'd build a base for.
+  if (event.type === "pull_request") {
+    const backendResolvedTestRun = await getBaseTestRunResolvedByBackend?.();
+
+    if (backendResolvedTestRun != null) {
+      logger.info(
+        `No tests exist for commit ${base}, but this pull request already has a base test run to compare against (${backendResolvedTestRun.id})`
+      );
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "suitable-test-run-already-existed",
+          testRunId: backendResolvedTestRun.id,
+        },
+      };
+    }
   }
 
   return await tryTriggerTestsWorkflowOnBase({

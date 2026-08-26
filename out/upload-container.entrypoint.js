@@ -29916,7 +29916,7 @@ var require_github_cloud_replay_api = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getGitHubCloudReplayBaseTestRun = void 0;
     var errors_1 = require_errors2();
-    var getGitHubCloudReplayBaseTestRun = async ({ client, headCommitSha }) => {
+    var getGitHubCloudReplayBaseTestRun2 = async ({ client, headCommitSha }) => {
       const { data } = await client.get("github-cloud-replay/base-test-run", {
         params: { headCommitSha }
       }).catch((error2) => {
@@ -29924,7 +29924,7 @@ var require_github_cloud_replay_api = __commonJS({
       });
       return data;
     };
-    exports2.getGitHubCloudReplayBaseTestRun = getGitHubCloudReplayBaseTestRun;
+    exports2.getGitHubCloudReplayBaseTestRun = getGitHubCloudReplayBaseTestRun2;
   }
 });
 
@@ -100844,7 +100844,7 @@ var require_client3 = __commonJS({
       };
     };
     exports2.buildClient = buildClient;
-    var createClient2 = ({ apiToken: apiToken_, appInfo }) => {
+    var createClient3 = ({ apiToken: apiToken_, appInfo }) => {
       const logger = (0, common_1.initLogger)();
       const apiToken = (0, api_token_utils_1.getApiToken)(apiToken_);
       if (!apiToken) {
@@ -100852,7 +100852,7 @@ var require_client3 = __commonJS({
       }
       return (0, exports2.buildClient)(apiToken, logger, appInfo);
     };
-    exports2.createClient = createClient2;
+    exports2.createClient = createClient3;
     var isInteractiveContext = () => process.stdin.isTTY === true && !process.env["CI"];
     exports2.isInteractiveContext = isInteractiveContext;
     var resolveApiTokenWithOAuth = async (options) => {
@@ -244724,9 +244724,40 @@ async function flush(timeout) {
 // src/actions/upload-container/upload-container.ts
 var import_core4 = __toESM(require_core());
 var import_github3 = __toESM(require_github());
-var import_client = __toESM(require_dist13());
+var import_client2 = __toESM(require_dist13());
 var import_remote_replay_launcher = __toESM(require_dist15());
 var import_sentry = __toESM(require_dist16());
+
+// src/common/cloud-replay-base.utils.ts
+var import_client = __toESM(require_dist13());
+var getCloudReplayBaseTestRun = async ({
+  apiToken,
+  headCommitSha
+}) => {
+  const client = (0, import_client.createClient)({ apiToken });
+  return await (0, import_client.getGitHubCloudReplayBaseTestRun)({
+    client,
+    headCommitSha
+  });
+};
+var getBaseTestRunResolvedByBackend = async ({
+  apiToken,
+  headCommitSha,
+  logger
+}) => {
+  try {
+    const { baseTestRun, commitIsInPullRequest } = await getCloudReplayBaseTestRun({ apiToken, headCommitSha });
+    if (!commitIsInPullRequest) {
+      return null;
+    }
+    return baseTestRun;
+  } catch (error2) {
+    logger.debug(
+      `Could not ask which base commit ${headCommitSha} would be compared against: ${error2}`
+    );
+    return null;
+  }
+};
 
 // src/common/ensure-base-exists.utils.ts
 var import_core2 = __toESM(require_core());
@@ -251755,6 +251786,7 @@ var ensureBaseTestsExists = async ({
   context: context5,
   octokit,
   getBaseTestRun,
+  getBaseTestRunResolvedByBackend: getBaseTestRunResolvedByBackend2,
   logger
 }) => {
   if (!base) {
@@ -251770,6 +251802,21 @@ var ensureBaseTestsExists = async ({
         testRunId: testRun.id
       }
     };
+  }
+  if (event.type === "pull_request") {
+    const backendResolvedTestRun = await getBaseTestRunResolvedByBackend2?.();
+    if (backendResolvedTestRun != null) {
+      logger.info(
+        `No tests exist for commit ${base}, but this pull request already has a base test run to compare against (${backendResolvedTestRun.id})`
+      );
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "suitable-test-run-already-existed",
+          testRunId: backendResolvedTestRun.id
+        }
+      };
+    }
   }
   return await tryTriggerTestsWorkflowOnBase({
     logger,
@@ -252332,7 +252379,7 @@ var runMeticulousUploadContainerAction = async () => {
           );
           return;
         }
-        const { base } = await getBaseAndHeadCommitShas(
+        const { base, head } = await getBaseAndHeadCommitShas(
           event,
           { useDeploymentUrl: false },
           logger
@@ -252343,12 +252390,17 @@ var runMeticulousUploadContainerAction = async () => {
           base,
           context: import_github3.context,
           octokit,
-          getBaseTestRun: async ({ baseSha }) => await (0, import_client.getLatestTestRunResults)({
-            client: (0, import_client.createClient)({ apiToken }),
+          getBaseTestRun: async ({ baseSha }) => await (0, import_client2.getLatestTestRunResults)({
+            client: (0, import_client2.createClient)({ apiToken }),
             commitSha: baseSha
             // We deliberately don't filter by environment version here because when containers are uploaded,
             // the backend can trigger a re-run. So we don't care whether we have a valid base now,
             // just whether the commit was tested at some point which means we have the container.
+          }),
+          getBaseTestRunResolvedByBackend: async () => await getBaseTestRunResolvedByBackend({
+            apiToken,
+            headCommitSha: head,
+            logger
           }),
           logger
         });

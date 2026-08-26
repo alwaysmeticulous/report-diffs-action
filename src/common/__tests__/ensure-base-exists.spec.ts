@@ -256,6 +256,101 @@ describe("ensureBaseTestsExists", () => {
     await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
   });
 
+  it("counts a base the backend resolved to an earlier commit rather than building one", async () => {
+    // Nothing has run at the merge base, but under a monorepo setup the backend will happily
+    // compare against an older tested ancestor, so building it would buy nothing.
+    const createWorkflowDispatch = vi.fn();
+    const octokit = buildOctokit({ createWorkflowDispatch });
+
+    const result = await ensureBaseTestsExists({
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit,
+      getBaseTestRun: vi.fn().mockResolvedValue(null),
+      getBaseTestRunResolvedByBackend: vi
+        .fn()
+        .mockResolvedValue({ id: "ancestor-test-run-id" } as TestRun),
+      logger,
+    });
+
+    expect(createWorkflowDispatch).not.toHaveBeenCalled();
+    expect(result).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: {
+        type: "suitable-test-run-already-existed",
+        testRunId: "ancestor-test-run-id",
+      },
+    });
+  });
+
+  it("builds the base when the backend has no base of its own either", async () => {
+    vi.useFakeTimers();
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockResolvedValue({ data: { workflow_run_id: 99 } });
+    const octokit = buildOctokit({ createWorkflowDispatch });
+
+    const resultPromise = ensureBaseTestsExists({
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit,
+      getBaseTestRun: vi.fn().mockResolvedValue(null),
+      getBaseTestRunResolvedByBackend: vi.fn().mockResolvedValue(null),
+      logger,
+    });
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: expect.objectContaining({
+        type: "triggered-new-workflow-run-successfully",
+      }),
+    });
+    expect(createWorkflowDispatch).toHaveBeenCalled();
+  });
+
+  it("doesn't ask the backend when the base commit has itself been tested", async () => {
+    const getBaseTestRunResolvedByBackend = vi.fn();
+
+    await ensureBaseTestsExists({
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit: buildOctokit(),
+      getBaseTestRun: vi.fn().mockResolvedValue({ id: "base-run" } as TestRun),
+      getBaseTestRunResolvedByBackend,
+      logger,
+    });
+
+    expect(getBaseTestRunResolvedByBackend).not.toHaveBeenCalled();
+  });
+
+  it("doesn't ask the backend outside a pull request, where we'd never build a base anyway", async () => {
+    const getBaseTestRunResolvedByBackend = vi.fn();
+
+    const result = await ensureBaseTestsExists({
+      event: {
+        type: "push",
+        payload: { before: ANCESTOR_SHA, after: BASE_SHA, ref: "main" },
+      },
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit: buildOctokit(),
+      getBaseTestRun: vi.fn().mockResolvedValue(null),
+      getBaseTestRunResolvedByBackend,
+      logger,
+    });
+
+    expect(getBaseTestRunResolvedByBackend).not.toHaveBeenCalled();
+    expect(result).toEqual({ baseTestRunExists: false });
+  });
+
   it("stops polling once the base workflow has failed", async () => {
     vi.useFakeTimers();
     const getBaseTestRun = vi.fn().mockResolvedValue(null);
