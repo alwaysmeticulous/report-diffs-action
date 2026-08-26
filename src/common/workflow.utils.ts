@@ -115,9 +115,10 @@ export const startNewWorkflowRun = async ({
     const message = (err as { message?: string } | null)?.message ?? "";
     const status = (err as { status?: number } | null)?.status;
 
-    // A branch that no longer exists is refused with a 422 too, so it has to be told apart from
-    // the missing-input refusal below — otherwise a deleted branch looks like a workflow that
-    // can't pin, and the caller goes looking for a branch head that isn't there.
+    // A branch that no longer exists is refused with a 422 too, so the status can't tell it from
+    // the missing-input refusal below and the wording has to; otherwise a deleted branch looks
+    // like a workflow that can't pin, and the caller goes looking for a branch head that isn't
+    // there.
     if (message.includes(REF_NOT_FOUND_MESSAGE)) {
       logger.debug(
         `There is no '${ref}' branch to dispatch the Meticulous workflow on. ${message}`

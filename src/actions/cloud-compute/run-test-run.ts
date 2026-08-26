@@ -133,6 +133,7 @@ export const runOneTestRun = async ({
           logger,
           event,
           base: codeChangeBase,
+          dispatchedRunReportsCheckedOutCommit: true,
           getBaseTestRun: async () => {
             const { baseTestRun } = await getCloudReplayBaseTestRun({
               apiToken,

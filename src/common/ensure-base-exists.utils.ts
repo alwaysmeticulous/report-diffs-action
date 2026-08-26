@@ -16,9 +16,9 @@ import {
   getCurrentWorkflowId,
   getPendingWorkflowRun,
   isPendingStatus,
-  StartWorkflowRunResult,
   startNewWorkflowRun,
   waitForWorkflowCompletion,
+  WorkflowRunHandle,
 } from "./workflow.utils";
 
 const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST = Duration.fromObject({
@@ -61,6 +61,7 @@ export const ensureBaseTestsExists = async ({
   octokit,
   getBaseTestRun,
   getBaseTestRunResolvedByBackend,
+  dispatchedRunReportsCheckedOutCommit = false,
   logger,
 }: {
   event: CodeChangeEvent;
@@ -68,6 +69,7 @@ export const ensureBaseTestsExists = async ({
   base: string | null;
   context: Context;
   octokit: InstanceType<typeof GitHub>;
+  dispatchedRunReportsCheckedOutCommit?: boolean;
   getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
   /**
    * A second, optional source of an already-usable base, asked only if nothing has been tested at
@@ -119,6 +121,7 @@ export const ensureBaseTestsExists = async ({
     base,
     context,
     octokit,
+    dispatchedRunReportsCheckedOutCommit,
     // Racing the workflow against a poll for the test run lets someone else's build of the same
     // base finish the job for us, which matters when two dispatches land close enough together
     // that neither can tell which run is its own.
@@ -133,6 +136,12 @@ export interface TryTriggerTestsWorkflowOnBaseOpts {
   getBaseTestRun?: () => Promise<TestRun | null>;
   context: Context;
   octokit: InstanceType<typeof GitHub>;
+  /**
+   * Whether a dispatched run records the commit it checked out, rather than the head of the
+   * branch it was dispatched at. Only then is a build we asked for on some other branch findable
+   * afterwards under the base commit, so only then is it worth asking for one.
+   */
+  dispatchedRunReportsCheckedOutCommit?: boolean;
 }
 
 export const tryTriggerTestsWorkflowOnBase = async (
@@ -163,7 +172,14 @@ const waitOnWorkflowRun = async (
   opts: TryTriggerTestsWorkflowOnBaseOpts,
   isCancelled: () => boolean
 ): Promise<BaseTestsResolutionResult> => {
-  const { logger, event, base, context, octokit } = opts;
+  const {
+    logger,
+    event,
+    base,
+    context,
+    octokit,
+    dispatchedRunReportsCheckedOutCommit,
+  } = opts;
   const { owner, repo } = context.repo;
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
 
@@ -232,15 +248,24 @@ const waitOnWorkflowRun = async (
   });
 
   if (dispatch.type === "ref-not-found") {
-    const fallback = await dispatchPinnedOnDefaultBranch({
-      owner,
-      repo,
-      workflowId,
-      base,
-      baseRef,
-      octokit,
-      logger,
-    });
+    const fallback = dispatchedRunReportsCheckedOutCommit
+      ? await dispatchPinnedOnDefaultBranch({
+          owner,
+          repo,
+          workflowId,
+          base,
+          baseRef,
+          octokit,
+          logger,
+        })
+      : {
+          type: "gave-up" as const,
+          message: couldNotBuildBase({
+            base,
+            reason: `the '${baseRef}' branch it was on no longer exists.`,
+            remedy: `The upload-assets and upload-container actions can build it from another branch instead: see ${DOCS_URL}.`,
+          }),
+        };
     if (fallback.type === "gave-up") {
       logger.warn(fallback.message);
       ghWarning(fallback.message);
@@ -365,7 +390,9 @@ const dispatchPinnedOnDefaultBranch = async ({
   baseRef: string;
   octokit: InstanceType<typeof GitHub>;
   logger: log.Logger;
-}): Promise<StartWorkflowRunResult | { type: "gave-up"; message: string }> => {
+}): Promise<
+  { type: "started"; workflowRun: WorkflowRunHandle | undefined } | GaveUp
+> => {
   const defaultBranch = await getDefaultBranch({
     owner,
     repo,
@@ -376,9 +403,14 @@ const dispatchPinnedOnDefaultBranch = async ({
   if (defaultBranch == null || defaultBranch === baseRef) {
     return {
       type: "gave-up",
-      message: `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
-    In addition we were not able to trigger a run on ${base}, since the '${baseRef}' branch it was on no longer exists.
-    Therefore no diffs will be reported for this run.`,
+      message: couldNotBuildBase({
+        base,
+        reason: `the '${baseRef}' branch it was on no longer exists${
+          defaultBranch == null
+            ? `, and we could not look up the repository's default branch to build it from instead`
+            : ``
+        }.`,
+      }),
     };
   }
 
@@ -400,14 +432,48 @@ const dispatchPinnedOnDefaultBranch = async ({
   if (dispatch.type === "commit-pinning-unsupported") {
     return {
       type: "gave-up",
-      message: `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
-    In addition we were not able to trigger a run on ${base}: the '${baseRef}' branch it was on no longer exists, and the Meticulous workflow on '${defaultBranch}' does not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input that would let us ask for ${base} specifically.
-    Therefore no diffs will be reported for this run. Adding the input will fix this: see ${DOCS_URL}.`,
+      message: couldNotBuildBase({
+        base,
+        reason: `the '${baseRef}' branch it was on no longer exists, and the Meticulous workflow on '${defaultBranch}' does not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input that would let us ask for ${base} specifically.`,
+        remedy: `Adding the input will fix this: see ${DOCS_URL}.`,
+      }),
+    };
+  }
+
+  if (dispatch.type !== "started") {
+    // Reported in full by `startNewWorkflowRun`; saying "we lost the run we dispatched" here
+    // would be a worse answer than the one already logged, and it's this one that's persisted.
+    return {
+      type: "gave-up",
+      message: couldNotBuildBase({
+        base,
+        reason: `the '${baseRef}' branch it was on no longer exists, and the dispatch on '${defaultBranch}' did not start a run.`,
+      }),
     };
   }
 
   return dispatch;
 };
+
+interface GaveUp {
+  type: "gave-up";
+  message: string;
+}
+
+const couldNotBuildBase = ({
+  base,
+  reason,
+  remedy,
+}: {
+  base: string;
+  reason: string;
+  remedy?: string;
+}): string =>
+  `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
+    In addition we were not able to trigger a run on ${base}: ${reason}
+    Therefore no diffs will be reported for this run.${
+      remedy ? ` ${remedy}` : ``
+    }`;
 
 const getDefaultBranch = async ({
   owner,
@@ -424,7 +490,7 @@ const getDefaultBranch = async ({
     const { data } = await octokit.rest.repos.get({ owner, repo });
     return data.default_branch;
   } catch (err: unknown) {
-    logger.debug(`Could not look up the repository's default branch: ${err}`);
+    logger.warn(`Could not look up the repository's default branch: ${err}`);
     return null;
   }
 };

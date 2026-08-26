@@ -64,6 +64,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           base,
           context,
           octokit,
+          dispatchedRunReportsCheckedOutCommit: true,
           getBaseTestRun: async ({ baseSha }) =>
             await getLatestTestRunResults({
               client: createClient({ apiToken }),
