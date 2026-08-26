@@ -60,7 +60,7 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           { useDeploymentUrl: false },
           logger
         );
-        await safeEnsureBaseTestsExists({
+        const { baseResolutionDetails } = await safeEnsureBaseTestsExists({
           event,
           apiToken,
           base,
@@ -101,6 +101,9 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           commitSha,
           rewrites,
           waitForBase: false,
+          ...(baseResolutionDetails
+            ? { debugContext: { baseResolutionDetails } }
+            : {}),
         });
         span.setStatus({ code: 1, message: "ok" });
         return 0;

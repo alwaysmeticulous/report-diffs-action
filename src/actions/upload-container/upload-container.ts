@@ -58,7 +58,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           { useDeploymentUrl: false },
           logger
         );
-        await safeEnsureBaseTestsExists({
+        const { baseResolutionDetails } = await safeEnsureBaseTestsExists({
           event,
           apiToken,
           base,
@@ -104,6 +104,9 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
             ? { containerHealthCheckEndpoint }
             : {}),
           ...(companionAssets != null ? { companionAssets } : {}),
+          ...(baseResolutionDetails
+            ? { debugContext: { baseResolutionDetails } }
+            : {}),
         });
         span.setStatus({ code: 1, message: "ok" });
         return 0;

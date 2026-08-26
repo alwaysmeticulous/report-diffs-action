@@ -28,9 +28,9 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^5.1.1",
-    "@alwaysmeticulous/client": "^2.331.1",
+    "@alwaysmeticulous/client": "^2.335.0",
     "@alwaysmeticulous/common": "^2.326.0",
-    "@alwaysmeticulous/remote-replay-launcher": "^2.331.1",
+    "@alwaysmeticulous/remote-replay-launcher": "^2.335.0",
     "@alwaysmeticulous/replay-orchestrator-launcher": "^2.331.1",
     "@alwaysmeticulous/sentry": "^2.326.0",
     "@sentry/cli": "^2.58.4",
