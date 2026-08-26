@@ -170,6 +170,7 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
       base: BASE_SHA,
       context,
       octokit,
+      dispatchedRunReportsCheckedOutCommit: true,
     });
     await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
 
@@ -207,6 +208,7 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
       base: BASE_SHA,
       context,
       octokit,
+      dispatchedRunReportsCheckedOutCommit: true,
     });
     await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
 
@@ -216,9 +218,40 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
         type: "failed-for-other-reason",
       }),
     });
+    expect(createWorkflowDispatch).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        ref: "main",
+        inputs: { [COMMIT_SHA_WORKFLOW_INPUT]: BASE_SHA },
+      })
+    );
     for (const [dispatch] of createWorkflowDispatch.mock.calls) {
       expect(dispatch).toHaveProperty("inputs");
     }
+  });
+
+  it("won't ask another branch to build the base when a dispatched run reports the branch head", async () => {
+    vi.useFakeTimers();
+    // The legacy `main` action records a dispatched run against the ref it was dispatched at, so
+    // a build asked for on the default branch would never be found under the base commit.
+    const createWorkflowDispatch = vi.fn().mockRejectedValue(refNotFound());
+    const octokit = buildOctokit({ createWorkflowDispatch });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event: stackedEvent,
+      base: BASE_SHA,
+      context,
+      octokit,
+    });
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: false,
+      baseResolutionDetails: expect.objectContaining({
+        type: "failed-for-other-reason",
+      }),
+    });
+    expect(createWorkflowDispatch).toHaveBeenCalledTimes(1);
   });
 
   it("waits on a pending run that is building the base commit itself", async () => {
