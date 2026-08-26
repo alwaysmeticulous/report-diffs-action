@@ -251438,7 +251438,6 @@ var UNEXPECTED_INPUTS_MESSAGE = "Unexpected inputs provided";
 var WORKFLOW_RUN_UPDATE_STATUS_INTERVAL = Duration.fromObject({ seconds: 5 });
 var WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL = Duration.fromObject({ hours: 1 });
 var GITHUB_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-var MAX_COMMITS_TO_SEARCH = 500;
 var MAX_WORKFLOW_RUNS_TO_SEARCH = 500;
 var getCurrentWorkflowId = async ({
   context: context5,
@@ -251681,22 +251680,6 @@ var getPendingWorkflowRun = async ({
 }) => {
   try {
     const since = DateTime.utc().minus(WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL).toFormat(GITHUB_DATE_FORMAT);
-    const commitResponses = octokit.paginate.iterator(
-      octokit.rest.repos.listCommits,
-      {
-        owner,
-        repo,
-        per_page: 100,
-        sha: commitSha,
-        since
-      }
-    );
-    const commits = [];
-    for await (const commitResponse of commitResponses) {
-      commits.push(...commitResponse.data);
-      if (commits.length >= MAX_COMMITS_TO_SEARCH)
-        break;
-    }
     const workflowRunsResponses = octokit.paginate.iterator(
       octokit.rest.actions.listWorkflowRuns,
       {
@@ -251713,33 +251696,16 @@ var getPendingWorkflowRun = async ({
       if (workflowRuns.length >= MAX_WORKFLOW_RUNS_TO_SEARCH)
         break;
     }
-    let shaToCheck = commitSha;
-    while (shaToCheck) {
-      const workflowRunsForCommit = workflowRuns.filter(
-        // Note we ignore runs on PR events because these are actually running on the temporary
-        // merge commit created by GitHub so they are not useable for comparisons.
-        (run) => run.head_sha === shaToCheck && run.event !== "pull_request"
-      );
-      if (workflowRunsForCommit.length > 0) {
-        const pendingRun = workflowRunsForCommit.find(
-          (run) => isPendingStatus(run.status)
-        );
-        if (pendingRun) {
-          return {
-            ...pendingRun,
-            workflowRunId: pendingRun.id
-          };
-        }
-        return void 0;
-      }
-      const commit = commits.find((c) => c.sha === shaToCheck);
-      if (!commit) {
-        return void 0;
-      }
-      if (commit.parents.length === 0) {
-        return void 0;
-      }
-      shaToCheck = commit.parents[0].sha;
+    const pendingRun = workflowRuns.find(
+      (run) => run.head_sha === commitSha && // Note we ignore runs on PR events because these are actually running on the temporary
+      // merge commit created by GitHub so they are not useable for comparisons.
+      run.event !== "pull_request" && isPendingStatus(run.status)
+    );
+    if (pendingRun) {
+      return {
+        ...pendingRun,
+        workflowRunId: pendingRun.id
+      };
     }
     return void 0;
   } catch (err) {
@@ -251810,7 +251776,11 @@ var ensureBaseTestsExists = async ({
     event,
     base,
     context: context5,
-    octokit
+    octokit,
+    // Racing the workflow against a poll for the test run lets someone else's build of the same
+    // base finish the job for us, which matters when two dispatches land close enough together
+    // that neither can tell which run is its own.
+    getBaseTestRun: () => getBaseTestRun({ baseSha: base })
   });
 };
 var tryTriggerTestsWorkflowOnBase = async (opts) => {
@@ -251826,9 +251796,11 @@ var tryTriggerTestsWorkflowOnBase = async (opts) => {
     opts.getBaseTestRun,
     isCancelled
   );
-  const result = await Promise.race([workflowRunPromise, baseTestRunPromise]);
-  isDone = true;
-  return result;
+  try {
+    return await Promise.race([workflowRunPromise, baseTestRunPromise]);
+  } finally {
+    isDone = true;
+  }
 };
 var waitOnWorkflowRun = async (opts, isCancelled) => {
   const { logger, event, base, context: context5, octokit } = opts;

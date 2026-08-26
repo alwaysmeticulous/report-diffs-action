@@ -26,8 +26,6 @@ const WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL = Duration.fromObject({ hours: 1 });
 
 const GITHUB_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-const MAX_COMMITS_TO_SEARCH = 500;
-
 const MAX_WORKFLOW_RUNS_TO_SEARCH = 500;
 
 export const getCurrentWorkflowId = async ({
@@ -411,8 +409,11 @@ export const waitForWorkflowCompletion = async ({
 };
 
 /**
- * Searches for a pending workflow in the commit passed in or one of it's parents
- * within the last hour.
+ * Searches for a pending workflow run on the commit passed in, dispatched within the last hour.
+ *
+ * Only a run whose `head_sha` is that commit counts. A run on an ancestor built a different tree,
+ * so there are no snapshots at this commit to compare against however close the two commits are,
+ * and waiting on one leaves the caller believing a base exists that the backend then can't find.
  */
 export const getPendingWorkflowRun = async ({
   owner,
@@ -433,23 +434,6 @@ export const getPendingWorkflowRun = async ({
     const since = DateTime.utc()
       .minus(WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL)
       .toFormat(GITHUB_DATE_FORMAT);
-    const commitResponses = octokit.paginate.iterator(
-      octokit.rest.repos.listCommits,
-      {
-        owner,
-        repo,
-        per_page: 100,
-        sha: commitSha,
-        since,
-      }
-    );
-    const commits: Awaited<
-      ReturnType<typeof octokit.rest.repos.listCommits>
-    >["data"] = [];
-    for await (const commitResponse of commitResponses) {
-      commits.push(...commitResponse.data);
-      if (commits.length >= MAX_COMMITS_TO_SEARCH) break;
-    }
     const workflowRunsResponses = octokit.paginate.iterator(
       octokit.rest.actions.listWorkflowRuns,
       {
@@ -467,40 +451,19 @@ export const getPendingWorkflowRun = async ({
       workflowRuns.push(...workflowRunResponse.data);
       if (workflowRuns.length >= MAX_WORKFLOW_RUNS_TO_SEARCH) break;
     }
-    let shaToCheck = commitSha;
-    while (shaToCheck) {
-      const workflowRunsForCommit = workflowRuns.filter(
+    const pendingRun = workflowRuns.find(
+      (run) =>
+        run.head_sha === commitSha &&
         // Note we ignore runs on PR events because these are actually running on the temporary
         // merge commit created by GitHub so they are not useable for comparisons.
-        (run) => run.head_sha === shaToCheck && run.event !== "pull_request"
-      );
-      if (workflowRunsForCommit.length > 0) {
-        // We've found a commit that we ran on. If there's a pending run, return it.
-        // In any case we can stop searching.
-        const pendingRun = workflowRunsForCommit.find((run) =>
-          isPendingStatus(run.status)
-        );
-        if (pendingRun) {
-          return {
-            ...pendingRun,
-            workflowRunId: pendingRun.id,
-          };
-        }
-        return undefined;
-      }
-      // If we don't find a workflow on the commit passed in, we search through the parents as the
-      // workflow may be selectively executed. Note we _always_ check the commit passed in first,
-      // which may be one that's older than an hour ago but that we just triggered a workflow on.
-      const commit = commits.find((c) => c.sha === shaToCheck);
-      if (!commit) {
-        // This must mean the commit is older than an hour ago, so we can stop searching.
-        return undefined;
-      }
-      if (commit.parents.length === 0) {
-        // We've reached the root commit, so we can stop searching.
-        return undefined;
-      }
-      shaToCheck = commit.parents[0].sha;
+        run.event !== "pull_request" &&
+        isPendingStatus(run.status)
+    );
+    if (pendingRun) {
+      return {
+        ...pendingRun,
+        workflowRunId: pendingRun.id,
+      };
     }
     return undefined;
   } catch (err) {

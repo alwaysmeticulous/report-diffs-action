@@ -92,6 +92,10 @@ export const ensureBaseTestsExists = async ({
     base,
     context,
     octokit,
+    // Racing the workflow against a poll for the test run lets someone else's build of the same
+    // base finish the job for us, which matters when two dispatches land close enough together
+    // that neither can tell which run is its own.
+    getBaseTestRun: () => getBaseTestRun({ baseSha: base }),
   });
 };
 
@@ -119,9 +123,13 @@ export const tryTriggerTestsWorkflowOnBase = async (
     opts.getBaseTestRun,
     isCancelled
   );
-  const result = await Promise.race([workflowRunPromise, baseTestRunPromise]);
-  isDone = true;
-  return result;
+  try {
+    return await Promise.race([workflowRunPromise, baseTestRunPromise]);
+  } finally {
+    // A workflow run that fails or times out throws, and the poll has no timeout of its own, so
+    // cancelling only on the happy path leaves it running until the job exits.
+    isDone = true;
+  }
 };
 
 const waitOnWorkflowRun = async (
