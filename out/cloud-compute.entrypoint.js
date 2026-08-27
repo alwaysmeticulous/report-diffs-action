@@ -177352,17 +177352,10 @@ var require_dist14 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/errors.js
 var require_errors10 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "7e85b61c-3cdd-5f34-8644-d9770519bb1a");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.WRONG_CREDENTIAL_TYPE_GUIDANCE = exports2.MISSING_AUTH_GUIDANCE = exports2.isAuthFailureStatus = exports2.isFetchError = void 0;
     var isFetchError = (error2) => {
@@ -177456,17 +177449,10 @@ ${requestAndResponse}`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
 var require_agent_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "af527722-2b83-54ba-b793-a15ef5c6473b");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getSessions = exports2.getStructuredSessionData = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.completeBaseRun = exports2.getTestRunForCommit = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummaryCounts = exports2.replyToDiffComment = exports2.createDiffComment = exports2.ignoreDiff = exports2.rejectDiff = exports2.getDiffComments = exports2.getTestRunDiffsSummary = exports2.submitAgentFeedback = exports2.trackAgentFeatureUsage = exports2.shouldDefaultToExecutedRanges = exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = void 0;
     var errors_1 = require_errors10();
@@ -177888,19 +177874,1080 @@ var require_agent_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
-var require_github_cloud_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/defer.js
+var require_defer2 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "b88447e0-b929-5ded-9600-f2c22e5dcfb8");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getGitHubCloudReplayBaseTestRun = void 0;
+    exports2.defer = defer2;
+    function defer2() {
+      let state = "pending";
+      let resolve5 = null;
+      let reject = null;
+      const promise = new Promise((res, rej) => {
+        resolve5 = res;
+        reject = rej;
+      });
+      promise.then(() => {
+        state = "fulfilled";
+      }, () => {
+        state = "rejected";
+      });
+      return {
+        resolve: resolve5,
+        reject,
+        promise,
+        getState: () => state
+      };
+    }
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
+var require_console_logger2 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
+    "use strict";
+    var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.logNotice = exports2.logProgress = exports2.setLogLevel = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = void 0;
+    var loglevel_1 = __importDefault2(require_loglevel());
+    exports2.METICULOUS_LOGGER_NAME = "@alwaysmeticulous";
+    var timestampsApplied = false;
+    var explicitLevelSet = false;
+    var initLogger2 = () => {
+      const logger = loglevel_1.default.getLogger(exports2.METICULOUS_LOGGER_NAME);
+      if (!explicitLevelSet) {
+        logger.setDefaultLevel(loglevel_1.default.levels.INFO);
+      }
+      if (process.env.METICULOUS_TIMESTAMP_LOGS === "true" && !timestampsApplied) {
+        const originalFactory = logger.methodFactory;
+        logger.methodFactory = (methodName, logLevel, loggerName) => {
+          const rawMethod = originalFactory(methodName, logLevel, loggerName);
+          return (...args) => {
+            const timestamp = (/* @__PURE__ */ new Date()).toISOString();
+            rawMethod(`[${timestamp}]`, ...args);
+          };
+        };
+        timestampsApplied = true;
+      }
+      return logger;
+    };
+    exports2.initLogger = initLogger2;
+    var setLogLevel2 = (logLevel) => {
+      const logger = loglevel_1.default.getLogger(exports2.METICULOUS_LOGGER_NAME);
+      switch ((logLevel || "").toLocaleLowerCase()) {
+        case "trace":
+          logger.setLevel(loglevel_1.default.levels.TRACE, false);
+          break;
+        case "debug":
+          logger.setLevel(loglevel_1.default.levels.DEBUG, false);
+          break;
+        case "info":
+          logger.setLevel(loglevel_1.default.levels.INFO, false);
+          break;
+        case "warn":
+          logger.setLevel(loglevel_1.default.levels.WARN, false);
+          break;
+        case "error":
+          logger.setLevel(loglevel_1.default.levels.ERROR, false);
+          break;
+        case "silent":
+          logger.setLevel(loglevel_1.default.levels.SILENT, false);
+          break;
+        default:
+          return;
+      }
+      explicitLevelSet = true;
+    };
+    exports2.setLogLevel = setLogLevel2;
+    var logProgress = (message) => {
+      if ((0, exports2.initLogger)().getLevel() <= loglevel_1.default.levels.INFO) {
+        console.error(message);
+      }
+    };
+    exports2.logProgress = logProgress;
+    var logNotice = (message) => {
+      console.error(message);
+    };
+    exports2.logNotice = logNotice;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
+var require_local_data2 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.runWithLocalDataDir = exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = void 0;
+    var async_hooks_1 = require("async_hooks");
+    var path_1 = require("path");
+    var console_logger_1 = require_console_logger2();
+    var asyncLocalDataDir = new async_hooks_1.AsyncLocalStorage();
+    var _localDataDir = "";
+    var getMeticulousLocalDataDir = () => {
+      const asyncDir = asyncLocalDataDir.getStore();
+      if (asyncDir) {
+        return asyncDir;
+      }
+      const logger = (0, console_logger_1.initLogger)();
+      if (!_localDataDir) {
+        (0, exports2.setMeticulousLocalDataDir)();
+        logger.debug(`Local data dir has not been set explictly, so defaulting to ${_localDataDir}`);
+      } else {
+        logger.debug(`Using local data dir at ${_localDataDir}`);
+      }
+      return _localDataDir;
+    };
+    exports2.getMeticulousLocalDataDir = getMeticulousLocalDataDir;
+    var setMeticulousLocalDataDir = (localDataDir) => {
+      const logger = (0, console_logger_1.initLogger)();
+      if (_localDataDir) {
+        logger.warn("Meticulous local data dir has already been set by a prior call to setMeticulousLocalDataDir()");
+      }
+      _localDataDir = localDataDir || process.env["METICULOUS_DIR"] || (0, path_1.normalize)((0, path_1.join)(process.env["HOME"] || process.cwd(), ".meticulous"));
+    };
+    exports2.setMeticulousLocalDataDir = setMeticulousLocalDataDir;
+    var runWithLocalDataDir = (dataDir, fn) => {
+      let result;
+      asyncLocalDataDir.run(dataDir, () => {
+        result = fn();
+      });
+      return result;
+    };
+    exports2.runWithLocalDataDir = runWithLocalDataDir;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
+var require_logs3 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getLogFile = void 0;
+    var promises_1 = require("fs/promises");
+    var path_1 = require("path");
+    var local_data_1 = require_local_data2();
+    var getLogFile = async (invocationId) => {
+      const logsDir = (0, path_1.join)((0, local_data_1.getMeticulousLocalDataDir)(), "logs");
+      await (0, promises_1.mkdir)(logsDir, { recursive: true });
+      const logFile = (0, path_1.join)(logsDir, `${invocationId}.log`);
+      return logFile;
+    };
+    exports2.getLogFile = getLogFile;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
+var require_debug_logger3 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.DebugLogger = void 0;
+    var child_process_1 = require("child_process");
+    var crypto_1 = require("crypto");
+    var promises_1 = require("fs/promises");
+    var luxon_1 = require_luxon();
+    var local_data_1 = require_local_data2();
+    var logs_1 = require_logs3();
+    var random = () => {
+      return (0, crypto_1.createHash)("sha256").update((0, crypto_1.randomUUID)()).digest("hex").slice(0, 8);
+    };
+    var getUname = () => {
+      return new Promise((resolve5, reject) => {
+        (0, child_process_1.exec)("uname -a", { encoding: "utf-8" }, (error2, output) => {
+          if (error2) {
+            reject(error2);
+            return;
+          }
+          resolve5(output);
+        });
+      });
+    };
+    var getNpmConfig = () => {
+      return new Promise((resolve5, reject) => {
+        (0, child_process_1.exec)("npm config get", { encoding: "utf-8" }, (error2, output) => {
+          if (error2) {
+            reject(error2);
+            return;
+          }
+          resolve5(output);
+        });
+      });
+    };
+    var DebugLogger = class _DebugLogger {
+      invocationId;
+      logFilePath;
+      logFile;
+      writeStream;
+      constructor(invocationId, logFilePath, logFile, writeStream) {
+        this.invocationId = invocationId;
+        this.logFilePath = logFilePath;
+        this.logFile = logFile;
+        this.writeStream = writeStream;
+      }
+      log(msg) {
+        this.writeStream.write(msg);
+        this.writeStream.write("\n");
+      }
+      logObject(object) {
+        this.log(JSON.stringify(object, null, 2));
+      }
+      async logStart() {
+        console.log(`Recording detailed log file in ${this.logFilePath}`);
+        const uname = await getUname().catch((error2) => `Error: ${error2}`);
+        const cwd = process.cwd();
+        const argv = process.argv;
+        const execArgv = process.execArgv;
+        const meticulousLocalDataDir = (0, local_data_1.getMeticulousLocalDataDir)();
+        const invocation = {
+          uname,
+          cwd,
+          argv,
+          execArgv,
+          meticulousLocalDataDir
+        };
+        this.log("Invocation:");
+        this.logObject(invocation);
+        const npmConfig = await getNpmConfig().catch((error2) => `Error: ${error2}`);
+        this.log("NPM config:");
+        this.logObject({ npmConfig });
+      }
+      static async create() {
+        const invocationId = _DebugLogger.genereteInvocationId();
+        const logFilePath = await (0, logs_1.getLogFile)(invocationId);
+        const logFile = await (0, promises_1.open)(logFilePath, "ax");
+        const writeStream = logFile.createWriteStream({
+          encoding: "utf-8"
+        });
+        const logger = new _DebugLogger(invocationId, logFilePath, logFile, writeStream);
+        await logger.logStart();
+        return logger;
+      }
+      static genereteInvocationId() {
+        const date = luxon_1.DateTime.utc();
+        return `${date.toISO()}_${random()}`;
+      }
+    };
+    exports2.DebugLogger = DebugLogger;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/constants.js
+var require_constants36 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = void 0;
+    exports2.BASE_SNIPPETS_URL = "https://snippet.meticulous.ai/";
+    exports2.IS_METICULOUS_SUPER_USER = !!process.env["METICULOUS_SUPER_USER"];
+    exports2.DEFAULT_EXECUTION_OPTIONS = {
+      headless: true,
+      devTools: false,
+      bypassCSP: false,
+      shiftTime: true,
+      networkStubbing: true,
+      skipPauses: true,
+      moveBeforeMouseEvent: true,
+      disableRemoteFonts: false,
+      noSandbox: false,
+      maxDurationMs: 5 * 60 * 1e3,
+      // 5 minutes
+      maxEventCount: null,
+      essentialFeaturesOnly: false,
+      logPossibleNonDeterminism: false
+    };
+    exports2.DEFAULT_SCREENSHOTTING_OPTIONS = {
+      enabled: true,
+      storyboardOptions: { enabled: true },
+      diffOptions: {
+        diffThreshold: 1e-5,
+        diffPixelThreshold: 0.01
+      }
+    };
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/version.utils.js
+var require_version_utils2 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getMeticulousVersion = void 0;
+    var promises_1 = require("fs/promises");
+    var version = "";
+    var getMeticulousVersion = async (packageJsonPath) => {
+      if (version) {
+        return version;
+      }
+      const packageJson = JSON.parse(await (0, promises_1.readFile)(packageJsonPath, { encoding: "utf-8" }));
+      const versionStr = packageJson["version"] || "unknown";
+      version = `sdk-v${versionStr}`;
+      return version;
+    };
+    exports2.getMeticulousVersion = getMeticulousVersion;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
+var require_commit_sha_utils2 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getCommitDate = exports2.getStashCreateSha = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitSha = void 0;
+    var child_process_1 = require("child_process");
+    var console_logger_1 = require_console_logger2();
+    var execPromise = (command2, cwd) => {
+      return new Promise((resolve5, reject) => {
+        (0, child_process_1.exec)(command2, { encoding: "utf-8", cwd }, (error2, output) => {
+          if (error2) {
+            reject(error2);
+            return;
+          }
+          resolve5(output.trim());
+        });
+      });
+    };
+    var execFilePromise = (file, args, cwd) => {
+      return new Promise((resolve5, reject) => {
+        (0, child_process_1.execFile)(file, args, { encoding: "utf-8", cwd }, (error2, output) => {
+          if (error2) {
+            reject(error2 instanceof Error ? error2 : new Error(String(error2)));
+            return;
+          }
+          resolve5(output.trim());
+        });
+      });
+    };
+    var getGitRevParseHead = (cwd) => {
+      return new Promise((resolve5, reject) => {
+        (0, child_process_1.exec)("git rev-parse HEAD", { encoding: "utf-8", cwd }, (error2, output) => {
+          if (error2) {
+            reject(error2);
+            return;
+          }
+          resolve5(output);
+        });
+      });
+    };
+    var getCommitSha = async (commitSha_, options) => {
+      if (commitSha_) {
+        return commitSha_;
+      }
+      const logger = (0, console_logger_1.initLogger)();
+      try {
+        const gitCommitSha = (await getGitRevParseHead(options?.cwd)).trim();
+        return gitCommitSha;
+      } catch (error2) {
+        if (error2 instanceof Error) {
+          if (error2.message.startsWith("Command failed")) {
+            logger.info("Notice: not running in a git repository");
+            return "";
+          }
+        }
+        logger.error(error2);
+        return "";
+      }
+    };
+    exports2.getCommitSha = getCommitSha;
+    var getGitCommitDate = (commitSha, cwd) => {
+      return new Promise((resolve5, reject) => {
+        (0, child_process_1.execFile)("git", ["show", "-s", "--format=%cI", commitSha], { encoding: "utf-8", cwd }, (error2, output) => {
+          if (error2) {
+            reject(error2 instanceof Error ? error2 : new Error(String(error2)));
+            return;
+          }
+          resolve5(output);
+        });
+      });
+    };
+    var getLocalBaseSha = async (options) => {
+      const logger = (0, console_logger_1.initLogger)();
+      const cwd = options?.cwd;
+      let branchName;
+      try {
+        branchName = await execPromise("git rev-parse --abbrev-ref HEAD", cwd);
+      } catch (error2) {
+        logger.info(`Could not determine current branch (not in a git repository?): ${error2 instanceof Error ? error2.message : error2}`);
+        return null;
+      }
+      logger.debug(`Current branch: ${branchName}`);
+      try {
+        await execPromise("git fetch origin", cwd);
+      } catch (error2) {
+        logger.warn(`Could not fetch from origin: ${error2 instanceof Error ? error2.message : error2}`);
+      }
+      const defaultBranch = await detectDefaultBranch(cwd);
+      const defaultBranchName = defaultBranch?.replace(/^origin\//, "");
+      const defaultBranchCandidates = defaultBranchName ? [defaultBranchName] : ["main", "master"];
+      if (branchName === "HEAD" || defaultBranchCandidates.includes(branchName)) {
+        try {
+          const headSha = await execPromise("git rev-parse HEAD", cwd);
+          logger.debug(`On ${branchName === "HEAD" ? "detached HEAD" : branchName}, using HEAD as base SHA: ${headSha}`);
+          return headSha;
+        } catch (error2) {
+          logger.warn(`On ${branchName === "HEAD" ? "detached HEAD" : branchName}, but could not get HEAD SHA: ${error2 instanceof Error ? error2.message : error2}`);
+          return null;
+        }
+      }
+      const baseCandidates = [
+        ...defaultBranch ? [defaultBranch] : [],
+        "origin/main",
+        "origin/master"
+      ];
+      const uniqueCandidates = [...new Set(baseCandidates)];
+      for (const candidate of uniqueCandidates) {
+        try {
+          const mergeBase = await execFilePromise("git", ["merge-base", candidate, "HEAD"], cwd);
+          logger.debug(`Computed merge-base with '${candidate}': ${mergeBase}`);
+          return mergeBase;
+        } catch {
+        }
+      }
+      logger.warn("Could not compute base SHA: no default branch found on origin.");
+      return null;
+    };
+    exports2.getLocalBaseSha = getLocalBaseSha;
+    var hasUncommittedChanges = async (options) => {
+      try {
+        const output = await execPromise("git status --porcelain --untracked-files=no", options?.cwd);
+        return output.length > 0;
+      } catch {
+        return false;
+      }
+    };
+    exports2.hasUncommittedChanges = hasUncommittedChanges;
+    var getUntrackedFiles = async (options) => {
+      try {
+        const output = await execFilePromise("git", ["ls-files", "--others", "--exclude-standard"], options?.cwd);
+        return output.split("\n").map((line) => line.trim()).filter((line) => line.length > 0);
+      } catch {
+        return [];
+      }
+    };
+    exports2.getUntrackedFiles = getUntrackedFiles;
+    var getGitDiff = async (baseSha, headSha, options) => {
+      const args = headSha ? ["diff", baseSha, headSha] : ["diff", baseSha];
+      return execFilePromise("git", args, options?.cwd);
+    };
+    exports2.getGitDiff = getGitDiff;
+    var getStashCreateSha = async (options) => {
+      const output = (await execFilePromise("git", ["stash", "create"], options?.cwd)).trim();
+      return output || void 0;
+    };
+    exports2.getStashCreateSha = getStashCreateSha;
+    var detectDefaultBranch = async (cwd) => {
+      const logger = (0, console_logger_1.initLogger)();
+      try {
+        const ref = await execPromise("git symbolic-ref refs/remotes/origin/HEAD", cwd);
+        const branch = ref.replace(/^refs\/remotes\//, "");
+        logger.debug(`Default branch from symbolic-ref: ${branch}`);
+        return branch;
+      } catch {
+      }
+      try {
+        const output = await execPromise("git remote show origin", cwd);
+        const match2 = output.match(/HEAD branch:\s*(\S+)/);
+        if (match2) {
+          const branch = `origin/${match2[1]}`;
+          logger.debug(`Default branch from remote show: ${branch}`);
+          return branch;
+        }
+      } catch {
+      }
+      return null;
+    };
+    var getCommitDate = async (commitDate_, commitSha) => {
+      if (commitDate_) {
+        return commitDate_;
+      }
+      const logger = (0, console_logger_1.initLogger)();
+      try {
+        const gitCommitDate = (await getGitCommitDate(commitSha)).trim();
+        return gitCommitDate;
+      } catch (error2) {
+        if (error2 instanceof Error) {
+          if (error2.message.startsWith("Command failed")) {
+            logger.debug("Notice: not running in a git repository (cannot get commit date)");
+            return "";
+          }
+        }
+        logger.error(error2);
+        return "";
+      }
+    };
+    exports2.getCommitDate = getCommitDate;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js
+var require_error_code_utils2 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getErrorCode = getErrorCode;
+    function getErrorCode(error2) {
+      return getNestedErrorCode(error2, /* @__PURE__ */ new Set());
+    }
+    function getNestedErrorCode(error2, visited) {
+      if (!error2 || typeof error2 !== "object") {
+        return void 0;
+      }
+      if (visited.has(error2)) {
+        return void 0;
+      }
+      visited.add(error2);
+      const nodeError = error2;
+      const nestedCode = getNestedErrorCode(nodeError.cause, visited);
+      if (nestedCode) {
+        return nestedCode;
+      }
+      return typeof nodeError.code === "string" ? nodeError.code : void 0;
+    }
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
+var require_http_retry_utils2 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.executeWithRetry = exports2.computeRetryDelayMs = exports2.getRetryAfterMs = exports2.defaultShouldRetry = void 0;
+    var error_code_utils_1 = require_error_code_utils2();
+    var DEFAULT_MAX_RETRIES = 3;
+    var DEFAULT_RETRY_DELAY_MS = 1e3;
+    var DEFAULT_MAX_RETRY_DELAY_MS = 3e4;
+    var RETRY_AFTER_JITTER_MS = 1e3;
+    var RETRYABLE_NETWORK_ERROR_CODES = /* @__PURE__ */ new Set([
+      "ECONNRESET",
+      "ETIMEDOUT",
+      "ECONNREFUSED",
+      "ENOTFOUND",
+      // undici-specific codes (surfaced via fetch's cause chain)
+      "UND_ERR_CONNECT_TIMEOUT",
+      "UND_ERR_HEADERS_TIMEOUT",
+      "UND_ERR_SOCKET",
+      // OpenSSL handshake glitches (e.g. LB/proxy briefly returning non-TLS bytes).
+      // Seen in CI as TypeError: fetch failed -> ERR_SSL_PACKET_LENGTH_TOO_LONG.
+      "ERR_SSL_PACKET_LENGTH_TOO_LONG",
+      "ERR_SSL_WRONG_VERSION_NUMBER"
+    ]);
+    var defaultShouldRetry = (error2) => {
+      if (error2.name === "AbortError") {
+        return true;
+      }
+      const errorCode = (0, error_code_utils_1.getErrorCode)(error2);
+      if (errorCode != null && RETRYABLE_NETWORK_ERROR_CODES.has(errorCode)) {
+        return true;
+      }
+      const status = error2.response?.status;
+      if (status === 429) {
+        return true;
+      }
+      if (typeof status === "number" && status >= 500) {
+        return true;
+      }
+      return false;
+    };
+    exports2.defaultShouldRetry = defaultShouldRetry;
+    var getRetryAfterMs = (error2, now2 = Date.now()) => {
+      const headers = error2?.response?.headers;
+      if (!headers || typeof headers !== "object") {
+        return null;
+      }
+      const raw = headers["retry-after"] ?? headers["Retry-After"];
+      if (raw == null) {
+        return null;
+      }
+      const value = Array.isArray(raw) ? raw[0] : String(raw);
+      const seconds = Number(value);
+      if (Number.isFinite(seconds)) {
+        return Math.max(0, seconds * 1e3);
+      }
+      const dateMs = Date.parse(value);
+      if (!Number.isNaN(dateMs)) {
+        return Math.max(0, dateMs - now2);
+      }
+      return null;
+    };
+    exports2.getRetryAfterMs = getRetryAfterMs;
+    var computeRetryDelayMs = (attempt, { retryDelay, maxRetryDelay, retryAfterMs }, random = Math.random) => {
+      if (retryAfterMs != null) {
+        const jitter = random() * RETRY_AFTER_JITTER_MS;
+        return Math.min(retryAfterMs + jitter, maxRetryDelay);
+      }
+      const cappedBackoff = Math.min(retryDelay * 2 ** attempt, maxRetryDelay);
+      return cappedBackoff / 2 + random() * (cappedBackoff / 2);
+    };
+    exports2.computeRetryDelayMs = computeRetryDelayMs;
+    var executeWithRetry = async (operation2, options = {}) => {
+      const { maxRetries = DEFAULT_MAX_RETRIES, retryDelay = DEFAULT_RETRY_DELAY_MS, maxRetryDelay = DEFAULT_MAX_RETRY_DELAY_MS, shouldRetry = exports2.defaultShouldRetry, logger } = options;
+      let lastError;
+      for (let attempt = 0; attempt <= maxRetries; attempt++) {
+        try {
+          return await operation2();
+        } catch (error2) {
+          lastError = error2;
+          if (attempt < maxRetries && shouldRetry(error2)) {
+            const delay2 = (0, exports2.computeRetryDelayMs)(attempt, {
+              retryDelay,
+              maxRetryDelay,
+              retryAfterMs: (0, exports2.getRetryAfterMs)(error2)
+            });
+            if (logger) {
+              logger.warn(`Operation failed, retrying in ${Math.round(delay2)}ms (attempt ${attempt + 2} of ${maxRetries + 1}): ${describeRetriedError(error2)}`);
+            }
+            await new Promise((resolve5) => setTimeout(resolve5, delay2));
+          } else {
+            break;
+          }
+        }
+      }
+      throw lastError;
+    };
+    exports2.executeWithRetry = executeWithRetry;
+    var describeRetriedError = (error2) => error2 instanceof Error ? error2.message : String(error2);
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js
+var require_fetch_utils2 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.meticulousFetch = void 0;
+    var undici_1 = require_undici2();
+    var DEFAULT_PORTS = {
+      "http:": 80,
+      "https:": 443
+    };
+    var directDispatcher;
+    var proxyDispatchers;
+    var meticulousFetch = (input, init) => {
+      return (0, undici_1.fetch)(input, {
+        ...init,
+        dispatcher: getDispatcherForInput(input)
+      });
+    };
+    exports2.meticulousFetch = meticulousFetch;
+    function getDispatcherForInput(input) {
+      const url = getUrlFromInput(input);
+      if (!url) {
+        return getDirectDispatcher();
+      }
+      const { httpProxy, httpsProxy, noProxy } = getProxyConfiguration();
+      if (!shouldProxy(url, noProxy)) {
+        return getDirectDispatcher();
+      }
+      if (url.protocol === "https:") {
+        return httpsProxy ? getProxyDispatcher(httpsProxy) : getDirectDispatcher();
+      }
+      return httpProxy ? getProxyDispatcher(httpProxy) : getDirectDispatcher();
+    }
+    function getUrlFromInput(input) {
+      try {
+        if (typeof input === "string" || input instanceof URL) {
+          return new URL(input.toString());
+        }
+        if (typeof input === "object" && input !== null && "url" in input) {
+          const requestUrl = input.url;
+          if (typeof requestUrl === "string") {
+            return new URL(requestUrl);
+          }
+        }
+      } catch {
+        return void 0;
+      }
+      return void 0;
+    }
+    function getProxyConfiguration() {
+      const httpProxy = process.env["http_proxy"] ?? process.env["HTTP_PROXY"];
+      const httpsProxy = process.env["https_proxy"] ?? process.env["HTTPS_PROXY"] ?? httpProxy;
+      const noProxy = process.env["no_proxy"] ?? process.env["NO_PROXY"] ?? "";
+      const proxyConfiguration = { noProxy };
+      if (httpProxy) {
+        proxyConfiguration.httpProxy = httpProxy;
+      }
+      if (httpsProxy) {
+        proxyConfiguration.httpsProxy = httpsProxy;
+      }
+      return proxyConfiguration;
+    }
+    function shouldProxy(url, noProxy) {
+      const entries = parseNoProxyEntries(noProxy);
+      if (entries.length === 0) {
+        return true;
+      }
+      if (noProxy === "*") {
+        return false;
+      }
+      const hostname = url.hostname.toLowerCase();
+      const port = Number.parseInt(url.port, 10) || DEFAULT_PORTS[url.protocol] || 0;
+      for (const entry of entries) {
+        if (entry.port !== 0 && entry.port !== port) {
+          continue;
+        }
+        if (!/^[.*]/.test(entry.hostname)) {
+          if (hostname === entry.hostname) {
+            return false;
+          }
+          continue;
+        }
+        if (hostname.endsWith(entry.hostname.replace(/^\*/, ""))) {
+          return false;
+        }
+      }
+      return true;
+    }
+    function parseNoProxyEntries(noProxy) {
+      return noProxy.split(/[,\s]/).filter(Boolean).map((entry) => {
+        const parsed = entry.match(/^(.+):(\d+)$/);
+        return {
+          hostname: (parsed ? parsed[1] : entry).toLowerCase(),
+          port: parsed ? Number.parseInt(parsed[2], 10) : 0
+        };
+      });
+    }
+    function getProxyDispatcher(uri) {
+      proxyDispatchers ??= /* @__PURE__ */ new Map();
+      const existingDispatcher = proxyDispatchers.get(uri);
+      if (existingDispatcher) {
+        return existingDispatcher;
+      }
+      const dispatcher = new undici_1.ProxyAgent({ uri });
+      proxyDispatchers.set(uri, dispatcher);
+      return dispatcher;
+    }
+    function getDirectDispatcher() {
+      directDispatcher ??= new undici_1.Agent();
+      return directDispatcher;
+    }
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/browser-installer.js
+var require_browser_installer2 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/browser-installer.js"(exports2) {
+    "use strict";
+    var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    } : function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      o[k2] = m[k];
+    });
+    var __setModuleDefault2 = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+      Object.defineProperty(o, "default", { enumerable: true, value: v });
+    } : function(o, v) {
+      o["default"] = v;
+    });
+    var __importStar2 = exports2 && exports2.__importStar || /* @__PURE__ */ function() {
+      var ownKeys2 = function(o) {
+        ownKeys2 = Object.getOwnPropertyNames || function(o2) {
+          var ar = [];
+          for (var k in o2)
+            if (Object.prototype.hasOwnProperty.call(o2, k))
+              ar[ar.length] = k;
+          return ar;
+        };
+        return ownKeys2(o);
+      };
+      return function(mod) {
+        if (mod && mod.__esModule)
+          return mod;
+        var result = {};
+        if (mod != null) {
+          for (var k = ownKeys2(mod), i = 0; i < k.length; i++)
+            if (k[i] !== "default")
+              __createBinding2(result, mod, k[i]);
+        }
+        __setModuleDefault2(result, mod);
+        return result;
+      };
+    }();
+    var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ensureBrowser = ensureBrowser;
+    var fs = __importStar2(require("fs"));
+    var os = __importStar2(require("os"));
+    var path = __importStar2(require("path"));
+    var browsers_1 = require_main3();
+    var chalk_1 = __importDefault2(require_source());
+    async function loadPuppeteerRevisions() {
+      try {
+        const revisions = await Promise.resolve().then(() => __importStar2(require_revisions()));
+        return revisions.PUPPETEER_REVISIONS;
+      } catch {
+        try {
+          const revisions = await Promise.resolve().then(() => __importStar2((init_revisions(), __toCommonJS(revisions_exports))));
+          return revisions.PUPPETEER_REVISIONS;
+        } catch {
+          return void 0;
+        }
+      }
+    }
+    var INSTALL_TIMEOUT_MS = 5 * 60 * 1e3;
+    var MAX_INSTALL_RETRIES = 3;
+    function getOverrideChromeBuildId() {
+      const override = process.env.METICULOUS_CHROME_BUILD_ID?.trim();
+      return override ? override : void 0;
+    }
+    function validateCacheDir(cacheDir) {
+      if (!cacheDir)
+        return void 0;
+      if (!path.isAbsolute(cacheDir)) {
+        console.warn(chalk_1.default.yellow("PUPPETEER_CACHE_DIR must be an absolute path, ignoring"));
+        return void 0;
+      }
+      if (cacheDir.includes("..")) {
+        console.warn(chalk_1.default.yellow("PUPPETEER_CACHE_DIR contains '..' which is not allowed, ignoring"));
+        return void 0;
+      }
+      return cacheDir;
+    }
+    async function installBrowserWithRetry(options, maxRetries = MAX_INSTALL_RETRIES) {
+      let lastError = null;
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error(`Browser installation timed out after ${INSTALL_TIMEOUT_MS / 1e3} seconds`)), INSTALL_TIMEOUT_MS);
+          });
+          const result = await Promise.race([
+            (0, browsers_1.install)({ ...options, unpack: true }),
+            timeoutPromise
+          ]);
+          return result;
+        } catch (error2) {
+          lastError = error2 instanceof Error ? error2 : new Error(String(error2));
+          if (attempt < maxRetries) {
+            const retryDelay = 1e3 * attempt;
+            console.log(chalk_1.default.yellow(`Installation attempt ${attempt} failed: ${lastError.message}`));
+            console.log(chalk_1.default.gray(`Retrying in ${retryDelay / 1e3} seconds... (attempt ${attempt + 1}/${maxRetries})`));
+            await new Promise((resolve5) => setTimeout(resolve5, retryDelay));
+          }
+        }
+      }
+      throw lastError || new Error("Browser installation failed after all retries");
+    }
+    var getExplicitExecutablePath = () => {
+      const explicit = process.env.PUPPETEER_EXECUTABLE_PATH?.trim();
+      return explicit ? explicit : void 0;
+    };
+    async function ensureBrowser(browserType = browsers_1.Browser.CHROME) {
+      const explicitExecutable = getExplicitExecutablePath();
+      if (explicitExecutable) {
+        if (!fs.existsSync(explicitExecutable)) {
+          throw new Error(`PUPPETEER_EXECUTABLE_PATH is set to ${explicitExecutable} but no file exists there. Ensure the browser package is installed, or unset the variable to allow automatic installation.`);
+        }
+        if (!process.env.METICULOUS_IS_CLOUD_REPLAY) {
+          console.log(chalk_1.default.gray(`Using browser from PUPPETEER_EXECUTABLE_PATH: ${explicitExecutable}`));
+        }
+        return explicitExecutable;
+      }
+      const platform = (0, browsers_1.detectBrowserPlatform)();
+      if (platform) {
+        const validatedCacheDir2 = validateCacheDir(process.env.PUPPETEER_CACHE_DIR);
+        const cacheDir2 = validatedCacheDir2 || path.join(os.homedir(), ".cache", "puppeteer");
+        const revisions2 = await loadPuppeteerRevisions();
+        const expectedVersion2 = getOverrideChromeBuildId() ?? revisions2?.chrome;
+        try {
+          const installedBrowsers = await (0, browsers_1.getInstalledBrowsers)({ cacheDir: cacheDir2 });
+          const matchingBrowser = installedBrowsers.find((browser) => browser.browser === browserType && browser.platform === platform && (!expectedVersion2 || browser.buildId === expectedVersion2));
+          if (matchingBrowser && fs.existsSync(matchingBrowser.executablePath)) {
+            if (!process.env.METICULOUS_IS_CLOUD_REPLAY) {
+              if (expectedVersion2) {
+                console.log(chalk_1.default.gray(`Found existing browser with expected version ${expectedVersion2}: ${matchingBrowser.executablePath}`));
+              } else {
+                console.log(chalk_1.default.gray(`Found existing browser: ${matchingBrowser.executablePath}`));
+              }
+            }
+            return matchingBrowser.executablePath;
+          } else if (expectedVersion2 && installedBrowsers.length > 0) {
+            const mismatchedBrowser = installedBrowsers.find((browser) => browser.browser === browserType && browser.platform === platform);
+            if (mismatchedBrowser) {
+              console.log(chalk_1.default.yellow(`Found cached browser (${mismatchedBrowser.buildId}) but puppeteer-core expects ${expectedVersion2}. Will install correct version.`));
+            }
+          }
+        } catch (error2) {
+          console.debug(chalk_1.default.gray(`Could not check installed browsers: ${error2}`));
+        }
+      }
+      if (!platform) {
+        throw new Error("Unsupported platform for automatic browser installation.\nPlease install Chrome manually:\n" + chalk_1.default.blue("\u2022 macOS:") + " brew install --cask google-chrome\n" + chalk_1.default.blue("\u2022 Ubuntu:") + " sudo apt-get install google-chrome-stable\n" + chalk_1.default.blue("\u2022 Windows:") + " Download from https://www.google.com/chrome/");
+      }
+      const validatedCacheDir = validateCacheDir(process.env.PUPPETEER_CACHE_DIR);
+      const cacheDir = validatedCacheDir || path.join(os.homedir(), ".cache", "puppeteer");
+      fs.mkdirSync(cacheDir, { recursive: true });
+      let buildId;
+      const revisions = await loadPuppeteerRevisions();
+      const overrideBuildId = getOverrideChromeBuildId();
+      const expectedVersion = overrideBuildId ?? revisions?.chrome;
+      if (expectedVersion) {
+        console.log(chalk_1.default.gray(overrideBuildId ? `Using Chrome version from METICULOUS_CHROME_BUILD_ID: ${expectedVersion}` : `Using Chrome version from puppeteer-core: ${expectedVersion}`));
+        buildId = expectedVersion;
+      } else {
+        console.log(chalk_1.default.gray("Falling back to latest stable Chrome version"));
+        buildId = await (0, browsers_1.resolveBuildId)(browserType, platform, "stable");
+      }
+      const baseOptions = {
+        browser: browserType,
+        platform,
+        buildId
+      };
+      const installOptions = { ...baseOptions, cacheDir };
+      console.log(chalk_1.default.yellow("Browser not found. Installing Chrome for Meticulous..."));
+      console.log(chalk_1.default.gray("This is a one-time setup (~200MB download)."));
+      try {
+        const installedBrowser = await installBrowserWithRetry(installOptions);
+        console.log(chalk_1.default.green("\u2713 Browser installed successfully!"));
+        return installedBrowser.executablePath;
+      } catch (error2) {
+        const errorMessage = error2 instanceof Error ? error2.message : String(error2);
+        const errorCause = error2 instanceof Error ? error2 : void 0;
+        const troubleshootingMessage = `Failed to install browser: ${errorMessage}
+
+Troubleshooting steps:
+1. Check your internet connection
+2. Ensure you have sufficient disk space (~300MB)
+3. Try setting a custom cache directory: export PUPPETEER_CACHE_DIR=/path/to/cache
+4. Install Chrome manually and set: export PUPPETEER_EXECUTABLE_PATH=/path/to/chrome
+
+For more help, see: https://pptr.dev/troubleshooting`;
+        const err = new Error(troubleshootingMessage);
+        if (errorCause && "cause" in err) {
+          err.cause = errorCause;
+        }
+        throw err;
+      }
+    }
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/index.js
+var require_dist15 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@2.333.1/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ensureBrowser = exports2.meticulousFetch = exports2.getErrorCode = exports2.computeRetryDelayMs = exports2.getRetryAfterMs = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getStashCreateSha = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.logProgress = exports2.logNotice = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
+    var defer_1 = require_defer2();
+    Object.defineProperty(exports2, "defer", { enumerable: true, get: function() {
+      return defer_1.defer;
+    } });
+    var local_data_1 = require_local_data2();
+    Object.defineProperty(exports2, "getMeticulousLocalDataDir", { enumerable: true, get: function() {
+      return local_data_1.getMeticulousLocalDataDir;
+    } });
+    Object.defineProperty(exports2, "runWithLocalDataDir", { enumerable: true, get: function() {
+      return local_data_1.runWithLocalDataDir;
+    } });
+    Object.defineProperty(exports2, "setMeticulousLocalDataDir", { enumerable: true, get: function() {
+      return local_data_1.setMeticulousLocalDataDir;
+    } });
+    var console_logger_1 = require_console_logger2();
+    Object.defineProperty(exports2, "METICULOUS_LOGGER_NAME", { enumerable: true, get: function() {
+      return console_logger_1.METICULOUS_LOGGER_NAME;
+    } });
+    Object.defineProperty(exports2, "initLogger", { enumerable: true, get: function() {
+      return console_logger_1.initLogger;
+    } });
+    Object.defineProperty(exports2, "logNotice", { enumerable: true, get: function() {
+      return console_logger_1.logNotice;
+    } });
+    Object.defineProperty(exports2, "logProgress", { enumerable: true, get: function() {
+      return console_logger_1.logProgress;
+    } });
+    Object.defineProperty(exports2, "setLogLevel", { enumerable: true, get: function() {
+      return console_logger_1.setLogLevel;
+    } });
+    var debug_logger_1 = require_debug_logger3();
+    Object.defineProperty(exports2, "DebugLogger", { enumerable: true, get: function() {
+      return debug_logger_1.DebugLogger;
+    } });
+    var constants_1 = require_constants36();
+    Object.defineProperty(exports2, "DEFAULT_EXECUTION_OPTIONS", { enumerable: true, get: function() {
+      return constants_1.DEFAULT_EXECUTION_OPTIONS;
+    } });
+    Object.defineProperty(exports2, "DEFAULT_SCREENSHOTTING_OPTIONS", { enumerable: true, get: function() {
+      return constants_1.DEFAULT_SCREENSHOTTING_OPTIONS;
+    } });
+    Object.defineProperty(exports2, "BASE_SNIPPETS_URL", { enumerable: true, get: function() {
+      return constants_1.BASE_SNIPPETS_URL;
+    } });
+    Object.defineProperty(exports2, "IS_METICULOUS_SUPER_USER", { enumerable: true, get: function() {
+      return constants_1.IS_METICULOUS_SUPER_USER;
+    } });
+    var version_utils_1 = require_version_utils2();
+    Object.defineProperty(exports2, "getMeticulousVersion", { enumerable: true, get: function() {
+      return version_utils_1.getMeticulousVersion;
+    } });
+    var commit_sha_utils_1 = require_commit_sha_utils2();
+    Object.defineProperty(exports2, "getCommitSha", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getCommitSha;
+    } });
+    Object.defineProperty(exports2, "getCommitDate", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getCommitDate;
+    } });
+    Object.defineProperty(exports2, "getLocalBaseSha", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getLocalBaseSha;
+    } });
+    Object.defineProperty(exports2, "hasUncommittedChanges", { enumerable: true, get: function() {
+      return commit_sha_utils_1.hasUncommittedChanges;
+    } });
+    Object.defineProperty(exports2, "getUntrackedFiles", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getUntrackedFiles;
+    } });
+    Object.defineProperty(exports2, "getGitDiff", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getGitDiff;
+    } });
+    Object.defineProperty(exports2, "getStashCreateSha", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getStashCreateSha;
+    } });
+    var http_retry_utils_1 = require_http_retry_utils2();
+    Object.defineProperty(exports2, "executeWithRetry", { enumerable: true, get: function() {
+      return http_retry_utils_1.executeWithRetry;
+    } });
+    Object.defineProperty(exports2, "defaultShouldRetry", { enumerable: true, get: function() {
+      return http_retry_utils_1.defaultShouldRetry;
+    } });
+    Object.defineProperty(exports2, "getRetryAfterMs", { enumerable: true, get: function() {
+      return http_retry_utils_1.getRetryAfterMs;
+    } });
+    Object.defineProperty(exports2, "computeRetryDelayMs", { enumerable: true, get: function() {
+      return http_retry_utils_1.computeRetryDelayMs;
+    } });
+    var error_code_utils_1 = require_error_code_utils2();
+    Object.defineProperty(exports2, "getErrorCode", { enumerable: true, get: function() {
+      return error_code_utils_1.getErrorCode;
+    } });
+    var fetch_utils_1 = require_fetch_utils2();
+    Object.defineProperty(exports2, "meticulousFetch", { enumerable: true, get: function() {
+      return fetch_utils_1.meticulousFetch;
+    } });
+    var browser_installer_1 = require_browser_installer2();
+    Object.defineProperty(exports2, "ensureBrowser", { enumerable: true, get: function() {
+      return browser_installer_1.ensureBrowser;
+    } });
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
+var require_github_cloud_replay_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.takeBaseWorkflowDispatchLease = exports2.getGitHubCloudReplayBaseTestRun = void 0;
+    var common_1 = require_dist15();
     var errors_1 = require_errors10();
     var getGitHubCloudReplayBaseTestRun2 = async ({ client, headCommitSha }) => {
       const { data } = await client.get("github-cloud-replay/base-test-run", {
@@ -177911,20 +178958,23 @@ var require_github_cloud_replay_api = __commonJS({
       return data;
     };
     exports2.getGitHubCloudReplayBaseTestRun = getGitHubCloudReplayBaseTestRun2;
+    var takeBaseWorkflowDispatchLease = async ({ client, baseCommitSha, workflowId }) => {
+      try {
+        const { data } = await client.post("github-cloud-replay/base-workflow-dispatch-lease", { baseCommitSha, workflowId });
+        return data?.shouldDispatch !== false;
+      } catch (error2) {
+        (0, common_1.initLogger)().debug(`Could not take a dispatch lease for ${baseCommitSha}, so dispatching anyway`, error2);
+        return true;
+      }
+    };
+    exports2.takeBaseWorkflowDispatchLease = takeBaseWorkflowDispatchLease;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
 var require_oauth_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "8665ca99-1cf5-543f-88c9-6844fe13c138");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = void 0;
     var getWhoami = async (client) => {
@@ -177956,17 +179006,10 @@ var require_oauth_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
 var require_project_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "2022f42a-f4bc-5010-835b-bbd86445dc91");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = void 0;
     var errors_1 = require_errors10();
@@ -178013,17 +179056,10 @@ var require_project_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js
 var require_crawler_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "80a1fd6b-8524-52e5-9404-40a9396109dd");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createCrawlerTestRun = void 0;
     var errors_1 = require_errors10();
@@ -178047,17 +179083,10 @@ var require_crawler_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
 var require_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "ded1f9fd-094e-5049-9acc-927249c691aa");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = void 0;
     var errors_1 = require_errors10();
@@ -178106,17 +179135,10 @@ var require_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
 var require_session_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "9fedbc35-de28-53b7-a0ed-cec87ea6de2a");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = void 0;
     var errors_1 = require_errors10();
@@ -178165,17 +179187,10 @@ var require_session_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
 var require_replay_diff_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "7bc618a4-cb1c-5161-a2cb-87841101eca0");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getReplayDiff = void 0;
     var errors_1 = require_errors10();
@@ -178192,17 +179207,10 @@ var require_replay_diff_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
 var require_source_code_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "a6bc17b1-40c3-5ed6-b33b-243ed4876288");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getPrDescriptionForTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = void 0;
     var getPrDiff = async ({ client, testRunId }) => {
@@ -178223,34 +179231,20 @@ var require_source_code_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js
 var require_test_run_status_client_version = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "1a65611b-7891-54ab-b09d-55179b27c47d");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TEST_RUN_STATUS_CLIENT_VERSION = void 0;
     exports2.TEST_RUN_STATUS_CLIENT_VERSION = 1;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
 var require_test_run_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "55943417-6084-52a7-9c1b-83500b4c4507");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.emitTelemetry = exports2.getTestRunReplayDiffs = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = void 0;
     var errors_1 = require_errors10();
@@ -178347,17 +179341,10 @@ var require_test_run_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
 var require_deployment_lock_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "761937b9-0340-5bd6-a6d9-992f5b0d1f3a");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getIsLocked = void 0;
     var errors_1 = require_errors10();
@@ -178373,17 +179360,10 @@ var require_deployment_lock_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js
 var require_commit_label_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "b86d6bda-de0a-5122-bc30-ecddb42bd50f");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = void 0;
     var errors_1 = require_errors10();
@@ -178398,17 +179378,10 @@ var require_commit_label_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
 var require_test_run_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "d60bd2d7-eeb5-5e4a-b784-8c80d53d2f3e");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.IN_PROGRESS_TEST_RUN_STATUS = void 0;
     exports2.IN_PROGRESS_TEST_RUN_STATUS = [
@@ -178420,17 +179393,10 @@ var require_test_run_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
 var require_oauth_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "95fa8852-7a90-5c4f-9026-55b9235427a0");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getWebappBaseUrl = exports2.getDeviceAuthorizationEndpoint = exports2.getTokenEndpoint = exports2.OAUTH_SCOPES = exports2.CLI_CLIENT_ID = exports2.KEYCLOAK_ISSUER_URL = void 0;
     exports2.KEYCLOAK_ISSUER_URL = process.env["METICULOUS_OAUTH_ISSUER_URL"] || "https://app.meticulous.ai/auth/realms/meticulous";
@@ -178478,22 +179444,15 @@ var require_oauth_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
 var require_oauth_token_store = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "d355ae60-9b8a-5f87-8c77-d6afca238630");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.clearOAuthTokens = exports2.storeOAuthTokens = exports2.getStoredOAuthTokens = void 0;
     var fs_1 = require("fs");
     var path_1 = require("path");
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
     var getMeticulousDir = () => (0, common_1.getMeticulousLocalDataDir)();
     var getTokenFilePath = () => (0, path_1.join)(getMeticulousDir(), "oauth-tokens.json");
     var getStoredOAuthTokens = () => {
@@ -178529,17 +179488,10 @@ var require_oauth_token_store = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
 var require_oauth_refresh = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "fca90cde-9636-50c9-9f66-02f16c64f849");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getValidAccessToken = void 0;
     var oauth_constants_1 = require_oauth_constants();
@@ -178593,22 +179545,15 @@ var require_oauth_refresh = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
 var require_api_token_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "25aa47ce-8058-5e42-907f-ce08276f58a9");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getAuthToken = exports2.getApiToken = exports2.readFileBasedToken = void 0;
     var fs_1 = require("fs");
     var path_1 = require("path");
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
     var oauth_refresh_1 = require_oauth_refresh();
     var readFileBasedToken = () => {
       const personalConfigFileAbsolutePath = (0, path_1.join)((0, common_1.getMeticulousLocalDataDir)(), "config.json");
@@ -178665,22 +179610,29 @@ var require_api_token_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
 var require_oauth_callback_server = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "8957600a-25f6-5e85-83da-bb5e2c08634f");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.startCallbackServer = void 0;
     var http_1 = require("http");
     var CALLBACK_TIMEOUT_MS = 12e4;
-    var SUCCESS_HTML = `<!DOCTYPE html>
+    var AGENT_SETUP_SECTION = `    <div style="margin-top: 16px; padding: 20px 24px; max-width: 720px; border: 1px solid #27272a; border-radius: 12px; display: flex; flex-direction: column; gap: 20px; text-align: left;">
+      <p style="margin: 0; font-size: 14px; color: #e4e4e7; font-weight: 500;">Using an AI coding agent? Set Meticulous up for it:</p>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <p style="margin: 0; font-size: 13px; color: #a1a1aa;">1. Install the Meticulous CLI:</p>
+        <code style="display: block; padding: 10px 14px; background: #27272a; border-radius: 8px; font-size: 13px; color: #e4e4e7; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere;">npm install --global @alwaysmeticulous/cli@latest</code>
+        <p style="margin: 6px 0 0; font-size: 13px; color: #a1a1aa;">or, alternatively, add the Meticulous MCP server:</p>
+        <code style="display: block; padding: 10px 14px; background: #27272a; border-radius: 8px; font-size: 13px; color: #e4e4e7; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere;">https://app.meticulous.ai/api/mcp</code>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px;">
+        <p style="margin: 0; font-size: 13px; color: #a1a1aa;">2. Either way, install the Meticulous agent skills:</p>
+        <code style="display: block; padding: 10px 14px; background: #27272a; border-radius: 8px; font-size: 13px; color: #e4e4e7; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere;">npx skills add alwaysmeticulous/skills --skill "*" --agent claude-code --agent codex --agent cursor -y</code>
+      </div>
+      <p style="margin: 0; font-size: 13px; color: #a1a1aa;">See the <a href="https://app.meticulous.ai/docs/agents/setup" style="color: #a5b4fc;">agent setup docs</a> for details.</p>
+    </div>`;
+    var successHtml = (showAgentSetup) => `<!DOCTYPE html>
 <html>
 <head>
   <title>Meticulous CLI</title>
@@ -178695,24 +179647,11 @@ var require_oauth_callback_server = __commonJS({
     </svg>
     <h2 style="margin: 0; font-size: 24px; font-weight: 600;">Authentication successful</h2>
     <p style="margin: 0; font-size: 16px; color: #a1a1aa;">You can close this tab and return to the terminal.</p>
-    <div style="margin-top: 16px; padding: 20px 24px; max-width: 720px; border: 1px solid #27272a; border-radius: 12px; display: flex; flex-direction: column; gap: 20px; text-align: left;">
-      <p style="margin: 0; font-size: 14px; color: #e4e4e7; font-weight: 500;">Using an AI coding agent? Set Meticulous up for it:</p>
-      <div style="display: flex; flex-direction: column; gap: 6px;">
-        <p style="margin: 0; font-size: 13px; color: #a1a1aa;">1. Install the Meticulous CLI:</p>
-        <code style="display: block; padding: 10px 14px; background: #27272a; border-radius: 8px; font-size: 13px; color: #e4e4e7; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere;">npm install --global @alwaysmeticulous/cli@latest</code>
-        <p style="margin: 6px 0 0; font-size: 13px; color: #a1a1aa;">or, alternatively, add the Meticulous MCP server:</p>
-        <code style="display: block; padding: 10px 14px; background: #27272a; border-radius: 8px; font-size: 13px; color: #e4e4e7; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere;">https://app.meticulous.ai/api/mcp</code>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 6px;">
-        <p style="margin: 0; font-size: 13px; color: #a1a1aa;">2. Either way, install the Meticulous agent skills:</p>
-        <code style="display: block; padding: 10px 14px; background: #27272a; border-radius: 8px; font-size: 13px; color: #e4e4e7; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere;">npx skills add alwaysmeticulous/skills --skill "*" --agent claude-code --agent codex --agent cursor -y</code>
-      </div>
-      <p style="margin: 0; font-size: 13px; color: #a1a1aa;">See the <a href="https://app.meticulous.ai/docs/agents/setup" style="color: #a5b4fc;">agent setup docs</a> for details.</p>
-    </div>
+${showAgentSetup ? AGENT_SETUP_SECTION : ""}
   </div>
 </body>
 </html>`;
-    var startCallbackServer = () => {
+    var startCallbackServer = ({ showAgentSetup = true } = {}) => {
       return new Promise((resolveServer, rejectServer) => {
         let callbackResolve;
         let callbackReject;
@@ -178731,7 +179670,7 @@ var require_oauth_callback_server = __commonJS({
           const state = url.searchParams.get("state");
           const error2 = url.searchParams.get("error");
           res.writeHead(200, { "Content-Type": "text/html" });
-          res.end(SUCCESS_HTML);
+          res.end(successHtml(showAgentSetup));
           if (error2) {
             const errorDescription = url.searchParams.get("error_description") || error2;
             callbackReject(new Error(`OAuth error: ${errorDescription}`));
@@ -178773,17 +179712,10 @@ var require_oauth_callback_server = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
 var require_oauth_pkce = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "a7bfcc3e-c4d4-57b1-8821-29345c1448ca");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.generateState = exports2.generateCodeChallenge = exports2.generateCodeVerifier = void 0;
     var crypto_1 = require("crypto");
@@ -178802,36 +179734,33 @@ var require_oauth_pkce = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
 var require_oauth_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "308b0c76-0717-53d0-9e7c-90cbd847d107");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.performOAuthLogin = void 0;
+    exports2.buildAuthorizationUrl = exports2.performOAuthLogin = exports2.CLI_LOGIN_INTENT_ONBOARD = void 0;
     var child_process_1 = require("child_process");
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
     var oauth_callback_server_1 = require_oauth_callback_server();
     var oauth_constants_1 = require_oauth_constants();
     var oauth_pkce_1 = require_oauth_pkce();
     var oauth_token_store_1 = require_oauth_token_store();
-    var performOAuthLogin = async ({ openBrowserAutomatically = true } = {}) => {
+    exports2.CLI_LOGIN_INTENT_ONBOARD = "onboard";
+    var performOAuthLogin = async ({ openBrowserAutomatically = true, intent } = {}) => {
       const logger = (0, common_1.initLogger)();
       const codeVerifier = (0, oauth_pkce_1.generateCodeVerifier)();
       const codeChallenge = (0, oauth_pkce_1.generateCodeChallenge)(codeVerifier);
       const state = (0, oauth_pkce_1.generateState)();
-      const callbackServer = await (0, oauth_callback_server_1.startCallbackServer)();
+      const callbackServer = await (0, oauth_callback_server_1.startCallbackServer)({
+        showAgentSetup: intent !== exports2.CLI_LOGIN_INTENT_ONBOARD
+      });
       const redirectUri = `http://127.0.0.1:${callbackServer.port}/callback`;
-      const authUrl = buildAuthorizationUrl({
+      const authUrl = (0, exports2.buildAuthorizationUrl)({
         codeChallenge,
         state,
-        redirectUri
+        redirectUri,
+        ...intent ? { intent } : {}
       });
       if (openBrowserAutomatically) {
         logger.info("Opening browser for authentication...");
@@ -178855,7 +179784,7 @@ ${authUrl}`);
       return tokens;
     };
     exports2.performOAuthLogin = performOAuthLogin;
-    var buildAuthorizationUrl = ({ codeChallenge, state, redirectUri }) => {
+    var buildAuthorizationUrl = ({ codeChallenge, state, redirectUri, intent }) => {
       const params = new URLSearchParams({
         client_id: oauth_constants_1.CLI_CLIENT_ID,
         response_type: "code",
@@ -178866,9 +179795,13 @@ ${authUrl}`);
         state,
         issuer: oauth_constants_1.KEYCLOAK_ISSUER_URL
       });
+      if (intent) {
+        params.set("intent", intent);
+      }
       const webappBaseUrl = (0, oauth_constants_1.getWebappBaseUrl)();
       return `${webappBaseUrl}/cli-login?${params.toString()}`;
     };
+    exports2.buildAuthorizationUrl = buildAuthorizationUrl;
     var exchangeCodeForTokens = async ({ code, codeVerifier, redirectUri }) => {
       const body = new URLSearchParams({
         grant_type: "authorization_code",
@@ -178905,17 +179838,10 @@ ${authUrl}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
 var require_oauth_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "00695429-9b48-5d6d-968e-ad8a3a779651");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.isJwtExpired = exports2.getJwtClaims = exports2.isOAuthJwt = void 0;
     var PROJECT_API_TOKEN_PREFIX = "prat-";
@@ -178953,22 +179879,15 @@ var require_oauth_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js
 var require_legacy_project_migration = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "5439c3b9-b3a1-5eb2-b9ff-c8a86633c388");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.migrateLegacySelectedProjectIfPresent = void 0;
     var fs_1 = require("fs");
     var path_1 = require("path");
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
     var oauth_api_1 = require_oauth_api();
     var client_1 = require_client5();
     var getLegacySelectedProjectFilePath = () => (0, path_1.join)((0, common_1.getMeticulousLocalDataDir)(), "selected-project.json");
@@ -179013,37 +179932,23 @@ var require_legacy_project_migration = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/version.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/version.js
 var require_version6 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "41252744-fb87-5536-a6d1-03c9cee8bf2d");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.VERSION = void 0;
-    exports2.VERSION = "2.331.1";
+    exports2.VERSION = "2.335.0";
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/client.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/client.js
 var require_client5 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "82593adb-314f-5092-bd94-9bc8493cd633");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createClientWithOAuth = exports2.resolveApiTokenWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.buildClient = exports2.makeRequest = exports2.declareClientAppInfo = exports2.buildUserAgent = void 0;
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
     var api_token_utils_1 = require_api_token_utils();
     var errors_1 = require_errors10();
     var oauth_login_1 = require_oauth_login();
@@ -179233,20 +180138,13 @@ var require_client5 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js
 var require_oauth_device_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "10b213de-4215-5432-9c3b-32f7fba05ff3");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.performDeviceLogin = void 0;
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
     var oauth_constants_1 = require_oauth_constants();
     var oauth_pkce_1 = require_oauth_pkce();
     var oauth_token_store_1 = require_oauth_token_store();
@@ -179392,17 +180290,10 @@ var require_oauth_device_login = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js
 var require_default_project = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "7d61b877-5da8-5e00-9ecc-dfdd0c6cd8ee");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.resolveDefaultProjectId = void 0;
     var oauth_api_1 = require_oauth_api();
@@ -179416,17 +180307,10 @@ var require_default_project = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
 var require_get_proxy_agent = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "6bc9eeb8-a2cb-58e2-80bf-c82262cbe4fd");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getProxyAgent = void 0;
     var proxy_agent_1 = require_dist11();
@@ -179439,17 +180323,10 @@ var require_get_proxy_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
 var require_retry_transient_upload_errors = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "941f39d0-50b4-5915-91a0-7d1afe24760d");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = void 0;
     var UploadError = class extends Error {
@@ -179516,17 +180393,10 @@ ${responseBody}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
 var require_put_file_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "17f151b7-f09c-5d80-93a8-7e9aa3376eb1");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.putFileToSignedUrl = void 0;
     var fs_1 = require("fs");
@@ -179572,19 +180442,12 @@ var require_put_file_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
 var require_project_deployments_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "c99640f2-24a6-5694-9a9d-a42c1c3f2c97");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.projectIdQuery = void 0;
+    exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.triggerDeploymentSourceMapIngestion = exports2.requestDeploymentSourceMapArtifactUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.projectIdQuery = void 0;
     var errors_1 = require_errors10();
     var projectIdQuery = (projectId) => projectId ? { params: { projectId } } : void 0;
     exports2.projectIdQuery = projectIdQuery;
@@ -179614,6 +180477,16 @@ var require_project_deployments_api = __commonJS({
       return data;
     };
     exports2.requestGitDiffUpload = requestGitDiffUpload;
+    var requestDeploymentSourceMapArtifactUpload = async ({ client, projectDeploymentId, ...body }) => {
+      const { data } = await client.post(`project-deployments/${projectDeploymentId}/source-map-mapping-artifact-upload-url`, body);
+      return data;
+    };
+    exports2.requestDeploymentSourceMapArtifactUpload = requestDeploymentSourceMapArtifactUpload;
+    var triggerDeploymentSourceMapIngestion = async ({ client, deploymentUploadId, projectId }) => {
+      const { data } = await client.post(`project-deployments/${deploymentUploadId}/ingest-source-maps`, {}, (0, exports2.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.triggerDeploymentSourceMapIngestion = triggerDeploymentSourceMapIngestion;
     var triggerRunOnDeployment = async ({ client, projectId, ...body }) => {
       const { data } = await client.post("project-deployments/trigger-run", body, (0, exports2.projectIdQuery)(projectId));
       return data;
@@ -179690,17 +180563,10 @@ var require_project_deployments_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js
 var require_agentic_session_generation_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "4b446484-9663-59cc-a439-d55139c304cc");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.releaseAgenticRepoLease = exports2.heartbeatAgenticRepoLease = exports2.getAgenticRepoLeaseStatus = exports2.acquireAgenticRepoLease = exports2.listAgenticRepoSourceFiles = exports2.listAgenticRepoTree = exports2.getAgenticFileChanges = exports2.searchAgenticRepoCode = exports2.getAgenticRepoFile = exports2.getAgenticChangedFiles = exports2.getAgenticRunCoverage = exports2.requestAgenticArtifactUploads = exports2.requestAgenticTestcasesUpload = exports2.isAgenticRunCancelled = exports2.requestAgenticProgressUpload = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = void 0;
     var project_deployments_api_1 = require_project_deployments_api();
@@ -179746,7 +180612,9 @@ var require_agentic_session_generation_api = __commonJS({
       "build-or-tooling",
       "backend-only",
       "docs-or-config",
-      "no-reachable-ui"
+      "no-reachable-ui",
+      /** The commit under test has no pull request, so there is no diff to review. */
+      "no-diff"
     ];
     var requestAgenticResultUpload = async ({ client, projectId, ...body }) => {
       const { data } = await client.post("agentic-session-generation/request-result-upload", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
@@ -179877,17 +180745,10 @@ var require_agentic_session_generation_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/session-transform-discovery.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/session-transform-discovery.api.js
 var require_session_transform_discovery_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/session-transform-discovery.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/session-transform-discovery.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "38677f57-1407-5009-92bf-837a7a5cfa54");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.releaseDiscoveryRepoLease = exports2.heartbeatDiscoveryRepoLease = exports2.getDiscoveryRepoLeaseStatus = exports2.acquireDiscoveryRepoLease = exports2.listDiscoveryRepoTree = exports2.searchDiscoveryRepoCode = exports2.getDiscoveryRepoFile = void 0;
     var project_deployments_api_1 = require_project_deployments_api();
@@ -179939,17 +180800,10 @@ var require_session_transform_discovery_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js
 var require_catalog_maintenance_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "90d148ac-b413-5e23-87ab-a4cfee7e6c7e");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.requestCatalogMaintenanceProposalUpload = exports2.getCatalogMaintenanceWorkflowStatus = exports2.launchCatalogMaintenance = void 0;
     var project_deployments_api_1 = require_project_deployments_api();
@@ -179976,17 +180830,10 @@ var require_catalog_maintenance_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
 var require_registry_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "0fdc36c3-b88b-58e5-9eab-c8d106039a18");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRegistryAuth = void 0;
     var getRegistryAuth = async ({ client, projectId }) => {
@@ -179997,17 +180844,10 @@ var require_registry_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
 var require_local_changes_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "61d58f2a-161c-5982-b710-d087b379dde9");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRelevantSessions = void 0;
     var errors_1 = require_errors10();
@@ -180029,17 +180869,10 @@ var require_local_changes_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/index.js
-var require_dist15 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@2.331.1/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/index.js
+var require_dist16 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@2.335.0/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "9c3ae004-59fb-5a1d-af35-eafa532586d8");
-      } catch (e2) {
-      }
-    }();
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
         k2 = k;
@@ -180062,8 +180895,8 @@ var require_dist15 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.executeSecureTunnelTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = exports2.getPrDescriptionForTestRun = exports2.getReplayDiff = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.createCrawlerTestRun = exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = exports2.trackAgentFeatureUsage = exports2.submitAgentFeedback = exports2.getSessions = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = exports2.completeBaseRun = exports2.getTestRunForCommit = exports2.getScreenshotDomDiff = exports2.ignoreDiff = exports2.rejectDiff = exports2.replyToDiffComment = exports2.createDiffComment = exports2.getDiffComments = exports2.getTestRunDiffsSummaryCounts = exports2.getTestRunDiffsSummary = exports2.getStructuredSessionData = exports2.shouldDefaultToExecutedRanges = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = void 0;
-    exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putFileToSignedUrl = exports2.getProxyAgent = exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.migrateLegacySelectedProjectIfPresent = exports2.resolveDefaultProjectId = exports2.getStoredOAuthTokens = exports2.clearOAuthTokens = exports2.getValidAccessToken = exports2.performDeviceLogin = exports2.performOAuthLogin = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.declareClientAppInfo = exports2.createClientWithOAuth = exports2.createClient = exports2.readFileBasedToken = exports2.getAuthToken = exports2.getApiToken = exports2.TEST_RUN_STATUS_CLIENT_VERSION = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = exports2.getIsLocked = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunReplayDiffs = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = void 0;
-    exports2.getRelevantSessions = exports2.MISSING_AUTH_GUIDANCE = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isFetchError = exports2.isAuthFailureStatus = exports2.getRegistryAuth = exports2.requestCatalogMaintenanceProposalUpload = exports2.launchCatalogMaintenance = exports2.getCatalogMaintenanceWorkflowStatus = exports2.releaseDiscoveryRepoLease = exports2.heartbeatDiscoveryRepoLease = exports2.getDiscoveryRepoLeaseStatus = exports2.acquireDiscoveryRepoLease = exports2.listDiscoveryRepoTree = exports2.searchDiscoveryRepoCode = exports2.getDiscoveryRepoFile = exports2.requestAgenticProgressUpload = exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.isAgenticRunCancelled = exports2.releaseAgenticRepoLease = exports2.heartbeatAgenticRepoLease = exports2.getAgenticRepoLeaseStatus = exports2.acquireAgenticRepoLease = exports2.listAgenticRepoSourceFiles = exports2.listAgenticRepoTree = exports2.getAgenticFileChanges = exports2.searchAgenticRepoCode = exports2.getAgenticRepoFile = exports2.getAgenticChangedFiles = exports2.getAgenticRunCoverage = exports2.requestAgenticTestcasesUpload = exports2.requestAgenticArtifactUploads = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = void 0;
+    exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestDeploymentSourceMapArtifactUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putFileToSignedUrl = exports2.getProxyAgent = exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.migrateLegacySelectedProjectIfPresent = exports2.resolveDefaultProjectId = exports2.getStoredOAuthTokens = exports2.clearOAuthTokens = exports2.getValidAccessToken = exports2.performDeviceLogin = exports2.performOAuthLogin = exports2.CLI_LOGIN_INTENT_ONBOARD = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.declareClientAppInfo = exports2.createClientWithOAuth = exports2.createClient = exports2.readFileBasedToken = exports2.getAuthToken = exports2.getApiToken = exports2.TEST_RUN_STATUS_CLIENT_VERSION = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = exports2.getIsLocked = exports2.emitTelemetry = exports2.getLatestTestRunResults = exports2.getTestRunReplayDiffs = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = void 0;
+    exports2.getRelevantSessions = exports2.MISSING_AUTH_GUIDANCE = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isFetchError = exports2.isAuthFailureStatus = exports2.getRegistryAuth = exports2.requestCatalogMaintenanceProposalUpload = exports2.launchCatalogMaintenance = exports2.getCatalogMaintenanceWorkflowStatus = exports2.releaseDiscoveryRepoLease = exports2.heartbeatDiscoveryRepoLease = exports2.getDiscoveryRepoLeaseStatus = exports2.acquireDiscoveryRepoLease = exports2.listDiscoveryRepoTree = exports2.searchDiscoveryRepoCode = exports2.getDiscoveryRepoFile = exports2.requestAgenticProgressUpload = exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.isAgenticRunCancelled = exports2.releaseAgenticRepoLease = exports2.heartbeatAgenticRepoLease = exports2.getAgenticRepoLeaseStatus = exports2.acquireAgenticRepoLease = exports2.listAgenticRepoSourceFiles = exports2.listAgenticRepoTree = exports2.getAgenticFileChanges = exports2.searchAgenticRepoCode = exports2.getAgenticRepoFile = exports2.getAgenticChangedFiles = exports2.getAgenticRunCoverage = exports2.requestAgenticTestcasesUpload = exports2.requestAgenticArtifactUploads = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = exports2.triggerDeploymentSourceMapIngestion = exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = void 0;
     var agent_api_1 = require_agent_api();
     Object.defineProperty(exports2, "getAgentWhoami", { enumerable: true, get: function() {
       return agent_api_1.getAgentWhoami;
@@ -180294,6 +181127,9 @@ var require_dist15 = __commonJS({
       return client_1.resolveApiTokenWithOAuth;
     } });
     var oauth_login_1 = require_oauth_login();
+    Object.defineProperty(exports2, "CLI_LOGIN_INTENT_ONBOARD", { enumerable: true, get: function() {
+      return oauth_login_1.CLI_LOGIN_INTENT_ONBOARD;
+    } });
     Object.defineProperty(exports2, "performOAuthLogin", { enumerable: true, get: function() {
       return oauth_login_1.performOAuthLogin;
     } });
@@ -180361,6 +181197,9 @@ var require_dist15 = __commonJS({
     Object.defineProperty(exports2, "requestGitDiffUpload", { enumerable: true, get: function() {
       return project_deployments_api_1.requestGitDiffUpload;
     } });
+    Object.defineProperty(exports2, "requestDeploymentSourceMapArtifactUpload", { enumerable: true, get: function() {
+      return project_deployments_api_1.requestDeploymentSourceMapArtifactUpload;
+    } });
     Object.defineProperty(exports2, "completeAssetUpload", { enumerable: true, get: function() {
       return project_deployments_api_1.completeAssetUpload;
     } });
@@ -180396,6 +181235,9 @@ var require_dist15 = __commonJS({
     } });
     Object.defineProperty(exports2, "agentTriggerTestRun", { enumerable: true, get: function() {
       return project_deployments_api_1.agentTriggerTestRun;
+    } });
+    Object.defineProperty(exports2, "triggerDeploymentSourceMapIngestion", { enumerable: true, get: function() {
+      return project_deployments_api_1.triggerDeploymentSourceMapIngestion;
     } });
     var agentic_session_generation_api_1 = require_agentic_session_generation_api();
     Object.defineProperty(exports2, "requestAgenticInstructionsUpload", { enumerable: true, get: function() {
@@ -180526,17 +181368,10 @@ var require_dist15 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel.js
 var require_tunnel4 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "2a7b0be0-f226-5326-bcc0-af750ff49e19");
-      } catch (e2) {
-      }
-    }();
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -180546,7 +181381,7 @@ var require_tunnel4 = __commonJS({
     var node_cluster_1 = __importDefault2(require("node:cluster"));
     var node_os_1 = require("node:os");
     var path_1 = __importDefault2(require("path"));
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
     var DEFAULT_HOST = "https://tunnels.meticulous.ai";
     var DEFAULT_HTTP2_NUMBER_OF_CONNECTIONS = Math.min((0, node_os_1.cpus)().length, 16);
     var Tunnel = class extends events_1.EventEmitter {
@@ -180739,17 +181574,10 @@ var require_tunnel4 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/localtunnel.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/localtunnel.js
 var require_localtunnel = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/localtunnel.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/localtunnel.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "9149b765-900e-5c65-914a-7df6b02da893");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.localtunnel = void 0;
     var tunnel_1 = require_tunnel4();
@@ -180786,7 +181614,7 @@ var require_humanize_ms = __commonJS({
 });
 
 // node_modules/.pnpm/agentkeepalive@4.6.0/node_modules/agentkeepalive/lib/constants.js
-var require_constants36 = __commonJS({
+var require_constants37 = __commonJS({
   "node_modules/.pnpm/agentkeepalive@4.6.0/node_modules/agentkeepalive/lib/constants.js"(exports2, module2) {
     "use strict";
     module2.exports = {
@@ -180819,7 +181647,7 @@ var require_agent3 = __commonJS({
       SOCKET_NAME,
       SOCKET_REQUEST_COUNT,
       SOCKET_REQUEST_FINISHED_COUNT
-    } = require_constants36();
+    } = require_constants37();
     var defaultTimeoutListenerCount = 1;
     var majorVersion = parseInt(process.version.split(".", 1)[0].substring(1));
     if (majorVersion >= 11 && majorVersion <= 12) {
@@ -181145,7 +181973,7 @@ var require_https_agent = __commonJS({
     var {
       INIT_SOCKET,
       CREATE_HTTPS_CONNECTION
-    } = require_constants36();
+    } = require_constants37();
     var HttpsAgent = class extends HttpAgent {
       constructor(options) {
         super(options);
@@ -181190,7 +182018,7 @@ var require_agentkeepalive = __commonJS({
     module2.exports = HttpAgent;
     module2.exports.HttpAgent = HttpAgent;
     module2.exports.HttpsAgent = require_https_agent();
-    module2.exports.constants = require_constants36();
+    module2.exports.constants = require_constants37();
   }
 });
 
@@ -181548,17 +182376,10 @@ var require_source2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js
 var require_get_local_address = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/get-local-address.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "fd604f9c-23e0-5c2f-a181-9ff8d4a13b22");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getLocalAddress = void 0;
     var LOCAL_ADDRESS_ENV_VARIABLE = "METICULOUS_TUNNEL_CLIENT_REQUEST_LOCAL_ADDRESS";
@@ -181572,17 +182393,10 @@ var require_get_local_address = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js
 var require_tunnel_http2_cluster = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-http2-cluster.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "bee6af1b-8214-55c6-90c2-ff99efbbfa37");
-      } catch (e2) {
-      }
-    }();
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
         k2 = k;
@@ -181788,17 +182602,10 @@ var require_tunnel_http2_cluster = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js
 var require_open_socket = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/utils/open-socket.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "cbf254f1-f2ec-5bc6-9df5-dcaebd225797");
-      } catch (e2) {
-      }
-    }();
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -181923,17 +182730,10 @@ var require_open_socket = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/index.js
-var require_dist16 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.326.0/node_modules/@alwaysmeticulous/tunnels-client/dist/index.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/index.js
+var require_dist17 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+tunnels-client@2.333.1/node_modules/@alwaysmeticulous/tunnels-client/dist/index.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "a7096a73-c4e2-56cd-aacd-3f6ffcbd76e1");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.openSocket = exports2.TunnelHTTP2Cluster = exports2.localtunnel = void 0;
     var localtunnel_1 = require_localtunnel();
@@ -181951,20 +182751,34 @@ var require_dist16 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js
-var require_poll_for_base_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/deployment-in-progress.js
+var require_deployment_in_progress = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/deployment-in-progress.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "9008b919-e83b-588d-9ac2-d046d52f1173");
-      } catch (e2) {
-      }
-    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.DEPLOYMENT_IN_PROGRESS_RETRY = exports2.isDeploymentStillInProgress = void 0;
+    var isDeploymentStillInProgress = (error2) => {
+      const status = error2?.response?.status;
+      return status === 502 || status === 503 || status === 504;
+    };
+    exports2.isDeploymentStillInProgress = isDeploymentStillInProgress;
+    exports2.DEPLOYMENT_IN_PROGRESS_RETRY = {
+      maxRetries: 2,
+      retryDelay: 2e4,
+      maxRetryDelay: 6e4,
+      shouldRetry: exports2.isDeploymentStillInProgress
+    };
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js
+var require_poll_for_base_test_run = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js"(exports2) {
+    "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.pollWhileBaseNotFound = void 0;
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
+    var deployment_in_progress_1 = require_deployment_in_progress();
     var POLL_FOR_BASE_TEST_RUN_INTERVAL_MS = 1e4;
     var POLL_FOR_BASE_TEST_RUN_MAX_TIMEOUT_MS = 5 * 60 * 1e3;
     var pollWhileBaseNotFound = async ({ initialResult, retryFn, fallbackFn, fallbackLogMessage = "Base test run not found. Creating the test run without a base; no sessions will be executed." }) => {
@@ -181991,7 +182805,10 @@ var require_poll_for_base_test_run = __commonJS({
             lastTimeElapsed = timeElapsed;
           }
           await new Promise((resolve5) => setTimeout(resolve5, POLL_FOR_BASE_TEST_RUN_INTERVAL_MS));
-          const retryResult = await retryFn();
+          const retryResult = await pollOnce(retryFn, logger);
+          if (retryResult == null) {
+            continue;
+          }
           testRun = retryResult.testRun ?? null;
           baseNotFound = retryResult.baseNotFound;
           message = retryResult.message;
@@ -182001,7 +182818,7 @@ var require_poll_for_base_test_run = __commonJS({
         }
         if (baseNotFound && !testRun) {
           logger.info(fallbackLogMessage);
-          const fallbackResult = await fallbackFn();
+          const fallbackResult = await runFallback(fallbackFn, logger);
           testRun = fallbackResult.testRun ?? null;
           message = fallbackResult.message;
           overlaps = fallbackResult.overlaps;
@@ -182012,6 +182829,18 @@ var require_poll_for_base_test_run = __commonJS({
       return { testRun, baseNotFound, message, overlaps, overlapsTruncated };
     };
     exports2.pollWhileBaseNotFound = pollWhileBaseNotFound;
+    var pollOnce = async (retryFn, logger) => {
+      try {
+        return await retryFn();
+      } catch (error2) {
+        if (!(0, deployment_in_progress_1.isDeploymentStillInProgress)(error2)) {
+          throw error2;
+        }
+        logger.debug(`Deployment is still being processed server-side; will poll again. ${String(error2)}`);
+        return null;
+      }
+    };
+    var runFallback = async (fallbackFn, logger) => (0, common_1.executeWithRetry)(fallbackFn, { ...deployment_in_progress_1.DEPLOYMENT_IN_PROGRESS_RETRY, logger });
   }
 });
 
@@ -185806,17 +186635,10 @@ var require_p_limit = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js
 var require_multipart_buffer_manager = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "1549bb96-7bff-5f77-b604-5ca3a1c7605f");
-      } catch (e2) {
-      }
-    }();
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
@@ -185904,22 +186726,15 @@ var require_multipart_buffer_manager = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js
 var require_multipart_compressing_uploader = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "18c72e30-adc0-57a3-b000-067be50a5aa9");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.MultipartCompressingUploader = exports2.UPLOAD_ARCHIVE_FILE_FORMAT = void 0;
     var zlib_1 = require("zlib");
-    var client_1 = require_dist15();
-    var common_1 = require_dist12();
+    var client_1 = require_dist16();
+    var common_1 = require_dist15();
     var fast_zlib_1 = require_fast_zlib();
     var tar_1 = require_index_min();
     var multipart_buffer_manager_1 = require_multipart_buffer_manager();
@@ -186005,17 +186820,10 @@ var require_multipart_compressing_uploader = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js
 var require_asset_upload_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "568d2cdd-17fc-58b4-b3b8-9b5159ce30f0");
-      } catch (e2) {
-      }
-    }();
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
         k2 = k;
@@ -186067,10 +186875,11 @@ var require_asset_upload_utils = __commonJS({
     var http_1 = require("http");
     var https_1 = require("https");
     var path_1 = require("path");
-    var client_1 = require_dist15();
+    var client_1 = require_dist16();
     var project_deployments_api_1 = require_project_deployments_api();
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
     var Sentry = __importStar2(require_cjs5());
+    var deployment_in_progress_1 = require_deployment_in_progress();
     var poll_for_base_test_run_1 = require_poll_for_base_test_run();
     var multipart_compressing_uploader_1 = require_multipart_compressing_uploader();
     var uploadAssets = async (opts) => {
@@ -186099,7 +186908,7 @@ var require_asset_upload_utils = __commonJS({
       const { tarStream, apiToken: apiToken_ } = opts;
       const apiToken = (0, client_1.getApiToken)(apiToken_);
       const client = (0, client_1.createClient)({ apiToken });
-      const { commitSha, baseSha, gitDiffOutput, waitForBase = false, rewrites = [], createDeployment = true, projectId } = opts;
+      const { commitSha, baseSha, gitDiffOutput, waitForBase = false, rewrites = [], createDeployment = true, projectId, debugContext } = opts;
       const { uploadId, multipartUploadInfo } = await (0, exports2.uploadAssetBytesFromTarStream)({
         client,
         tarStream,
@@ -186124,7 +186933,8 @@ var require_asset_upload_utils = __commonJS({
         createDeployment,
         archiveType: multipart_compressing_uploader_1.UPLOAD_ARCHIVE_FILE_FORMAT,
         multipartUploadInfo,
-        ...projectId ? { projectId } : {}
+        ...projectId ? { projectId } : {},
+        ...debugContext ? { debugContext } : {}
       });
       return {
         uploadId,
@@ -186134,11 +186944,7 @@ var require_asset_upload_utils = __commonJS({
       };
     };
     exports2.uploadAssetsFromTarStream = uploadAssetsFromTarStream;
-    var isGatewayError = (error2) => {
-      const status = error2?.response?.status;
-      return status === 502 || status === 503 || status === 504;
-    };
-    var completeUploadAndWaitForBase = async ({ client, uploadId, commitSha, baseSha, hasGitDiff, waitForBase, rewrites, createDeployment, archiveType, multipartUploadInfo, projectId }) => {
+    var completeUploadAndWaitForBase = async ({ client, uploadId, commitSha, baseSha, hasGitDiff, waitForBase, rewrites, createDeployment, archiveType, multipartUploadInfo, projectId, debugContext }) => {
       const logger = (0, common_1.initLogger)();
       const completeAssetUploadArgs = {
         client,
@@ -186153,13 +186959,10 @@ var require_asset_upload_utils = __commonJS({
         ...multipartUploadInfo ? { multipartUploadInfo } : {},
         ...projectId ? { projectId } : {}
       };
-      const initialResult = await (0, common_1.executeWithRetry)(() => (0, client_1.completeAssetUpload)(completeAssetUploadArgs), {
-        maxRetries: 2,
-        retryDelay: 2e4,
-        maxRetryDelay: 6e4,
-        shouldRetry: isGatewayError,
-        logger
-      });
+      const initialResult = await (0, common_1.executeWithRetry)(() => (0, client_1.completeAssetUpload)({
+        ...completeAssetUploadArgs,
+        ...debugContext ? { debugContext } : {}
+      }), { ...deployment_in_progress_1.DEPLOYMENT_IN_PROGRESS_RETRY, logger });
       const { testRun, baseNotFound, message } = await (0, poll_for_base_test_run_1.pollWhileBaseNotFound)({
         initialResult: {
           testRun: initialResult?.testRun ?? null,
@@ -186215,7 +187018,7 @@ var require_asset_upload_utils = __commonJS({
       logger.info(`Deployment assets ${uploadId} uploaded successfully`);
       return { uploadId, multipartUploadInfo };
     };
-    var uploadAssetsStreaming = async ({ client, folderPath, commitSha, baseSha, gitDiffOutput, waitForBase = false, rewrites = [], createDeployment = true, projectId }) => {
+    var uploadAssetsStreaming = async ({ client, folderPath, commitSha, baseSha, gitDiffOutput, waitForBase = false, rewrites = [], createDeployment = true, projectId, debugContext }) => {
       const { uploadId, multipartUploadInfo } = await (0, exports2.uploadAssetBytesFromDirectory)({
         client,
         folderPath,
@@ -186240,7 +187043,8 @@ var require_asset_upload_utils = __commonJS({
         createDeployment,
         archiveType: multipart_compressing_uploader_1.UPLOAD_ARCHIVE_FILE_FORMAT,
         multipartUploadInfo,
-        ...projectId ? { projectId } : {}
+        ...projectId ? { projectId } : {},
+        ...debugContext ? { debugContext } : {}
       });
       return {
         uploadId,
@@ -186337,7 +187141,7 @@ var require_asset_upload_utils = __commonJS({
       return { uploadId };
     };
     exports2.uploadAssetBytesFromZip = uploadAssetBytesFromZip;
-    var uploadAssetsFromZip = async ({ apiToken: apiToken_, zipPath, commitSha, baseSha, gitDiffOutput, waitForBase = false, rewrites = [], createDeployment = true, deleteAfterUpload = false, projectId }) => {
+    var uploadAssetsFromZip = async ({ apiToken: apiToken_, zipPath, commitSha, baseSha, gitDiffOutput, waitForBase = false, rewrites = [], createDeployment = true, deleteAfterUpload = false, projectId, debugContext }) => {
       const logger = (0, common_1.initLogger)();
       const apiToken = (0, client_1.getApiToken)(apiToken_);
       const client = (0, client_1.createClient)({ apiToken });
@@ -186366,7 +187170,8 @@ var require_asset_upload_utils = __commonJS({
           rewrites,
           createDeployment,
           archiveType: "zip",
-          ...projectIdentifier
+          ...projectIdentifier,
+          ...debugContext ? { debugContext } : {}
         });
         return {
           uploadId,
@@ -204673,17 +205478,10 @@ var require_lib8 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js
 var require_resource_tracker = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "c6b19292-974c-5e99-8b79-85cac1501f7c");
-      } catch (e2) {
-      }
-    }();
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
         k2 = k;
@@ -204786,17 +205584,10 @@ var require_resource_tracker = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js
 var require_url_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "f5582fb2-4b9a-5634-a468-8d92d308dd02");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getPort = getPort;
     function getPort(url) {
@@ -204823,22 +205614,15 @@ var require_url_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js
 var require_execute_remote_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "3e933b70-a8e5-5b6d-88c3-7b2af641365d");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.executeRemoteTestRun = void 0;
-    var client_1 = require_dist15();
-    var common_1 = require_dist12();
-    var tunnels_client_1 = require_dist16();
+    var client_1 = require_dist16();
+    var common_1 = require_dist15();
+    var tunnels_client_1 = require_dist17();
     var asset_upload_utils_1 = require_asset_upload_utils();
     var resource_tracker_1 = require_resource_tracker();
     var url_utils_1 = require_url_utils();
@@ -205032,22 +205816,15 @@ var require_execute_remote_test_run = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js
 var require_upload_assets_and_trigger_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "1d7a3dd1-0336-5dd2-bc24-306744ccf179");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.uploadAssetsAndTriggerTestRun = void 0;
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
     var asset_upload_utils_1 = require_asset_upload_utils();
-    var uploadAssetsAndTriggerTestRun = async ({ apiToken, appDirectory, appZip, commitSha, baseSha, gitDiffOutput, rewrites, waitForBase, projectId }) => {
+    var uploadAssetsAndTriggerTestRun = async ({ apiToken, appDirectory, appZip, commitSha, baseSha, gitDiffOutput, rewrites, waitForBase, projectId, debugContext }) => {
       const logger = (0, common_1.initLogger)();
       const opts = {
         apiToken,
@@ -205059,7 +205836,8 @@ var require_upload_assets_and_trigger_test_run = __commonJS({
         waitForBase,
         rewrites: rewrites ?? [],
         createDeployment: true,
-        ...projectId ? { projectId } : {}
+        ...projectId ? { projectId } : {},
+        ...debugContext ? { debugContext } : {}
       };
       const result = appDirectory ? await (0, asset_upload_utils_1.uploadAssets)({ ...opts, appDirectory }) : appZip ? await (0, asset_upload_utils_1.uploadAssetsFromZip)({ ...opts, zipPath: appZip }) : void 0;
       if (!result) {
@@ -209304,7 +210082,7 @@ var require_bcrypt_pbkdf = __commonJS({
 });
 
 // node_modules/.pnpm/ssh2@1.17.0/node_modules/ssh2/lib/protocol/constants.js
-var require_constants37 = __commonJS({
+var require_constants38 = __commonJS({
   "node_modules/.pnpm/ssh2@1.17.0/node_modules/ssh2/lib/protocol/constants.js"(exports2, module2) {
     "use strict";
     var crypto = require("crypto");
@@ -209842,7 +210620,7 @@ var require_utils45 = __commonJS({
       doFatalError: (protocol, msg, level, reason) => {
         let err;
         if (DISCONNECT_REASON === void 0)
-          ({ DISCONNECT_REASON } = require_constants37());
+          ({ DISCONNECT_REASON } = require_constants38());
         if (msg instanceof Error) {
           err = msg;
           if (typeof level !== "number")
@@ -211821,7 +212599,7 @@ var require_keyParser = __commonJS({
     var { Ber } = require_lib9();
     var bcrypt_pbkdf = require_bcrypt_pbkdf().pbkdf;
     var { CIPHER_INFO } = require_crypto();
-    var { eddsaSupported, SUPPORTED_CIPHER } = require_constants37();
+    var { eddsaSupported, SUPPORTED_CIPHER } = require_constants38();
     var {
       bufferSlice,
       makeBufferParser,
@@ -214106,7 +214884,7 @@ var require_handlers_misc = __commonJS({
       COMPAT,
       MESSAGE,
       TERMINAL_MODE
-    } = require_constants37();
+    } = require_constants38();
     var {
       parseKey
     } = require_keyParser();
@@ -215039,7 +215817,7 @@ var require_kex = __commonJS({
       DEFAULT_COMPRESSION,
       DISCONNECT_REASON,
       MESSAGE
-    } = require_constants37();
+    } = require_constants38();
     var {
       CIPHER_INFO,
       createCipher,
@@ -216674,7 +217452,7 @@ var require_Protocol = __commonJS({
       MESSAGE,
       SIGNALS,
       TERMINAL_MODE
-    } = require_constants37();
+    } = require_constants38();
     var {
       DEFAULT_KEXINIT_CLIENT,
       DEFAULT_KEXINIT_SERVER,
@@ -221388,7 +222166,7 @@ var require_Channel = __commonJS({
     } = require("stream");
     var {
       CHANNEL_EXTENDED_DATATYPE: { STDERR }
-    } = require_constants37();
+    } = require_constants38();
     var { bufferSlice } = require_utils45();
     var PACKET_SIZE = 32 * 1024;
     var MAX_WINDOW = 2 * 1024 * 1024;
@@ -221922,7 +222700,7 @@ var require_client6 = __commonJS({
       SUPPORTED_KEX,
       SUPPORTED_MAC,
       SUPPORTED_SERVER_HOST_KEY
-    } = require_constants37();
+    } = require_constants38();
     var { init: cryptoInit } = require_crypto();
     var Protocol = require_Protocol();
     var { parseKey } = require_keyParser();
@@ -223795,7 +224573,7 @@ var require_server = __commonJS({
       SUPPORTED_KEX,
       SUPPORTED_MAC,
       SUPPORTED_SERVER_HOST_KEY
-    } = require_constants37();
+    } = require_constants38();
     var { init: cryptoInit } = require_crypto();
     var { KexInit } = require_kex();
     var { parseKey } = require_keyParser();
@@ -233230,7 +234008,7 @@ var require_node10 = __commonJS({
 });
 
 // node_modules/.pnpm/@grpc+grpc-js@1.14.4/node_modules/@grpc/grpc-js/build/src/constants.js
-var require_constants38 = __commonJS({
+var require_constants39 = __commonJS({
   "node_modules/.pnpm/@grpc+grpc-js@1.14.4/node_modules/@grpc/grpc-js/build/src/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -233382,7 +234160,7 @@ var require_logging = __commonJS({
     exports2.log = exports2.setLoggerVerbosity = exports2.setLogger = exports2.getLogger = void 0;
     exports2.trace = trace3;
     exports2.isTracerEnabled = isTracerEnabled;
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var process_1 = require("process");
     var clientVersion = require_package5().version;
     var DEFAULT_LOGGER = {
@@ -233502,7 +234280,7 @@ var require_metadata2 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Metadata = void 0;
     var logging_1 = require_logging();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var error_1 = require_error3();
     var LEGAL_KEY_REGEX = /^[:0-9a-z_.-]+$/;
     var LEGAL_NON_BINARY_VALUE_REGEX = /^[ -~]*$/;
@@ -234054,7 +234832,7 @@ var require_channel_credentials = __commonJS({
     var uri_parser_1 = require_uri_parser();
     var resolver_1 = require_resolver();
     var logging_1 = require_logging();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     function verifyIsBufferOrNull(obj, friendlyName) {
       if (obj && !(obj instanceof Buffer)) {
         throw new TypeError(`${friendlyName}, if provided, must be a Buffer.`);
@@ -234451,7 +235229,7 @@ var require_load_balancer = __commonJS({
     exports2.getDefaultConfig = getDefaultConfig;
     exports2.selectLbConfigFromList = selectLbConfigFromList;
     var logging_1 = require_logging();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     function createChildChannelControlHelper(parent, overrides) {
       var _a2, _b2, _c2, _d, _e, _f, _g, _h, _j, _k;
       return {
@@ -234537,7 +235315,7 @@ var require_service_config = __commonJS({
     exports2.validateServiceConfig = validateServiceConfig;
     exports2.extractAndSelectServiceConfig = extractAndSelectServiceConfig;
     var os = require("os");
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var DURATION_REGEX = /^\d+(\.\d{1,9})?s$/;
     var CLIENT_LANGUAGE_STRING = "node";
     function validateName(obj) {
@@ -234895,7 +235673,7 @@ var require_picker = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.QueuePicker = exports2.UnavailablePicker = exports2.PickResultType = void 0;
     var metadata_1 = require_metadata2();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var PickResultType;
     (function(PickResultType2) {
       PickResultType2[PickResultType2["COMPLETE"] = 0] = "COMPLETE";
@@ -234955,7 +235733,7 @@ var require_backoff_timeout = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.BackoffTimeout = void 0;
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var logging = require_logging();
     var TRACER_NAME = "backoff";
     var INITIAL_BACKOFF_MS = 1e3;
@@ -235237,10 +236015,10 @@ var require_resolving_load_balancer = __commonJS({
     var resolver_1 = require_resolver();
     var picker_1 = require_picker();
     var backoff_timeout_1 = require_backoff_timeout();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var metadata_1 = require_metadata2();
     var logging = require_logging();
-    var constants_2 = require_constants38();
+    var constants_2 = require_constants39();
     var uri_parser_1 = require_uri_parser();
     var load_balancer_child_handler_1 = require_load_balancer_child_handler();
     var TRACER_NAME = "resolving_load_balancer";
@@ -236579,7 +237357,7 @@ var require_call = __commonJS({
     exports2.callErrorFromStatus = callErrorFromStatus;
     var events_1 = require("events");
     var stream_1 = require("stream");
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     function callErrorFromStatus(status, callerStack) {
       const message = `${status.code} ${constants_1.Status[status.code]}: ${status.details}`;
       const error2 = new Error(message);
@@ -236800,7 +237578,7 @@ var require_client_interceptors = __commonJS({
     exports2.getInterceptingCall = getInterceptingCall;
     var metadata_1 = require_metadata2();
     var call_interface_1 = require_call_interface();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var error_1 = require_error3();
     var InterceptorConfigurationError = class _InterceptorConfigurationError extends Error {
       constructor(message) {
@@ -237153,7 +237931,7 @@ var require_client7 = __commonJS({
     var call_1 = require_call();
     var channel_1 = require_channel();
     var connectivity_state_1 = require_connectivity_state();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var metadata_1 = require_metadata2();
     var client_interceptors_1 = require_client_interceptors();
     var CHANNEL_SYMBOL = Symbol();
@@ -247265,7 +248043,7 @@ var require_channelz = __commonJS({
     var net_1 = require("net");
     var ordered_map_1 = require_cjs6();
     var connectivity_state_1 = require_connectivity_state();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var subchannel_address_1 = require_subchannel_address();
     var admin_1 = require_admin();
     var make_client_1 = require_make_client();
@@ -247899,7 +248677,7 @@ var require_compression_filter = __commonJS({
     exports2.CompressionFilterFactory = exports2.CompressionFilter = void 0;
     var zlib = require("zlib");
     var compression_algorithms_1 = require_compression_algorithms();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var filter_1 = require_filter();
     var logging = require_logging();
     var isCompressionAlgorithmKey = (key) => {
@@ -248166,7 +248944,7 @@ var require_control_plane_status = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.restrictControlPlaneStatusCode = restrictControlPlaneStatusCode;
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var INAPPROPRIATE_CONTROL_PLANE_CODES = [
       constants_1.Status.OK,
       constants_1.Status.INVALID_ARGUMENT,
@@ -248342,7 +249120,7 @@ var require_single_subchannel_channel = __commonJS({
     var channelz_1 = require_channelz();
     var compression_filter_1 = require_compression_filter();
     var connectivity_state_1 = require_connectivity_state();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var control_plane_status_1 = require_control_plane_status();
     var deadline_1 = require_deadline();
     var filter_stack_1 = require_filter_stack();
@@ -248561,7 +249339,7 @@ var require_subchannel = __commonJS({
     var connectivity_state_1 = require_connectivity_state();
     var backoff_timeout_1 = require_backoff_timeout();
     var logging = require_logging();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var uri_parser_1 = require_uri_parser();
     var subchannel_address_1 = require_subchannel_address();
     var channelz_1 = require_channelz();
@@ -248901,11 +249679,11 @@ var require_resolver_dns = __commonJS({
     var resolver_1 = require_resolver();
     var dns_1 = require("dns");
     var service_config_1 = require_service_config();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var call_interface_1 = require_call_interface();
     var metadata_1 = require_metadata2();
     var logging = require_logging();
-    var constants_2 = require_constants38();
+    var constants_2 = require_constants39();
     var uri_parser_1 = require_uri_parser();
     var net_1 = require("net");
     var backoff_timeout_1 = require_backoff_timeout();
@@ -249188,7 +249966,7 @@ var require_http_proxy = __commonJS({
     exports2.mapProxyName = mapProxyName;
     exports2.getProxiedConnection = getProxiedConnection;
     var logging_1 = require_logging();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var net_1 = require("net");
     var http = require("http");
     var logging = require_logging();
@@ -249491,11 +250269,11 @@ var require_subchannel_call = __commonJS({
     exports2.Http2SubchannelCall = void 0;
     var http2 = require("http2");
     var os = require("os");
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var metadata_1 = require_metadata2();
     var stream_decoder_1 = require_stream_decoder();
     var logging = require_logging();
-    var constants_2 = require_constants38();
+    var constants_2 = require_constants39();
     var TRACER_NAME = "subchannel_call";
     function getSystemErrorName(errno) {
       for (const [name, num] of Object.entries(os.constants.errno)) {
@@ -249897,7 +250675,7 @@ var require_transport2 = __commonJS({
     var http2 = require("http2");
     var tls_1 = require("tls");
     var channelz_1 = require_channelz();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var http_proxy_1 = require_http_proxy();
     var logging = require_logging();
     var resolver_1 = require_resolver();
@@ -250520,7 +251298,7 @@ var require_load_balancing_call = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.LoadBalancingCall = void 0;
     var connectivity_state_1 = require_connectivity_state();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var deadline_1 = require_deadline();
     var metadata_1 = require_metadata2();
     var picker_1 = require_picker();
@@ -250763,7 +251541,7 @@ var require_resolving_call = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.ResolvingCall = void 0;
     var call_credentials_1 = require_call_credentials();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var deadline_1 = require_deadline();
     var metadata_1 = require_metadata2();
     var logging = require_logging();
@@ -251047,7 +251825,7 @@ var require_retrying_call = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.RetryingCall = exports2.MessageBufferTracker = exports2.RetryThrottler = void 0;
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var deadline_1 = require_deadline();
     var metadata_1 = require_metadata2();
     var logging = require_logging();
@@ -251777,7 +252555,7 @@ var require_internal_channel = __commonJS({
     var subchannel_pool_1 = require_subchannel_pool();
     var picker_1 = require_picker();
     var metadata_1 = require_metadata2();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var filter_stack_1 = require_filter_stack();
     var compression_filter_1 = require_compression_filter();
     var resolver_1 = require_resolver();
@@ -252346,7 +253124,7 @@ var require_server_call = __commonJS({
     exports2.serverErrorToStatus = serverErrorToStatus;
     var events_1 = require("events");
     var stream_1 = require("stream");
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var metadata_1 = require_metadata2();
     function serverErrorToStatus(error2, overrideTrailers) {
       var _a2;
@@ -252909,7 +253687,7 @@ var require_orca = __commonJS({
     var duration_1 = require_duration();
     var channel_credentials_1 = require_channel_credentials();
     var subchannel_interface_1 = require_subchannel_interface();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var backoff_timeout_1 = require_backoff_timeout();
     var connectivity_state_1 = require_connectivity_state();
     var loadedOrcaProto = null;
@@ -253201,7 +253979,7 @@ var require_server_interceptors = __commonJS({
     exports2.isInterceptingServerListener = isInterceptingServerListener;
     exports2.getServerInterceptingCall = getServerInterceptingCall;
     var metadata_1 = require_metadata2();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var http2 = require("http2");
     var error_1 = require_error3();
     var zlib = require("zlib");
@@ -254003,7 +254781,7 @@ var require_server2 = __commonJS({
     exports2.Server = void 0;
     var http2 = require("http2");
     var util = require("util");
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var server_call_1 = require_server_call();
     var server_credentials_1 = require_server_credentials();
     var resolver_1 = require_resolver();
@@ -255474,7 +256252,7 @@ var require_load_balancer_pick_first = __commonJS({
     var picker_1 = require_picker();
     var subchannel_address_1 = require_subchannel_address();
     var logging = require_logging();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var subchannel_address_2 = require_subchannel_address();
     var net_1 = require("net");
     var call_interface_1 = require_call_interface();
@@ -255888,7 +256666,7 @@ var require_certificate_provider = __commonJS({
     exports2.FileWatcherCertificateProvider = void 0;
     var fs = require("fs");
     var logging = require_logging();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var util_1 = require("util");
     var TRACER_NAME = "certificate_provider";
     function trace3(text) {
@@ -256184,7 +256962,7 @@ var require_resolver_ip = __commonJS({
     exports2.setup = setup;
     var net_1 = require("net");
     var call_interface_1 = require_call_interface();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var metadata_1 = require_metadata2();
     var resolver_1 = require_resolver();
     var subchannel_address_1 = require_subchannel_address();
@@ -256278,7 +257056,7 @@ var require_load_balancer_round_robin = __commonJS({
     var connectivity_state_1 = require_connectivity_state();
     var picker_1 = require_picker();
     var logging = require_logging();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var subchannel_address_1 = require_subchannel_address();
     var load_balancer_pick_first_1 = require_load_balancer_pick_first();
     var TRACER_NAME = "round_robin";
@@ -256451,7 +257229,7 @@ var require_load_balancer_outlier_detection = __commonJS({
     exports2.OutlierDetectionLoadBalancer = exports2.OutlierDetectionLoadBalancingConfig = void 0;
     exports2.setup = setup;
     var connectivity_state_1 = require_connectivity_state();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var duration_1 = require_duration();
     var experimental_1 = require_experimental();
     var load_balancer_1 = require_load_balancer();
@@ -257051,7 +257829,7 @@ var require_load_balancer_weighted_round_robin = __commonJS({
     exports2.WeightedRoundRobinLoadBalancingConfig = void 0;
     exports2.setup = setup;
     var connectivity_state_1 = require_connectivity_state();
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     var duration_1 = require_duration();
     var load_balancer_1 = require_load_balancer();
     var load_balancer_pick_first_1 = require_load_balancer_pick_first();
@@ -257425,7 +258203,7 @@ var require_src10 = __commonJS({
     Object.defineProperty(exports2, "Client", { enumerable: true, get: function() {
       return client_1.Client;
     } });
-    var constants_1 = require_constants38();
+    var constants_1 = require_constants39();
     Object.defineProperty(exports2, "logVerbosity", { enumerable: true, get: function() {
       return constants_1.LogVerbosity;
     } });
@@ -259530,23 +260308,16 @@ var require_docker2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/docker-utils.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/docker-utils.js
 var require_docker_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/docker-utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/docker-utils.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "e02b6eb9-4326-5f49-a864-e13054f442f7");
-      } catch (e2) {
-      }
-    }();
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.pushImage = exports2.getTarStreamFromImage = exports2.tagImage = exports2.getImageInfo = exports2.verifyDockerConnection = exports2.getDockerClient = void 0;
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
     var dockerode_1 = __importDefault2(require_docker2());
     var IncompleteDockerPushError = class extends Error {
     };
@@ -259719,17 +260490,10 @@ var require_docker_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js
 var require_upload_container = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "8486a62a-c896-5742-9bfd-907e520447ea");
-      } catch (e2) {
-      }
-    }();
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
         k2 = k;
@@ -259776,11 +260540,12 @@ var require_upload_container = __commonJS({
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.uploadContainer = exports2.pushContainerImage = void 0;
-    var client_1 = require_dist15();
-    var common_1 = require_dist12();
+    var client_1 = require_dist16();
+    var common_1 = require_dist15();
     var Sentry = __importStar2(require_cjs5());
     var asset_upload_utils_1 = require_asset_upload_utils();
     var docker_utils_1 = require_docker_utils();
+    var deployment_in_progress_1 = require_deployment_in_progress();
     var poll_for_base_test_run_1 = require_poll_for_base_test_run();
     var pushContainerImage = async ({ apiToken: apiToken_, localImageTag, projectId }) => {
       const apiToken = (0, client_1.getApiToken)(apiToken_);
@@ -259817,7 +260582,7 @@ var require_upload_container = __commonJS({
       return { client, uploadId, imageReference };
     };
     exports2.pushContainerImage = pushContainerImage;
-    var uploadContainer = async ({ apiToken: apiToken_, localImageTag, commitSha, baseSha, gitDiffOutput, waitForBase = false, containerPort, containerEnv, containerHealthCheckEndpoint, companionAssets, projectId }) => {
+    var uploadContainer = async ({ apiToken: apiToken_, localImageTag, commitSha, baseSha, gitDiffOutput, waitForBase = false, containerPort, containerEnv, containerHealthCheckEndpoint, companionAssets, projectId, debugContext }) => {
       const projectIdentifier = projectId ? { projectId } : {};
       const { client, uploadId, imageReference } = await (0, exports2.pushContainerImage)({
         apiToken: apiToken_,
@@ -259876,19 +260641,25 @@ var require_upload_container = __commonJS({
         ...companionAssetsInfo ? { companionAssetsInfo } : {},
         ...projectIdentifier
       };
+      const firstAttemptArgs = {
+        ...completeContainerArgs,
+        ...debugContext ? { debugContext } : {}
+      };
       const completeUpload = async (args) => {
         try {
           return await (0, client_1.completeContainerUpload)(args);
         } catch (error2) {
-          const logger = (0, common_1.initLogger)();
-          logger.error(`Failed to complete container upload ${uploadId} for image ${imageReference} and commit ${commitSha}`);
-          if (error2 instanceof Error) {
-            logger.error(error2.message);
+          if (!(0, deployment_in_progress_1.isDeploymentStillInProgress)(error2)) {
+            const logger = (0, common_1.initLogger)();
+            logger.error(`Failed to complete container upload ${uploadId} for image ${imageReference} and commit ${commitSha}`);
+            if (error2 instanceof Error) {
+              logger.error(error2.message);
+            }
           }
           throw error2;
         }
       };
-      const completeResult = await completeUpload(completeContainerArgs);
+      const completeResult = await (0, common_1.executeWithRetry)(() => completeUpload(firstAttemptArgs), { ...deployment_in_progress_1.DEPLOYMENT_IN_PROGRESS_RETRY, logger: (0, common_1.initLogger)() });
       const pollResult = await (0, poll_for_base_test_run_1.pollWhileBaseNotFound)({
         initialResult: {
           testRun: completeResult.testRun ?? null,
@@ -259938,22 +260709,15 @@ var require_upload_container = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js
 var require_upload_container_and_trigger_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "76df5c90-7325-5ce8-ba44-4eebbca8e307");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.uploadContainerAndTriggerTestRun = void 0;
-    var common_1 = require_dist12();
+    var common_1 = require_dist15();
     var upload_container_1 = require_upload_container();
-    var uploadContainerAndTriggerTestRun = async ({ apiToken, localImageTag, commitSha, waitForBase, containerPort, containerEnv, containerHealthCheckEndpoint, companionAssets, projectId }) => {
+    var uploadContainerAndTriggerTestRun = async ({ apiToken, localImageTag, commitSha, waitForBase, containerPort, containerEnv, containerHealthCheckEndpoint, companionAssets, projectId, debugContext }) => {
       const logger = (0, common_1.initLogger)();
       const result = await (0, upload_container_1.uploadContainer)({
         apiToken,
@@ -259964,7 +260728,8 @@ var require_upload_container_and_trigger_test_run = __commonJS({
         containerEnv,
         containerHealthCheckEndpoint,
         ...companionAssets ? { companionAssets } : {},
-        ...projectId ? { projectId } : {}
+        ...projectId ? { projectId } : {},
+        ...debugContext ? { debugContext } : {}
       });
       if (result.testRun) {
         const organizationName = encodeURIComponent(result.testRun.project.organization.name);
@@ -259982,23 +260747,16 @@ var require_upload_container_and_trigger_test_run = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-build.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-build.js
 var require_upload_build = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-build.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-build.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "5d3011db-93b4-5c9c-9920-5117600082d0");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.uploadBuild = void 0;
     var fs_1 = require("fs");
     var path_1 = require("path");
-    var client_1 = require_dist15();
-    var common_1 = require_dist12();
+    var client_1 = require_dist16();
+    var common_1 = require_dist15();
     var asset_upload_utils_1 = require_asset_upload_utils();
     var upload_container_1 = require_upload_container();
     var multipart_compressing_uploader_1 = require_multipart_compressing_uploader();
@@ -260081,21 +260839,14 @@ var require_upload_build = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/trigger-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/trigger-test-run.js
 var require_trigger_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/trigger-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/trigger-test-run.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "fdd21640-3096-541a-b417-6047e245c672");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.triggerTestRun = void 0;
-    var client_1 = require_dist15();
-    var common_1 = require_dist12();
+    var client_1 = require_dist16();
+    var common_1 = require_dist15();
     var asset_upload_utils_1 = require_asset_upload_utils();
     var identifierParams = (deploymentId, commitSha) => {
       if (deploymentId) {
@@ -260152,17 +260903,10 @@ var require_trigger_test_run = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/generate-sessions.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/generate-sessions.js
 var require_generate_sessions = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/generate-sessions.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/generate-sessions.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "3c25ce0d-e10e-5a42-8aa1-677653b6ea40");
-      } catch (e2) {
-      }
-    }();
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
         k2 = k;
@@ -260210,8 +260954,8 @@ var require_generate_sessions = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.generateSessions = void 0;
     var promises_1 = require("fs/promises");
-    var client_1 = require_dist15();
-    var common_1 = require_dist12();
+    var client_1 = require_dist16();
+    var common_1 = require_dist15();
     var Sentry = __importStar2(require_cjs5());
     var asset_upload_utils_1 = require_asset_upload_utils();
     var multipart_compressing_uploader_1 = require_multipart_compressing_uploader();
@@ -260305,14 +261049,18 @@ var require_generate_sessions = __commonJS({
         extra: {
           uploadId,
           commitSha,
-          workflowRunId: result.workflowRunId,
+          agenticRunId: result.agenticRunId,
           ...imageReference ? { imageReference } : {}
         }
       });
-      logger.info(`Agentic session generation launched. Upload ID: ${uploadId}${result.workflowRunId ? `, workflow run: ${result.workflowRunId}` : ""}`);
+      if (result.message && !result.agenticRunId) {
+        logger.info(result.message);
+      } else {
+        logger.info(`Agentic session generation launched. Upload ID: ${uploadId}${result.agenticRunId ? `, agentic run: ${result.agenticRunId}` : ""}`);
+      }
       return {
         uploadId,
-        workflowRunId: result.workflowRunId ?? null,
+        agenticRunId: result.agenticRunId ?? null,
         ...result.message ? { message: result.message } : {}
       };
     };
@@ -260343,17 +261091,10 @@ var require_generate_sessions = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-asset-chunk.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-asset-chunk.js
 var require_upload_asset_chunk = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-asset-chunk.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-asset-chunk.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "86bf1f7b-84bf-5e4d-9419-85ec550ea253");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.writeCompressedTar = exports2.uploadAssetChunk = void 0;
     var fs_1 = require("fs");
@@ -260361,8 +261102,8 @@ var require_upload_asset_chunk = __commonJS({
     var os_1 = require("os");
     var path_1 = require("path");
     var zlib_1 = require("zlib");
-    var client_1 = require_dist15();
-    var common_1 = require_dist12();
+    var client_1 = require_dist16();
+    var common_1 = require_dist15();
     var fast_zlib_1 = require_fast_zlib();
     var tar_1 = require_index_min();
     var COMPRESSION_LEVEL = 3;
@@ -260495,17 +261236,10 @@ var require_upload_asset_chunk = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/run-with-uploaded-asset-chunks.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/run-with-uploaded-asset-chunks.js
 var require_run_with_uploaded_asset_chunks = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/run-with-uploaded-asset-chunks.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/run-with-uploaded-asset-chunks.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "9606c131-8b0e-598b-9475-ec734234c1b1");
-      } catch (e2) {
-      }
-    }();
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
         k2 = k;
@@ -260552,8 +261286,8 @@ var require_run_with_uploaded_asset_chunks = __commonJS({
     }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.runWithUploadedAssetChunks = void 0;
-    var client_1 = require_dist15();
-    var common_1 = require_dist12();
+    var client_1 = require_dist16();
+    var common_1 = require_dist15();
     var Sentry = __importStar2(require_cjs5());
     var asset_upload_utils_1 = require_asset_upload_utils();
     var poll_for_base_test_run_1 = require_poll_for_base_test_run();
@@ -260638,17 +261372,10 @@ var require_run_with_uploaded_asset_chunks = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js
-var require_dist17 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.331.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js
+var require_dist18 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@2.335.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js"(exports2) {
     "use strict";
-    !function() {
-      try {
-        var e = "undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof globalThis ? globalThis : "undefined" != typeof self ? self : {}, n2 = new e.Error().stack;
-        n2 && (e._sentryDebugIds = e._sentryDebugIds || {}, e._sentryDebugIds[n2] = "3f3489b4-38d9-5c05-9340-1f14c9ce4eb5");
-      } catch (e2) {
-      }
-    }();
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.runWithUploadedAssetChunks = exports2.uploadAssetChunk = exports2.generateSessions = exports2.triggerTestRun = exports2.uploadBuild = exports2.uploadContainer = exports2.uploadContainerAndTriggerTestRun = exports2.uploadAssetsFromZip = exports2.uploadAssets = exports2.uploadAssetsAndTriggerTestRun = exports2.executeRemoteTestRun = void 0;
     var execute_remote_test_run_1 = require_execute_remote_test_run();
@@ -263310,9 +264037,9 @@ var getInCloudActionInputs = () => {
 
 // src/actions/cloud-compute/run-test-run.ts
 var import_github3 = __toESM(require_github());
-var import_client2 = __toESM(require_dist15());
+var import_client2 = __toESM(require_dist16());
 var import_common3 = __toESM(require_dist12());
-var import_remote_replay_launcher = __toESM(require_dist17());
+var import_remote_replay_launcher = __toESM(require_dist18());
 var import_loglevel3 = __toESM(require_loglevel());
 
 // src/common/check-connection.ts
@@ -263361,6 +264088,19 @@ async function fetchWithTimeout(url) {
   clearTimeout(id);
   return response;
 }
+
+// src/common/cloud-replay-base.utils.ts
+var import_client = __toESM(require_dist16());
+var getCloudReplayBaseTestRun = async ({
+  apiToken,
+  headCommitSha
+}) => {
+  const client = (0, import_client.createClient)({ apiToken });
+  return await (0, import_client.getGitHubCloudReplayBaseTestRun)({
+    client,
+    headCommitSha
+  });
+};
 
 // src/common/constants.ts
 var METICULIOUS_APP_URL = "https://app.meticulous.ai";
@@ -270034,7 +270774,6 @@ var UNEXPECTED_INPUTS_MESSAGE = "Unexpected inputs provided";
 var WORKFLOW_RUN_UPDATE_STATUS_INTERVAL = Duration.fromObject({ seconds: 5 });
 var WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL = Duration.fromObject({ hours: 1 });
 var GITHUB_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-var MAX_COMMITS_TO_SEARCH = 500;
 var MAX_WORKFLOW_RUNS_TO_SEARCH = 500;
 var getCurrentWorkflowId = async ({
   context: context5,
@@ -270061,6 +270800,7 @@ var getCurrentWorkflowId = async ({
     throw err;
   }
 };
+var REF_NOT_FOUND_MESSAGE = "No ref found for";
 var startNewWorkflowRun = async ({
   owner,
   repo,
@@ -270087,6 +270827,12 @@ var startNewWorkflowRun = async ({
   } catch (err) {
     const message = err?.message ?? "";
     const status = err?.status;
+    if (message.includes(REF_NOT_FOUND_MESSAGE)) {
+      logger.debug(
+        `There is no '${ref}' branch to dispatch the Meticulous workflow on. ${message}`
+      );
+      return { type: "ref-not-found" };
+    }
     if (pinCommitSha && (status === 422 || message.includes(UNEXPECTED_INPUTS_MESSAGE))) {
       logger.debug(
         `The Meticulous workflow on '${ref}' did not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input, so it can only build whatever that branch currently points at. ${message}`
@@ -270180,10 +270926,13 @@ var dispatchAndReadRun = async ({
 };
 var isUnknownBodyFieldRefusal = (err) => {
   const status = err?.status;
+  const message = err?.message ?? "";
+  if (message.includes(REF_NOT_FOUND_MESSAGE)) {
+    return false;
+  }
   if (status === 400) {
     return true;
   }
-  const message = err?.message ?? "";
   return status === 422 && !message.includes(UNEXPECTED_INPUTS_MESSAGE);
 };
 var readDispatchedWorkflowRun = (response) => {
@@ -270277,22 +271026,6 @@ var getPendingWorkflowRun = async ({
 }) => {
   try {
     const since = DateTime.utc().minus(WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL).toFormat(GITHUB_DATE_FORMAT);
-    const commitResponses = octokit.paginate.iterator(
-      octokit.rest.repos.listCommits,
-      {
-        owner,
-        repo,
-        per_page: 100,
-        sha: commitSha,
-        since
-      }
-    );
-    const commits = [];
-    for await (const commitResponse of commitResponses) {
-      commits.push(...commitResponse.data);
-      if (commits.length >= MAX_COMMITS_TO_SEARCH)
-        break;
-    }
     const workflowRunsResponses = octokit.paginate.iterator(
       octokit.rest.actions.listWorkflowRuns,
       {
@@ -270309,33 +271042,16 @@ var getPendingWorkflowRun = async ({
       if (workflowRuns.length >= MAX_WORKFLOW_RUNS_TO_SEARCH)
         break;
     }
-    let shaToCheck = commitSha;
-    while (shaToCheck) {
-      const workflowRunsForCommit = workflowRuns.filter(
-        // Note we ignore runs on PR events because these are actually running on the temporary
-        // merge commit created by GitHub so they are not useable for comparisons.
-        (run) => run.head_sha === shaToCheck && run.event !== "pull_request"
-      );
-      if (workflowRunsForCommit.length > 0) {
-        const pendingRun = workflowRunsForCommit.find(
-          (run) => isPendingStatus(run.status)
-        );
-        if (pendingRun) {
-          return {
-            ...pendingRun,
-            workflowRunId: pendingRun.id
-          };
-        }
-        return void 0;
-      }
-      const commit = commits.find((c) => c.sha === shaToCheck);
-      if (!commit) {
-        return void 0;
-      }
-      if (commit.parents.length === 0) {
-        return void 0;
-      }
-      shaToCheck = commit.parents[0].sha;
+    const pendingRun = workflowRuns.find(
+      (run) => run.head_sha === commitSha && // Note we ignore runs on PR events because these are actually running on the temporary
+      // merge commit created by GitHub so they are not useable for comparisons.
+      run.event !== "pull_request" && isPendingStatus(run.status)
+    );
+    if (pendingRun) {
+      return {
+        ...pendingRun,
+        workflowRunId: pendingRun.id
+      };
     }
     return void 0;
   } catch (err) {
@@ -270374,12 +271090,21 @@ var tryTriggerTestsWorkflowOnBase = async (opts) => {
     opts.getBaseTestRun,
     isCancelled
   );
-  const result = await Promise.race([workflowRunPromise, baseTestRunPromise]);
-  isDone = true;
-  return result;
+  try {
+    return await Promise.race([workflowRunPromise, baseTestRunPromise]);
+  } finally {
+    isDone = true;
+  }
 };
 var waitOnWorkflowRun = async (opts, isCancelled) => {
-  const { logger, event, base, context: context5, octokit } = opts;
+  const {
+    logger,
+    event,
+    base,
+    context: context5,
+    octokit,
+    dispatchedRunReportsCheckedOutCommit
+  } = opts;
   const { owner, repo } = context5.repo;
   const { workflowId } = await getCurrentWorkflowId({ context: context5, octokit });
   const alreadyPending = await getPendingWorkflowRun({
@@ -270433,6 +271158,36 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     octokit,
     logger
   });
+  if (dispatch.type === "ref-not-found") {
+    const fallback = dispatchedRunReportsCheckedOutCommit ? await dispatchPinnedOnDefaultBranch({
+      owner,
+      repo,
+      workflowId,
+      base,
+      baseRef,
+      octokit,
+      logger
+    }) : {
+      type: "gave-up",
+      message: couldNotBuildBase({
+        base,
+        reason: `the '${baseRef}' branch it was on no longer exists.`,
+        remedy: `The upload-assets and upload-container actions can build it from another branch instead: see ${DOCS_URL}.`
+      })
+    };
+    if (fallback.type === "gave-up") {
+      logger.warn(fallback.message);
+      (0, import_core3.warning)(fallback.message);
+      return {
+        baseTestRunExists: false,
+        baseResolutionDetails: {
+          type: "failed-for-other-reason",
+          message: fallback.message
+        }
+      };
+    }
+    dispatch = fallback;
+  }
   if (dispatch.type === "commit-pinning-unsupported") {
     const currentBaseSha = await getHeadCommitForRef({
       owner,
@@ -270506,6 +271261,85 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
       msTaken: Date.now() - waitStartMs
     }
   };
+};
+var dispatchPinnedOnDefaultBranch = async ({
+  owner,
+  repo,
+  workflowId,
+  base,
+  baseRef,
+  octokit,
+  logger
+}) => {
+  const defaultBranch = await getDefaultBranch({
+    owner,
+    repo,
+    octokit,
+    logger
+  });
+  if (defaultBranch == null || defaultBranch === baseRef) {
+    return {
+      type: "gave-up",
+      message: couldNotBuildBase({
+        base,
+        reason: `the '${baseRef}' branch it was on no longer exists${defaultBranch == null ? `, and we could not look up the repository's default branch to build it from instead` : ``}.`
+      })
+    };
+  }
+  logger.info(
+    `The '${baseRef}' branch no longer exists, so asking the Meticulous workflow on '${defaultBranch}' to build ${base} instead.`
+  );
+  const dispatch = await startNewWorkflowRun({
+    owner,
+    repo,
+    workflowId,
+    ref: defaultBranch,
+    commitSha: base,
+    pinCommitSha: true,
+    octokit,
+    logger
+  });
+  if (dispatch.type === "commit-pinning-unsupported") {
+    return {
+      type: "gave-up",
+      message: couldNotBuildBase({
+        base,
+        reason: `the '${baseRef}' branch it was on no longer exists, and the Meticulous workflow on '${defaultBranch}' does not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input that would let us ask for ${base} specifically.`,
+        remedy: `Adding the input will fix this: see ${DOCS_URL}.`
+      })
+    };
+  }
+  if (dispatch.type !== "started") {
+    return {
+      type: "gave-up",
+      message: couldNotBuildBase({
+        base,
+        reason: `the '${baseRef}' branch it was on no longer exists, and the dispatch on '${defaultBranch}' did not start a run.`
+      })
+    };
+  }
+  return dispatch;
+};
+var couldNotBuildBase = ({
+  base,
+  reason,
+  remedy
+}) => `Meticulous tests on base commit ${base} haven't started running so we have nothing to compare against.
+    In addition we were not able to trigger a run on ${base}: ${reason}
+    Therefore no diffs will be reported for this run.${remedy ? ` ${remedy}` : ``}`;
+var getDefaultBranch = async ({
+  owner,
+  repo,
+  octokit,
+  logger
+}) => {
+  try {
+    const { data } = await octokit.rest.repos.get({ owner, repo });
+    return data.default_branch;
+  } catch (err) {
+    logger.warn(`Could not look up the repository's default branch: ${err}`);
+    return null;
+  }
 };
 var waitOnBaseTestRun = async (getBaseTestRun, isCancelled) => {
   let baseTestRun = await getBaseTestRun();
@@ -270691,19 +271525,6 @@ var DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION = Duration.fromObject({
   minutes: 45
 });
 
-// src/actions/cloud-compute/get-cloud-compute-base-test-run.ts
-var import_client = __toESM(require_dist15());
-var getCloudComputeBaseTestRun = async ({
-  apiToken,
-  headCommitSha
-}) => {
-  const client = (0, import_client.createClient)({ apiToken });
-  return await (0, import_client.getGitHubCloudReplayBaseTestRun)({
-    client,
-    headCommitSha
-  });
-};
-
 // src/actions/cloud-compute/get-pull-request-id.ts
 var getPullRequestId = (event) => {
   if (!event || event.type !== "pull_request") {
@@ -270752,7 +271573,7 @@ var runOneTestRun = async ({
     return;
   }
   logger.warn("Head commit SHA: ", headSha);
-  const { baseCommitSha, baseTestRun } = await getCloudComputeBaseTestRun({
+  const { baseCommitSha, baseTestRun } = await getCloudReplayBaseTestRun({
     apiToken,
     headCommitSha: headSha
   });
@@ -270780,8 +271601,9 @@ var runOneTestRun = async ({
         logger,
         event,
         base: codeChangeBase,
+        dispatchedRunReportsCheckedOutCommit: true,
         getBaseTestRun: async () => {
-          const { baseTestRun: baseTestRun2 } = await getCloudComputeBaseTestRun({
+          const { baseTestRun: baseTestRun2 } = await getCloudReplayBaseTestRun({
             apiToken,
             headCommitSha: headSha
           });

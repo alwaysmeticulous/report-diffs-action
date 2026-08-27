@@ -13,6 +13,7 @@ import { defer, METICULOUS_LOGGER_NAME } from "@alwaysmeticulous/common";
 import { executeRemoteTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import log from "loglevel";
 import { throwIfCannotConnectToOrigin } from "../../common/check-connection";
+import { getCloudReplayBaseTestRun } from "../../common/cloud-replay-base.utils";
 import { METICULIOUS_APP_URL } from "../../common/constants";
 import { tryTriggerTestsWorkflowOnBase } from "../../common/ensure-base-exists.utils";
 import { shortCommitSha } from "../../common/environment.utils";
@@ -23,7 +24,6 @@ import { getPrefixedLogger, shortSha } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { updateStatusComment } from "../../common/update-status-comment";
 import { DEBUG_MODE_KEEP_TUNNEL_OPEN_DURATION } from "./consts";
-import { getCloudComputeBaseTestRun } from "./get-cloud-compute-base-test-run";
 import { getPullRequestId } from "./get-pull-request-id";
 
 export const runOneTestRun = async ({
@@ -96,7 +96,7 @@ export const runOneTestRun = async ({
   // Compute the base commit SHA to compare to for the HEAD commit.
   // This will usually be the merge base of the PR head and base commit. In some cases it can be an older main branch commit,
   // for example when running in a monorepo setup.
-  const { baseCommitSha, baseTestRun } = await getCloudComputeBaseTestRun({
+  const { baseCommitSha, baseTestRun } = await getCloudReplayBaseTestRun({
     apiToken,
     headCommitSha: headSha,
   });
@@ -133,8 +133,9 @@ export const runOneTestRun = async ({
           logger,
           event,
           base: codeChangeBase,
+          dispatchedRunReportsCheckedOutCommit: true,
           getBaseTestRun: async () => {
-            const { baseTestRun } = await getCloudComputeBaseTestRun({
+            const { baseTestRun } = await getCloudReplayBaseTestRun({
               apiToken,
               headCommitSha: headSha,
             });

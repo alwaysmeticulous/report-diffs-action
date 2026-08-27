@@ -26,8 +26,6 @@ const WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL = Duration.fromObject({ hours: 1 });
 
 const GITHUB_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-const MAX_COMMITS_TO_SEARCH = 500;
-
 const MAX_WORKFLOW_RUNS_TO_SEARCH = 500;
 
 export const getCurrentWorkflowId = async ({
@@ -68,7 +66,11 @@ export interface WorkflowRunHandle {
 export type StartWorkflowRunResult =
   | { type: "started"; workflowRun: WorkflowRunHandle | undefined }
   | { type: "commit-pinning-unsupported" }
+  | { type: "ref-not-found" }
   | { type: "failed" };
+
+/** How GitHub refuses a dispatch naming a branch that doesn't exist. */
+const REF_NOT_FOUND_MESSAGE = "No ref found for";
 
 export const startNewWorkflowRun = async ({
   owner,
@@ -111,11 +113,23 @@ export const startNewWorkflowRun = async ({
     });
   } catch (err: unknown) {
     const message = (err as { message?: string } | null)?.message ?? "";
+    const status = (err as { status?: number } | null)?.status;
+
+    // A branch that no longer exists is refused with a 422 too, so the status can't tell it from
+    // the missing-input refusal below and the wording has to; otherwise a deleted branch looks
+    // like a workflow that can't pin, and the caller goes looking for a branch head that isn't
+    // there.
+    if (message.includes(REF_NOT_FOUND_MESSAGE)) {
+      logger.debug(
+        `There is no '${ref}' branch to dispatch the Meticulous workflow on. ${message}`
+      );
+      return { type: "ref-not-found" };
+    }
+
     // A workflow that doesn't declare the input is rejected with 422 "Unexpected inputs
     // provided". We key off the status rather than the wording alone so that a rephrasing on
     // GitHub's side degrades to the branch-head behaviour we had before pinning, rather than
     // failing outright.
-    const status = (err as { status?: number } | null)?.status;
     if (
       pinCommitSha &&
       (status === 422 || message.includes(UNEXPECTED_INPUTS_MESSAGE))
@@ -262,15 +276,19 @@ const dispatchAndReadRun = async ({
  *
  * They have to be told apart by message, not status. A server that validates the body strictly
  * answers `400` on some versions and `422` on others, and `422` is also what an undeclared
- * input produces. Going by status alone, a strict server would look like a workflow that can't
- * be pinned, and we would drop the commit pinning that workflow was perfectly willing to honour.
+ * input — or a branch that doesn't exist — produces. Going by status alone, a strict server
+ * would look like a workflow that can't be pinned, and we would drop the commit pinning that
+ * workflow was perfectly willing to honour.
  */
 const isUnknownBodyFieldRefusal = (err: unknown): boolean => {
   const status = (err as { status?: number } | null)?.status;
+  const message = (err as { message?: string } | null)?.message ?? "";
+  if (message.includes(REF_NOT_FOUND_MESSAGE)) {
+    return false;
+  }
   if (status === 400) {
     return true;
   }
-  const message = (err as { message?: string } | null)?.message ?? "";
   return status === 422 && !message.includes(UNEXPECTED_INPUTS_MESSAGE);
 };
 
@@ -411,8 +429,11 @@ export const waitForWorkflowCompletion = async ({
 };
 
 /**
- * Searches for a pending workflow in the commit passed in or one of it's parents
- * within the last hour.
+ * Searches for a pending workflow run on the commit passed in, dispatched within the last hour.
+ *
+ * Only a run whose `head_sha` is that commit counts. A run on an ancestor built a different tree,
+ * so there are no snapshots at this commit to compare against however close the two commits are,
+ * and waiting on one leaves the caller believing a base exists that the backend then can't find.
  */
 export const getPendingWorkflowRun = async ({
   owner,
@@ -433,23 +454,6 @@ export const getPendingWorkflowRun = async ({
     const since = DateTime.utc()
       .minus(WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL)
       .toFormat(GITHUB_DATE_FORMAT);
-    const commitResponses = octokit.paginate.iterator(
-      octokit.rest.repos.listCommits,
-      {
-        owner,
-        repo,
-        per_page: 100,
-        sha: commitSha,
-        since,
-      }
-    );
-    const commits: Awaited<
-      ReturnType<typeof octokit.rest.repos.listCommits>
-    >["data"] = [];
-    for await (const commitResponse of commitResponses) {
-      commits.push(...commitResponse.data);
-      if (commits.length >= MAX_COMMITS_TO_SEARCH) break;
-    }
     const workflowRunsResponses = octokit.paginate.iterator(
       octokit.rest.actions.listWorkflowRuns,
       {
@@ -467,40 +471,19 @@ export const getPendingWorkflowRun = async ({
       workflowRuns.push(...workflowRunResponse.data);
       if (workflowRuns.length >= MAX_WORKFLOW_RUNS_TO_SEARCH) break;
     }
-    let shaToCheck = commitSha;
-    while (shaToCheck) {
-      const workflowRunsForCommit = workflowRuns.filter(
+    const pendingRun = workflowRuns.find(
+      (run) =>
+        run.head_sha === commitSha &&
         // Note we ignore runs on PR events because these are actually running on the temporary
         // merge commit created by GitHub so they are not useable for comparisons.
-        (run) => run.head_sha === shaToCheck && run.event !== "pull_request"
-      );
-      if (workflowRunsForCommit.length > 0) {
-        // We've found a commit that we ran on. If there's a pending run, return it.
-        // In any case we can stop searching.
-        const pendingRun = workflowRunsForCommit.find((run) =>
-          isPendingStatus(run.status)
-        );
-        if (pendingRun) {
-          return {
-            ...pendingRun,
-            workflowRunId: pendingRun.id,
-          };
-        }
-        return undefined;
-      }
-      // If we don't find a workflow on the commit passed in, we search through the parents as the
-      // workflow may be selectively executed. Note we _always_ check the commit passed in first,
-      // which may be one that's older than an hour ago but that we just triggered a workflow on.
-      const commit = commits.find((c) => c.sha === shaToCheck);
-      if (!commit) {
-        // This must mean the commit is older than an hour ago, so we can stop searching.
-        return undefined;
-      }
-      if (commit.parents.length === 0) {
-        // We've reached the root commit, so we can stop searching.
-        return undefined;
-      }
-      shaToCheck = commit.parents[0].sha;
+        run.event !== "pull_request" &&
+        isPendingStatus(run.status)
+    );
+    if (pendingRun) {
+      return {
+        ...pendingRun,
+        workflowRunId: pendingRun.id,
+      };
     }
     return undefined;
   } catch (err) {
