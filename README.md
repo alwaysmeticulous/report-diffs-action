@@ -10,7 +10,7 @@ A GitHub Action that performs visual regression testing by comparing screenshots
 | --------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `upload-assets`       | Upload built static assets for Meticulous to test **(recommended for static sites)**                                 |
 | `upload-container`    | Upload a built Docker image for Meticulous to host and test **(recommended for server-rendered apps, e.g. Next.js)** |
-| `ensure-base`         | Optional sibling job: dispatch a missing base build at workflow start so it runs in parallel with the PR build       |
+| `ensure-base`         | First step before upload: dispatch a missing base build so it runs in parallel with the PR build                     |
 | `cloud-compute`       | Test a locally-served app via a secure tunnel (last resort)                                                          |
 | `report-diffs-action` | Run tests in GitHub Actions runner (legacy)                                                                          |
 
@@ -108,17 +108,15 @@ permissions:
   statuses: read
 
 jobs:
-  # Same workflow file as the upload job — ensure-base dispatches *this* workflow
-  # on the base branch. Do not add `needs:` between these jobs; that re-serializes the wait.
-  ensure-base:
-    runs-on: ubuntu-latest
+  test:
     steps:
+      # Same workflow file as the upload step — ensure-base dispatches *this*
+      # workflow on the base branch. Run it before checkout/build so the base
+      # can start while this job continues.
       - uses: alwaysmeticulous/report-diffs-action/ensure-base@v1
         with:
           api-token: ${{ secrets.METICULOUS_API_TOKEN }}
 
-  test:
-    steps:
       - uses: actions/checkout@v4
         with:
           # Hyphenated inputs need index syntax, and reading them off `github.event`
@@ -127,7 +125,7 @@ jobs:
 ```
 
 `ensure-base` needs no checkout. It asks GitHub for the PR merge base and, if that commit
-has no test run yet, dispatches this workflow and returns immediately. The upload job still
+has no test run yet, dispatches this workflow and returns immediately. The upload step still
 calls `ensureBaseTestsExists` and only waits if the base is still missing when it finishes.
 
 `meticulous-commit-sha` lets Meticulous ask this workflow to build a specific commit when a
