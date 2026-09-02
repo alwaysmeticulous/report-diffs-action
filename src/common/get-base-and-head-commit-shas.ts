@@ -1,36 +1,10 @@
 import { execFileSync } from "child_process";
 import { context } from "@actions/github";
+import { GitHub } from "@actions/github/lib/utils";
 import log from "loglevel";
 import { CodeChangeEvent } from "../types";
-
-/**
- * Like `getActualCommitShaFromRepo`, but falls back to the `GITHUB_SHA` from the
- * GitHub Actions context if the git repo isn't available (e.g. in a job that
- * downloads a pre-built artifact without running `actions/checkout`).
- *
- * Returns `null` only if neither source yields a SHA.
- */
-export const getActualCommitShaFromRepoOrContext = (
-  logger: log.Logger
-): string | null => {
-  try {
-    return getActualCommitShaFromRepo();
-  } catch (error) {
-    const fallback = context.sha;
-    if (fallback) {
-      logger.info(
-        `Could not read HEAD from a git repository (${
-          error instanceof Error ? error.message : error
-        }). Falling back to GITHUB_SHA (${fallback}).`
-      );
-      return fallback;
-    }
-    logger.error(
-      `Could not read HEAD from a git repository and GITHUB_SHA is not set. Error: ${error}`
-    );
-    return null;
-  }
-};
+import { getActualCommitShaFromRepo } from "./get-actual-commit-sha";
+import { tryGetMergeBaseViaCompareApi } from "./get-merge-base-via-compare-api";
 
 interface BaseAndHeadCommitShas {
   base: string | null;
@@ -50,6 +24,7 @@ export const getBaseAndHeadCommitShas = async (
   event: CodeChangeEvent,
   options: {
     useDeploymentUrl: boolean;
+    octokit: InstanceType<typeof GitHub>;
   },
   logger: log.Logger
 ): Promise<BaseAndHeadCommitShas> => {
@@ -57,25 +32,32 @@ export const getBaseAndHeadCommitShas = async (
     const head = event.payload.pull_request.head.sha;
     const base = event.payload.pull_request.base.sha;
     const baseRef = event.payload.pull_request.base.ref;
+    const mergeBaseOpts = {
+      pullRequestHeadSha: head,
+      pullRequestBaseSha: base,
+      baseRef,
+      octokit: options.octokit,
+      logger,
+    };
     if (options.useDeploymentUrl) {
       // Vercel deploys the head commit of the PR, not the github temporary merge commit
       // The PR base can sometimes point to a commit ahead of the merge-base of the head commit
       // (I believe it's based on the github temporary merge commit)
       return {
         base:
-          (await tryGetMergeBaseOfHeadCommit(head, base, baseRef, logger)) ??
-          base,
+          (await tryGetMergeBaseViaCompareApi({
+            headSha: head,
+            baseRef,
+            pullRequestBaseSha: base,
+            octokit: options.octokit,
+            logger,
+          })) ?? base,
         head,
       };
     }
     return {
       base:
-        (await tryGetMergeBaseOfTemporaryMergeCommit(
-          head,
-          base,
-          baseRef,
-          logger
-        )) ?? base,
+        (await tryGetMergeBaseOfTemporaryMergeCommit(mergeBaseOpts)) ?? base,
       head,
     };
   }
@@ -98,69 +80,35 @@ const assertNever = (event: never): never => {
   throw new Error("Unexpected event: " + JSON.stringify(event));
 };
 
-const tryGetMergeBaseOfHeadCommit = (
-  pullRequestHeadSha: string,
-  pullRequestBaseSha: string,
-  baseRef: string,
-  logger: log.Logger
-): string | null => {
-  try {
-    markGitDirectoryAsSafe();
-    // Only a single commit is fetched by the checkout action by default
-    // (https://github.com/actions/checkout#checkout-v3)
-    // We therefore run fetch with the `--unshallow` param to fetch the whole branch/commit ancestor chains, which merge-base needs
-    execFileSync("git", ["fetch", "origin", pullRequestHeadSha, "--unshallow"]);
-    execFileSync("git", ["fetch", "origin", "--", baseRef]);
-    const mergeBase = execFileSync("git", [
-      "merge-base",
-      pullRequestHeadSha,
-      `origin/${baseRef}`,
-    ])
-      .toString()
-      .trim();
+interface MergeBaseOpts {
+  pullRequestHeadSha: string;
+  pullRequestBaseSha: string;
+  baseRef: string;
+  octokit: InstanceType<typeof GitHub>;
+  logger: log.Logger;
+}
 
-    if (!isValidGitSha(mergeBase)) {
-      // Note: the GITHUB_SHA is always a merge commit, even if the merge is a no-op because the PR is up to date
-      // So this should never happen
-      logger.error(
-        `Failed to get merge base of ${pullRequestHeadSha} and ${baseRef}: value returned by 'git merge-base' was not a valid git SHA ('${mergeBase}').` +
-          `Using the base of the pull request instead (${pullRequestBaseSha}).`
-      );
-      return null;
-    }
+const tryGetMergeBaseOfTemporaryMergeCommit = async ({
+  pullRequestHeadSha,
+  pullRequestBaseSha,
+  baseRef,
+  octokit,
+  logger,
+}: MergeBaseOpts): Promise<string | null> => {
+  const mergeBaseFromCompare = (headSha: string) =>
+    tryGetMergeBaseViaCompareApi({
+      headSha,
+      baseRef,
+      pullRequestBaseSha,
+      octokit,
+      logger,
+    });
 
-    return mergeBase;
-  } catch (error) {
-    logger.error(
-      `Failed to get merge base of ${pullRequestHeadSha} and ${baseRef}. Error: ${error}. Using the base of the pull request instead (${pullRequestBaseSha}).`
-    );
-    return null;
-  }
-};
-
-/**
- * Get the actual commit SHA that we have the code for.
- */
-export const getActualCommitShaFromRepo = (): string => {
-  return execFileSync("git", ["rev-list", "--max-count=1", "HEAD"])
-    .toString()
-    .trim();
-};
-
-const tryGetMergeBaseOfTemporaryMergeCommit = (
-  pullRequestHeadSha: string,
-  pullRequestBaseSha: string,
-  pullRequestBaseRef: string,
-  logger: log.Logger
-): string | null => {
   const mergeCommitSha = process.env.GITHUB_SHA;
-
   if (mergeCommitSha == null) {
-    logger.error(
-      `No GITHUB_SHA environment var set, so can't work out true base of the merge commit. Using the base of the pull request instead (${pullRequestBaseSha}).`
-    );
-    return null;
+    return mergeBaseFromCompare(pullRequestHeadSha);
   }
+
   try {
     markGitDirectoryAsSafe();
 
@@ -173,12 +121,7 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
           using the branching point of the PR branch to compare the visual snapshots against, and not the base
           of GitHub's temporary merge commit.`
       );
-      return tryGetMergeBaseOfHeadCommit(
-        headCommitSha,
-        pullRequestBaseSha,
-        pullRequestBaseRef,
-        logger
-      );
+      return mergeBaseFromCompare(headCommitSha);
     }
 
     // The GITHUB_SHA is always a merge commit for PRs
@@ -192,9 +135,9 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
       // Note: the GITHUB_SHA is always a merge commit, even if the merge is a no-op because the PR is up to date
       // So this should never happen
       logger.error(
-        `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit. Using the base of the pull request instead.`
+        `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit from its parents. Falling back to the GitHub compare API.`
       );
-      return null;
+      return mergeBaseFromCompare(pullRequestHeadSha);
     }
 
     // The first parent is always the base, and the second parent is the head of the PR
@@ -203,17 +146,16 @@ const tryGetMergeBaseOfTemporaryMergeCommit = (
     if (mergeHeadSha !== pullRequestHeadSha) {
       logger.error(
         `The second parent (${parents[1]}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
-        so can not confidently determine the base of the merge commit to compare against. Using the base of the pull request instead (${pullRequestBaseSha}).`
+        so can not confidently determine the base of the merge commit from its parents. Falling back to the GitHub compare API.`
       );
-      return null;
+      return mergeBaseFromCompare(pullRequestHeadSha);
     }
     return mergeBaseSha;
   } catch (e) {
-    logger.error(
-      `Error getting base of merge commit (${mergeCommitSha}). Using the base of the pull request instead (${pullRequestBaseSha}).`,
-      e
+    logger.info(
+      `Could not read the merge commit (${mergeCommitSha}) from the local git repository (${e}). Falling back to the GitHub compare API.`
     );
-    return null;
+    return mergeBaseFromCompare(pullRequestHeadSha);
   }
 };
 
@@ -230,8 +172,4 @@ const markGitDirectoryAsSafe = () => {
     "safe.directory",
     process.cwd(),
   ]);
-};
-
-const isValidGitSha = (sha: string): boolean => {
-  return /^[a-f0-9]{40}$/.test(sha);
 };

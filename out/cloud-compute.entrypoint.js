@@ -958,7 +958,7 @@ var require_source_map_consumer = __commonJS({
     SourceMapConsumer.GREATEST_LOWER_BOUND = 1;
     SourceMapConsumer.LEAST_UPPER_BOUND = 2;
     SourceMapConsumer.prototype.eachMapping = function SourceMapConsumer_eachMapping(aCallback, aContext, aOrder) {
-      var context5 = aContext || null;
+      var context7 = aContext || null;
       var order = aOrder || SourceMapConsumer.GENERATED_ORDER;
       var mappings;
       switch (order) {
@@ -983,7 +983,7 @@ var require_source_map_consumer = __commonJS({
           originalColumn: mapping.originalColumn,
           name: mapping.name === null ? null : this._names.at(mapping.name)
         };
-      }, this).forEach(aCallback, context5);
+      }, this).forEach(aCallback, context7);
     };
     SourceMapConsumer.prototype.allGeneratedPositionsFor = function SourceMapConsumer_allGeneratedPositionsFor(aArgs) {
       var line = util.getArg(aArgs, "line");
@@ -6540,18 +6540,18 @@ var require_webidl = __commonJS({
     webidl.errors.exception = function(message) {
       return new TypeError(`${message.header}: ${message.message}`);
     };
-    webidl.errors.conversionFailed = function(context5) {
-      const plural = context5.types.length === 1 ? "" : " one of";
-      const message = `${context5.argument} could not be converted to${plural}: ${context5.types.join(", ")}.`;
+    webidl.errors.conversionFailed = function(context7) {
+      const plural = context7.types.length === 1 ? "" : " one of";
+      const message = `${context7.argument} could not be converted to${plural}: ${context7.types.join(", ")}.`;
       return webidl.errors.exception({
-        header: context5.prefix,
+        header: context7.prefix,
         message
       });
     };
-    webidl.errors.invalidArgument = function(context5) {
+    webidl.errors.invalidArgument = function(context7) {
       return webidl.errors.exception({
-        header: context5.prefix,
-        message: `"${context5.value}" is an invalid ${context5.type}.`
+        header: context7.prefix,
+        message: `"${context7.value}" is an invalid ${context7.type}.`
       });
     };
     webidl.brandCheck = function(V, I, opts = void 0) {
@@ -11897,15 +11897,15 @@ var require_api_request = __commonJS({
         }
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context7) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context5;
+        this.context = context7;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { callback, opaque, abort, context: context5, responseHeaders, highWaterMark } = this;
+        const { callback, opaque, abort, context: context7, responseHeaders, highWaterMark } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -11932,7 +11932,7 @@ var require_api_request = __commonJS({
               trailers: this.trailers,
               opaque,
               body,
-              context: context5
+              context: context7
             });
           }
         }
@@ -12052,15 +12052,15 @@ var require_api_stream = __commonJS({
         }
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context7) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context5;
+        this.context = context7;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { factory, opaque, context: context5, callback, responseHeaders } = this;
+        const { factory, opaque, context: context7, callback, responseHeaders } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -12088,7 +12088,7 @@ var require_api_stream = __commonJS({
             statusCode,
             headers,
             opaque,
-            context: context5
+            context: context7
           });
           if (!res || typeof res.write !== "function" || typeof res.end !== "function" || typeof res.on !== "function") {
             throw new InvalidReturnValueError("expected Writable");
@@ -12280,17 +12280,17 @@ var require_api_pipeline = __commonJS({
         this.res = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context7) {
         const { ret, res } = this;
         assert(!res, "pipeline cannot be retried");
         if (ret.destroyed) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context5;
+        this.context = context7;
       }
       onHeaders(statusCode, rawHeaders, resume) {
-        const { opaque, handler, context: context5 } = this;
+        const { opaque, handler, context: context7 } = this;
         if (statusCode < 200) {
           if (this.onInfo) {
             const headers = this.responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
@@ -12308,7 +12308,7 @@ var require_api_pipeline = __commonJS({
             headers,
             opaque,
             body: this.res,
-            context: context5
+            context: context7
           });
         } catch (err) {
           this.res.on("error", util.nop);
@@ -12392,7 +12392,7 @@ var require_api_upgrade = __commonJS({
         this.context = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context7) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
@@ -12403,7 +12403,7 @@ var require_api_upgrade = __commonJS({
         throw new SocketError("bad upgrade", null);
       }
       onUpgrade(statusCode, rawHeaders, socket) {
-        const { callback, opaque, context: context5 } = this;
+        const { callback, opaque, context: context7 } = this;
         assert.strictEqual(statusCode, 101);
         removeSignal(this);
         this.callback = null;
@@ -12412,7 +12412,7 @@ var require_api_upgrade = __commonJS({
           headers,
           socket,
           opaque,
-          context: context5
+          context: context7
         });
       }
       onError(err) {
@@ -12480,18 +12480,18 @@ var require_api_connect = __commonJS({
         this.abort = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context7) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context5;
+        this.context = context7;
       }
       onHeaders() {
         throw new SocketError("bad connect", null);
       }
       onUpgrade(statusCode, rawHeaders, socket) {
-        const { callback, opaque, context: context5 } = this;
+        const { callback, opaque, context: context7 } = this;
         removeSignal(this);
         this.callback = null;
         let headers = rawHeaders;
@@ -12503,7 +12503,7 @@ var require_api_connect = __commonJS({
           headers,
           socket,
           opaque,
-          context: context5
+          context: context7
         });
       }
       onError(err) {
@@ -22699,14 +22699,14 @@ var init_context = __esm({
           return self2._currentContext.get(key);
         };
         self2.setValue = function(key, value) {
-          var context5 = new BaseContext3(self2._currentContext);
-          context5._currentContext.set(key, value);
-          return context5;
+          var context7 = new BaseContext3(self2._currentContext);
+          context7._currentContext.set(key, value);
+          return context7;
         };
         self2.deleteValue = function(key) {
-          var context5 = new BaseContext3(self2._currentContext);
-          context5._currentContext.delete(key);
-          return context5;
+          var context7 = new BaseContext3(self2._currentContext);
+          context7._currentContext.delete(key);
+          return context7;
         };
       }
       return BaseContext3;
@@ -23067,16 +23067,16 @@ var init_context2 = __esm({
       ContextAPI3.prototype.active = function() {
         return this._getContextManager().active();
       };
-      ContextAPI3.prototype.with = function(context5, fn, thisArg) {
+      ContextAPI3.prototype.with = function(context7, fn, thisArg) {
         var _a2;
         var args = [];
         for (var _i = 3; _i < arguments.length; _i++) {
           args[_i - 3] = arguments[_i];
         }
-        return (_a2 = this._getContextManager()).with.apply(_a2, __spreadArray4([context5, fn, thisArg], __read5(args), false));
+        return (_a2 = this._getContextManager()).with.apply(_a2, __spreadArray4([context7, fn, thisArg], __read5(args), false));
       };
-      ContextAPI3.prototype.bind = function(context5, target) {
-        return this._getContextManager().bind(context5, target);
+      ContextAPI3.prototype.bind = function(context7, target) {
+        return this._getContextManager().bind(context7, target);
       };
       ContextAPI3.prototype._getContextManager = function() {
         return getGlobal(API_NAME2) || NOOP_CONTEXT_MANAGER;
@@ -23166,24 +23166,24 @@ var init_NonRecordingSpan = __esm({
 });
 
 // node_modules/.pnpm/@opentelemetry+api@1.9.0/node_modules/@opentelemetry/api/build/esm/trace/context-utils.js
-function getSpan(context5) {
-  return context5.getValue(SPAN_KEY) || void 0;
+function getSpan(context7) {
+  return context7.getValue(SPAN_KEY) || void 0;
 }
 function getActiveSpan() {
   return getSpan(ContextAPI.getInstance().active());
 }
-function setSpan(context5, span) {
-  return context5.setValue(SPAN_KEY, span);
+function setSpan(context7, span) {
+  return context7.setValue(SPAN_KEY, span);
 }
-function deleteSpan(context5) {
-  return context5.deleteValue(SPAN_KEY);
+function deleteSpan(context7) {
+  return context7.deleteValue(SPAN_KEY);
 }
-function setSpanContext(context5, spanContext) {
-  return setSpan(context5, new NonRecordingSpan(spanContext));
+function setSpanContext(context7, spanContext) {
+  return setSpan(context7, new NonRecordingSpan(spanContext));
 }
-function getSpanContext(context5) {
+function getSpanContext(context7) {
   var _a2;
-  return (_a2 = getSpan(context5)) === null || _a2 === void 0 ? void 0 : _a2.spanContext();
+  return (_a2 = getSpan(context7)) === null || _a2 === void 0 ? void 0 : _a2.spanContext();
 }
 var SPAN_KEY;
 var init_context_utils = __esm({
@@ -23234,15 +23234,15 @@ var init_NoopTracer = __esm({
     function() {
       function NoopTracer3() {
       }
-      NoopTracer3.prototype.startSpan = function(name, options, context5) {
-        if (context5 === void 0) {
-          context5 = contextApi.active();
+      NoopTracer3.prototype.startSpan = function(name, options, context7) {
+        if (context7 === void 0) {
+          context7 = contextApi.active();
         }
         var root = Boolean(options === null || options === void 0 ? void 0 : options.root);
         if (root) {
           return new NonRecordingSpan();
         }
-        var parentFromContext = context5 && getSpanContext(context5);
+        var parentFromContext = context7 && getSpanContext(context7);
         if (isSpanContext(parentFromContext) && isSpanContextValid(parentFromContext)) {
           return new NonRecordingSpan(parentFromContext);
         } else {
@@ -23289,8 +23289,8 @@ var init_ProxyTracer = __esm({
         this.version = version;
         this.options = options;
       }
-      ProxyTracer3.prototype.startSpan = function(name, options, context5) {
-        return this._getTracer().startSpan(name, options, context5);
+      ProxyTracer3.prototype.startSpan = function(name, options, context7) {
+        return this._getTracer().startSpan(name, options, context7);
       };
       ProxyTracer3.prototype.startActiveSpan = function(_name, _options, _context, _fn) {
         var tracer = this._getTracer();
@@ -23589,8 +23589,8 @@ var init_NoopTextMapPropagator = __esm({
       }
       NoopTextMapPropagator3.prototype.inject = function(_context, _carrier) {
       };
-      NoopTextMapPropagator3.prototype.extract = function(context5, _carrier) {
-        return context5;
+      NoopTextMapPropagator3.prototype.extract = function(context7, _carrier) {
+        return context7;
       };
       NoopTextMapPropagator3.prototype.fields = function() {
         return [];
@@ -23601,17 +23601,17 @@ var init_NoopTextMapPropagator = __esm({
 });
 
 // node_modules/.pnpm/@opentelemetry+api@1.9.0/node_modules/@opentelemetry/api/build/esm/baggage/context-helpers.js
-function getBaggage(context5) {
-  return context5.getValue(BAGGAGE_KEY) || void 0;
+function getBaggage(context7) {
+  return context7.getValue(BAGGAGE_KEY) || void 0;
 }
 function getActiveBaggage() {
   return getBaggage(ContextAPI.getInstance().active());
 }
-function setBaggage(context5, baggage) {
-  return context5.setValue(BAGGAGE_KEY, baggage);
+function setBaggage(context7, baggage) {
+  return context7.setValue(BAGGAGE_KEY, baggage);
 }
-function deleteBaggage(context5) {
-  return context5.deleteValue(BAGGAGE_KEY);
+function deleteBaggage(context7) {
+  return context7.deleteValue(BAGGAGE_KEY);
 }
 var BAGGAGE_KEY;
 var init_context_helpers = __esm({
@@ -23652,17 +23652,17 @@ var init_propagation = __esm({
       PropagationAPI3.prototype.setGlobalPropagator = function(propagator) {
         return registerGlobal(API_NAME4, propagator, DiagAPI.instance());
       };
-      PropagationAPI3.prototype.inject = function(context5, carrier, setter) {
+      PropagationAPI3.prototype.inject = function(context7, carrier, setter) {
         if (setter === void 0) {
           setter = defaultTextMapSetter;
         }
-        return this._getGlobalPropagator().inject(context5, carrier, setter);
+        return this._getGlobalPropagator().inject(context7, carrier, setter);
       };
-      PropagationAPI3.prototype.extract = function(context5, carrier, getter) {
+      PropagationAPI3.prototype.extract = function(context7, carrier, getter) {
         if (getter === void 0) {
           getter = defaultTextMapGetter;
         }
-        return this._getGlobalPropagator().extract(context5, carrier, getter);
+        return this._getGlobalPropagator().extract(context7, carrier, getter);
       };
       PropagationAPI3.prototype.fields = function() {
         return this._getGlobalPropagator().fields();
@@ -34918,18 +34918,18 @@ var require_webidl2 = __commonJS({
     webidl.errors.exception = function(message) {
       return new TypeError(`${message.header}: ${message.message}`);
     };
-    webidl.errors.conversionFailed = function(context5) {
-      const plural = context5.types.length === 1 ? "" : " one of";
-      const message = `${context5.argument} could not be converted to${plural}: ${context5.types.join(", ")}.`;
+    webidl.errors.conversionFailed = function(context7) {
+      const plural = context7.types.length === 1 ? "" : " one of";
+      const message = `${context7.argument} could not be converted to${plural}: ${context7.types.join(", ")}.`;
       return webidl.errors.exception({
-        header: context5.prefix,
+        header: context7.prefix,
         message
       });
     };
-    webidl.errors.invalidArgument = function(context5) {
+    webidl.errors.invalidArgument = function(context7) {
       return webidl.errors.exception({
-        header: context5.prefix,
-        message: `"${context5.value}" is an invalid ${context5.type}.`
+        header: context7.prefix,
+        message: `"${context7.value}" is an invalid ${context7.type}.`
       });
     };
     webidl.brandCheck = function(V, I, opts) {
@@ -41054,17 +41054,17 @@ var require_api_request2 = __commonJS({
           }
         }
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context7) {
         if (this.reason) {
           abort(this.reason);
           return;
         }
         assert(this.callback);
         this.abort = abort;
-        this.context = context5;
+        this.context = context7;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { callback, opaque, abort, context: context5, responseHeaders, highWaterMark } = this;
+        const { callback, opaque, abort, context: context7, responseHeaders, highWaterMark } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -41101,7 +41101,7 @@ var require_api_request2 = __commonJS({
               trailers: this.trailers,
               opaque,
               body: res,
-              context: context5
+              context: context7
             });
           }
         }
@@ -41270,17 +41270,17 @@ var require_api_stream2 = __commonJS({
         }
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context7) {
         if (this.reason) {
           abort(this.reason);
           return;
         }
         assert(this.callback);
         this.abort = abort;
-        this.context = context5;
+        this.context = context7;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { factory, opaque, context: context5, callback, responseHeaders } = this;
+        const { factory, opaque, context: context7, callback, responseHeaders } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -41308,7 +41308,7 @@ var require_api_stream2 = __commonJS({
             statusCode,
             headers,
             opaque,
-            context: context5
+            context: context7
           });
           if (!res || typeof res.write !== "function" || typeof res.end !== "function" || typeof res.on !== "function") {
             throw new InvalidReturnValueError("expected Writable");
@@ -41500,7 +41500,7 @@ var require_api_pipeline2 = __commonJS({
         this.res = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context7) {
         const { ret, res } = this;
         if (this.reason) {
           abort(this.reason);
@@ -41509,10 +41509,10 @@ var require_api_pipeline2 = __commonJS({
         assert(!res, "pipeline cannot be retried");
         assert(!ret.destroyed);
         this.abort = abort;
-        this.context = context5;
+        this.context = context7;
       }
       onHeaders(statusCode, rawHeaders, resume) {
-        const { opaque, handler, context: context5 } = this;
+        const { opaque, handler, context: context7 } = this;
         if (statusCode < 200) {
           if (this.onInfo) {
             const headers = this.responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
@@ -41530,7 +41530,7 @@ var require_api_pipeline2 = __commonJS({
             headers,
             opaque,
             body: this.res,
-            context: context5
+            context: context7
           });
         } catch (err) {
           this.res.on("error", util.nop);
@@ -41614,7 +41614,7 @@ var require_api_upgrade2 = __commonJS({
         this.context = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context7) {
         if (this.reason) {
           abort(this.reason);
           return;
@@ -41628,7 +41628,7 @@ var require_api_upgrade2 = __commonJS({
       }
       onUpgrade(statusCode, rawHeaders, socket) {
         assert(statusCode === 101);
-        const { callback, opaque, context: context5 } = this;
+        const { callback, opaque, context: context7 } = this;
         removeSignal(this);
         this.callback = null;
         const headers = this.responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
@@ -41636,7 +41636,7 @@ var require_api_upgrade2 = __commonJS({
           headers,
           socket,
           opaque,
-          context: context5
+          context: context7
         });
       }
       onError(err) {
@@ -41705,20 +41705,20 @@ var require_api_connect2 = __commonJS({
         this.abort = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context7) {
         if (this.reason) {
           abort(this.reason);
           return;
         }
         assert(this.callback);
         this.abort = abort;
-        this.context = context5;
+        this.context = context7;
       }
       onHeaders() {
         throw new SocketError("bad connect", null);
       }
       onUpgrade(statusCode, rawHeaders, socket) {
-        const { callback, opaque, context: context5 } = this;
+        const { callback, opaque, context: context7 } = this;
         removeSignal(this);
         this.callback = null;
         let headers = rawHeaders;
@@ -41730,7 +41730,7 @@ var require_api_connect2 = __commonJS({
           headers,
           socket,
           opaque,
-          context: context5
+          context: context7
         });
       }
       onError(err) {
@@ -52972,7 +52972,7 @@ var require_lru_cache = __commonJS({
           return this.isBackgroundFetch(v) ? v.__staleWhileFetching : v;
         }
       }
-      backgroundFetch(k, index, options, context5) {
+      backgroundFetch(k, index, options, context7) {
         const v = index === void 0 ? void 0 : this.valList[index];
         if (this.isBackgroundFetch(v)) {
           return v;
@@ -52987,7 +52987,7 @@ var require_lru_cache = __commonJS({
         const fetchOpts = {
           signal: ac.signal,
           options,
-          context: context5
+          context: context7
         };
         const cb = (v2, updateCache = false) => {
           const { aborted } = ac.signal;
@@ -71258,17 +71258,17 @@ function __esDecorate(ctor, descriptorIn, decorators, contextIn, initializers, e
   var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
   var _, done = false;
   for (var i = decorators.length - 1; i >= 0; i--) {
-    var context5 = {};
+    var context7 = {};
     for (var p in contextIn)
-      context5[p] = p === "access" ? {} : contextIn[p];
+      context7[p] = p === "access" ? {} : contextIn[p];
     for (var p in contextIn.access)
-      context5.access[p] = contextIn.access[p];
-    context5.addInitializer = function(f) {
+      context7.access[p] = contextIn.access[p];
+    context7.addInitializer = function(f) {
       if (done)
         throw new TypeError("Cannot add initializers after decoration has completed");
       extraInitializers.push(accept(f || null));
     };
-    var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context5);
+    var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context7);
     if (kind === "accessor") {
       if (result === void 0)
         continue;
@@ -72366,15 +72366,15 @@ var require_types2 = __commonJS({
         }
         return object && object[fieldName];
       }
-      function eachField(object, callback, context5) {
+      function eachField(object, callback, context7) {
         getFieldNames(object).forEach(function(name) {
           callback.call(this, name, getFieldValue(object, name));
-        }, context5);
+        }, context7);
       }
-      function someField(object, callback, context5) {
+      function someField(object, callback, context7) {
         return getFieldNames(object).some(function(name) {
           return callback.call(this, name, getFieldValue(object, name));
-        }, context5);
+        }, context7);
       }
       function wrapExpressionBuilderWithStatement(typeName) {
         var wrapperName = getStatementBuilderName(typeName);
@@ -72513,7 +72513,7 @@ var require_path = __commonJS({
         }
         return path;
       };
-      Pp.each = function each(callback, context5) {
+      Pp.each = function each(callback, context7) {
         var childPaths = [];
         var len = this.value.length;
         var i = 0;
@@ -72522,27 +72522,27 @@ var require_path = __commonJS({
             childPaths[i] = this.get(i);
           }
         }
-        context5 = context5 || this;
+        context7 = context7 || this;
         for (i = 0; i < len; ++i) {
           if (hasOwn.call(childPaths, i)) {
-            callback.call(context5, childPaths[i]);
+            callback.call(context7, childPaths[i]);
           }
         }
       };
-      Pp.map = function map(callback, context5) {
+      Pp.map = function map(callback, context7) {
         var result = [];
         this.each(function(childPath) {
           result.push(callback.call(this, childPath));
-        }, context5);
+        }, context7);
         return result;
       };
-      Pp.filter = function filter(callback, context5) {
+      Pp.filter = function filter(callback, context7) {
         var result = [];
         this.each(function(childPath) {
           if (callback.call(this, childPath)) {
             result.push(childPath);
           }
-        }, context5);
+        }, context7);
         return result;
       };
       function emptyMoves() {
@@ -73505,11 +73505,11 @@ var require_path_visitor = __commonJS({
         var value = path.value;
         var methodName = value && typeof value === "object" && typeof value.type === "string" && this._methodNameTable[value.type];
         if (methodName) {
-          var context5 = this.acquireContext(path);
+          var context7 = this.acquireContext(path);
           try {
-            return context5.invokeVisitorMethod(methodName);
+            return context7.invokeVisitorMethod(methodName);
           } finally {
-            this.releaseContext(context5);
+            this.releaseContext(context7);
           }
         } else {
           return visitChildren(path, this);
@@ -73552,12 +73552,12 @@ var require_path_visitor = __commonJS({
         }
         return this._reusableContextStack.pop().reset(path);
       };
-      PVp.releaseContext = function(context5) {
-        if (!(context5 instanceof this.Context)) {
+      PVp.releaseContext = function(context7) {
+        if (!(context7 instanceof this.Context)) {
           throw new Error("");
         }
-        this._reusableContextStack.push(context5);
-        context5.currentPath = null;
+        this._reusableContextStack.push(context7);
+        context7.currentPath = null;
       };
       PVp.reportChanged = function() {
         this._changeReported = true;
@@ -75907,16 +75907,16 @@ var require_dist8 = __commonJS({
     var weekdayRange_1 = __importDefault2(require_weekdayRange());
     function createPacResolver(qjs, _str, _opts = {}) {
       const str = Buffer.isBuffer(_str) ? _str.toString("utf8") : _str;
-      const context5 = {
+      const context7 = {
         ...exports2.sandbox,
         ..._opts.sandbox
       };
-      const names = Object.keys(context5).filter((k) => isAsyncFunction(context5[k]));
+      const names = Object.keys(context7).filter((k) => isAsyncFunction(context7[k]));
       const opts = {
         filename: "proxy.pac",
         names,
         ..._opts,
-        sandbox: context5
+        sandbox: context7
       };
       const resolver = (0, degenerator_1.compile)(qjs, str, "FindProxyForURL", opts);
       function FindProxyForURL(url, _host) {
@@ -75998,10 +75998,10 @@ var require_errors3 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.QuickJSMemoryLeakDetected = exports2.QuickJSAsyncifySuspended = exports2.QuickJSAsyncifyError = exports2.QuickJSNotImplemented = exports2.QuickJSUseAfterFree = exports2.QuickJSWrongOwner = exports2.QuickJSUnwrapError = void 0;
     var QuickJSUnwrapError = class extends Error {
-      constructor(cause, context5) {
+      constructor(cause, context7) {
         super(String(cause));
         this.cause = cause;
-        this.context = context5;
+        this.context = context7;
         this.name = "QuickJSUnwrapError";
       }
     };
@@ -77041,7 +77041,7 @@ var require_context = __commonJS({
        */
       unwrapResult(result) {
         if (result.error) {
-          const context5 = "context" in result.error ? result.error.context : this;
+          const context7 = "context" in result.error ? result.error.context : this;
           const cause = result.error.consume((error2) => this.dump(error2));
           if (cause && typeof cause === "object" && typeof cause.message === "string") {
             const { message, name, stack } = cause;
@@ -77054,10 +77054,10 @@ var require_context = __commonJS({
               exception.stack = `${name}: ${message}
 ${cause.stack}Host: ${hostStack}`;
             }
-            Object.assign(exception, { cause, context: context5, message });
+            Object.assign(exception, { cause, context: context7, message });
             throw exception;
           }
-          throw new errors_1.QuickJSUnwrapError(cause, context5);
+          throw new errors_1.QuickJSUnwrapError(cause, context7);
         }
         return result.value;
       }
@@ -77128,11 +77128,11 @@ var require_runtime = __commonJS({
             if (rt !== this.rt.value) {
               throw new Error("Runtime pointer mismatch");
             }
-            const context5 = this.contextMap.get(ctx) ?? this.newContext({
+            const context7 = this.contextMap.get(ctx) ?? this.newContext({
               contextPointer: ctx
             });
             try {
-              const result = yield* awaited(moduleLoader(moduleName, context5));
+              const result = yield* awaited(moduleLoader(moduleName, context7));
               if (typeof result === "object" && "error" in result && result.error) {
                 (0, debug_1.debugLog)("cToHostLoadModule: loader returned error", result.error);
                 throw result.error;
@@ -77141,7 +77141,7 @@ var require_runtime = __commonJS({
               return this.memory.newHeapCharPointer(moduleSource).value;
             } catch (error2) {
               (0, debug_1.debugLog)("cToHostLoadModule: caught error", error2);
-              context5.throw(error2);
+              context7.throw(error2);
               return 0;
             }
           }),
@@ -77153,21 +77153,21 @@ var require_runtime = __commonJS({
             if (rt !== this.rt.value) {
               throw new Error("Runtime pointer mismatch");
             }
-            const context5 = this.contextMap.get(ctx) ?? this.newContext({
+            const context7 = this.contextMap.get(ctx) ?? this.newContext({
               /* TODO: Does this happen? Are we responsible for disposing? I don't think so */
               contextPointer: ctx
             });
             try {
-              const result = yield* awaited(moduleNormalizer(baseModuleName, moduleNameRequest, context5));
+              const result = yield* awaited(moduleNormalizer(baseModuleName, moduleNameRequest, context7));
               if (typeof result === "object" && "error" in result && result.error) {
                 (0, debug_1.debugLog)("cToHostNormalizeModule: normalizer returned error", result.error);
                 throw result.error;
               }
               const name = typeof result === "string" ? result : result.value;
-              return context5.getMemory(this.rt.value).newHeapCharPointer(name).value;
+              return context7.getMemory(this.rt.value).newHeapCharPointer(name).value;
             } catch (error2) {
               (0, debug_1.debugLog)("normalizeModule: caught error", error2);
-              context5.throw(error2);
+              context7.throw(error2);
               return 0;
             }
           })
@@ -77197,7 +77197,7 @@ var require_runtime = __commonJS({
           this.callbacks.deleteContext(ctx_ptr);
           this.ffi.QTS_FreeContext(ctx_ptr);
         });
-        const context5 = new context_1.QuickJSContext({
+        const context7 = new context_1.QuickJSContext({
           module: this.module,
           ctx,
           ffi: this.ffi,
@@ -77206,8 +77206,8 @@ var require_runtime = __commonJS({
           runtime: this,
           callbacks: this.callbacks
         });
-        this.contextMap.set(ctx.value, context5);
-        return context5;
+        this.contextMap.set(ctx.value, context7);
+        return context7;
       }
       /**
        * Set the loader for EcmaScript modules requested by any context in this
@@ -77287,17 +77287,17 @@ var require_runtime = __commonJS({
           this.ffi.QTS_FreeValuePointerRuntime(this.rt.value, valuePtr);
           return { value: 0 };
         }
-        const context5 = this.contextMap.get(ctxPtr) ?? this.newContext({
+        const context7 = this.contextMap.get(ctxPtr) ?? this.newContext({
           contextPointer: ctxPtr
         });
-        const resultValue = context5.getMemory(this.rt.value).heapValueHandle(valuePtr);
-        const typeOfRet = context5.typeof(resultValue);
+        const resultValue = context7.getMemory(this.rt.value).heapValueHandle(valuePtr);
+        const typeOfRet = context7.typeof(resultValue);
         if (typeOfRet === "number") {
-          const executedJobs = context5.getNumber(resultValue);
+          const executedJobs = context7.getNumber(resultValue);
           resultValue.dispose();
           return { value: executedJobs };
         } else {
-          const error2 = Object.assign(resultValue, { context: context5 });
+          const error2 = Object.assign(resultValue, { context: context7 });
           return {
             error: error2
           };
@@ -77562,12 +77562,12 @@ Attempted to suspend at:`);
        */
       newContext(options = {}) {
         const runtime = this.newRuntime();
-        const context5 = runtime.newContext({
+        const context7 = runtime.newContext({
           ...options,
           ownedLifetimes: (0, types_1.concat)(runtime, options.ownedLifetimes)
         });
-        runtime.context = context5;
-        return context5;
+        runtime.context = context7;
+        return context7;
       }
       /**
        * One-off evaluate code without needing to create a [[QuickJSRuntime]] or
@@ -77700,7 +77700,7 @@ var require_runtime_asyncify = __commonJS({
           this.callbacks.deleteContext(ctx_ptr);
           this.ffi.QTS_FreeContext(ctx_ptr);
         });
-        const context5 = new context_asyncify_1.QuickJSAsyncContext({
+        const context7 = new context_asyncify_1.QuickJSAsyncContext({
           module: this.module,
           ctx,
           ffi: this.ffi,
@@ -77709,8 +77709,8 @@ var require_runtime_asyncify = __commonJS({
           runtime: this,
           callbacks: this.callbacks
         });
-        this.contextMap.set(ctx.value, context5);
-        return context5;
+        this.contextMap.set(ctx.value, context7);
+        return context7;
       }
       setModuleLoader(moduleLoader, moduleNormalizer) {
         super.setModuleLoader(moduleLoader, moduleNormalizer);
@@ -77777,9 +77777,9 @@ var require_module_asyncify = __commonJS({
       newContext(options = {}) {
         const runtime = this.newRuntime();
         const lifetimes = options.ownedLifetimes ? options.ownedLifetimes.concat([runtime]) : [runtime];
-        const context5 = runtime.newContext({ ...options, ownedLifetimes: lifetimes });
-        runtime.context = context5;
-        return context5;
+        const context7 = runtime.newContext({ ...options, ownedLifetimes: lifetimes });
+        runtime.context = context7;
+        return context7;
       }
       /** Synchronous evalCode is not supported. */
       evalCode() {
@@ -78777,15 +78777,15 @@ var require_module_test = __commonJS({
         return runtime;
       }
       newContext(options) {
-        const context5 = this.parent.newContext({
+        const context7 = this.parent.newContext({
           ...options,
           ownedLifetimes: [
-            new lifetime_1.Lifetime(void 0, void 0, () => this.contexts.delete(context5)),
+            new lifetime_1.Lifetime(void 0, void 0, () => this.contexts.delete(context7)),
             ...options?.ownedLifetimes ?? []
           ]
         });
-        this.contexts.add(context5);
-        return context5;
+        this.contexts.add(context7);
+        return context7;
       }
       evalCode(code, options) {
         return this.parent.evalCode(code, options);
@@ -81522,10 +81522,10 @@ var require_fd_slicer = __commonJS({
       }
     };
     util.inherits(ReadStream, Readable);
-    function ReadStream(context5, options) {
+    function ReadStream(context7, options) {
       options = options || {};
       Readable.call(this, options);
-      this.context = context5;
+      this.context = context7;
       this.context.ref();
       this.start = options.start || 0;
       this.endOffset = options.end;
@@ -81574,10 +81574,10 @@ var require_fd_slicer = __commonJS({
       this.context.unref();
     };
     util.inherits(WriteStream, Writable);
-    function WriteStream(context5, options) {
+    function WriteStream(context7, options) {
       options = options || {};
       Writable.call(this, options);
-      this.context = context5;
+      this.context = context7;
       this.context.ref();
       this.start = options.start || 0;
       this.endOffset = options.end == null ? Infinity : +options.end;
@@ -82677,9 +82677,9 @@ var require_yauzl = __commonJS({
       setImmediate(callback);
     };
     util.inherits(RefUnrefFilter, PassThrough);
-    function RefUnrefFilter(context5) {
+    function RefUnrefFilter(context7) {
       PassThrough.call(this);
-      this.context = context5;
+      this.context = context7;
       this.context.ref();
       this.unreffedYet = false;
     }
@@ -88460,8 +88460,8 @@ var init_command = __esm({
         const maybePromiseArgv = applyMiddleware(innerArgv, yargs, middlewares, true);
         return isPromise(maybePromiseArgv) ? maybePromiseArgv.then((resolvedInnerArgv) => this.handleValidationAndGetResult(isDefaultCommand, commandHandler, resolvedInnerArgv, currentContext, aliases, yargs, middlewares, positionalMap)) : this.handleValidationAndGetResult(isDefaultCommand, commandHandler, maybePromiseArgv, currentContext, aliases, yargs, middlewares, positionalMap);
       }
-      populatePositionals(commandHandler, argv, context5, yargs) {
-        argv._ = argv._.slice(context5.commands.length);
+      populatePositionals(commandHandler, argv, context7, yargs) {
+        argv._ = argv._.slice(context7.commands.length);
         const demanded = commandHandler.demanded.slice(0);
         const optional = commandHandler.optional.slice(0);
         const positionalMap = {};
@@ -88474,7 +88474,7 @@ var init_command = __esm({
           const maybe = optional.shift();
           this.populatePositional(maybe, argv, positionalMap);
         }
-        argv._ = context5.commands.concat(argv._.map((a) => "" + a));
+        argv._ = context7.commands.concat(argv._.map((a) => "" + a));
         this.postProcessPositionals(argv, positionalMap, this.cmdToParseOptions(commandHandler.original), yargs);
         return positionalMap;
       }
@@ -88848,8 +88848,8 @@ function usage(yargs, shim3) {
     }
     if (commands.length > 1 || commands.length === 1 && !commands[0][2]) {
       ui2.div(__("Commands:"));
-      const context5 = yargs.getInternalMethods().getContext();
-      const parentCommands = context5.commands.length ? `${context5.commands.join(" ")} ` : "";
+      const context7 = yargs.getInternalMethods().getContext();
+      const parentCommands = context7.commands.length ? `${context7.commands.join(" ")} ` : "";
       if (yargs.getInternalMethods().getParserConfiguration()["sort-commands"] === true) {
         commands = commands.sort((a, b) => a[0].localeCompare(b[0]));
       }
@@ -94666,7 +94666,7 @@ var require_session = __commonJS({
     Object.defineProperty(exports2, Symbol.toStringTag, { value: "Module" });
     var misc = require_misc();
     var time = require_time();
-    function makeSession(context5) {
+    function makeSession(context7) {
       const startingTime = time.timestampInSeconds();
       const session = {
         sid: misc.uuid4(),
@@ -94679,74 +94679,74 @@ var require_session = __commonJS({
         ignoreDuration: false,
         toJSON: () => sessionToJSON(session)
       };
-      if (context5) {
-        updateSession2(session, context5);
+      if (context7) {
+        updateSession2(session, context7);
       }
       return session;
     }
-    function updateSession2(session, context5 = {}) {
-      if (context5.user) {
-        if (!session.ipAddress && context5.user.ip_address) {
-          session.ipAddress = context5.user.ip_address;
+    function updateSession2(session, context7 = {}) {
+      if (context7.user) {
+        if (!session.ipAddress && context7.user.ip_address) {
+          session.ipAddress = context7.user.ip_address;
         }
-        if (!session.did && !context5.did) {
-          session.did = context5.user.id || context5.user.email || context5.user.username;
+        if (!session.did && !context7.did) {
+          session.did = context7.user.id || context7.user.email || context7.user.username;
         }
       }
-      session.timestamp = context5.timestamp || time.timestampInSeconds();
-      if (context5.abnormal_mechanism) {
-        session.abnormal_mechanism = context5.abnormal_mechanism;
+      session.timestamp = context7.timestamp || time.timestampInSeconds();
+      if (context7.abnormal_mechanism) {
+        session.abnormal_mechanism = context7.abnormal_mechanism;
       }
-      if (context5.ignoreDuration) {
-        session.ignoreDuration = context5.ignoreDuration;
+      if (context7.ignoreDuration) {
+        session.ignoreDuration = context7.ignoreDuration;
       }
-      if (context5.sid) {
-        session.sid = context5.sid.length === 32 ? context5.sid : misc.uuid4();
+      if (context7.sid) {
+        session.sid = context7.sid.length === 32 ? context7.sid : misc.uuid4();
       }
-      if (context5.init !== void 0) {
-        session.init = context5.init;
+      if (context7.init !== void 0) {
+        session.init = context7.init;
       }
-      if (!session.did && context5.did) {
-        session.did = `${context5.did}`;
+      if (!session.did && context7.did) {
+        session.did = `${context7.did}`;
       }
-      if (typeof context5.started === "number") {
-        session.started = context5.started;
+      if (typeof context7.started === "number") {
+        session.started = context7.started;
       }
       if (session.ignoreDuration) {
         session.duration = void 0;
-      } else if (typeof context5.duration === "number") {
-        session.duration = context5.duration;
+      } else if (typeof context7.duration === "number") {
+        session.duration = context7.duration;
       } else {
         const duration = session.timestamp - session.started;
         session.duration = duration >= 0 ? duration : 0;
       }
-      if (context5.release) {
-        session.release = context5.release;
+      if (context7.release) {
+        session.release = context7.release;
       }
-      if (context5.environment) {
-        session.environment = context5.environment;
+      if (context7.environment) {
+        session.environment = context7.environment;
       }
-      if (!session.ipAddress && context5.ipAddress) {
-        session.ipAddress = context5.ipAddress;
+      if (!session.ipAddress && context7.ipAddress) {
+        session.ipAddress = context7.ipAddress;
       }
-      if (!session.userAgent && context5.userAgent) {
-        session.userAgent = context5.userAgent;
+      if (!session.userAgent && context7.userAgent) {
+        session.userAgent = context7.userAgent;
       }
-      if (typeof context5.errors === "number") {
-        session.errors = context5.errors;
+      if (typeof context7.errors === "number") {
+        session.errors = context7.errors;
       }
-      if (context5.status) {
-        session.status = context5.status;
+      if (context7.status) {
+        session.status = context7.status;
       }
     }
     function closeSession(session, status) {
-      let context5 = {};
+      let context7 = {};
       if (status) {
-        context5 = { status };
+        context7 = { status };
       } else if (session.status === "ok") {
-        context5 = { status: "exited" };
+        context7 = { status: "exited" };
       }
-      updateSession2(session, context5);
+      updateSession2(session, context7);
     }
     function sessionToJSON(session) {
       return {
@@ -95145,11 +95145,11 @@ var require_scope2 = __commonJS({
        * Data passed as context will be normalized. You can also pass `null` to unset the context.
        * Note that context data will not be merged - calling `setContext` will overwrite an existing context with the same key.
        */
-      setContext(key, context5) {
-        if (context5 === null) {
+      setContext(key, context7) {
+        if (context7 === null) {
           delete this._contexts[key];
         } else {
-          this._contexts[key] = context5;
+          this._contexts[key] = context7;
         }
         this._notifyScopeListeners();
         return this;
@@ -95324,8 +95324,8 @@ var require_scope2 = __commonJS({
       /**
        * Add propagation context to the scope, used for distributed tracing
        */
-      setPropagationContext(context5) {
-        this._propagationContext = context5;
+      setPropagationContext(context7) {
+        this._propagationContext = context7;
         return this;
       }
       /**
@@ -100281,8 +100281,8 @@ var require_exports = __commonJS({
     function captureEvent2(event, hint) {
       return currentScopes.getCurrentScope().captureEvent(event, hint);
     }
-    function setContext2(name, context5) {
-      currentScopes.getIsolationScope().setContext(name, context5);
+    function setContext2(name, context7) {
+      currentScopes.getIsolationScope().setContext(name, context7);
     }
     function setExtras2(extras) {
       currentScopes.getIsolationScope().setExtras(extras);
@@ -100380,14 +100380,14 @@ var require_exports = __commonJS({
     function addEventProcessor2(callback) {
       currentScopes.getIsolationScope().addEventProcessor(callback);
     }
-    function startSession2(context5) {
+    function startSession2(context7) {
       const isolationScope = currentScopes.getIsolationScope();
       const { user } = scopeData.getCombinedScopeData(isolationScope, currentScopes.getCurrentScope());
       const { userAgent } = worldwide.GLOBAL_OBJ.navigator || {};
       const session$1 = session.makeSession({
         user,
         ...userAgent && { userAgent },
-        ...context5
+        ...context7
       });
       const currentSession = isolationScope.getSession();
       if (currentSession?.status === "ok") {
@@ -108192,7 +108192,7 @@ var require_openai = __commonJS({
         span.setAttribute(genAiAttributes.GEN_AI_INPUT_MESSAGES_ORIGINAL_LENGTH_ATTRIBUTE, 1);
       }
     }
-    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context5, options) {
+    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context7, options) {
       return function instrumentedCall(...args) {
         const operationName = instrumentedMethod.operation || "unknown";
         const requestAttributes = extractRequestAttributes(args, operationName);
@@ -108207,7 +108207,7 @@ var require_openai = __commonJS({
         if (isStreamRequested) {
           let originalResult2;
           const instrumentedPromise2 = trace3.startSpanManual(spanConfig, (span) => {
-            originalResult2 = originalMethod.apply(context5, args);
+            originalResult2 = originalMethod.apply(context7, args);
             if (options.recordInputs && params) {
               addRequestAttributes(span, params, operationName, utils.shouldEnableTruncation(options.enableTruncation));
             }
@@ -108237,7 +108237,7 @@ var require_openai = __commonJS({
         }
         let originalResult;
         const instrumentedPromise = trace3.startSpan(spanConfig, (span) => {
-          originalResult = originalMethod.apply(context5, args);
+          originalResult = originalMethod.apply(context7, args);
           if (options.recordInputs && params) {
             addRequestAttributes(span, params, operationName, utils.shouldEnableTruncation(options.enableTruncation));
           }
@@ -108709,10 +108709,10 @@ var require_anthropic_ai = __commonJS({
         });
       }
     }
-    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context5, options) {
+    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context7, options) {
       return new Proxy(originalMethod, {
         apply(target, thisArg, args) {
-          const invocationThis = thisArg !== void 0 ? thisArg : context5;
+          const invocationThis = thisArg !== void 0 ? thisArg : context7;
           const isStreamingMethod = instrumentedMethod.streaming === true;
           if (!isStreamingMethod && suppressDelegatedCreate) {
             return target.apply(invocationThis, args);
@@ -108950,12 +108950,12 @@ var require_google_genai = __commonJS({
     var constants = require_constants23();
     var streaming = require_streaming3();
     var utils = require_utils12();
-    function extractModel(params, context5) {
+    function extractModel(params, context7) {
       if ("model" in params && typeof params.model === "string") {
         return params.model;
       }
-      if (context5 && typeof context5 === "object") {
-        const contextObj = context5;
+      if (context7 && typeof context7 === "object") {
+        const contextObj = context7;
         if ("model" in contextObj && typeof contextObj.model === "string") {
           return contextObj.model;
         }
@@ -108987,14 +108987,14 @@ var require_google_genai = __commonJS({
       }
       return attributes;
     }
-    function extractRequestAttributes(operationName, params, context5) {
+    function extractRequestAttributes(operationName, params, context7) {
       const attributes = {
         [genAiAttributes.GEN_AI_SYSTEM_ATTRIBUTE]: constants.GOOGLE_GENAI_SYSTEM_NAME,
         [genAiAttributes.GEN_AI_OPERATION_NAME_ATTRIBUTE]: operationName,
         [semanticAttributes.SEMANTIC_ATTRIBUTE_SENTRY_ORIGIN]: "auto.ai.google_genai"
       };
       if (params) {
-        attributes[genAiAttributes.GEN_AI_REQUEST_MODEL_ATTRIBUTE] = extractModel(params, context5);
+        attributes[genAiAttributes.GEN_AI_REQUEST_MODEL_ATTRIBUTE] = extractModel(params, context7);
         if ("config" in params && typeof params.config === "object" && params.config) {
           const config = params.config;
           Object.assign(attributes, extractConfigAttributes(config));
@@ -109006,7 +109006,7 @@ var require_google_genai = __commonJS({
           }
         }
       } else {
-        attributes[genAiAttributes.GEN_AI_REQUEST_MODEL_ATTRIBUTE] = extractModel({}, context5);
+        attributes[genAiAttributes.GEN_AI_REQUEST_MODEL_ATTRIBUTE] = extractModel({}, context7);
       }
       return attributes;
     }
@@ -109092,13 +109092,13 @@ var require_google_genai = __commonJS({
         }
       }
     }
-    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context5, options) {
+    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context7, options) {
       const isEmbeddings = instrumentedMethod.operation === "embeddings";
       return new Proxy(originalMethod, {
         apply(target, _, args) {
           const operationName = instrumentedMethod.operation || "unknown";
           const params = args[0];
-          const requestAttributes = extractRequestAttributes(operationName, params, context5);
+          const requestAttributes = extractRequestAttributes(operationName, params, context7);
           const model = requestAttributes[genAiAttributes.GEN_AI_REQUEST_MODEL_ATTRIBUTE] ?? "unknown";
           if (instrumentedMethod.streaming) {
             return trace3.startSpanManual(
@@ -109117,7 +109117,7 @@ var require_google_genai = __commonJS({
                       utils$1.shouldEnableTruncation(options.enableTruncation)
                     );
                   }
-                  const stream = await target.apply(context5, args);
+                  const stream = await target.apply(context7, args);
                   return streaming.instrumentStream(stream, span, Boolean(options.recordOutputs));
                 } catch (error2) {
                   span.setStatus({ code: spanstatus.SPAN_STATUS_ERROR, message: "internal_error" });
@@ -109145,7 +109145,7 @@ var require_google_genai = __commonJS({
                 addPrivateRequestAttributes(span, params, operationName, utils$1.shouldEnableTruncation(options.enableTruncation));
               }
               return handleCallbackErrors2.handleCallbackErrors(
-                () => target.apply(context5, args),
+                () => target.apply(context7, args),
                 (error2) => {
                   exports$1.captureException(error2, {
                     mechanism: { handled: false, type: "auto.ai.google_genai", data: { function: methodPath } }
@@ -110677,10 +110677,10 @@ var require_workers_ai = __commonJS({
     function isReadableStream(value) {
       return is.isObjectLike(value) && typeof value.pipeThrough === "function" && typeof value.getReader === "function";
     }
-    function instrumentRun(originalRun, context5, options) {
+    function instrumentRun(originalRun, context7, options) {
       return function instrumentedRun(...args) {
         if (providerSkip._INTERNAL_shouldSkipAiProviderWrapping(constants.WORKERS_AI_INTEGRATION_NAME)) {
-          return originalRun.apply(context5, args);
+          return originalRun.apply(context7, args);
         }
         const [model, inputs, runOptions] = args;
         const operationName = utils$1.getOperationName(inputs);
@@ -110702,7 +110702,7 @@ var require_workers_ai = __commonJS({
             };
             let originalResult;
             try {
-              originalResult = originalRun.apply(context5, args);
+              originalResult = originalRun.apply(context7, args);
             } catch (error2) {
               return handleError(error2);
             }
@@ -110720,7 +110720,7 @@ var require_workers_ai = __commonJS({
           });
         }
         return trace3.startSpan(spanConfig, (span) => {
-          const originalResult = originalRun.apply(context5, args);
+          const originalResult = originalRun.apply(context7, args);
           if (options.recordInputs) {
             utils$1.addRequestAttributes(span, inputs, operationName, utils.shouldEnableTruncation(options.enableTruncation));
           }
@@ -115949,14 +115949,14 @@ var init_context3 = __esm({
         self2._currentContext = parentContext ? new Map(parentContext) : /* @__PURE__ */ new Map();
         self2.getValue = (key) => self2._currentContext.get(key);
         self2.setValue = (key, value) => {
-          const context5 = new _BaseContext(self2._currentContext);
-          context5._currentContext.set(key, value);
-          return context5;
+          const context7 = new _BaseContext(self2._currentContext);
+          context7._currentContext.set(key, value);
+          return context7;
         };
         self2.deleteValue = (key) => {
-          const context5 = new _BaseContext(self2._currentContext);
-          context5._currentContext.delete(key);
-          return context5;
+          const context7 = new _BaseContext(self2._currentContext);
+          context7._currentContext.delete(key);
+          return context7;
         };
       }
     };
@@ -116229,8 +116229,8 @@ var init_context4 = __esm({
        * @param thisArg optional receiver to be used for calling fn
        * @param args optional arguments forwarded to fn
        */
-      with(context5, fn, thisArg, ...args) {
-        return this._getContextManager().with(context5, fn, thisArg, ...args);
+      with(context7, fn, thisArg, ...args) {
+        return this._getContextManager().with(context7, fn, thisArg, ...args);
       }
       /**
        * Bind a context to a target function or event emitter
@@ -116238,8 +116238,8 @@ var init_context4 = __esm({
        * @param context context to bind to the event emitter or function. Defaults to the currently active context
        * @param target function or event emitter to bind
        */
-      bind(context5, target) {
-        return this._getContextManager().bind(context5, target);
+      bind(context7, target) {
+        return this._getContextManager().bind(context7, target);
       }
       _getContextManager() {
         return getGlobal2(API_NAME7) || NOOP_CONTEXT_MANAGER2;
@@ -116333,24 +116333,24 @@ var init_NonRecordingSpan2 = __esm({
 });
 
 // node_modules/.pnpm/@opentelemetry+api@1.9.1/node_modules/@opentelemetry/api/build/esm/trace/context-utils.js
-function getSpan2(context5) {
-  return context5.getValue(SPAN_KEY2) || void 0;
+function getSpan2(context7) {
+  return context7.getValue(SPAN_KEY2) || void 0;
 }
 function getActiveSpan3() {
   return getSpan2(ContextAPI2.getInstance().active());
 }
-function setSpan2(context5, span) {
-  return context5.setValue(SPAN_KEY2, span);
+function setSpan2(context7, span) {
+  return context7.setValue(SPAN_KEY2, span);
 }
-function deleteSpan2(context5) {
-  return context5.deleteValue(SPAN_KEY2);
+function deleteSpan2(context7) {
+  return context7.deleteValue(SPAN_KEY2);
 }
-function setSpanContext2(context5, spanContext) {
-  return setSpan2(context5, new NonRecordingSpan2(spanContext));
+function setSpanContext2(context7, spanContext) {
+  return setSpan2(context7, new NonRecordingSpan2(spanContext));
 }
-function getSpanContext2(context5) {
+function getSpanContext2(context7) {
   var _a2;
-  return (_a2 = getSpan2(context5)) === null || _a2 === void 0 ? void 0 : _a2.spanContext();
+  return (_a2 = getSpan2(context7)) === null || _a2 === void 0 ? void 0 : _a2.spanContext();
 }
 var SPAN_KEY2;
 var init_context_utils2 = __esm({
@@ -116511,12 +116511,12 @@ var init_NoopTracer2 = __esm({
     contextApi2 = ContextAPI2.getInstance();
     NoopTracer2 = class {
       // startSpan starts a noop span.
-      startSpan(name, options, context5 = contextApi2.active()) {
+      startSpan(name, options, context7 = contextApi2.active()) {
         const root = Boolean(options === null || options === void 0 ? void 0 : options.root);
         if (root) {
           return new NonRecordingSpan2();
         }
-        const parentFromContext = context5 && getSpanContext2(context5);
+        const parentFromContext = context7 && getSpanContext2(context7);
         if (isSpanContext2(parentFromContext) && isSpanContextValid2(parentFromContext)) {
           return new NonRecordingSpan2(parentFromContext);
         } else {
@@ -116561,8 +116561,8 @@ var init_ProxyTracer2 = __esm({
         this.version = version;
         this.options = options;
       }
-      startSpan(name, options, context5) {
-        return this._getTracer().startSpan(name, options, context5);
+      startSpan(name, options, context7) {
+        return this._getTracer().startSpan(name, options, context7);
       }
       startActiveSpan(_name, _options, _context, _fn) {
         const tracer = this._getTracer();
@@ -116866,8 +116866,8 @@ var init_NoopTextMapPropagator2 = __esm({
       inject(_context, _carrier) {
       }
       /** Noop extract function does nothing and returns the input context */
-      extract(context5, _carrier) {
-        return context5;
+      extract(context7, _carrier) {
+        return context7;
       }
       fields() {
         return [];
@@ -116877,17 +116877,17 @@ var init_NoopTextMapPropagator2 = __esm({
 });
 
 // node_modules/.pnpm/@opentelemetry+api@1.9.1/node_modules/@opentelemetry/api/build/esm/baggage/context-helpers.js
-function getBaggage2(context5) {
-  return context5.getValue(BAGGAGE_KEY2) || void 0;
+function getBaggage2(context7) {
+  return context7.getValue(BAGGAGE_KEY2) || void 0;
 }
 function getActiveBaggage2() {
   return getBaggage2(ContextAPI2.getInstance().active());
 }
-function setBaggage2(context5, baggage) {
-  return context5.setValue(BAGGAGE_KEY2, baggage);
+function setBaggage2(context7, baggage) {
+  return context7.setValue(BAGGAGE_KEY2, baggage);
 }
-function deleteBaggage2(context5) {
-  return context5.deleteValue(BAGGAGE_KEY2);
+function deleteBaggage2(context7) {
+  return context7.deleteValue(BAGGAGE_KEY2);
 }
 var BAGGAGE_KEY2;
 var init_context_helpers2 = __esm({
@@ -116941,8 +116941,8 @@ var init_propagation2 = __esm({
        * @param carrier carrier to inject context into
        * @param setter Function used to set values on the carrier
        */
-      inject(context5, carrier, setter = defaultTextMapSetter2) {
-        return this._getGlobalPropagator().inject(context5, carrier, setter);
+      inject(context7, carrier, setter = defaultTextMapSetter2) {
+        return this._getGlobalPropagator().inject(context7, carrier, setter);
       }
       /**
        * Extract context from a carrier
@@ -116951,8 +116951,8 @@ var init_propagation2 = __esm({
        * @param carrier Carrier to extract context from
        * @param getter Function used to extract keys from a carrier
        */
-      extract(context5, carrier, getter = defaultTextMapGetter2) {
-        return this._getGlobalPropagator().extract(context5, carrier, getter);
+      extract(context7, carrier, getter = defaultTextMapGetter2) {
+        return this._getGlobalPropagator().extract(context7, carrier, getter);
       }
       /**
        * Return a list of all fields which may be used by the propagator.
@@ -117215,16 +117215,16 @@ var require_suppress_tracing = __commonJS({
     exports2.isTracingSuppressed = exports2.unsuppressTracing = exports2.suppressTracing = void 0;
     var api_1 = (init_esm(), __toCommonJS(esm_exports));
     var SUPPRESS_TRACING_KEY2 = (0, api_1.createContextKey)("OpenTelemetry SDK Context Key SUPPRESS_TRACING");
-    function suppressTracing2(context5) {
-      return context5.setValue(SUPPRESS_TRACING_KEY2, true);
+    function suppressTracing2(context7) {
+      return context7.setValue(SUPPRESS_TRACING_KEY2, true);
     }
     exports2.suppressTracing = suppressTracing2;
-    function unsuppressTracing(context5) {
-      return context5.deleteValue(SUPPRESS_TRACING_KEY2);
+    function unsuppressTracing(context7) {
+      return context7.deleteValue(SUPPRESS_TRACING_KEY2);
     }
     exports2.unsuppressTracing = unsuppressTracing;
-    function isTracingSuppressed(context5) {
-      return context5.getValue(SUPPRESS_TRACING_KEY2) === true;
+    function isTracingSuppressed(context7) {
+      return context7.getValue(SUPPRESS_TRACING_KEY2) === true;
     }
     exports2.isTracingSuppressed = isTracingSuppressed;
   }
@@ -117350,9 +117350,9 @@ var require_W3CBaggagePropagator = __commonJS({
     var constants_1 = require_constants27();
     var utils_1 = require_utils17();
     var W3CBaggagePropagator = class {
-      inject(context5, carrier, setter) {
-        const baggage = api_1.propagation.getBaggage(context5);
-        if (!baggage || (0, suppress_tracing_1.isTracingSuppressed)(context5))
+      inject(context7, carrier, setter) {
+        const baggage = api_1.propagation.getBaggage(context7);
+        if (!baggage || (0, suppress_tracing_1.isTracingSuppressed)(context7))
           return;
         const keyPairs = (0, utils_1.getKeyPairs)(baggage).filter((pair) => {
           return pair.length <= constants_1.BAGGAGE_MAX_PER_NAME_VALUE_PAIRS;
@@ -117362,10 +117362,10 @@ var require_W3CBaggagePropagator = __commonJS({
           setter.set(carrier, constants_1.BAGGAGE_HEADER, headerValue);
         }
       }
-      extract(context5, carrier, getter) {
+      extract(context7, carrier, getter) {
         const headerValue = getter.get(carrier, constants_1.BAGGAGE_HEADER);
         if (!headerValue) {
-          return context5;
+          return context7;
         }
         const baggage = {};
         let count = 0;
@@ -117378,9 +117378,9 @@ var require_W3CBaggagePropagator = __commonJS({
           [count] = (0, utils_1.parseBaggageHeaderString)(headerValue, baggage, count, totalSize);
         }
         if (count === 0) {
-          return context5;
+          return context7;
         }
-        return api_1.propagation.setBaggage(context5, api_1.propagation.createBaggage(baggage));
+        return api_1.propagation.setBaggage(context7, api_1.propagation.createBaggage(baggage));
       }
       fields() {
         return [constants_1.BAGGAGE_HEADER];
@@ -120086,10 +120086,10 @@ var require_composite = __commonJS({
        * @param context Context to inject
        * @param carrier Carrier into which context will be injected
        */
-      inject(context5, carrier, setter) {
+      inject(context7, carrier, setter) {
         for (const propagator of this._propagators) {
           try {
-            propagator.inject(context5, carrier, setter);
+            propagator.inject(context7, carrier, setter);
           } catch (err) {
             api_1.diag.warn(`Failed to inject with ${propagator.constructor.name}. Err: ${err.message}`);
           }
@@ -120104,7 +120104,7 @@ var require_composite = __commonJS({
        * @param context Context to add values to
        * @param carrier Carrier from which to extract context
        */
-      extract(context5, carrier, getter) {
+      extract(context7, carrier, getter) {
         return this._propagators.reduce((ctx, propagator) => {
           try {
             return propagator.extract(ctx, carrier, getter);
@@ -120112,7 +120112,7 @@ var require_composite = __commonJS({
             api_1.diag.warn(`Failed to extract with ${propagator.constructor.name}. Err: ${err.message}`);
           }
           return ctx;
-        }, context5);
+        }, context7);
       }
       fields() {
         return this._fields.slice();
@@ -120288,9 +120288,9 @@ var require_W3CTraceContextPropagator = __commonJS({
     }
     exports2.parseTraceParent = parseTraceParent;
     var W3CTraceContextPropagator = class {
-      inject(context5, carrier, setter) {
-        const spanContext = api_1.trace.getSpanContext(context5);
-        if (!spanContext || (0, suppress_tracing_1.isTracingSuppressed)(context5) || !(0, api_1.isSpanContextValid)(spanContext))
+      inject(context7, carrier, setter) {
+        const spanContext = api_1.trace.getSpanContext(context7);
+        if (!spanContext || (0, suppress_tracing_1.isTracingSuppressed)(context7) || !(0, api_1.isSpanContextValid)(spanContext))
           return;
         const traceParent = `${VERSION3}-${spanContext.traceId}-${spanContext.spanId}-0${Number(spanContext.traceFlags || api_1.TraceFlags.NONE).toString(16)}`;
         setter.set(carrier, exports2.TRACE_PARENT_HEADER, traceParent);
@@ -120298,23 +120298,23 @@ var require_W3CTraceContextPropagator = __commonJS({
           setter.set(carrier, exports2.TRACE_STATE_HEADER, spanContext.traceState.serialize());
         }
       }
-      extract(context5, carrier, getter) {
+      extract(context7, carrier, getter) {
         const traceParentHeader = getter.get(carrier, exports2.TRACE_PARENT_HEADER);
         if (!traceParentHeader)
-          return context5;
+          return context7;
         const traceParent = Array.isArray(traceParentHeader) ? traceParentHeader[0] : traceParentHeader;
         if (typeof traceParent !== "string")
-          return context5;
+          return context7;
         const spanContext = parseTraceParent(traceParent);
         if (!spanContext)
-          return context5;
+          return context7;
         spanContext.isRemote = true;
         const traceStateHeader = getter.get(carrier, exports2.TRACE_STATE_HEADER);
         if (traceStateHeader) {
           const state = Array.isArray(traceStateHeader) ? traceStateHeader.join(",") : traceStateHeader;
           spanContext.traceState = new TraceState_1.TraceState(typeof state === "string" ? state : void 0);
         }
-        return api_1.trace.setSpanContext(context5, spanContext);
+        return api_1.trace.setSpanContext(context7, spanContext);
       }
       fields() {
         return [exports2.TRACE_PARENT_HEADER, exports2.TRACE_STATE_HEADER];
@@ -120336,16 +120336,16 @@ var require_rpc_metadata = __commonJS({
     (function(RPCType2) {
       RPCType2["HTTP"] = "http";
     })(RPCType || (exports2.RPCType = RPCType = {}));
-    function setRPCMetadata(context5, meta) {
-      return context5.setValue(RPC_METADATA_KEY, meta);
+    function setRPCMetadata(context7, meta) {
+      return context7.setValue(RPC_METADATA_KEY, meta);
     }
     exports2.setRPCMetadata = setRPCMetadata;
-    function deleteRPCMetadata(context5) {
-      return context5.deleteValue(RPC_METADATA_KEY);
+    function deleteRPCMetadata(context7) {
+      return context7.deleteValue(RPC_METADATA_KEY);
     }
     exports2.deleteRPCMetadata = deleteRPCMetadata;
-    function getRPCMetadata(context5) {
-      return context5.getValue(RPC_METADATA_KEY);
+    function getRPCMetadata(context7) {
+      return context7.getValue(RPC_METADATA_KEY);
     }
     exports2.getRPCMetadata = getRPCMetadata;
   }
@@ -124009,16 +124009,16 @@ var require_suppress_tracing2 = __commonJS({
     exports2.isTracingSuppressed = exports2.unsuppressTracing = exports2.suppressTracing = void 0;
     var api_1 = (init_esm3(), __toCommonJS(esm_exports2));
     var SUPPRESS_TRACING_KEY2 = (0, api_1.createContextKey)("OpenTelemetry SDK Context Key SUPPRESS_TRACING");
-    function suppressTracing2(context5) {
-      return context5.setValue(SUPPRESS_TRACING_KEY2, true);
+    function suppressTracing2(context7) {
+      return context7.setValue(SUPPRESS_TRACING_KEY2, true);
     }
     exports2.suppressTracing = suppressTracing2;
-    function unsuppressTracing(context5) {
-      return context5.deleteValue(SUPPRESS_TRACING_KEY2);
+    function unsuppressTracing(context7) {
+      return context7.deleteValue(SUPPRESS_TRACING_KEY2);
     }
     exports2.unsuppressTracing = unsuppressTracing;
-    function isTracingSuppressed(context5) {
-      return context5.getValue(SUPPRESS_TRACING_KEY2) === true;
+    function isTracingSuppressed(context7) {
+      return context7.getValue(SUPPRESS_TRACING_KEY2) === true;
     }
     exports2.isTracingSuppressed = isTracingSuppressed;
   }
@@ -124144,9 +124144,9 @@ var require_W3CBaggagePropagator2 = __commonJS({
     var constants_1 = require_constants29();
     var utils_1 = require_utils19();
     var W3CBaggagePropagator = class {
-      inject(context5, carrier, setter) {
-        const baggage = api_1.propagation.getBaggage(context5);
-        if (!baggage || (0, suppress_tracing_1.isTracingSuppressed)(context5))
+      inject(context7, carrier, setter) {
+        const baggage = api_1.propagation.getBaggage(context7);
+        if (!baggage || (0, suppress_tracing_1.isTracingSuppressed)(context7))
           return;
         const keyPairs = (0, utils_1.getKeyPairs)(baggage).filter((pair) => {
           return pair.length <= constants_1.BAGGAGE_MAX_PER_NAME_VALUE_PAIRS;
@@ -124156,10 +124156,10 @@ var require_W3CBaggagePropagator2 = __commonJS({
           setter.set(carrier, constants_1.BAGGAGE_HEADER, headerValue);
         }
       }
-      extract(context5, carrier, getter) {
+      extract(context7, carrier, getter) {
         const headerValue = getter.get(carrier, constants_1.BAGGAGE_HEADER);
         if (!headerValue) {
-          return context5;
+          return context7;
         }
         const baggage = {};
         let count = 0;
@@ -124172,9 +124172,9 @@ var require_W3CBaggagePropagator2 = __commonJS({
           [count] = (0, utils_1.parseBaggageHeaderString)(headerValue, baggage, count, totalSize);
         }
         if (count === 0) {
-          return context5;
+          return context7;
         }
-        return api_1.propagation.setBaggage(context5, api_1.propagation.createBaggage(baggage));
+        return api_1.propagation.setBaggage(context7, api_1.propagation.createBaggage(baggage));
       }
       fields() {
         return [constants_1.BAGGAGE_HEADER];
@@ -124682,10 +124682,10 @@ var require_composite2 = __commonJS({
        * @param context Context to inject
        * @param carrier Carrier into which context will be injected
        */
-      inject(context5, carrier, setter) {
+      inject(context7, carrier, setter) {
         for (const propagator of this._propagators) {
           try {
-            propagator.inject(context5, carrier, setter);
+            propagator.inject(context7, carrier, setter);
           } catch (err) {
             api_1.diag.warn(`Failed to inject with ${propagator.constructor.name}. Err: ${err.message}`);
           }
@@ -124700,7 +124700,7 @@ var require_composite2 = __commonJS({
        * @param context Context to add values to
        * @param carrier Carrier from which to extract context
        */
-      extract(context5, carrier, getter) {
+      extract(context7, carrier, getter) {
         return this._propagators.reduce((ctx, propagator) => {
           try {
             return propagator.extract(ctx, carrier, getter);
@@ -124708,7 +124708,7 @@ var require_composite2 = __commonJS({
             api_1.diag.warn(`Failed to extract with ${propagator.constructor.name}. Err: ${err.message}`);
           }
           return ctx;
-        }, context5);
+        }, context7);
       }
       fields() {
         return this._fields.slice();
@@ -124884,9 +124884,9 @@ var require_W3CTraceContextPropagator2 = __commonJS({
     }
     exports2.parseTraceParent = parseTraceParent;
     var W3CTraceContextPropagator = class {
-      inject(context5, carrier, setter) {
-        const spanContext = api_1.trace.getSpanContext(context5);
-        if (!spanContext || (0, suppress_tracing_1.isTracingSuppressed)(context5) || !(0, api_1.isSpanContextValid)(spanContext))
+      inject(context7, carrier, setter) {
+        const spanContext = api_1.trace.getSpanContext(context7);
+        if (!spanContext || (0, suppress_tracing_1.isTracingSuppressed)(context7) || !(0, api_1.isSpanContextValid)(spanContext))
           return;
         const traceParent = `${VERSION3}-${spanContext.traceId}-${spanContext.spanId}-0${Number(spanContext.traceFlags || api_1.TraceFlags.NONE).toString(16)}`;
         setter.set(carrier, exports2.TRACE_PARENT_HEADER, traceParent);
@@ -124894,23 +124894,23 @@ var require_W3CTraceContextPropagator2 = __commonJS({
           setter.set(carrier, exports2.TRACE_STATE_HEADER, spanContext.traceState.serialize());
         }
       }
-      extract(context5, carrier, getter) {
+      extract(context7, carrier, getter) {
         const traceParentHeader = getter.get(carrier, exports2.TRACE_PARENT_HEADER);
         if (!traceParentHeader)
-          return context5;
+          return context7;
         const traceParent = Array.isArray(traceParentHeader) ? traceParentHeader[0] : traceParentHeader;
         if (typeof traceParent !== "string")
-          return context5;
+          return context7;
         const spanContext = parseTraceParent(traceParent);
         if (!spanContext)
-          return context5;
+          return context7;
         spanContext.isRemote = true;
         const traceStateHeader = getter.get(carrier, exports2.TRACE_STATE_HEADER);
         if (traceStateHeader) {
           const state = Array.isArray(traceStateHeader) ? traceStateHeader.join(",") : traceStateHeader;
           spanContext.traceState = new TraceState_1.TraceState(typeof state === "string" ? state : void 0);
         }
-        return api_1.trace.setSpanContext(context5, spanContext);
+        return api_1.trace.setSpanContext(context7, spanContext);
       }
       fields() {
         return [exports2.TRACE_PARENT_HEADER, exports2.TRACE_STATE_HEADER];
@@ -124932,16 +124932,16 @@ var require_rpc_metadata2 = __commonJS({
     (function(RPCType2) {
       RPCType2["HTTP"] = "http";
     })(RPCType || (exports2.RPCType = RPCType = {}));
-    function setRPCMetadata(context5, meta) {
-      return context5.setValue(RPC_METADATA_KEY, meta);
+    function setRPCMetadata(context7, meta) {
+      return context7.setValue(RPC_METADATA_KEY, meta);
     }
     exports2.setRPCMetadata = setRPCMetadata;
-    function deleteRPCMetadata(context5) {
-      return context5.deleteValue(RPC_METADATA_KEY);
+    function deleteRPCMetadata(context7) {
+      return context7.deleteValue(RPC_METADATA_KEY);
     }
     exports2.deleteRPCMetadata = deleteRPCMetadata;
-    function getRPCMetadata(context5) {
-      return context5.getValue(RPC_METADATA_KEY);
+    function getRPCMetadata(context7) {
+      return context7.getValue(RPC_METADATA_KEY);
     }
     exports2.getRPCMetadata = getRPCMetadata;
   }
@@ -126866,12 +126866,12 @@ var require_Tracer = __commonJS({
        * Starts a new Span or returns the default NoopSpan based on the sampling
        * decision.
        */
-      startSpan(name, options = {}, context5 = api.context.active()) {
+      startSpan(name, options = {}, context7 = api.context.active()) {
         if (options.root) {
-          context5 = api.trace.deleteSpan(context5);
+          context7 = api.trace.deleteSpan(context7);
         }
-        const parentSpan = api.trace.getSpan(context5);
-        if ((0, core_1.isTracingSuppressed)(context5)) {
+        const parentSpan = api.trace.getSpan(context7);
+        if ((0, core_1.isTracingSuppressed)(context7)) {
           api.diag.debug("Instrumentation suppressed, returning Noop Span");
           const nonRecordingSpan = api.trace.wrapSpanContext(api.INVALID_SPAN_CONTEXT);
           return nonRecordingSpan;
@@ -126896,7 +126896,7 @@ var require_Tracer = __commonJS({
           };
         });
         const attributes = (0, core_1.sanitizeAttributes)(options.attributes);
-        const samplingResult = this._sampler.shouldSample(context5, traceId, name, spanKind, attributes, links);
+        const samplingResult = this._sampler.shouldSample(context7, traceId, name, spanKind, attributes, links);
         const recordEndMetrics = this._tracerMetrics.startSpan(parentSpanContext, samplingResult.decision);
         traceState = samplingResult.traceState ?? traceState;
         const traceFlags = samplingResult.decision === api.SamplingDecision.RECORD_AND_SAMPLED ? api.TraceFlags.SAMPLED : api.TraceFlags.NONE;
@@ -126910,7 +126910,7 @@ var require_Tracer = __commonJS({
         const span = new Span_1.SpanImpl({
           resource: this._resource,
           scope: this.instrumentationScope,
-          context: context5,
+          context: context7,
           spanContext,
           name,
           kind: spanKind,
@@ -126984,9 +126984,9 @@ var require_MultiSpanProcessor = __commonJS({
           });
         });
       }
-      onStart(span, context5) {
+      onStart(span, context7) {
         for (const spanProcessor of this._spanProcessors) {
-          spanProcessor.onStart(span, context5);
+          spanProcessor.onStart(span, context7);
         }
       }
       onEnding(span) {
@@ -127086,21 +127086,21 @@ var require_ParentBasedSampler = __commonJS({
         this._localParentSampled = config.localParentSampled ?? new AlwaysOnSampler_1.AlwaysOnSampler();
         this._localParentNotSampled = config.localParentNotSampled ?? new AlwaysOffSampler_1.AlwaysOffSampler();
       }
-      shouldSample(context5, traceId, spanName, spanKind, attributes, links) {
-        const parentContext = api_1.trace.getSpanContext(context5);
+      shouldSample(context7, traceId, spanName, spanKind, attributes, links) {
+        const parentContext = api_1.trace.getSpanContext(context7);
         if (!parentContext || !(0, api_1.isSpanContextValid)(parentContext)) {
-          return this._root.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+          return this._root.shouldSample(context7, traceId, spanName, spanKind, attributes, links);
         }
         if (parentContext.isRemote) {
           if (parentContext.traceFlags & api_1.TraceFlags.SAMPLED) {
-            return this._remoteParentSampled.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+            return this._remoteParentSampled.shouldSample(context7, traceId, spanName, spanKind, attributes, links);
           }
-          return this._remoteParentNotSampled.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+          return this._remoteParentNotSampled.shouldSample(context7, traceId, spanName, spanKind, attributes, links);
         }
         if (parentContext.traceFlags & api_1.TraceFlags.SAMPLED) {
-          return this._localParentSampled.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+          return this._localParentSampled.shouldSample(context7, traceId, spanName, spanKind, attributes, links);
         }
-        return this._localParentNotSampled.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+        return this._localParentNotSampled.shouldSample(context7, traceId, spanName, spanKind, attributes, links);
       }
       toString() {
         return `ParentBased{root=${this._root.toString()}, remoteParentSampled=${this._remoteParentSampled.toString()}, remoteParentNotSampled=${this._remoteParentNotSampled.toString()}, localParentSampled=${this._localParentSampled.toString()}, localParentNotSampled=${this._localParentNotSampled.toString()}}`;
@@ -127792,8 +127792,8 @@ var require_AlwaysRecordSampler = __commonJS({
         throw new Error("createAlwaysRecordSampler requires a delegate sampler");
       }
       return {
-        shouldSample(context5, traceId, spanName, spanKind, attributes, links) {
-          const result = delegate.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+        shouldSample(context7, traceId, spanName, spanKind, attributes, links) {
+          const result = delegate.shouldSample(context7, traceId, spanName, spanKind, attributes, links);
           if (result.decision === Sampler_1.SamplingDecision.NOT_RECORD) {
             return {
               decision: Sampler_1.SamplingDecision.RECORD,
@@ -127827,7 +127827,7 @@ var require_TraceIdRatioBasedSampler = __commonJS({
         this._ratio = this._normalize(ratio);
         this._upperBound = this._ratio === 1 ? 4294967296 : Math.floor(this._ratio * 4294967295);
       }
-      shouldSample(context5, traceId) {
+      shouldSample(context7, traceId) {
         return {
           decision: (0, api_1.isValidTraceId)(traceId) && this._accumulate(traceId) < this._upperBound ? Sampler_1.SamplingDecision.RECORD_AND_SAMPLED : Sampler_1.SamplingDecision.NOT_RECORD
         };
@@ -128256,14 +128256,14 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
     var SENTRY_FORK_SET_SCOPE_CONTEXT_KEY = api.createContextKey("sentry_fork_set_scope");
     var SENTRY_FORK_SET_ISOLATION_SCOPE_CONTEXT_KEY = api.createContextKey("sentry_fork_set_isolation_scope");
     var SCOPE_CONTEXT_FIELD = "_scopeContext";
-    function getScopesFromContext(context5) {
-      return context5.getValue(SENTRY_SCOPES_CONTEXT_KEY);
+    function getScopesFromContext(context7) {
+      return context7.getValue(SENTRY_SCOPES_CONTEXT_KEY);
     }
-    function setScopesOnContext(context5, scopes) {
-      return context5.setValue(SENTRY_SCOPES_CONTEXT_KEY, scopes);
+    function setScopesOnContext(context7, scopes) {
+      return context7.setValue(SENTRY_SCOPES_CONTEXT_KEY, scopes);
     }
-    function setContextOnScope(scope, context5) {
-      core.addNonEnumerableProperty(scope, SCOPE_CONTEXT_FIELD, core.makeWeakRef(context5));
+    function setContextOnScope(scope, context7) {
+      core.addNonEnumerableProperty(scope, SCOPE_CONTEXT_FIELD, core.makeWeakRef(context7));
     }
     function getContextFromScope(scope) {
       return core.derefWeakRef(scope[SCOPE_CONTEXT_FIELD]);
@@ -128917,15 +128917,15 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
         return event;
       });
     }
-    function buildContextWithSentryScopes(context5, activeContext) {
-      const span = api.trace.getSpan(context5);
+    function buildContextWithSentryScopes(context7, activeContext) {
+      const span = api.trace.getSpan(context7);
       let effectiveContext;
       if (span?.spanContext().traceState?.get(SENTRY_TRACE_STATE_CHILD_IGNORED) === "1") {
-        const contextWithoutSpan = api.trace.deleteSpan(context5);
+        const contextWithoutSpan = api.trace.deleteSpan(context7);
         const parentSpan = api.trace.getSpan(activeContext);
         effectiveContext = parentSpan ? api.trace.setSpan(contextWithoutSpan, parentSpan) : contextWithoutSpan;
       } else {
-        effectiveContext = context5;
+        effectiveContext = context7;
       }
       const currentScopes = getScopesFromContext(effectiveContext);
       const currentScope = currentScopes?.scope || core.getCurrentScope();
@@ -128951,8 +128951,8 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
          * Overwrite with() of the original AsyncLocalStorageContextManager
          * to ensure we also create new scopes per context.
          */
-        with(context5, fn, thisArg, ...args) {
-          const ctx2 = buildContextWithSentryScopes(context5, this.active());
+        with(context7, fn, thisArg, ...args) {
+          const ctx2 = buildContextWithSentryScopes(context7, this.active());
           return super.with(ctx2, fn, thisArg, ...args);
         }
         /**
@@ -129450,19 +129450,19 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
         setIsSetup("SentrySampler");
       }
       /** @inheritDoc */
-      shouldSample(context5, traceId, spanName, spanKind, spanAttributes, _links) {
+      shouldSample(context7, traceId, spanName, spanKind, spanAttributes, _links) {
         const options = this._client.getOptions();
         const { ignoreSpans } = options;
-        const parentSpan = getValidSpan(context5);
+        const parentSpan = getValidSpan(context7);
         const parentContext = parentSpan?.spanContext();
         if (!core.hasSpansEnabled(options)) {
-          return wrapSamplingDecision({ decision: void 0, context: context5, spanAttributes });
+          return wrapSamplingDecision({ decision: void 0, context: context7, spanAttributes });
         }
         const maybeSpanHttpMethod = spanAttributes[attributes.HTTP_METHOD] || spanAttributes[attributes.HTTP_REQUEST_METHOD];
         if (spanKind === api.SpanKind.CLIENT && maybeSpanHttpMethod && (!parentSpan || parentContext?.isRemote)) {
           if (!this._isSpanStreaming) {
             this._client.recordDroppedEvent("no_parent_span", "span");
-            return wrapSamplingDecision({ decision: void 0, context: context5, spanAttributes });
+            return wrapSamplingDecision({ decision: void 0, context: context7, spanAttributes });
           }
         }
         const parentSampled = parentSpan ? getParentSampled(parentSpan, traceId, spanName) : void 0;
@@ -129483,7 +129483,7 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
                   this._client.recordDroppedEvent("ignored", "span");
                   return wrapSamplingDecision({
                     decision: sdkTraceBase.SamplingDecision.NOT_RECORD,
-                    context: context5,
+                    context: context7,
                     spanAttributes,
                     ignoredChildSpan: true
                   });
@@ -129497,7 +129497,7 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
           }
           return wrapSamplingDecision({
             decision: parentSampled ? sdkTraceBase.SamplingDecision.RECORD_AND_SAMPLED : sdkTraceBase.SamplingDecision.NOT_RECORD,
-            context: context5,
+            context: context7,
             spanAttributes
           });
         }
@@ -129524,7 +129524,7 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
           this._client.recordDroppedEvent("ignored", "span");
           return wrapSamplingDecision({
             decision: sdkTraceBase.SamplingDecision.NOT_RECORD,
-            context: context5,
+            context: context7,
             spanAttributes,
             ignoredSegmentSpan: true
           });
@@ -129541,9 +129541,9 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
           mutableSamplingDecision
         );
         if (!mutableSamplingDecision.decision) {
-          return wrapSamplingDecision({ decision: void 0, context: context5, spanAttributes });
+          return wrapSamplingDecision({ decision: void 0, context: context7, spanAttributes });
         }
-        const { isolationScope } = getScopesFromContext(context5) ?? {};
+        const { isolationScope } = getScopesFromContext(context7) ?? {};
         const dscString = parentContext?.traceState ? parentContext.traceState.get(SENTRY_TRACE_STATE_DSC) : void 0;
         const dsc = dscString ? core.baggageHeaderToDynamicSamplingContext(dscString) : void 0;
         const sampleRand = core.parseSampleRate(dsc?.sample_rand) ?? core._INTERNAL_safeMathRandom();
@@ -129563,7 +129563,7 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
           DEBUG_BUILD2 && core.debug.log(`[Tracing] Not sampling span because HTTP method is '${method}' for ${spanName}`);
           return wrapSamplingDecision({
             decision: sdkTraceBase.SamplingDecision.NOT_RECORD,
-            context: context5,
+            context: context7,
             spanAttributes,
             sampleRand,
             downstreamTraceSampleRate: 0
@@ -129578,7 +129578,7 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
         return {
           ...wrapSamplingDecision({
             decision: sampled ? sdkTraceBase.SamplingDecision.RECORD_AND_SAMPLED : sdkTraceBase.SamplingDecision.NOT_RECORD,
-            context: context5,
+            context: context7,
             spanAttributes,
             sampleRand,
             downstreamTraceSampleRate: localSampleRateWasApplied ? sampleRate : void 0
@@ -129610,14 +129610,14 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
     }
     function wrapSamplingDecision({
       decision,
-      context: context5,
+      context: context7,
       spanAttributes,
       sampleRand,
       downstreamTraceSampleRate,
       ignoredChildSpan,
       ignoredSegmentSpan
     }) {
-      let traceState = getBaseTraceState(context5, spanAttributes);
+      let traceState = getBaseTraceState(context7, spanAttributes);
       if (downstreamTraceSampleRate !== void 0) {
         traceState = traceState.set(SENTRY_TRACE_STATE_SAMPLE_RATE, `${downstreamTraceSampleRate}`);
       }
@@ -129638,8 +129638,8 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
       }
       return { decision, traceState };
     }
-    function getBaseTraceState(context5, spanAttributes) {
-      const parentSpan = api.trace.getSpan(context5);
+    function getBaseTraceState(context7, spanAttributes) {
+      const parentSpan = api.trace.getSpan(context7);
       const parentContext = parentSpan?.spanContext();
       let traceState = parentContext?.traceState || new TraceState();
       const url = spanAttributes[attributes.HTTP_URL] || spanAttributes[attributes.URL_FULL];
@@ -129648,8 +129648,8 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
       }
       return traceState;
     }
-    function getValidSpan(context5) {
-      const span = api.trace.getSpan(context5);
+    function getValidSpan(context7) {
+      const span = api.trace.getSpan(context7);
       return span && api.isSpanContextValid(span.spanContext()) ? span : void 0;
     }
     function applyOtelSpanData(span, options = {}) {
@@ -130020,8 +130020,8 @@ var require_cjs2 = __commonJS({
       active() {
         return this._asyncLocalStorage.getStore() ?? api.ROOT_CONTEXT;
       }
-      with(context5, fn, thisArg, ...args) {
-        const ctx2 = asyncContextStrategy.buildContextWithSentryScopes(context5, this.active());
+      with(context7, fn, thisArg, ...args) {
+        const ctx2 = asyncContextStrategy.buildContextWithSentryScopes(context7, this.active());
         const cb = thisArg == null ? fn : fn.bind(thisArg);
         return this._asyncLocalStorage.run(ctx2, cb, ...args);
       }
@@ -130032,12 +130032,12 @@ var require_cjs2 = __commonJS({
         this._asyncLocalStorage.disable();
         return this;
       }
-      bind(context5, target) {
+      bind(context7, target) {
         if (target instanceof node_events.EventEmitter) {
-          return this._bindEventEmitter(context5, target);
+          return this._bindEventEmitter(context7, target);
         }
         if (typeof target === "function") {
-          return this._bindFunction(context5, target);
+          return this._bindFunction(context7, target);
         }
         return target;
       }
@@ -130051,10 +130051,10 @@ var require_cjs2 = __commonJS({
           contextSymbol: asyncContextStrategy.SENTRY_SCOPES_CONTEXT_KEY
         };
       }
-      _bindFunction(context5, target) {
+      _bindFunction(context7, target) {
         const managerWith = this.with.bind(this);
         const contextWrapper = function(...args) {
-          return managerWith(context5, () => target.apply(this, args));
+          return managerWith(context7, () => target.apply(this, args));
         };
         Object.defineProperty(contextWrapper, "length", {
           enumerable: false,
@@ -130064,7 +130064,7 @@ var require_cjs2 = __commonJS({
         });
         return contextWrapper;
       }
-      _bindEventEmitter(context5, ee) {
+      _bindEventEmitter(context7, ee) {
         if (this._getPatchMap(ee) !== void 0) {
           return ee;
         }
@@ -130075,7 +130075,7 @@ var require_cjs2 = __commonJS({
           ee[methodName] = this._patchAddListener(
             ee,
             ee[methodName],
-            context5
+            context7
           );
         }
         if (typeof ee.removeListener === "function") {
@@ -130118,7 +130118,7 @@ var require_cjs2 = __commonJS({
           return original.apply(this, arguments);
         };
       }
-      _patchAddListener(ee, original, context5) {
+      _patchAddListener(ee, original, context7) {
         const contextManager = this;
         return function(event, listener) {
           if (contextManager._wrapped) {
@@ -130133,7 +130133,7 @@ var require_cjs2 = __commonJS({
             listeners = /* @__PURE__ */ new WeakMap();
             map[event] = listeners;
           }
-          const patchedListener = contextManager.bind(context5, listener);
+          const patchedListener = contextManager.bind(context7, listener);
           listeners.set(listener, patchedListener);
           contextManager._wrapped = true;
           try {
@@ -132842,7 +132842,7 @@ var require_sdk2 = __commonJS({
     var opentelemetry = require_cjs2();
     var debugBuild = require_debug_build2();
     var childProcess = require_childProcess();
-    var context5 = require_context2();
+    var context7 = require_context2();
     var contextlines = require_contextlines();
     var index = require_http2();
     var index$2 = require_local_variables();
@@ -132880,7 +132880,7 @@ var require_sdk2 = __commonJS({
         // Event Info
         contextlines.contextLinesIntegration(),
         index$2.localVariablesIntegration(),
-        context5.nodeContextIntegration(),
+        context7.nodeContextIntegration(),
         childProcess.childProcessIntegration(),
         processSession.processSessionIntegration(),
         modules.modulesIntegration()
@@ -133774,12 +133774,12 @@ var require_cron = __commonJS({
           }
           jobScheduled = true;
           const cronString = common.replaceCronNames(cronTime);
-          async function monitoredTick(context5, onComplete2) {
+          async function monitoredTick(context7, onComplete2) {
             return core.withMonitor(
               monitorSlug,
               async () => {
                 try {
-                  await onTick(context5, onComplete2);
+                  await onTick(context7, onComplete2);
                 } catch (e) {
                   core.captureException(e, {
                     mechanism: {
@@ -133810,12 +133810,12 @@ var require_cron = __commonJS({
               }
               jobScheduled = true;
               const cronString = common.replaceCronNames(cronTime);
-              param.onTick = async (context5, onComplete) => {
+              param.onTick = async (context7, onComplete) => {
                 return core.withMonitor(
                   monitorSlug,
                   async () => {
                     try {
-                      await onTick(context5, onComplete);
+                      await onTick(context7, onComplete);
                     } catch (e) {
                       core.captureException(e, {
                         mechanism: {
@@ -133980,7 +133980,7 @@ var require_cjs3 = __commonJS({
     var index = require_anr2();
     var core = require_cjs();
     var exports$1 = require_exports3();
-    var context5 = require_context2();
+    var context7 = require_context2();
     var nodeRuntimeMetrics = require_nodeRuntimeMetrics();
     var contextlines = require_contextlines();
     var index$4 = require_local_variables();
@@ -134109,7 +134109,7 @@ var require_cjs3 = __commonJS({
     exports2.wrapMcpServerWithSentry = core.wrapMcpServerWithSentry;
     exports2.zodErrorsIntegration = core.zodErrorsIntegration;
     exports2.logger = exports$1;
-    exports2.nodeContextIntegration = context5.nodeContextIntegration;
+    exports2.nodeContextIntegration = context7.nodeContextIntegration;
     exports2._INTERNAL_normalizeCollectionInterval = nodeRuntimeMetrics._INTERNAL_normalizeCollectionInterval;
     exports2.nodeRuntimeMetricsIntegration = nodeRuntimeMetrics.nodeRuntimeMetricsIntegration;
     exports2.contextLinesIntegration = contextlines.contextLinesIntegration;
@@ -142079,22 +142079,22 @@ var require_hono = __commonJS({
     };
     var honoIntegration = core.defineIntegration(_honoIntegration);
     function honoRequestHandler() {
-      return async function sentryRequestMiddleware(context5, next) {
-        const normalizedRequest = core.httpRequestToRequestData(context5.req);
+      return async function sentryRequestMiddleware(context7, next) {
+        const normalizedRequest = core.httpRequestToRequestData(context7.req);
         core.getIsolationScope().setSDKProcessingMetadata({ normalizedRequest });
         await next();
       };
     }
-    function defaultShouldHandleError(context5) {
-      const statusCode = context5.res.status;
+    function defaultShouldHandleError(context7) {
+      const statusCode = context7.res.status;
       return statusCode >= 500;
     }
     function honoErrorHandler(options) {
-      return async function sentryErrorMiddleware(context5, next) {
+      return async function sentryErrorMiddleware(context7, next) {
         await next();
         const shouldHandleError = options?.shouldHandleError || defaultShouldHandleError;
-        if (shouldHandleError(context5)) {
-          context5.res.sentry = core.captureException(context5.error, {
+        if (shouldHandleError(context7)) {
+          context7.res.sentry = core.captureException(context7.error, {
             mechanism: {
               type: "auto.middleware.hono",
               handled: false
@@ -142147,7 +142147,7 @@ var require_utils34 = __commonJS({
     var types = require_types5();
     var AttributeNames = require_AttributeNames5();
     var attributes = require_attributes2();
-    var getMiddlewareMetadata = (context5, layer, isRouter, layerPath) => {
+    var getMiddlewareMetadata = (context7, layer, isRouter, layerPath) => {
       if (isRouter) {
         return {
           attributes: {
@@ -142156,7 +142156,7 @@ var require_utils34 = __commonJS({
             [AttributeNames.AttributeNames.KOA_TYPE]: types.KoaLayerType.ROUTER,
             [attributes.HTTP_ROUTE]: layerPath?.toString()
           },
-          name: context5._matchedRouteName || `router - ${layerPath}`
+          name: context7._matchedRouteName || `router - ${layerPath}`
         };
       } else {
         return {
@@ -142279,14 +142279,14 @@ var require_instrumentation15 = __commonJS({
           return middlewareLayer;
         }
         middlewareLayer[internalTypes.kLayerPatched] = true;
-        return (context5, next) => {
+        return (context7, next) => {
           const parent = api.trace.getSpan(api.context.active());
           if (parent === void 0) {
-            return middlewareLayer(context5, next);
+            return middlewareLayer(context7, next);
           }
-          const metadata = utils.getMiddlewareMetadata(context5, middlewareLayer, isRouter, layerPath);
-          if (context5._matchedRoute) {
-            setHttpServerSpanRouteAttribute.setHttpServerSpanRouteAttribute(context5._matchedRoute.toString());
+          const metadata = utils.getMiddlewareMetadata(context7, middlewareLayer, isRouter, layerPath);
+          if (context7._matchedRoute) {
+            setHttpServerSpanRouteAttribute.setHttpServerSpanRouteAttribute(context7._matchedRoute.toString());
           }
           const koaName = metadata.attributes[AttributeNames.AttributeNames.KOA_NAME];
           const name = typeof koaName === "string" ? koaName || "< unknown >" : metadata.name;
@@ -142304,10 +142304,10 @@ var require_instrumentation15 = __commonJS({
               if (core.getIsolationScope() === core.getDefaultIsolationScope()) {
                 debugBuild.DEBUG_BUILD && core.debug.warn("Isolation scope is default isolation scope - skipping setting transactionName");
               } else if (route) {
-                const method = context5.request?.method?.toUpperCase() || "GET";
+                const method = context7.request?.method?.toUpperCase() || "GET";
                 core.getIsolationScope().setTransactionName(`${method} ${route}`);
               }
-              return middlewareLayer(context5, next);
+              return middlewareLayer(context7, next);
             }
           );
         };
@@ -147217,13 +147217,13 @@ var require_koa3 = __commonJS({
         return middlewareLayer;
       }
       middlewareLayer[kLayerPatched] = true;
-      return (context5, next) => {
+      return (context7, next) => {
         if (!core.getActiveSpan()) {
-          return middlewareLayer(context5, next);
+          return middlewareLayer(context7, next);
         }
-        const metadata = getMiddlewareMetadata(context5, middlewareLayer, isRouter, layerPath);
-        if (context5._matchedRoute) {
-          setHttpServerSpanRouteAttribute(context5._matchedRoute.toString());
+        const metadata = getMiddlewareMetadata(context7, middlewareLayer, isRouter, layerPath);
+        if (context7._matchedRoute) {
+          setHttpServerSpanRouteAttribute(context7._matchedRoute.toString());
         }
         const koaName = metadata.attributes[attributes.KOA_NAME];
         const name = typeof koaName === "string" ? koaName || "< unknown >" : metadata.name;
@@ -147241,15 +147241,15 @@ var require_koa3 = __commonJS({
             if (core.getIsolationScope() === core.getDefaultIsolationScope()) {
               debugBuild.DEBUG_BUILD && core.debug.warn("Isolation scope is default isolation scope - skipping setting transactionName");
             } else if (route) {
-              const method = context5.request?.method?.toUpperCase() || "GET";
+              const method = context7.request?.method?.toUpperCase() || "GET";
               core.getIsolationScope().setTransactionName(`${method} ${route}`);
             }
-            return middlewareLayer(context5, next);
+            return middlewareLayer(context7, next);
           }
         );
       };
     }
-    function getMiddlewareMetadata(context5, layer, isRouter, layerPath) {
+    function getMiddlewareMetadata(context7, layer, isRouter, layerPath) {
       if (isRouter) {
         return {
           attributes: {
@@ -147259,7 +147259,7 @@ var require_koa3 = __commonJS({
             [attributes.KOA_TYPE]: LAYER_TYPE.ROUTER,
             [attributes.HTTP_ROUTE]: layerPath?.toString()
           },
-          name: context5._matchedRouteName || `router - ${layerPath}`
+          name: context7._matchedRouteName || `router - ${layerPath}`
         };
       }
       return {
@@ -148762,12 +148762,12 @@ var require_postgres_js = __commonJS({
     var SPAN_ENDED = /* @__PURE__ */ Symbol("sentryPostgresJsSpanEnded");
     var connectionContexts = /* @__PURE__ */ new WeakMap();
     var endpointRegistry = [];
-    function registerEndpoint(context5) {
+    function registerEndpoint(context7) {
       const alreadyKnown = endpointRegistry.some(
-        (e) => e.ATTR_SERVER_ADDRESS === context5.ATTR_SERVER_ADDRESS && e.ATTR_SERVER_PORT === context5.ATTR_SERVER_PORT && e.ATTR_DB_NAMESPACE === context5.ATTR_DB_NAMESPACE
+        (e) => e.ATTR_SERVER_ADDRESS === context7.ATTR_SERVER_ADDRESS && e.ATTR_SERVER_PORT === context7.ATTR_SERVER_PORT && e.ATTR_DB_NAMESPACE === context7.ATTR_DB_NAMESPACE
       );
       if (!alreadyKnown) {
-        endpointRegistry.push(context5);
+        endpointRegistry.push(context7);
       }
     }
     function resolveSingleEndpoint() {
@@ -148779,17 +148779,17 @@ var require_postgres_js = __commonJS({
       if (!connection || typeof connection !== "object" || !options) {
         return;
       }
-      const context5 = core._INTERNAL_buildPostgresConnectionContext(options);
-      connectionContexts.set(connection, context5);
-      registerEndpoint(context5);
+      const context7 = core._INTERNAL_buildPostgresConnectionContext(options);
+      connectionContexts.set(connection, context7);
+      registerEndpoint(context7);
     }
-    function setConnectionAttributes(span, query, context5) {
+    function setConnectionAttributes(span, query, context7) {
       const queryRecord = query;
       if (queryRecord[CONNECTION_ATTRS_SET]) {
         return;
       }
       queryRecord[CONNECTION_ATTRS_SET] = true;
-      core._INTERNAL_setPostgresConnectionAttributes(span, context5);
+      core._INTERNAL_setPostgresConnectionAttributes(span, context7);
     }
     function attachConnectionAttributesFromChannel(message) {
       const connection = message.self;
@@ -148798,9 +148798,9 @@ var require_postgres_js = __commonJS({
         return;
       }
       const span = query[QUERY_SPAN];
-      const context5 = connectionContexts.get(connection);
-      if (span && context5) {
-        setConnectionAttributes(span, query, context5);
+      const context7 = connectionContexts.get(connection);
+      if (span && context7) {
+        setConnectionAttributes(span, query, context7);
       }
     }
     function wrapQuerySettlement(data, span, sanitizedSqlQuery) {
@@ -148897,13 +148897,13 @@ var require_postgres_js = __commonJS({
                   }
                 });
                 query[QUERY_SPAN] = span;
-                const context5 = resolveSingleEndpoint();
-                if (context5) {
-                  setConnectionAttributes(span, query, context5);
+                const context7 = resolveSingleEndpoint();
+                if (context7) {
+                  setConnectionAttributes(span, query, context7);
                 }
                 if (requestHook) {
                   try {
-                    requestHook(span, sanitizedSqlQuery, context5);
+                    requestHook(span, sanitizedSqlQuery, context7);
                   } catch (e) {
                     span.setAttribute("sentry.hook.error", "requestHook failed");
                     debugBuild.DEBUG_BUILD && core.debug.error("[orchestrion:postgresjs] error in requestHook:", e);
@@ -154285,8 +154285,8 @@ var require_dist_node2 = __commonJS({
     function isKeyOperator(operator) {
       return operator === ";" || operator === "&" || operator === "?";
     }
-    function getValues(context5, operator, key, modifier) {
-      var value = context5[key], result = [];
+    function getValues(context7, operator, key, modifier) {
+      var value = context7[key], result = [];
       if (isDefined(value) && value !== "") {
         if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
           value = value.toString();
@@ -154346,7 +154346,7 @@ var require_dist_node2 = __commonJS({
         expand: expand.bind(null, template)
       };
     }
-    function expand(template, context5) {
+    function expand(template, context7) {
       var operators = ["+", "#", ".", "/", ";", "?", "&"];
       return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function(_, expression, literal) {
         if (expression) {
@@ -154358,7 +154358,7 @@ var require_dist_node2 = __commonJS({
           }
           expression.split(/,/g).forEach(function(variable) {
             var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-            values.push(getValues(context5, operator, tmp[1], tmp[2] || tmp[3]));
+            values.push(getValues(context7, operator, tmp[1], tmp[2] || tmp[3]));
           });
           if (operator && operator !== "+") {
             var separator = ",";
@@ -160195,22 +160195,22 @@ var require_lib4 = __commonJS({
           flush2();
         }
         args = args.map((arg) => new exports2.Parser(arg, this.settings));
-        return function(context5) {
+        return function(context7) {
           const innerValues = [];
           for (const arg of args) {
-            innerValues.push(arg.evaluate(context5));
+            innerValues.push(arg.evaluate(context7));
           }
-          return method.call(context5, ...innerValues);
+          return method.call(context7, ...innerValues);
         };
       }
-      evaluate(context5) {
+      evaluate(context7) {
         const parts = this._parts.slice();
         for (let i = parts.length - 2; i >= 0; --i) {
           const part = parts[i];
           if (part && part.type === "operator") {
             const current = parts[i + 1];
             parts.splice(i + 1, 1);
-            const value = internals.evaluate(current, context5);
+            const value = internals.evaluate(current, context7);
             parts[i] = internals.single(part.value, value);
           }
         }
@@ -160218,8 +160218,8 @@ var require_lib4 = __commonJS({
           for (let i = 1; i < parts.length - 1; ) {
             if (set.includes(parts[i])) {
               const operator = parts[i];
-              const left2 = internals.evaluate(parts[i - 1], context5);
-              const right2 = internals.evaluate(parts[i + 1], context5);
+              const left2 = internals.evaluate(parts[i - 1], context7);
+              const right2 = internals.evaluate(parts[i + 1], context7);
               parts.splice(i, 2);
               const result = internals.calculate(operator, left2, right2);
               parts[i - 1] = result === 0 ? 0 : result;
@@ -160228,24 +160228,24 @@ var require_lib4 = __commonJS({
             }
           }
         });
-        return internals.evaluate(parts[0], context5);
+        return internals.evaluate(parts[0], context7);
       }
     };
     exports2.Parser.prototype[internals.symbol] = true;
     internals.reference = function(name) {
-      return function(context5) {
-        return context5 && context5[name] !== void 0 ? context5[name] : null;
+      return function(context7) {
+        return context7 && context7[name] !== void 0 ? context7[name] : null;
       };
     };
-    internals.evaluate = function(part, context5) {
+    internals.evaluate = function(part, context7) {
       if (part === null) {
         return null;
       }
       if (typeof part === "function") {
-        return part(context5);
+        return part(context7);
       }
       if (part[internals.symbol]) {
-        return part.evaluate(context5);
+        return part.evaluate(context7);
       }
       return part;
     };
@@ -160645,11 +160645,11 @@ var require_ref = __commonJS({
       const ref = Object.assign({}, internals.defaults, options);
       delete ref.prefix;
       const separator = ref.separator;
-      const context5 = internals.context(key, separator, options.prefix);
-      ref.type = context5.type;
-      key = context5.key;
+      const context7 = internals.context(key, separator, options.prefix);
+      ref.type = context7.type;
+      key = context7.key;
       if (ref.type === "value") {
-        if (context5.root) {
+        if (context7.root) {
           Assert(!separator || key[0] !== separator, "Cannot specify relative path with root prefix");
           ref.ancestor = "root";
           if (!key) {
@@ -161085,8 +161085,8 @@ var require_template = __commonJS({
         const reference = (variable) => {
           const ref = Ref.create(variable, this._settings);
           refs.push(ref);
-          return (context5) => {
-            const resolved = ref.resolve(...context5);
+          return (context7) => {
+            const resolved = ref.resolve(...context7);
             return resolved !== void 0 ? resolved : null;
           };
         };
@@ -164749,19 +164749,19 @@ var require_alternatives = __commonJS({
             }
           }
           if (matched.length === 0) {
-            const context5 = {
+            const context7 = {
               details: failed.map((f) => Errors.details(f, { override: false }))
             };
-            return { errors: error2("alternatives.any", context5) };
+            return { errors: error2("alternatives.any", context7) };
           }
           if (schema._flags.match === "one") {
             return matched.length === 1 ? { value: matched[0] } : { errors: error2("alternatives.one") };
           }
           if (matched.length !== schema.$_terms.matches.length) {
-            const context5 = {
+            const context7 = {
               details: failed.map((f) => Errors.details(f, { override: false }))
             };
-            return { errors: error2("alternatives.all", context5) };
+            return { errors: error2("alternatives.all", context7) };
           }
           const isAnyObj = (alternative) => {
             return alternative.$_terms.matches.some((v) => {
@@ -165321,32 +165321,32 @@ var require_array2 = __commonJS({
                 while (!(current = entries.next()).done) {
                   if (compare(current.value[0], item)) {
                     const localState = state.localize([...state.path, i], [value, ...state.ancestors]);
-                    const context5 = {
+                    const context7 = {
                       pos: i,
                       value: value[i],
                       dupePos: current.value[1],
                       dupeValue: value[current.value[1]]
                     };
                     if (path) {
-                      context5.path = raw;
+                      context7.path = raw;
                     }
-                    return error2("array.unique", context5, localState);
+                    return error2("array.unique", context7, localState);
                   }
                 }
                 records.set(item, i);
               } else {
                 if ((!ignoreUndefined || item !== void 0) && records[item] !== void 0) {
-                  const context5 = {
+                  const context7 = {
                     pos: i,
                     value: value[i],
                     dupePos: records[item],
                     dupeValue: value[records[item]]
                   };
                   if (path) {
-                    context5.path = raw;
+                    context7.path = raw;
                   }
                   const localState = state.localize([...state.path, i], [value, ...state.ancestors]);
-                  return error2("array.unique", context5, localState);
+                  return error2("array.unique", context7, localState);
                 }
                 records[item] = i;
               }
@@ -166542,10 +166542,10 @@ var require_keys = __commonJS({
         if (!present.length || present.length === 1) {
           return;
         }
-        const context5 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
-        context5.present = present;
-        context5.presentWithLabels = internals.keysToLabels(schema, present);
-        return { code: "object.oxor", context: context5 };
+        const context7 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
+        context7.present = present;
+        context7.presentWithLabels = internals.keysToLabels(schema, present);
+        return { code: "object.oxor", context: context7 };
       },
       with(schema, dep, value, state, prefs) {
         const isPresent = internals.isPresent(dep.options);
@@ -166590,13 +166590,13 @@ var require_keys = __commonJS({
         if (present.length === 1) {
           return;
         }
-        const context5 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
+        const context7 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
         if (present.length === 0) {
-          return { code: "object.missing", context: context5 };
+          return { code: "object.missing", context: context7 };
         }
-        context5.present = present;
-        context5.presentWithLabels = internals.keysToLabels(schema, present);
-        return { code: "object.xor", context: context5 };
+        context7.present = present;
+        context7.presentWithLabels = internals.keysToLabels(schema, present);
+        return { code: "object.xor", context: context7 };
       }
     };
     internals.keysToLabels = function(schema, keys) {
@@ -175351,15 +175351,15 @@ var require_cst_scalar = __commonJS({
       }
       return null;
     }
-    function createScalarToken(value, context5) {
-      const { implicitKey = false, indent, inFlow = false, offset: offset2 = -1, type = "PLAIN" } = context5;
+    function createScalarToken(value, context7) {
+      const { implicitKey = false, indent, inFlow = false, offset: offset2 = -1, type = "PLAIN" } = context7;
       const source = stringifyString.stringifyString({ type, value }, {
         implicitKey,
         indent: indent > 0 ? " ".repeat(indent) : "",
         inFlow,
         options: { blockQuote: true, lineWidth: -1 }
       });
-      const end = context5.end ?? [
+      const end = context7.end ?? [
         { type: "newline", offset: -1, indent, source: "\n" }
       ];
       switch (source[0]) {
@@ -175383,8 +175383,8 @@ var require_cst_scalar = __commonJS({
           return { type: "scalar", offset: offset2, indent, source, end };
       }
     }
-    function setScalarValue(token, value, context5 = {}) {
-      let { afterKey = false, implicitKey = false, inFlow = false, type } = context5;
+    function setScalarValue(token, value, context7 = {}) {
+      let { afterKey = false, implicitKey = false, inFlow = false, type } = context7;
       let indent = "indent" in token ? token.indent : null;
       if (afterKey && typeof indent === "number")
         indent += 2;
@@ -177638,10 +177638,10 @@ var require_agent_api = __commonJS({
       return data;
     };
     exports2.getTestRunDiffsSummaryCounts = getTestRunDiffsSummaryCounts;
-    var getScreenshotDomDiff = async (client, replayDiffId, screenshotName, context5) => {
+    var getScreenshotDomDiff = async (client, replayDiffId, screenshotName, context7) => {
       const params = {};
-      if (context5 != null) {
-        params.context = context5;
+      if (context7 != null) {
+        params.context = context7;
       }
       const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/dom-diff`, { params }).catch((error2) => {
         throw (0, errors_1.maybeEnrichFetchError)(error2);
@@ -197723,7 +197723,7 @@ var require_network = __commonJS({
     var os = require("os");
     var exec = require("child_process").exec;
     var execSync = require("child_process").execSync;
-    var execFileSync2 = require("child_process").execFileSync;
+    var execFileSync3 = require("child_process").execFileSync;
     var readFileSync4 = require("fs").readFileSync;
     var fs = require("fs");
     var util = require_util21();
@@ -198194,7 +198194,7 @@ var require_network = __commonJS({
     }
     function getLinuxIfaceConnectionName(interfaceName) {
       try {
-        const output = execFileSync2("nmcli", ["device", "status"], { ...util.execOptsLinux, stdio: ["ignore", "pipe", "ignore"] }).toString();
+        const output = execFileSync3("nmcli", ["device", "status"], { ...util.execOptsLinux, stdio: ["ignore", "pipe", "ignore"] }).toString();
         const result = util.grep(output, interfaceName);
         const resultFormat = result.replace(/\s+/g, " ").trim();
         const connectionNameLines = resultFormat.split(" ").slice(3);
@@ -198273,7 +198273,7 @@ var require_network = __commonJS({
       let result = false;
       if (connectionName) {
         try {
-          const output = execFileSync2("nmcli", ["connection", "show", connectionName], { ...util.execOptsLinux, stdio: ["ignore", "pipe", "ignore"] }).toString();
+          const output = execFileSync3("nmcli", ["connection", "show", connectionName], { ...util.execOptsLinux, stdio: ["ignore", "pipe", "ignore"] }).toString();
           const lines = util.grep(output, "ipv4.method");
           const resultFormat = lines.replace(/\s+/g, " ").trim();
           const dhcStatus = resultFormat.split(" ").slice(1).toString();
@@ -198296,7 +198296,7 @@ var require_network = __commonJS({
     function getDarwinIfaceDHCPstatus(iface) {
       let result = false;
       try {
-        const output = execFileSync2("ipconfig", ["getpacket", iface], { ...util.execOptsLinux, stdio: ["ignore", "pipe", "ignore"] }).toString();
+        const output = execFileSync3("ipconfig", ["getpacket", iface], { ...util.execOptsLinux, stdio: ["ignore", "pipe", "ignore"] }).toString();
         const lines = util.grep(output, "lease_time");
         if (lines.length && lines[0].startsWith("lease_time")) {
           result = true;
@@ -198309,7 +198309,7 @@ var require_network = __commonJS({
     function getLinuxIfaceDNSsuffix(connectionName) {
       if (connectionName) {
         try {
-          const output = execFileSync2("nmcli", ["connection", "show", connectionName], { ...util.execOptsLinux, stdio: ["ignore", "pipe", "ignore"] }).toString();
+          const output = execFileSync3("nmcli", ["connection", "show", connectionName], { ...util.execOptsLinux, stdio: ["ignore", "pipe", "ignore"] }).toString();
           const result = util.grep(output, "ipv4.dns-search");
           const resultFormat = result.replace(/\s+/g, " ").trim();
           const dnsSuffix = resultFormat.split(" ").slice(1).toString();
@@ -198324,7 +198324,7 @@ var require_network = __commonJS({
     function getLinuxIfaceIEEE8021xAuth(connectionName) {
       if (connectionName) {
         try {
-          const output = execFileSync2("nmcli", ["connection", "show", connectionName], { ...util.execOptsLinux, stdio: ["ignore", "pipe", "ignore"] }).toString();
+          const output = execFileSync3("nmcli", ["connection", "show", connectionName], { ...util.execOptsLinux, stdio: ["ignore", "pipe", "ignore"] }).toString();
           const result = util.grep(output, "802-1x.eap");
           const resultFormat = result.replace(/\s+/g, " ").trim();
           const authenticationProtocol = resultFormat.split(" ").slice(1).toString();
@@ -229449,7 +229449,7 @@ var require_modem = __commonJS({
       this.socketPathCache = socketPathValue;
       return Promise.resolve(socketPathValue);
     };
-    Modem.prototype.buildRequest = function(options, context5, data, callback) {
+    Modem.prototype.buildRequest = function(options, context7, data, callback) {
       var self2 = this;
       var connectionTimeoutTimer;
       var finished = false;
@@ -229487,7 +229487,7 @@ var require_modem = __commonJS({
           req.destroy();
         });
       }
-      if (context5.hijack === true) {
+      if (context7.hijack === true) {
         clearTimeout(connectionTimeoutTimer);
         req.on("upgrade", function(res, sock, head) {
           if (finished === false) {
@@ -229507,10 +229507,10 @@ var require_modem = __commonJS({
       });
       req.on("response", function(res) {
         clearTimeout(connectionTimeoutTimer);
-        if (context5.isStream === true) {
+        if (context7.isStream === true) {
           if (finished === false) {
             finished = true;
-            self2.buildPayload(null, context5.isStream, context5.statusCodes, context5.openStdin, req, res, null, callback);
+            self2.buildPayload(null, context7.isStream, context7.statusCodes, context7.openStdin, req, res, null, callback);
           }
         } else {
           if (options.signal != null) {
@@ -229527,7 +229527,7 @@ var require_modem = __commonJS({
             var json = utils.parseJSON(result) || buffer;
             if (finished === false) {
               finished = true;
-              self2.buildPayload(null, context5.isStream, context5.statusCodes, false, req, res, json, callback);
+              self2.buildPayload(null, context7.isStream, context7.statusCodes, false, req, res, json, callback);
             }
           });
         }
@@ -229536,7 +229536,7 @@ var require_modem = __commonJS({
         clearTimeout(connectionTimeoutTimer);
         if (finished === false) {
           finished = true;
-          self2.buildPayload(error2, context5.isStream, context5.statusCodes, false, {}, {}, null, callback);
+          self2.buildPayload(error2, context7.isStream, context7.statusCodes, false, {}, {}, null, callback);
         }
       });
       if (typeof data === "string" || Buffer.isBuffer(data)) {
@@ -229547,7 +229547,7 @@ var require_modem = __commonJS({
         });
         data.pipe(req);
       }
-      if (!context5.openStdin && (typeof data === "string" || data === void 0 || Buffer.isBuffer(data))) {
+      if (!context7.openStdin && (typeof data === "string" || data === void 0 || Buffer.isBuffer(data))) {
         req.end();
       }
     };
@@ -237426,14 +237426,14 @@ ${callerStack}`;
       }
       _write(chunk, encoding, cb) {
         var _a2;
-        const context5 = {
+        const context7 = {
           callback: cb
         };
         const flags = Number(encoding);
         if (!Number.isNaN(flags)) {
-          context5.flags = flags;
+          context7.flags = flags;
         }
-        (_a2 = this.call) === null || _a2 === void 0 ? void 0 : _a2.sendMessageWithContext(context5, chunk);
+        (_a2 = this.call) === null || _a2 === void 0 ? void 0 : _a2.sendMessageWithContext(context7, chunk);
       }
       _final(cb) {
         var _a2;
@@ -237466,14 +237466,14 @@ ${callerStack}`;
       }
       _write(chunk, encoding, cb) {
         var _a2;
-        const context5 = {
+        const context7 = {
           callback: cb
         };
         const flags = Number(encoding);
         if (!Number.isNaN(flags)) {
-          context5.flags = flags;
+          context7.flags = flags;
         }
-        (_a2 = this.call) === null || _a2 === void 0 ? void 0 : _a2.sendMessageWithContext(context5, chunk);
+        (_a2 = this.call) === null || _a2 === void 0 ? void 0 : _a2.sendMessageWithContext(context7, chunk);
       }
       _final(cb) {
         var _a2;
@@ -237743,15 +237743,15 @@ var require_client_interceptors = __commonJS({
         });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context7, message) {
         this.processingMessage = true;
         this.requester.sendMessage(message, (finalMessage) => {
           this.processingMessage = false;
           if (this.processingMetadata) {
-            this.pendingMessageContext = context5;
+            this.pendingMessageContext = context7;
             this.pendingMessage = message;
           } else {
-            this.nextCall.sendMessageWithContext(context5, finalMessage);
+            this.nextCall.sendMessageWithContext(context7, finalMessage);
             this.processPendingHalfClose();
           }
         });
@@ -237802,7 +237802,7 @@ var require_client_interceptors = __commonJS({
         return this.call.getPeer();
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context7, message) {
         let serialized;
         try {
           serialized = this.methodDefinition.requestSerialize(message);
@@ -237810,7 +237810,7 @@ var require_client_interceptors = __commonJS({
           this.call.cancelWithStatus(constants_1.Status.INTERNAL, `Request message serialization failure: ${(0, error_1.getErrorMessage)(e)}`);
           return;
         }
-        this.call.sendMessageWithContext(context5, serialized);
+        this.call.sendMessageWithContext(context7, serialized);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       sendMessage(message) {
@@ -249236,17 +249236,17 @@ var require_single_subchannel_channel = __commonJS({
           this.childCall.halfClose();
         }
       }
-      async sendMessageWithContext(context5, message) {
+      async sendMessageWithContext(context7, message) {
         this.writeFilterPending = true;
-        const filteredMessage = await this.filterStack.sendMessage(Promise.resolve({ message, flags: context5.flags }));
+        const filteredMessage = await this.filterStack.sendMessage(Promise.resolve({ message, flags: context7.flags }));
         this.writeFilterPending = false;
         if (this.childCall) {
-          this.childCall.sendMessageWithContext(context5, filteredMessage.message);
+          this.childCall.sendMessageWithContext(context7, filteredMessage.message);
           if (this.halfClosePending) {
             this.childCall.halfClose();
           }
         } else {
-          this.pendingMessage = { context: context5, message: filteredMessage.message };
+          this.pendingMessage = { context: context7, message: filteredMessage.message };
         }
       }
       startRead() {
@@ -250629,7 +250629,7 @@ var require_subchannel_call = __commonJS({
         }
         this.http2Stream.resume();
       }
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context7, message) {
         this.trace("write() called with message of length " + message.length);
         const cb = (error2) => {
           process.nextTick(() => {
@@ -250641,7 +250641,7 @@ var require_subchannel_call = __commonJS({
             if (error2) {
               this.cancelWithStatus(code, `Write error: ${error2.message}`);
             }
-            (_a2 = context5.callback) === null || _a2 === void 0 ? void 0 : _a2.call(context5);
+            (_a2 = context7.callback) === null || _a2 === void 0 ? void 0 : _a2.call(context7);
           });
         };
         this.trace("sending data chunk of length " + message.length);
@@ -251492,12 +251492,12 @@ var require_load_balancing_call = __commonJS({
         this.metadata = metadata;
         this.doPick();
       }
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context7, message) {
         this.trace("write() called with message of length " + message.length);
         if (this.child) {
-          this.child.sendMessageWithContext(context5, message);
+          this.child.sendMessageWithContext(context7, message);
         } else {
-          this.pendingMessage = { context: context5, message };
+          this.pendingMessage = { context: context7, message };
         }
       }
       startRead() {
@@ -251647,15 +251647,15 @@ var require_resolving_call = __commonJS({
           });
         }
       }
-      sendMessageOnChild(context5, message) {
+      sendMessageOnChild(context7, message) {
         if (!this.child) {
           throw new Error("sendMessageonChild called with child not populated");
         }
         const child = this.child;
         this.writeFilterPending = true;
-        this.filterStack.sendMessage(Promise.resolve({ message, flags: context5.flags })).then((filteredMessage) => {
+        this.filterStack.sendMessage(Promise.resolve({ message, flags: context7.flags })).then((filteredMessage) => {
           this.writeFilterPending = false;
-          child.sendMessageWithContext(context5, filteredMessage.message);
+          child.sendMessageWithContext(context7, filteredMessage.message);
           if (this.pendingHalfClose) {
             child.halfClose();
           }
@@ -251774,12 +251774,12 @@ var require_resolving_call = __commonJS({
         this.listener = listener;
         this.getConfig();
       }
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context7, message) {
         this.trace("write() called with message of length " + message.length);
         if (this.child) {
-          this.sendMessageOnChild(context5, message);
+          this.sendMessageOnChild(context7, message);
         } else {
-          this.pendingMessage = { context: context5, message };
+          this.pendingMessage = { context: context7, message };
         }
       }
       startRead() {
@@ -252355,11 +252355,11 @@ var require_retrying_call = __commonJS({
           }
         }
       }
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context7, message) {
         this.trace("write() called with message of length " + message.length);
         const writeObj = {
           message,
-          flags: context5.flags
+          flags: context7.flags
         };
         const messageIndex = this.getNextBufferIndex();
         const bufferEntry = {
@@ -252371,7 +252371,7 @@ var require_retrying_call = __commonJS({
         if (bufferEntry.allocated) {
           process.nextTick(() => {
             var _a2;
-            (_a2 = context5.callback) === null || _a2 === void 0 ? void 0 : _a2.call(context5);
+            (_a2 = context7.callback) === null || _a2 === void 0 ? void 0 : _a2.call(context7);
           });
           for (const [callIndex, call] of this.underlyingCalls.entries()) {
             if (call.state === "ACTIVE" && call.nextMessageToSend === messageIndex) {
@@ -252388,7 +252388,7 @@ var require_retrying_call = __commonJS({
             return;
           }
           const call = this.underlyingCalls[this.committedCallIndex];
-          bufferEntry.callback = context5.callback;
+          bufferEntry.callback = context7.callback;
           if (call.state === "ACTIVE" && call.nextMessageToSend === messageIndex) {
             call.call.sendMessageWithContext({
               callback: (error2) => {
@@ -254744,17 +254744,17 @@ var require_server2 = __commonJS({
       var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
       var _, done = false;
       for (var i = decorators.length - 1; i >= 0; i--) {
-        var context5 = {};
+        var context7 = {};
         for (var p in contextIn)
-          context5[p] = p === "access" ? {} : contextIn[p];
+          context7[p] = p === "access" ? {} : contextIn[p];
         for (var p in contextIn.access)
-          context5.access[p] = contextIn.access[p];
-        context5.addInitializer = function(f) {
+          context7.access[p] = contextIn.access[p];
+        context7.addInitializer = function(f) {
           if (done)
             throw new TypeError("Cannot add initializers after decoration has completed");
           extraInitializers.push(accept(f || null));
         };
-        var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context5);
+        var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context7);
         if (kind === "accessor") {
           if (result === void 0)
             continue;
@@ -254803,7 +254803,7 @@ var require_server2 = __commonJS({
     function noop() {
     }
     function deprecate(message) {
-      return function(target, context5) {
+      return function(target, context7) {
         return util.deprecate(target, message);
       };
     }
@@ -261843,59 +261843,59 @@ function timestampInSeconds() {
 }
 
 // node_modules/.pnpm/@sentry+core@9.47.1/node_modules/@sentry/core/build/esm/session.js
-function updateSession(session, context5 = {}) {
-  if (context5.user) {
-    if (!session.ipAddress && context5.user.ip_address) {
-      session.ipAddress = context5.user.ip_address;
+function updateSession(session, context7 = {}) {
+  if (context7.user) {
+    if (!session.ipAddress && context7.user.ip_address) {
+      session.ipAddress = context7.user.ip_address;
     }
-    if (!session.did && !context5.did) {
-      session.did = context5.user.id || context5.user.email || context5.user.username;
+    if (!session.did && !context7.did) {
+      session.did = context7.user.id || context7.user.email || context7.user.username;
     }
   }
-  session.timestamp = context5.timestamp || timestampInSeconds();
-  if (context5.abnormal_mechanism) {
-    session.abnormal_mechanism = context5.abnormal_mechanism;
+  session.timestamp = context7.timestamp || timestampInSeconds();
+  if (context7.abnormal_mechanism) {
+    session.abnormal_mechanism = context7.abnormal_mechanism;
   }
-  if (context5.ignoreDuration) {
-    session.ignoreDuration = context5.ignoreDuration;
+  if (context7.ignoreDuration) {
+    session.ignoreDuration = context7.ignoreDuration;
   }
-  if (context5.sid) {
-    session.sid = context5.sid.length === 32 ? context5.sid : uuid4();
+  if (context7.sid) {
+    session.sid = context7.sid.length === 32 ? context7.sid : uuid4();
   }
-  if (context5.init !== void 0) {
-    session.init = context5.init;
+  if (context7.init !== void 0) {
+    session.init = context7.init;
   }
-  if (!session.did && context5.did) {
-    session.did = `${context5.did}`;
+  if (!session.did && context7.did) {
+    session.did = `${context7.did}`;
   }
-  if (typeof context5.started === "number") {
-    session.started = context5.started;
+  if (typeof context7.started === "number") {
+    session.started = context7.started;
   }
   if (session.ignoreDuration) {
     session.duration = void 0;
-  } else if (typeof context5.duration === "number") {
-    session.duration = context5.duration;
+  } else if (typeof context7.duration === "number") {
+    session.duration = context7.duration;
   } else {
     const duration = session.timestamp - session.started;
     session.duration = duration >= 0 ? duration : 0;
   }
-  if (context5.release) {
-    session.release = context5.release;
+  if (context7.release) {
+    session.release = context7.release;
   }
-  if (context5.environment) {
-    session.environment = context5.environment;
+  if (context7.environment) {
+    session.environment = context7.environment;
   }
-  if (!session.ipAddress && context5.ipAddress) {
-    session.ipAddress = context5.ipAddress;
+  if (!session.ipAddress && context7.ipAddress) {
+    session.ipAddress = context7.ipAddress;
   }
-  if (!session.userAgent && context5.userAgent) {
-    session.userAgent = context5.userAgent;
+  if (!session.userAgent && context7.userAgent) {
+    session.userAgent = context7.userAgent;
   }
-  if (typeof context5.errors === "number") {
-    session.errors = context5.errors;
+  if (typeof context7.errors === "number") {
+    session.errors = context7.errors;
   }
-  if (context5.status) {
-    session.status = context5.status;
+  if (context7.status) {
+    session.status = context7.status;
   }
 }
 
@@ -262152,11 +262152,11 @@ var Scope = class _Scope {
    * Data passed as context will be normalized. You can also pass `null` to unset the context.
    * Note that context data will not be merged - calling `setContext` will overwrite an existing context with the same key.
    */
-  setContext(key, context5) {
-    if (context5 === null) {
+  setContext(key, context7) {
+    if (context7 === null) {
       delete this._contexts[key];
     } else {
-      this._contexts[key] = context5;
+      this._contexts[key] = context7;
     }
     this._notifyScopeListeners();
     return this;
@@ -262310,8 +262310,8 @@ var Scope = class _Scope {
   /**
    * Add propagation context to the scope, used for distributed tracing
    */
-  setPropagationContext(context5) {
-    this._propagationContext = context5;
+  setPropagationContext(context7) {
+    this._propagationContext = context7;
     return this;
   }
   /**
@@ -263674,8 +263674,8 @@ function hintIsScopeContext(hint) {
 function captureException(exception, hint) {
   return getCurrentScope().captureException(exception, parseEventHintOrCaptureContext(hint));
 }
-function setContext(name, context5) {
-  getIsolationScope().setContext(name, context5);
+function setContext(name, context7) {
+  getIsolationScope().setContext(name, context7);
 }
 function setTags(tags) {
   getIsolationScope().setTags(tags);
@@ -263785,136 +263785,11 @@ function enrichSentryContextWithGitHubActionsContext() {
   }
 }
 
-// src/common/get-base-and-head-commit-shas.ts
+// src/common/get-actual-commit-sha.ts
 var import_child_process = require("child_process");
 var import_github = __toESM(require_github());
-var getBaseAndHeadCommitShas = async (event, options, logger) => {
-  if (event.type === "pull_request") {
-    const head = event.payload.pull_request.head.sha;
-    const base = event.payload.pull_request.base.sha;
-    const baseRef = event.payload.pull_request.base.ref;
-    if (options.useDeploymentUrl) {
-      return {
-        base: await tryGetMergeBaseOfHeadCommit(head, base, baseRef, logger) ?? base,
-        head
-      };
-    }
-    return {
-      base: await tryGetMergeBaseOfTemporaryMergeCommit(
-        head,
-        base,
-        baseRef,
-        logger
-      ) ?? base,
-      head
-    };
-  }
-  if (event.type === "push") {
-    return {
-      base: event.payload.before,
-      head: event.payload.after
-    };
-  }
-  if (event.type === "workflow_dispatch") {
-    return {
-      base: null,
-      head: import_github.context.sha
-    };
-  }
-  return assertNever(event);
-};
-var assertNever = (event) => {
-  throw new Error("Unexpected event: " + JSON.stringify(event));
-};
-var tryGetMergeBaseOfHeadCommit = (pullRequestHeadSha, pullRequestBaseSha, baseRef, logger) => {
-  try {
-    markGitDirectoryAsSafe();
-    (0, import_child_process.execFileSync)("git", ["fetch", "origin", pullRequestHeadSha, "--unshallow"]);
-    (0, import_child_process.execFileSync)("git", ["fetch", "origin", "--", baseRef]);
-    const mergeBase = (0, import_child_process.execFileSync)("git", [
-      "merge-base",
-      pullRequestHeadSha,
-      `origin/${baseRef}`
-    ]).toString().trim();
-    if (!isValidGitSha(mergeBase)) {
-      logger.error(
-        `Failed to get merge base of ${pullRequestHeadSha} and ${baseRef}: value returned by 'git merge-base' was not a valid git SHA ('${mergeBase}').Using the base of the pull request instead (${pullRequestBaseSha}).`
-      );
-      return null;
-    }
-    return mergeBase;
-  } catch (error2) {
-    logger.error(
-      `Failed to get merge base of ${pullRequestHeadSha} and ${baseRef}. Error: ${error2}. Using the base of the pull request instead (${pullRequestBaseSha}).`
-    );
-    return null;
-  }
-};
 var getActualCommitShaFromRepo = () => {
   return (0, import_child_process.execFileSync)("git", ["rev-list", "--max-count=1", "HEAD"]).toString().trim();
-};
-var tryGetMergeBaseOfTemporaryMergeCommit = (pullRequestHeadSha, pullRequestBaseSha, pullRequestBaseRef, logger) => {
-  const mergeCommitSha = process.env.GITHUB_SHA;
-  if (mergeCommitSha == null) {
-    logger.error(
-      `No GITHUB_SHA environment var set, so can't work out true base of the merge commit. Using the base of the pull request instead (${pullRequestBaseSha}).`
-    );
-    return null;
-  }
-  try {
-    markGitDirectoryAsSafe();
-    const headCommitSha = getActualCommitShaFromRepo();
-    if (headCommitSha !== mergeCommitSha) {
-      logger.info(
-        `The head commit SHA (${headCommitSha}) does not equal GITHUB_SHA environment variable (${mergeCommitSha}).
-          This is likely because a custom ref has been passed to the 'actions/checkout' action. We're assuming therefore
-          that the head commit SHA is not a temporary merge commit, but rather the head of the branch. Therefore we're
-          using the branching point of the PR branch to compare the visual snapshots against, and not the base
-          of GitHub's temporary merge commit.`
-      );
-      return tryGetMergeBaseOfHeadCommit(
-        headCommitSha,
-        pullRequestBaseSha,
-        pullRequestBaseRef,
-        logger
-      );
-    }
-    const parents = (0, import_child_process.execFileSync)("git", ["cat-file", "-p", mergeCommitSha]).toString().split("\n").filter((line) => line.startsWith("parent ")).map((line) => line.substring("parent ".length).trim());
-    if (parents.length !== 2) {
-      logger.error(
-        `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit. Using the base of the pull request instead.`
-      );
-      return null;
-    }
-    const mergeBaseSha = parents[0];
-    const mergeHeadSha = parents[1];
-    if (mergeHeadSha !== pullRequestHeadSha) {
-      logger.error(
-        `The second parent (${parents[1]}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
-        so can not confidently determine the base of the merge commit to compare against. Using the base of the pull request instead (${pullRequestBaseSha}).`
-      );
-      return null;
-    }
-    return mergeBaseSha;
-  } catch (e) {
-    logger.error(
-      `Error getting base of merge commit (${mergeCommitSha}). Using the base of the pull request instead (${pullRequestBaseSha}).`,
-      e
-    );
-    return null;
-  }
-};
-var markGitDirectoryAsSafe = () => {
-  (0, import_child_process.execFileSync)("git", [
-    "config",
-    "--global",
-    "--add",
-    "safe.directory",
-    process.cwd()
-  ]);
-};
-var isValidGitSha = (sha) => {
-  return /^[a-f0-9]{40}$/.test(sha);
 };
 
 // src/actions/cloud-compute/get-head-commit-sha.ts
@@ -264036,7 +263911,7 @@ var getInCloudActionInputs = () => {
 };
 
 // src/actions/cloud-compute/run-test-run.ts
-var import_github3 = __toESM(require_github());
+var import_github5 = __toESM(require_github());
 var import_client2 = __toESM(require_dist16());
 var import_common3 = __toESM(require_dist12());
 var import_remote_replay_launcher = __toESM(require_dist18());
@@ -270676,14 +270551,14 @@ var ALL_REQUIRED_PERMISSIONS = [
   "pull-requests: write",
   "statuses: read"
 ];
-var getDetailedGitHubPermissionsError = (error2, context5) => {
+var getDetailedGitHubPermissionsError = (error2, context7) => {
   if (!isGithubPermissionsError(error2)) {
     return getErrorMessage(error2);
   }
   const acceptedPermissions = error2?.response?.headers?.["x-accepted-github-permissions"];
   const apiUrl = error2?.response?.url;
   let message = "GitHub API Error: Resource not accessible by integration (403)\n\n";
-  switch (context5.operation) {
+  switch (context7.operation) {
     case "get_workflow_run":
       message += "Failed to retrieve workflow run information.\n";
       message += "This typically happens when:\n";
@@ -270703,6 +270578,12 @@ var getDetailedGitHubPermissionsError = (error2, context5) => {
       message += "1. The GitHub token doesn't have 'contents: read' permission\n";
       message += "2. The branch is protected and requires additional permissions\n";
       break;
+    case "compare_commits":
+      message += "Failed to compare commits to resolve the merge base.\n";
+      message += "This typically happens when:\n";
+      message += "1. The GitHub token doesn't have 'contents: read' permission\n";
+      message += "2. One of the commits is not reachable with the current token\n";
+      break;
     case "comment":
       message += "Failed to create or update PR comment.\n";
       message += "This typically happens when:\n";
@@ -270712,7 +270593,7 @@ var getDetailedGitHubPermissionsError = (error2, context5) => {
   }
   message += "\n**To fix this issue:**\n\n";
   message += getCommonPermissionsErrorMessage();
-  if (context5.operation === "trigger_workflow") {
+  if (context7.operation === "trigger_workflow") {
     message += "Also ensure your workflow has the 'workflow_dispatch' trigger:\n\n";
     message += "```yaml\n";
     message += "on:\n";
@@ -270776,11 +270657,11 @@ var WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL = Duration.fromObject({ hours: 1 });
 var GITHUB_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 var MAX_WORKFLOW_RUNS_TO_SEARCH = 500;
 var getCurrentWorkflowId = async ({
-  context: context5,
+  context: context7,
   octokit
 }) => {
-  const { owner, repo } = context5.repo;
-  const workflowRunId = context5.runId;
+  const { owner, repo } = context7.repo;
+  const workflowRunId = context7.runId;
   try {
     const { data } = await octokit.rest.actions.getWorkflowRun({
       owner,
@@ -271101,12 +270982,12 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     logger,
     event,
     base,
-    context: context5,
+    context: context7,
     octokit,
     dispatchedRunReportsCheckedOutCommit
   } = opts;
-  const { owner, repo } = context5.repo;
-  const { workflowId } = await getCurrentWorkflowId({ context: context5, octokit });
+  const { owner, repo } = context7.repo;
+  const { workflowId } = await getCurrentWorkflowId({ context: context7, octokit });
   const alreadyPending = await getPendingWorkflowRun({
     owner,
     repo,
@@ -271414,6 +271295,170 @@ ${detailedError}`
 var SHORT_SHA_LENGTH = 7;
 var shortCommitSha = (sha) => sha.substring(0, SHORT_SHA_LENGTH);
 
+// src/common/get-base-and-head-commit-shas.ts
+var import_child_process2 = require("child_process");
+var import_github3 = __toESM(require_github());
+
+// src/common/get-merge-base-via-compare-api.ts
+var import_github2 = __toESM(require_github());
+var tryGetMergeBaseViaCompareApi = async ({
+  headSha,
+  baseRef,
+  pullRequestBaseSha,
+  octokit,
+  logger
+}) => {
+  const { owner, repo } = import_github2.context.repo;
+  try {
+    const { data } = await octokit.rest.repos.compareCommits({
+      owner,
+      repo,
+      base: baseRef,
+      head: headSha
+    });
+    const mergeBase = data.merge_base_commit?.sha;
+    if (mergeBase == null || !isValidGitSha(mergeBase)) {
+      logger.error(
+        `Failed to get merge base of ${headSha} and ${baseRef} via the GitHub compare API: merge_base_commit.sha was not a valid git SHA ('${mergeBase}'). Using the base of the pull request instead (${pullRequestBaseSha}).`
+      );
+      return null;
+    }
+    return mergeBase;
+  } catch (error2) {
+    if (isGithubPermissionsError(error2)) {
+      const detailedError = getDetailedGitHubPermissionsError(error2, {
+        operation: "compare_commits",
+        requiredPermissions: ["contents: read"]
+      });
+      logger.error(
+        `Missing permission to compare ${headSha} with ${baseRef}. This is required in order to calculate the merge base.
+
+${detailedError}`
+      );
+      return null;
+    }
+    logger.error(
+      `Failed to get merge base of ${headSha} and ${baseRef} via the GitHub compare API. Error: ${error2}. Using the base of the pull request instead (${pullRequestBaseSha}).`
+    );
+    return null;
+  }
+};
+var isValidGitSha = (sha) => {
+  return /^[a-f0-9]{40}$/.test(sha);
+};
+
+// src/common/get-base-and-head-commit-shas.ts
+var getBaseAndHeadCommitShas = async (event, options, logger) => {
+  if (event.type === "pull_request") {
+    const head = event.payload.pull_request.head.sha;
+    const base = event.payload.pull_request.base.sha;
+    const baseRef = event.payload.pull_request.base.ref;
+    const mergeBaseOpts = {
+      pullRequestHeadSha: head,
+      pullRequestBaseSha: base,
+      baseRef,
+      octokit: options.octokit,
+      logger
+    };
+    if (options.useDeploymentUrl) {
+      return {
+        base: await tryGetMergeBaseViaCompareApi({
+          headSha: head,
+          baseRef,
+          pullRequestBaseSha: base,
+          octokit: options.octokit,
+          logger
+        }) ?? base,
+        head
+      };
+    }
+    return {
+      base: await tryGetMergeBaseOfTemporaryMergeCommit(mergeBaseOpts) ?? base,
+      head
+    };
+  }
+  if (event.type === "push") {
+    return {
+      base: event.payload.before,
+      head: event.payload.after
+    };
+  }
+  if (event.type === "workflow_dispatch") {
+    return {
+      base: null,
+      head: import_github3.context.sha
+    };
+  }
+  return assertNever(event);
+};
+var assertNever = (event) => {
+  throw new Error("Unexpected event: " + JSON.stringify(event));
+};
+var tryGetMergeBaseOfTemporaryMergeCommit = async ({
+  pullRequestHeadSha,
+  pullRequestBaseSha,
+  baseRef,
+  octokit,
+  logger
+}) => {
+  const mergeBaseFromCompare = (headSha) => tryGetMergeBaseViaCompareApi({
+    headSha,
+    baseRef,
+    pullRequestBaseSha,
+    octokit,
+    logger
+  });
+  const mergeCommitSha = process.env.GITHUB_SHA;
+  if (mergeCommitSha == null) {
+    return mergeBaseFromCompare(pullRequestHeadSha);
+  }
+  try {
+    markGitDirectoryAsSafe();
+    const headCommitSha = getActualCommitShaFromRepo();
+    if (headCommitSha !== mergeCommitSha) {
+      logger.info(
+        `The head commit SHA (${headCommitSha}) does not equal GITHUB_SHA environment variable (${mergeCommitSha}).
+          This is likely because a custom ref has been passed to the 'actions/checkout' action. We're assuming therefore
+          that the head commit SHA is not a temporary merge commit, but rather the head of the branch. Therefore we're
+          using the branching point of the PR branch to compare the visual snapshots against, and not the base
+          of GitHub's temporary merge commit.`
+      );
+      return mergeBaseFromCompare(headCommitSha);
+    }
+    const parents = (0, import_child_process2.execFileSync)("git", ["cat-file", "-p", mergeCommitSha]).toString().split("\n").filter((line) => line.startsWith("parent ")).map((line) => line.substring("parent ".length).trim());
+    if (parents.length !== 2) {
+      logger.error(
+        `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit from its parents. Falling back to the GitHub compare API.`
+      );
+      return mergeBaseFromCompare(pullRequestHeadSha);
+    }
+    const mergeBaseSha = parents[0];
+    const mergeHeadSha = parents[1];
+    if (mergeHeadSha !== pullRequestHeadSha) {
+      logger.error(
+        `The second parent (${parents[1]}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
+        so can not confidently determine the base of the merge commit from its parents. Falling back to the GitHub compare API.`
+      );
+      return mergeBaseFromCompare(pullRequestHeadSha);
+    }
+    return mergeBaseSha;
+  } catch (e) {
+    logger.info(
+      `Could not read the merge commit (${mergeCommitSha}) from the local git repository (${e}). Falling back to the GitHub compare API.`
+    );
+    return mergeBaseFromCompare(pullRequestHeadSha);
+  }
+};
+var markGitDirectoryAsSafe = () => {
+  (0, import_child_process2.execFileSync)("git", [
+    "config",
+    "--global",
+    "--add",
+    "safe.directory",
+    process.cwd()
+  ]);
+};
+
 // src/common/get-code-change-event.ts
 var getCodeChangeEvent = (eventName, payload) => {
   if (eventName === "push") {
@@ -271437,7 +271482,7 @@ var isDebugPullRequestRun = (event) => {
 };
 
 // src/common/octokit.ts
-var import_github2 = __toESM(require_github());
+var import_github4 = __toESM(require_github());
 var import_common2 = __toESM(require_dist12());
 var import_loglevel2 = __toESM(require_loglevel());
 var getOctokitOrFail = (githubToken) => {
@@ -271445,7 +271490,7 @@ var getOctokitOrFail = (githubToken) => {
     throw new Error("github-token is required");
   }
   try {
-    return (0, import_github2.getOctokit)(githubToken);
+    return (0, import_github4.getOctokit)(githubToken);
   } catch (err) {
     const logger = import_loglevel2.default.getLogger(import_common2.METICULOUS_LOGGER_NAME);
     logger.error(err);
@@ -271547,9 +271592,9 @@ var runOneTestRun = async ({
   companionAssetsFolder,
   companionAssetsRegex
 }) => {
-  const { payload } = import_github3.context;
-  const event = getCodeChangeEvent(import_github3.context.eventName, payload);
-  const { owner, repo } = import_github3.context.repo;
+  const { payload } = import_github5.context;
+  const event = getCodeChangeEvent(import_github5.context.eventName, payload);
+  const { owner, repo } = import_github5.context.repo;
   const pullRequestId = getPullRequestId(event);
   const isDebugPRRun = isDebugPullRequestRun(event);
   const octokit = getOctokitOrFail(githubToken);
@@ -271568,7 +271613,7 @@ var runOneTestRun = async ({
   );
   if (event == null) {
     logger.warn(
-      `Running report-diffs-action is only supported for 'push',       'pull_request' and 'workflow_dispatch' events, but was triggered       on a '${import_github3.context.eventName}' event. Skipping execution.`
+      `Running report-diffs-action is only supported for 'push',       'pull_request' and 'workflow_dispatch' events, but was triggered       on a '${import_github5.context.eventName}' event. Skipping execution.`
     );
     return;
   }
@@ -271592,7 +271637,8 @@ var runOneTestRun = async ({
     const { base: codeChangeBase } = await getBaseAndHeadCommitShas(
       event,
       {
-        useDeploymentUrl: false
+        useDeploymentUrl: false,
+        octokit
       },
       logger
     );
@@ -271609,7 +271655,7 @@ var runOneTestRun = async ({
           });
           return baseTestRun2;
         },
-        context: import_github3.context,
+        context: import_github5.context,
         octokit
       });
       baseResolutionDetails = resolutionDetails;

@@ -120580,7 +120580,7 @@ var getCommentIdentifier = (testSuiteOrProjectId) => {
   return `<!--- alwaysmeticulous/report-diffs-action/status-comment/${testSuiteOrProjectId}`;
 };
 
-// src/common/get-base-and-head-commit-shas.ts
+// src/common/get-actual-commit-sha.ts
 var import_child_process = require("child_process");
 var import_github4 = __toESM(require_github());
 var getActualCommitShaFromRepo = () => {

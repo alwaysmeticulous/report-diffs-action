@@ -35,7 +35,12 @@ type MaybeOctokitRequestError =
 export const DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE = `Please check www.githubstatus.com, and that you have setup the action correctly, including with the correct permissions: see ${DOCS_URL} for the correct setup.`;
 
 export type GitHubPermissionsErrorContext = {
-  operation: "get_workflow_run" | "trigger_workflow" | "get_branch" | "comment";
+  operation:
+    | "get_workflow_run"
+    | "trigger_workflow"
+    | "get_branch"
+    | "compare_commits"
+    | "comment";
   apiEndpoint?: string;
   requiredPermissions?: string[];
 };
@@ -63,6 +68,7 @@ export const OPERATION_PERMISSIONS: Record<
   get_workflow_run: ["actions: read"],
   trigger_workflow: ["actions: write"],
   get_branch: ["contents: read"],
+  compare_commits: ["contents: read"],
   comment: ["pull-requests: write"],
 };
 
@@ -106,6 +112,14 @@ export const getDetailedGitHubPermissionsError = (
         "1. The GitHub token doesn't have 'contents: read' permission\n";
       message +=
         "2. The branch is protected and requires additional permissions\n";
+      break;
+    case "compare_commits":
+      message += "Failed to compare commits to resolve the merge base.\n";
+      message += "This typically happens when:\n";
+      message +=
+        "1. The GitHub token doesn't have 'contents: read' permission\n";
+      message +=
+        "2. One of the commits is not reachable with the current token\n";
       break;
     case "comment":
       message += "Failed to create or update PR comment.\n";
