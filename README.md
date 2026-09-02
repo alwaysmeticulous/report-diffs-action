@@ -10,6 +10,7 @@ A GitHub Action that performs visual regression testing by comparing screenshots
 | --------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `upload-assets`       | Upload built static assets for Meticulous to test **(recommended for static sites)**                                 |
 | `upload-container`    | Upload a built Docker image for Meticulous to host and test **(recommended for server-rendered apps, e.g. Next.js)** |
+| `ensure-base`         | Optional sibling job: dispatch a missing base build at workflow start so it runs in parallel with the PR build       |
 | `cloud-compute`       | Test a locally-served app via a secure tunnel (last resort)                                                          |
 | `report-diffs-action` | Run tests in GitHub Actions runner (legacy)                                                                          |
 
@@ -82,6 +83,7 @@ All inputs are documented in the `action.yml` files:
 
 - [`upload-assets/action.yaml`](./upload-assets/action.yaml)
 - [`upload-container/action.yml`](./upload-container/action.yml)
+- [`ensure-base/action.yml`](./ensure-base/action.yml)
 - [`cloud-compute/action.yml`](./cloud-compute/action.yml)
 - [`action.yml`](./action.yml) (legacy)
 
@@ -106,6 +108,15 @@ permissions:
   statuses: read
 
 jobs:
+  # Same workflow file as the upload job — ensure-base dispatches *this* workflow
+  # on the base branch. Do not add `needs:` between these jobs; that re-serializes the wait.
+  ensure-base:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alwaysmeticulous/report-diffs-action/ensure-base@v1
+        with:
+          api-token: ${{ secrets.METICULOUS_API_TOKEN }}
+
   test:
     steps:
       - uses: actions/checkout@v4
@@ -113,7 +124,14 @@ jobs:
           # Hyphenated inputs need index syntax, and reading them off `github.event`
           # keeps this valid on `push` and `pull_request` runs too.
           ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
+          # Optional on large monorepos: skip blob download. Merge-base resolution
+          # uses the GitHub compare API and does not need local history.
+          # filter: blob:none
 ```
+
+`ensure-base` needs no checkout. It asks GitHub for the PR merge base and, if that commit
+has no test run yet, dispatches this workflow and returns immediately. The upload job still
+calls `ensureBaseTestsExists` and only waits if the base is still missing when it finishes.
 
 `meticulous-commit-sha` lets Meticulous ask this workflow to build a specific commit when a
 PR's base hasn't been tested yet. Without it a dispatched run can only build whatever the base

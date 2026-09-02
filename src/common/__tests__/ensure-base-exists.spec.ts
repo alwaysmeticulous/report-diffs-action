@@ -10,6 +10,17 @@ import {
   tryTriggerTestsWorkflowOnBase,
 } from "../ensure-base-exists.utils";
 
+vi.mock("@alwaysmeticulous/client", async (importOriginal) => {
+  const actual = await importOriginal<
+    typeof import("@alwaysmeticulous/client")
+  >();
+  return {
+    ...actual,
+    createClient: vi.fn().mockReturnValue({}),
+    takeBaseWorkflowDispatchLease: vi.fn().mockResolvedValue(true),
+  };
+});
+
 const BASE_SHA = "1111111111111111111111111111111111111111";
 const ANCESTOR_SHA = "2222222222222222222222222222222222222222";
 
@@ -331,6 +342,83 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     await resultPromise;
 
     expect(createWorkflowDispatch).toHaveBeenCalled();
+  });
+
+  it("dispatches and returns without waiting when waitForCompletion is false", async () => {
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockResolvedValue({ data: { workflow_run_id: 99 } });
+    const octokit = buildOctokit({ createWorkflowDispatch });
+
+    const result = await tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      base: BASE_SHA,
+      context,
+      octokit,
+      waitForCompletion: false,
+    });
+
+    expect(createWorkflowDispatch).toHaveBeenCalled();
+    expect(octokit.rest.actions.getWorkflowRun).toHaveBeenCalledTimes(1);
+    expect(result).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: expect.objectContaining({
+        type: "triggered-new-workflow-run-successfully",
+        workflowId: "99",
+        msTaken: 0,
+      }),
+    });
+  });
+
+  it("does not wait on a pending run when waitForCompletion is false", async () => {
+    const createWorkflowDispatch = vi.fn();
+    const octokit = buildOctokit({
+      workflowRuns: [pushRun(BASE_SHA, "queued", 5)],
+      createWorkflowDispatch,
+    });
+
+    const result = await tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      base: BASE_SHA,
+      context,
+      octokit,
+      waitForCompletion: false,
+    });
+
+    expect(createWorkflowDispatch).not.toHaveBeenCalled();
+    expect(result).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: expect.objectContaining({
+        type: "waited-for-existing-workflow-run",
+        workflowId: "5",
+        msTaken: 0,
+      }),
+    });
+  });
+
+  it("skips dispatch when the lease is refused", async () => {
+    const createWorkflowDispatch = vi.fn();
+    const octokit = buildOctokit({ createWorkflowDispatch });
+    const takeDispatchLease = vi.fn().mockResolvedValue(false);
+
+    const result = await tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      base: BASE_SHA,
+      context,
+      octokit,
+      waitForCompletion: false,
+      takeDispatchLease,
+    });
+
+    expect(takeDispatchLease).toHaveBeenCalledWith({
+      baseCommitSha: BASE_SHA,
+      workflowId: `${WORKFLOW_ID}`,
+    });
+    expect(createWorkflowDispatch).not.toHaveBeenCalled();
+    expect(result).toEqual({ baseTestRunExists: true });
   });
 });
 
