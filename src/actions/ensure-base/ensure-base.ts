@@ -4,41 +4,30 @@ import {
   createClient,
   getLatestTestRunResults,
 } from "@alwaysmeticulous/client";
-import { uploadContainerAndTriggerTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import * as Sentry from "@sentry/node";
 import { getBaseTestRunResolvedByBackend } from "../../common/cloud-replay-base.utils";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
-import { getActualCommitShaFromRepoOrContext } from "../../common/get-actual-commit-sha";
 import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import { enrichSentryContextWithGitHubActionsContext } from "../../common/sentry.utils";
-import { getUploadContainerInputs } from "./get-inputs";
+import { getEnsureBaseInputs } from "./get-inputs";
 
-export const runMeticulousUploadContainerAction = async (): Promise<void> => {
+export const runMeticulousEnsureBaseAction = async (): Promise<void> => {
   const logger = initLogger();
-  await initSentry("report-diffs-action-upload-container-v1", 1.0);
+  await initSentry("report-diffs-action-ensure-base-v1", 1.0);
   enrichSentryContextWithGitHubActionsContext();
 
   const exitCode = await Sentry.startSpan(
     {
-      name: "report-diffs-action.runMeticulousUploadContainerAction",
-      op: "report-diffs-action.runMeticulousUploadContainerAction",
+      name: "report-diffs-action.runMeticulousEnsureBaseAction",
+      op: "report-diffs-action.runMeticulousEnsureBaseAction",
     },
     async (span) => {
       try {
-        const {
-          apiToken,
-          githubToken,
-          imageTag,
-          containerPort,
-          containerEnv,
-          containerHealthCheckEndpoint,
-          commitSha: commitShaInput,
-          companionAssets,
-        } = getUploadContainerInputs();
+        const { apiToken, githubToken } = getEnsureBaseInputs();
         const event = getCodeChangeEvent(context.eventName, context.payload);
         const octokit = getOctokitOrFail(githubToken);
 
@@ -51,25 +40,32 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           return;
         }
 
+        if (event.type !== "pull_request") {
+          logger.info(
+            `ensure-base only dispatches on pull_request events. Skipping on '${event.type}'.`
+          );
+          span.setStatus({ code: 1, message: "ok" });
+          return 0;
+        }
+
         const { base, head } = await getBaseAndHeadCommitShas(
           event,
-          { useDeploymentUrl: false, octokit },
+          { useDeploymentUrl: true, octokit },
           logger
         );
-        const { baseResolutionDetails } = await safeEnsureBaseTestsExists({
+
+        await safeEnsureBaseTestsExists({
           event,
           apiToken,
           base,
           context,
           octokit,
           dispatchedRunReportsCheckedOutCommit: true,
+          waitForCompletion: false,
           getBaseTestRun: async ({ baseSha }) =>
             await getLatestTestRunResults({
               client: createClient({ apiToken }),
               commitSha: baseSha,
-              // We deliberately don't filter by environment version here because when containers are uploaded,
-              // the backend can trigger a re-run. So we don't care whether we have a valid base now,
-              // just whether the commit was tested at some point which means we have the container.
             }),
           getBaseTestRunResolvedByBackend: async () =>
             await getBaseTestRunResolvedByBackend({
@@ -80,32 +76,6 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           logger,
         });
 
-        logger.info(`Uploading container image: ${imageTag}`);
-
-        const commitSha =
-          commitShaInput ?? getActualCommitShaFromRepoOrContext(logger);
-        if (!commitSha) {
-          throw new Error(
-            "Could not determine a commit SHA to associate the uploaded container with. " +
-              "Either run 'actions/checkout' before this action, or pass the 'commit-sha' input explicitly."
-          );
-        }
-
-        await uploadContainerAndTriggerTestRun({
-          apiToken,
-          localImageTag: imageTag,
-          commitSha,
-          waitForBase: false,
-          ...(containerPort != null ? { containerPort } : {}),
-          ...(containerEnv != null ? { containerEnv } : {}),
-          ...(containerHealthCheckEndpoint != null
-            ? { containerHealthCheckEndpoint }
-            : {}),
-          ...(companionAssets != null ? { companionAssets } : {}),
-          ...(baseResolutionDetails
-            ? { debugContext: { baseResolutionDetails } }
-            : {}),
-        });
         span.setStatus({ code: 1, message: "ok" });
         return 0;
       } catch (error) {

@@ -10,6 +10,7 @@ A GitHub Action that performs visual regression testing by comparing screenshots
 | --------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `upload-assets`       | Upload built static assets for Meticulous to test **(recommended for static sites)**                                 |
 | `upload-container`    | Upload a built Docker image for Meticulous to host and test **(recommended for server-rendered apps, e.g. Next.js)** |
+| `ensure-base`         | First step before upload: dispatch a missing base build so it runs in parallel with the PR build                     |
 | `cloud-compute`       | Test a locally-served app via a secure tunnel (last resort)                                                          |
 | `report-diffs-action` | Run tests in GitHub Actions runner (legacy)                                                                          |
 
@@ -82,6 +83,7 @@ All inputs are documented in the `action.yml` files:
 
 - [`upload-assets/action.yaml`](./upload-assets/action.yaml)
 - [`upload-container/action.yml`](./upload-container/action.yml)
+- [`ensure-base/action.yml`](./ensure-base/action.yml)
 - [`cloud-compute/action.yml`](./cloud-compute/action.yml)
 - [`action.yml`](./action.yml) (legacy)
 
@@ -108,12 +110,23 @@ permissions:
 jobs:
   test:
     steps:
+      # Same workflow file as the upload step — ensure-base dispatches *this*
+      # workflow on the base branch. Run it before checkout/build so the base
+      # can start while this job continues.
+      - uses: alwaysmeticulous/report-diffs-action/ensure-base@v1
+        with:
+          api-token: ${{ secrets.METICULOUS_API_TOKEN }}
+
       - uses: actions/checkout@v4
         with:
           # Hyphenated inputs need index syntax, and reading them off `github.event`
           # keeps this valid on `push` and `pull_request` runs too.
           ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
 ```
+
+`ensure-base` needs no checkout. It asks GitHub for the PR merge base and, if that commit
+has no test run yet, dispatches this workflow and returns immediately. The upload step still
+calls `ensureBaseTestsExists` and only waits if the base is still missing when it finishes.
 
 `meticulous-commit-sha` lets Meticulous ask this workflow to build a specific commit when a
 PR's base hasn't been tested yet. Without it a dispatched run can only build whatever the base

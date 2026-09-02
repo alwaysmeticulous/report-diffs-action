@@ -1,0 +1,18 @@
+name: "Meticulous - Ensure Base"
+description: "Dispatch a base-commit build at workflow start so it runs in parallel with the PR build. Must live in the same workflow file as upload-assets or upload-container."
+inputs:
+  api-token:
+    description: "Meticulous API token."
+    required: true
+  github-token:
+    description: "GITHUB_TOKEN or a repo scoped PAT."
+    required: true
+    default: ${{ github.token }}
+
+outputs: {}
+runs:
+  using: node24
+  main: "../out/ensure-base.entrypoint.js"
+branding:
+  color: purple
+  icon: camera
