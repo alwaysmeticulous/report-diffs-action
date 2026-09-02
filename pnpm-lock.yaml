@@ -15,8 +15,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       '@alwaysmeticulous/client':
-        specifier: ^2.335.0
-        version: 2.335.0
+        specifier: ^2.336.0
+        version: 2.336.0
       '@alwaysmeticulous/common':
         specifier: ^2.326.0
         version: 2.326.0
@@ -140,6 +140,10 @@ packages:
     resolution: {integrity: sha512-Q4jkI9jK1WIMB/LZiJ4wgNIYbzPxzbMOcNSTdG/YYPz+mBfB9xEK/O6GsAo7uEi9h7zc0TUpKiNWwoYDOGALKA==}
     engines: {node: '>= 18'}
 
+  '@alwaysmeticulous/api@2.336.0':
+    resolution: {integrity: sha512-mfjlBZxd9Bqx4xuyRCdmthCkD/v6u+sM/XdN+hrBTjj04+XIXmwhBnna19TlgPAZej4ozQKCGKFsKyxEpaqMWw==}
+    engines: {node: '>= 18'}
+
   '@alwaysmeticulous/client@2.331.1':
     resolution: {integrity: sha512-9ozCPlmk6sw2Dz3rB9LrCklMCjHw5yqrJ7kxGGeNMvrk0vORUkHbHacc5DAGDwuX19L6EvzzItgFIq9/d3VXBQ==}
     engines: {node: '>= 18'}
@@ -148,12 +152,20 @@ packages:
     resolution: {integrity: sha512-PudrVlJssT2w8aC4NipGywAX1QXGRg/wLy5jXh0OoKTV4VUSkaJA+1l2ZKk09kWocXIncagVv7YBhK9/1v22CQ==}
     engines: {node: '>= 18'}
 
+  '@alwaysmeticulous/client@2.336.0':
+    resolution: {integrity: sha512-A6Kvsw/LA+ncabHKcbMlDqDYxEjpGHgpfFKFA0njL3xWxII+pfjctoQDdYJu9vqeIDmT+yk8t3sNRVCXnyix4g==}
+    engines: {node: '>= 18'}
+
   '@alwaysmeticulous/common@2.326.0':
     resolution: {integrity: sha512-6eOrR9B36AU4uhY2D08uzs0w6pYjSvA99+fgmymYt4eLDZ8BSOOfoxHmFRDmDb/gSgAUQ91WmrO+7/lDHbHTIg==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/common@2.333.1':
     resolution: {integrity: sha512-3tk+Sf9hjS5DgTRoFDgGWuUEuG/nxZm1+0qDOVlZFrpcHXl0xMTTPF1rtHvV2o8lXctqPe9p9KZQr1Lhu2eipQ==}
+    engines: {node: '>= 18'}
+
+  '@alwaysmeticulous/common@2.336.0':
+    resolution: {integrity: sha512-O23VvQ0PqslnDwksURIkYZy+hUmTaXINusnr5FwdX9o6ocVUzn6MqOed6GbyhvjvTlcjEKQdx3UHDdyH4hfPJw==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/downloading-helpers@2.331.1':
@@ -3493,6 +3505,8 @@ snapshots:
 
   '@alwaysmeticulous/api@2.334.0': {}
 
+  '@alwaysmeticulous/api@2.336.0': {}
+
   '@alwaysmeticulous/client@2.331.1':
     dependencies:
       '@alwaysmeticulous/api': 2.327.0
@@ -3523,6 +3537,21 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  '@alwaysmeticulous/client@2.336.0':
+    dependencies:
+      '@alwaysmeticulous/api': 2.336.0
+      '@alwaysmeticulous/common': 2.336.0
+      loglevel: 1.9.2
+      proxy-agent: 6.5.0
+      undici: 6.28.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bufferutil
+      - react-native-b4a
+      - supports-color
+      - utf-8-validate
+
   '@alwaysmeticulous/common@2.326.0':
     dependencies:
       '@puppeteer/browsers': 2.10.6
@@ -3540,6 +3569,22 @@ snapshots:
       - utf-8-validate
 
   '@alwaysmeticulous/common@2.333.1':
+    dependencies:
+      '@puppeteer/browsers': 2.10.6
+      chalk: 4.1.2
+      loglevel: 1.9.2
+      luxon: 3.7.2
+      puppeteer-core: 24.42.0
+      undici: 6.28.0
+    transitivePeerDependencies:
+      - bare-abort-controller
+      - bare-buffer
+      - bufferutil
+      - react-native-b4a
+      - supports-color
+      - utf-8-validate
+
+  '@alwaysmeticulous/common@2.336.0':
     dependencies:
       '@puppeteer/browsers': 2.10.6
       chalk: 4.1.2

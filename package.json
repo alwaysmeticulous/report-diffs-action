@@ -9,6 +9,7 @@
   "cloud-compute": "out/cloud-compute.entrypoint.js",
   "upload-assets": "out/upload-assets.entrypoint.js",
   "upload-container": "out/upload-container.entrypoint.js",
+  "ensure-base": "out/ensure-base.entrypoint.js",
   "files": [
     "dist",
     "out"
@@ -28,7 +29,7 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@actions/github": "^5.1.1",
-    "@alwaysmeticulous/client": "^2.335.0",
+    "@alwaysmeticulous/client": "^2.336.0",
     "@alwaysmeticulous/common": "^2.326.0",
     "@alwaysmeticulous/remote-replay-launcher": "^2.335.0",
     "@alwaysmeticulous/replay-orchestrator-launcher": "^2.331.1",

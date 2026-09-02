@@ -60,6 +60,12 @@ const targets = [
   },
   {
     ...baseConfig,
+    entryPoints: ["src/ensure-base.entrypoint.ts"],
+    outfile: "out/ensure-base.entrypoint.js",
+    format: "cjs",
+  },
+  {
+    ...baseConfig,
     entryPoints: [
       "node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js",
     ],

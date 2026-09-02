@@ -2,7 +2,11 @@ import { warning as ghWarning } from "@actions/core";
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
 import { BaseResolutionDetails } from "@alwaysmeticulous/api";
-import { TestRun } from "@alwaysmeticulous/client";
+import {
+  createClient,
+  takeBaseWorkflowDispatchLease,
+  TestRun,
+} from "@alwaysmeticulous/client";
 import log from "loglevel";
 import { Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
@@ -56,12 +60,14 @@ export const safeEnsureBaseTestsExists: typeof ensureBaseTestsExists = async (
 
 export const ensureBaseTestsExists = async ({
   event,
+  apiToken,
   base, // from the PR event
   context,
   octokit,
   getBaseTestRun,
   getBaseTestRunResolvedByBackend,
   dispatchedRunReportsCheckedOutCommit = false,
+  waitForCompletion = true,
   logger,
 }: {
   event: CodeChangeEvent;
@@ -70,6 +76,11 @@ export const ensureBaseTestsExists = async ({
   context: Context;
   octokit: InstanceType<typeof GitHub>;
   dispatchedRunReportsCheckedOutCommit?: boolean;
+  /**
+   * When false, dispatch a missing base build and return without waiting for it.
+   * Used by the ensure-base companion action so the PR build can run in parallel.
+   */
+  waitForCompletion?: boolean;
   getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
   /**
    * A second, optional source of an already-usable base, asked only if nothing has been tested at
@@ -122,6 +133,13 @@ export const ensureBaseTestsExists = async ({
     context,
     octokit,
     dispatchedRunReportsCheckedOutCommit,
+    waitForCompletion,
+    takeDispatchLease: ({ baseCommitSha, workflowId }) =>
+      takeBaseWorkflowDispatchLease({
+        client: createClient({ apiToken }),
+        baseCommitSha,
+        workflowId,
+      }),
     // Racing the workflow against a poll for the test run lets someone else's build of the same
     // base finish the job for us, which matters when two dispatches land close enough together
     // that neither can tell which run is its own.
@@ -142,6 +160,15 @@ export interface TryTriggerTestsWorkflowOnBaseOpts {
    * afterwards under the base commit, so only then is it worth asking for one.
    */
   dispatchedRunReportsCheckedOutCommit?: boolean;
+  waitForCompletion?: boolean;
+  /**
+   * Asked immediately before `workflow_dispatch`. An explicit false means another
+   * caller is dispatching this commit; we must not dispatch too.
+   */
+  takeDispatchLease?: (opts: {
+    baseCommitSha: string;
+    workflowId: string;
+  }) => Promise<boolean>;
 }
 
 export const tryTriggerTestsWorkflowOnBase = async (
@@ -152,7 +179,7 @@ export const tryTriggerTestsWorkflowOnBase = async (
     return isDone;
   };
   const workflowRunPromise = waitOnWorkflowRun(opts, isCancelled);
-  if (!opts.getBaseTestRun) {
+  if (!opts.getBaseTestRun || opts.waitForCompletion === false) {
     return workflowRunPromise;
   }
   const baseTestRunPromise = waitOnBaseTestRun(
@@ -179,7 +206,9 @@ const waitOnWorkflowRun = async (
     context,
     octokit,
     dispatchedRunReportsCheckedOutCommit,
+    takeDispatchLease,
   } = opts;
+  const waitForCompletion = opts.waitForCompletion !== false;
   const { owner, repo } = context.repo;
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
 
@@ -192,6 +221,21 @@ const waitOnWorkflowRun = async (
     logger,
   });
   if (alreadyPending != null) {
+    if (!waitForCompletion) {
+      logger.info(
+        `Workflow run already pending on base commit (${base}): ${alreadyPending.html_url}`
+      );
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "waited-for-existing-workflow-run",
+          workflowId: `${alreadyPending.workflowRunId}`,
+          baseCommitSha: base,
+          msTaken: 0,
+        },
+      };
+    }
+
     logger.info(
       `Waiting on workflow run on base commit (${base}) to compare against: ${alreadyPending.html_url}`
     );
@@ -235,6 +279,55 @@ const waitOnWorkflowRun = async (
   const baseRef = event.payload.pull_request.base.ref;
 
   logger.debug(JSON.stringify({ base, baseRef }, null, 2));
+
+  if (takeDispatchLease != null) {
+    const shouldDispatch = await takeDispatchLease({
+      baseCommitSha: base,
+      workflowId: `${workflowId}`,
+    });
+    if (!shouldDispatch) {
+      logger.info(
+        `Another job is already dispatching a build of ${base}; not dispatching again.`
+      );
+      if (!waitForCompletion) {
+        return { baseTestRunExists: true };
+      }
+      const pendingAfterLease = await getPendingWorkflowRun({
+        owner,
+        repo,
+        workflowId,
+        commitSha: base,
+        octokit,
+        logger,
+      });
+      if (pendingAfterLease != null) {
+        const waitStartMs = Date.now();
+        await waitForWorkflowCompletionAndThrowIfFailed({
+          owner,
+          repo,
+          workflowRunId: pendingAfterLease.workflowRunId,
+          octokit,
+          commitSha: base,
+          timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+          isCancelled,
+          logger,
+        });
+        return {
+          baseTestRunExists: true,
+          baseResolutionDetails: {
+            type: "waited-for-existing-workflow-run",
+            workflowId: `${pendingAfterLease.workflowRunId}`,
+            baseCommitSha: base,
+            msTaken: Date.now() - waitStartMs,
+          },
+        };
+      }
+      if (opts.getBaseTestRun != null) {
+        return waitOnBaseTestRun(opts.getBaseTestRun, isCancelled);
+      }
+      return { baseTestRunExists: false };
+    }
+  }
 
   let dispatch = await startNewWorkflowRun({
     owner,
@@ -333,6 +426,22 @@ const waitOnWorkflowRun = async (
       baseResolutionDetails: {
         type: "failed-for-other-reason",
         message,
+      },
+    };
+  }
+
+  if (!waitForCompletion) {
+    logger.info(
+      `Dispatched workflow run on base commit ${base}: ${
+        workflowRun.html_url ?? workflowRun.workflowRunId
+      }`
+    );
+    return {
+      baseTestRunExists: true,
+      baseResolutionDetails: {
+        type: "triggered-new-workflow-run-successfully",
+        workflowId: `${workflowRun.workflowRunId}`,
+        msTaken: 0,
       },
     };
   }
