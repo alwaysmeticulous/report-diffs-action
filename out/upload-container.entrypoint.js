@@ -252992,7 +252992,13 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
     };
     if (options.useDeploymentUrl) {
       return {
-        base: await tryGetMergeBaseOfHeadCommit(mergeBaseOpts) ?? base,
+        base: await tryGetMergeBaseViaCompareApi({
+          headSha: head,
+          baseRef,
+          pullRequestBaseSha: base,
+          octokit: options.octokit,
+          logger
+        }) ?? base,
         head
       };
     }
@@ -253017,21 +253023,6 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
 };
 var assertNever = (event) => {
   throw new Error("Unexpected event: " + JSON.stringify(event));
-};
-var tryGetMergeBaseOfHeadCommit = ({
-  pullRequestHeadSha,
-  pullRequestBaseSha,
-  baseRef,
-  octokit,
-  logger
-}) => {
-  return tryGetMergeBaseViaCompareApi({
-    headSha: pullRequestHeadSha,
-    baseRef,
-    pullRequestBaseSha,
-    octokit,
-    logger
-  });
 };
 var getActualCommitShaFromRepo = () => {
   return (0, import_child_process.execFileSync)("git", ["rev-list", "--max-count=1", "HEAD"]).toString().trim();

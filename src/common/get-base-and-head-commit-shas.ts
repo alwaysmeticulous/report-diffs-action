@@ -72,7 +72,14 @@ export const getBaseAndHeadCommitShas = async (
       // The PR base can sometimes point to a commit ahead of the merge-base of the head commit
       // (I believe it's based on the github temporary merge commit)
       return {
-        base: (await tryGetMergeBaseOfHeadCommit(mergeBaseOpts)) ?? base,
+        base:
+          (await tryGetMergeBaseViaCompareApi({
+            headSha: head,
+            baseRef,
+            pullRequestBaseSha: base,
+            octokit: options.octokit,
+            logger,
+          })) ?? base,
         head,
       };
     }
@@ -108,22 +115,6 @@ interface MergeBaseOpts {
   octokit: InstanceType<typeof GitHub>;
   logger: log.Logger;
 }
-
-const tryGetMergeBaseOfHeadCommit = ({
-  pullRequestHeadSha,
-  pullRequestBaseSha,
-  baseRef,
-  octokit,
-  logger,
-}: MergeBaseOpts): Promise<string | null> => {
-  return tryGetMergeBaseViaCompareApi({
-    headSha: pullRequestHeadSha,
-    baseRef,
-    pullRequestBaseSha,
-    octokit,
-    logger,
-  });
-};
 
 /**
  * Get the actual commit SHA that we have the code for.
