@@ -9,10 +9,8 @@ import { initSentry } from "@alwaysmeticulous/sentry";
 import * as Sentry from "@sentry/node";
 import { getBaseTestRunResolvedByBackend } from "../../common/cloud-replay-base.utils";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
-import {
-  getBaseAndHeadCommitShas,
-  getActualCommitShaFromRepoOrContext,
-} from "../../common/get-base-and-head-commit-shas";
+import { getActualCommitShaFromRepoOrContext } from "../../common/get-actual-commit-sha";
+import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";

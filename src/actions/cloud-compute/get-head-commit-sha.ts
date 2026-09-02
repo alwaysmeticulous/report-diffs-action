@@ -1,5 +1,5 @@
 import { Logger } from "loglevel";
-import { getActualCommitShaFromRepo } from "../../common/get-base-and-head-commit-shas";
+import { getActualCommitShaFromRepo } from "../../common/get-actual-commit-sha";
 
 /*
  * Computes the HEAD commit SHA to use when creating a test run.
