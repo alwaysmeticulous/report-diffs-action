@@ -124,9 +124,6 @@ jobs:
           # Hyphenated inputs need index syntax, and reading them off `github.event`
           # keeps this valid on `push` and `pull_request` runs too.
           ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
-          # Optional on large monorepos: skip blob download. Merge-base resolution
-          # uses the GitHub compare API and does not need local history.
-          # filter: blob:none
 ```
 
 `ensure-base` needs no checkout. It asks GitHub for the PR merge base and, if that commit
