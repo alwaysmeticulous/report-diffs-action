@@ -124,6 +124,7 @@ export const runOneTestRun = async ({
       event,
       {
         useDeploymentUrl: false,
+        octokit,
       },
       logger
     );

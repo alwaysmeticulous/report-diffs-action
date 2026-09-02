@@ -55,7 +55,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
 
         const { base, head } = await getBaseAndHeadCommitShas(
           event,
-          { useDeploymentUrl: false },
+          { useDeploymentUrl: false, octokit },
           logger
         );
         const { baseResolutionDetails } = await safeEnsureBaseTestsExists({

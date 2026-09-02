@@ -958,7 +958,7 @@ var require_source_map_consumer = __commonJS({
     SourceMapConsumer.GREATEST_LOWER_BOUND = 1;
     SourceMapConsumer.LEAST_UPPER_BOUND = 2;
     SourceMapConsumer.prototype.eachMapping = function SourceMapConsumer_eachMapping(aCallback, aContext, aOrder) {
-      var context4 = aContext || null;
+      var context5 = aContext || null;
       var order = aOrder || SourceMapConsumer.GENERATED_ORDER;
       var mappings;
       switch (order) {
@@ -983,7 +983,7 @@ var require_source_map_consumer = __commonJS({
           originalColumn: mapping.originalColumn,
           name: mapping.name === null ? null : this._names.at(mapping.name)
         };
-      }, this).forEach(aCallback, context4);
+      }, this).forEach(aCallback, context5);
     };
     SourceMapConsumer.prototype.allGeneratedPositionsFor = function SourceMapConsumer_allGeneratedPositionsFor(aArgs) {
       var line = util.getArg(aArgs, "line");
@@ -6540,18 +6540,18 @@ var require_webidl = __commonJS({
     webidl.errors.exception = function(message) {
       return new TypeError(`${message.header}: ${message.message}`);
     };
-    webidl.errors.conversionFailed = function(context4) {
-      const plural = context4.types.length === 1 ? "" : " one of";
-      const message = `${context4.argument} could not be converted to${plural}: ${context4.types.join(", ")}.`;
+    webidl.errors.conversionFailed = function(context5) {
+      const plural = context5.types.length === 1 ? "" : " one of";
+      const message = `${context5.argument} could not be converted to${plural}: ${context5.types.join(", ")}.`;
       return webidl.errors.exception({
-        header: context4.prefix,
+        header: context5.prefix,
         message
       });
     };
-    webidl.errors.invalidArgument = function(context4) {
+    webidl.errors.invalidArgument = function(context5) {
       return webidl.errors.exception({
-        header: context4.prefix,
-        message: `"${context4.value}" is an invalid ${context4.type}.`
+        header: context5.prefix,
+        message: `"${context5.value}" is an invalid ${context5.type}.`
       });
     };
     webidl.brandCheck = function(V, I, opts = void 0) {
@@ -11897,15 +11897,15 @@ var require_api_request = __commonJS({
         }
         addSignal(this, signal);
       }
-      onConnect(abort, context4) {
+      onConnect(abort, context5) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context4;
+        this.context = context5;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { callback, opaque, abort, context: context4, responseHeaders, highWaterMark } = this;
+        const { callback, opaque, abort, context: context5, responseHeaders, highWaterMark } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -11932,7 +11932,7 @@ var require_api_request = __commonJS({
               trailers: this.trailers,
               opaque,
               body,
-              context: context4
+              context: context5
             });
           }
         }
@@ -12052,15 +12052,15 @@ var require_api_stream = __commonJS({
         }
         addSignal(this, signal);
       }
-      onConnect(abort, context4) {
+      onConnect(abort, context5) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context4;
+        this.context = context5;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { factory, opaque, context: context4, callback, responseHeaders } = this;
+        const { factory, opaque, context: context5, callback, responseHeaders } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -12088,7 +12088,7 @@ var require_api_stream = __commonJS({
             statusCode,
             headers,
             opaque,
-            context: context4
+            context: context5
           });
           if (!res || typeof res.write !== "function" || typeof res.end !== "function" || typeof res.on !== "function") {
             throw new InvalidReturnValueError("expected Writable");
@@ -12280,17 +12280,17 @@ var require_api_pipeline = __commonJS({
         this.res = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context4) {
+      onConnect(abort, context5) {
         const { ret, res } = this;
         assert(!res, "pipeline cannot be retried");
         if (ret.destroyed) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context4;
+        this.context = context5;
       }
       onHeaders(statusCode, rawHeaders, resume) {
-        const { opaque, handler, context: context4 } = this;
+        const { opaque, handler, context: context5 } = this;
         if (statusCode < 200) {
           if (this.onInfo) {
             const headers = this.responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
@@ -12308,7 +12308,7 @@ var require_api_pipeline = __commonJS({
             headers,
             opaque,
             body: this.res,
-            context: context4
+            context: context5
           });
         } catch (err) {
           this.res.on("error", util.nop);
@@ -12392,7 +12392,7 @@ var require_api_upgrade = __commonJS({
         this.context = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context4) {
+      onConnect(abort, context5) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
@@ -12403,7 +12403,7 @@ var require_api_upgrade = __commonJS({
         throw new SocketError("bad upgrade", null);
       }
       onUpgrade(statusCode, rawHeaders, socket) {
-        const { callback, opaque, context: context4 } = this;
+        const { callback, opaque, context: context5 } = this;
         assert.strictEqual(statusCode, 101);
         removeSignal(this);
         this.callback = null;
@@ -12412,7 +12412,7 @@ var require_api_upgrade = __commonJS({
           headers,
           socket,
           opaque,
-          context: context4
+          context: context5
         });
       }
       onError(err) {
@@ -12480,18 +12480,18 @@ var require_api_connect = __commonJS({
         this.abort = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context4) {
+      onConnect(abort, context5) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context4;
+        this.context = context5;
       }
       onHeaders() {
         throw new SocketError("bad connect", null);
       }
       onUpgrade(statusCode, rawHeaders, socket) {
-        const { callback, opaque, context: context4 } = this;
+        const { callback, opaque, context: context5 } = this;
         removeSignal(this);
         this.callback = null;
         let headers = rawHeaders;
@@ -12503,7 +12503,7 @@ var require_api_connect = __commonJS({
           headers,
           socket,
           opaque,
-          context: context4
+          context: context5
         });
       }
       onError(err) {
@@ -22438,10 +22438,10 @@ var require_agent_api = __commonJS({
       return data;
     };
     exports2.getTestRunDiffsSummaryCounts = getTestRunDiffsSummaryCounts;
-    var getScreenshotDomDiff = async (client, replayDiffId, screenshotName, context4) => {
+    var getScreenshotDomDiff = async (client, replayDiffId, screenshotName, context5) => {
       const params = {};
-      if (context4 != null) {
-        params.context = context4;
+      if (context5 != null) {
+        params.context = context5;
       }
       const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/dom-diff`, { params }).catch((error2) => {
         throw (0, errors_1.maybeEnrichFetchError)(error2);
@@ -33709,18 +33709,18 @@ var require_webidl2 = __commonJS({
     webidl.errors.exception = function(message) {
       return new TypeError(`${message.header}: ${message.message}`);
     };
-    webidl.errors.conversionFailed = function(context4) {
-      const plural = context4.types.length === 1 ? "" : " one of";
-      const message = `${context4.argument} could not be converted to${plural}: ${context4.types.join(", ")}.`;
+    webidl.errors.conversionFailed = function(context5) {
+      const plural = context5.types.length === 1 ? "" : " one of";
+      const message = `${context5.argument} could not be converted to${plural}: ${context5.types.join(", ")}.`;
       return webidl.errors.exception({
-        header: context4.prefix,
+        header: context5.prefix,
         message
       });
     };
-    webidl.errors.invalidArgument = function(context4) {
+    webidl.errors.invalidArgument = function(context5) {
       return webidl.errors.exception({
-        header: context4.prefix,
-        message: `"${context4.value}" is an invalid ${context4.type}.`
+        header: context5.prefix,
+        message: `"${context5.value}" is an invalid ${context5.type}.`
       });
     };
     webidl.brandCheck = function(V, I, opts) {
@@ -39845,17 +39845,17 @@ var require_api_request2 = __commonJS({
           }
         }
       }
-      onConnect(abort, context4) {
+      onConnect(abort, context5) {
         if (this.reason) {
           abort(this.reason);
           return;
         }
         assert(this.callback);
         this.abort = abort;
-        this.context = context4;
+        this.context = context5;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { callback, opaque, abort, context: context4, responseHeaders, highWaterMark } = this;
+        const { callback, opaque, abort, context: context5, responseHeaders, highWaterMark } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -39892,7 +39892,7 @@ var require_api_request2 = __commonJS({
               trailers: this.trailers,
               opaque,
               body: res,
-              context: context4
+              context: context5
             });
           }
         }
@@ -40061,17 +40061,17 @@ var require_api_stream2 = __commonJS({
         }
         addSignal(this, signal);
       }
-      onConnect(abort, context4) {
+      onConnect(abort, context5) {
         if (this.reason) {
           abort(this.reason);
           return;
         }
         assert(this.callback);
         this.abort = abort;
-        this.context = context4;
+        this.context = context5;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { factory, opaque, context: context4, callback, responseHeaders } = this;
+        const { factory, opaque, context: context5, callback, responseHeaders } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -40099,7 +40099,7 @@ var require_api_stream2 = __commonJS({
             statusCode,
             headers,
             opaque,
-            context: context4
+            context: context5
           });
           if (!res || typeof res.write !== "function" || typeof res.end !== "function" || typeof res.on !== "function") {
             throw new InvalidReturnValueError("expected Writable");
@@ -40291,7 +40291,7 @@ var require_api_pipeline2 = __commonJS({
         this.res = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context4) {
+      onConnect(abort, context5) {
         const { ret, res } = this;
         if (this.reason) {
           abort(this.reason);
@@ -40300,10 +40300,10 @@ var require_api_pipeline2 = __commonJS({
         assert(!res, "pipeline cannot be retried");
         assert(!ret.destroyed);
         this.abort = abort;
-        this.context = context4;
+        this.context = context5;
       }
       onHeaders(statusCode, rawHeaders, resume) {
-        const { opaque, handler, context: context4 } = this;
+        const { opaque, handler, context: context5 } = this;
         if (statusCode < 200) {
           if (this.onInfo) {
             const headers = this.responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
@@ -40321,7 +40321,7 @@ var require_api_pipeline2 = __commonJS({
             headers,
             opaque,
             body: this.res,
-            context: context4
+            context: context5
           });
         } catch (err) {
           this.res.on("error", util.nop);
@@ -40405,7 +40405,7 @@ var require_api_upgrade2 = __commonJS({
         this.context = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context4) {
+      onConnect(abort, context5) {
         if (this.reason) {
           abort(this.reason);
           return;
@@ -40419,7 +40419,7 @@ var require_api_upgrade2 = __commonJS({
       }
       onUpgrade(statusCode, rawHeaders, socket) {
         assert(statusCode === 101);
-        const { callback, opaque, context: context4 } = this;
+        const { callback, opaque, context: context5 } = this;
         removeSignal(this);
         this.callback = null;
         const headers = this.responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
@@ -40427,7 +40427,7 @@ var require_api_upgrade2 = __commonJS({
           headers,
           socket,
           opaque,
-          context: context4
+          context: context5
         });
       }
       onError(err) {
@@ -40496,20 +40496,20 @@ var require_api_connect2 = __commonJS({
         this.abort = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context4) {
+      onConnect(abort, context5) {
         if (this.reason) {
           abort(this.reason);
           return;
         }
         assert(this.callback);
         this.abort = abort;
-        this.context = context4;
+        this.context = context5;
       }
       onHeaders() {
         throw new SocketError("bad connect", null);
       }
       onUpgrade(statusCode, rawHeaders, socket) {
-        const { callback, opaque, context: context4 } = this;
+        const { callback, opaque, context: context5 } = this;
         removeSignal(this);
         this.callback = null;
         let headers = rawHeaders;
@@ -40521,7 +40521,7 @@ var require_api_connect2 = __commonJS({
           headers,
           socket,
           opaque,
-          context: context4
+          context: context5
         });
       }
       onError(err) {
@@ -51756,7 +51756,7 @@ var require_lru_cache = __commonJS({
           return this.isBackgroundFetch(v) ? v.__staleWhileFetching : v;
         }
       }
-      backgroundFetch(k, index, options, context4) {
+      backgroundFetch(k, index, options, context5) {
         const v = index === void 0 ? void 0 : this.valList[index];
         if (this.isBackgroundFetch(v)) {
           return v;
@@ -51771,7 +51771,7 @@ var require_lru_cache = __commonJS({
         const fetchOpts = {
           signal: ac.signal,
           options,
-          context: context4
+          context: context5
         };
         const cb = (v2, updateCache = false) => {
           const { aborted } = ac.signal;
@@ -70042,17 +70042,17 @@ function __esDecorate(ctor, descriptorIn, decorators, contextIn, initializers, e
   var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
   var _, done = false;
   for (var i = decorators.length - 1; i >= 0; i--) {
-    var context4 = {};
+    var context5 = {};
     for (var p in contextIn)
-      context4[p] = p === "access" ? {} : contextIn[p];
+      context5[p] = p === "access" ? {} : contextIn[p];
     for (var p in contextIn.access)
-      context4.access[p] = contextIn.access[p];
-    context4.addInitializer = function(f) {
+      context5.access[p] = contextIn.access[p];
+    context5.addInitializer = function(f) {
       if (done)
         throw new TypeError("Cannot add initializers after decoration has completed");
       extraInitializers.push(accept(f || null));
     };
-    var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context4);
+    var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context5);
     if (kind === "accessor") {
       if (result === void 0)
         continue;
@@ -71150,15 +71150,15 @@ var require_types2 = __commonJS({
         }
         return object && object[fieldName];
       }
-      function eachField(object, callback, context4) {
+      function eachField(object, callback, context5) {
         getFieldNames(object).forEach(function(name) {
           callback.call(this, name, getFieldValue(object, name));
-        }, context4);
+        }, context5);
       }
-      function someField(object, callback, context4) {
+      function someField(object, callback, context5) {
         return getFieldNames(object).some(function(name) {
           return callback.call(this, name, getFieldValue(object, name));
-        }, context4);
+        }, context5);
       }
       function wrapExpressionBuilderWithStatement(typeName) {
         var wrapperName = getStatementBuilderName(typeName);
@@ -71297,7 +71297,7 @@ var require_path = __commonJS({
         }
         return path;
       };
-      Pp.each = function each(callback, context4) {
+      Pp.each = function each(callback, context5) {
         var childPaths = [];
         var len = this.value.length;
         var i = 0;
@@ -71306,27 +71306,27 @@ var require_path = __commonJS({
             childPaths[i] = this.get(i);
           }
         }
-        context4 = context4 || this;
+        context5 = context5 || this;
         for (i = 0; i < len; ++i) {
           if (hasOwn.call(childPaths, i)) {
-            callback.call(context4, childPaths[i]);
+            callback.call(context5, childPaths[i]);
           }
         }
       };
-      Pp.map = function map(callback, context4) {
+      Pp.map = function map(callback, context5) {
         var result = [];
         this.each(function(childPath) {
           result.push(callback.call(this, childPath));
-        }, context4);
+        }, context5);
         return result;
       };
-      Pp.filter = function filter(callback, context4) {
+      Pp.filter = function filter(callback, context5) {
         var result = [];
         this.each(function(childPath) {
           if (callback.call(this, childPath)) {
             result.push(childPath);
           }
-        }, context4);
+        }, context5);
         return result;
       };
       function emptyMoves() {
@@ -72289,11 +72289,11 @@ var require_path_visitor = __commonJS({
         var value = path.value;
         var methodName = value && typeof value === "object" && typeof value.type === "string" && this._methodNameTable[value.type];
         if (methodName) {
-          var context4 = this.acquireContext(path);
+          var context5 = this.acquireContext(path);
           try {
-            return context4.invokeVisitorMethod(methodName);
+            return context5.invokeVisitorMethod(methodName);
           } finally {
-            this.releaseContext(context4);
+            this.releaseContext(context5);
           }
         } else {
           return visitChildren(path, this);
@@ -72336,12 +72336,12 @@ var require_path_visitor = __commonJS({
         }
         return this._reusableContextStack.pop().reset(path);
       };
-      PVp.releaseContext = function(context4) {
-        if (!(context4 instanceof this.Context)) {
+      PVp.releaseContext = function(context5) {
+        if (!(context5 instanceof this.Context)) {
           throw new Error("");
         }
-        this._reusableContextStack.push(context4);
-        context4.currentPath = null;
+        this._reusableContextStack.push(context5);
+        context5.currentPath = null;
       };
       PVp.reportChanged = function() {
         this._changeReported = true;
@@ -74691,16 +74691,16 @@ var require_dist8 = __commonJS({
     var weekdayRange_1 = __importDefault2(require_weekdayRange());
     function createPacResolver(qjs, _str, _opts = {}) {
       const str = Buffer.isBuffer(_str) ? _str.toString("utf8") : _str;
-      const context4 = {
+      const context5 = {
         ...exports2.sandbox,
         ..._opts.sandbox
       };
-      const names = Object.keys(context4).filter((k) => isAsyncFunction(context4[k]));
+      const names = Object.keys(context5).filter((k) => isAsyncFunction(context5[k]));
       const opts = {
         filename: "proxy.pac",
         names,
         ..._opts,
-        sandbox: context4
+        sandbox: context5
       };
       const resolver = (0, degenerator_1.compile)(qjs, str, "FindProxyForURL", opts);
       function FindProxyForURL(url, _host) {
@@ -74782,10 +74782,10 @@ var require_errors4 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.QuickJSMemoryLeakDetected = exports2.QuickJSAsyncifySuspended = exports2.QuickJSAsyncifyError = exports2.QuickJSNotImplemented = exports2.QuickJSUseAfterFree = exports2.QuickJSWrongOwner = exports2.QuickJSUnwrapError = void 0;
     var QuickJSUnwrapError = class extends Error {
-      constructor(cause, context4) {
+      constructor(cause, context5) {
         super(String(cause));
         this.cause = cause;
-        this.context = context4;
+        this.context = context5;
         this.name = "QuickJSUnwrapError";
       }
     };
@@ -75825,7 +75825,7 @@ var require_context = __commonJS({
        */
       unwrapResult(result) {
         if (result.error) {
-          const context4 = "context" in result.error ? result.error.context : this;
+          const context5 = "context" in result.error ? result.error.context : this;
           const cause = result.error.consume((error2) => this.dump(error2));
           if (cause && typeof cause === "object" && typeof cause.message === "string") {
             const { message, name, stack } = cause;
@@ -75838,10 +75838,10 @@ var require_context = __commonJS({
               exception.stack = `${name}: ${message}
 ${cause.stack}Host: ${hostStack}`;
             }
-            Object.assign(exception, { cause, context: context4, message });
+            Object.assign(exception, { cause, context: context5, message });
             throw exception;
           }
-          throw new errors_1.QuickJSUnwrapError(cause, context4);
+          throw new errors_1.QuickJSUnwrapError(cause, context5);
         }
         return result.value;
       }
@@ -75912,11 +75912,11 @@ var require_runtime = __commonJS({
             if (rt !== this.rt.value) {
               throw new Error("Runtime pointer mismatch");
             }
-            const context4 = this.contextMap.get(ctx) ?? this.newContext({
+            const context5 = this.contextMap.get(ctx) ?? this.newContext({
               contextPointer: ctx
             });
             try {
-              const result = yield* awaited(moduleLoader(moduleName, context4));
+              const result = yield* awaited(moduleLoader(moduleName, context5));
               if (typeof result === "object" && "error" in result && result.error) {
                 (0, debug_1.debugLog)("cToHostLoadModule: loader returned error", result.error);
                 throw result.error;
@@ -75925,7 +75925,7 @@ var require_runtime = __commonJS({
               return this.memory.newHeapCharPointer(moduleSource).value;
             } catch (error2) {
               (0, debug_1.debugLog)("cToHostLoadModule: caught error", error2);
-              context4.throw(error2);
+              context5.throw(error2);
               return 0;
             }
           }),
@@ -75937,21 +75937,21 @@ var require_runtime = __commonJS({
             if (rt !== this.rt.value) {
               throw new Error("Runtime pointer mismatch");
             }
-            const context4 = this.contextMap.get(ctx) ?? this.newContext({
+            const context5 = this.contextMap.get(ctx) ?? this.newContext({
               /* TODO: Does this happen? Are we responsible for disposing? I don't think so */
               contextPointer: ctx
             });
             try {
-              const result = yield* awaited(moduleNormalizer(baseModuleName, moduleNameRequest, context4));
+              const result = yield* awaited(moduleNormalizer(baseModuleName, moduleNameRequest, context5));
               if (typeof result === "object" && "error" in result && result.error) {
                 (0, debug_1.debugLog)("cToHostNormalizeModule: normalizer returned error", result.error);
                 throw result.error;
               }
               const name = typeof result === "string" ? result : result.value;
-              return context4.getMemory(this.rt.value).newHeapCharPointer(name).value;
+              return context5.getMemory(this.rt.value).newHeapCharPointer(name).value;
             } catch (error2) {
               (0, debug_1.debugLog)("normalizeModule: caught error", error2);
-              context4.throw(error2);
+              context5.throw(error2);
               return 0;
             }
           })
@@ -75981,7 +75981,7 @@ var require_runtime = __commonJS({
           this.callbacks.deleteContext(ctx_ptr);
           this.ffi.QTS_FreeContext(ctx_ptr);
         });
-        const context4 = new context_1.QuickJSContext({
+        const context5 = new context_1.QuickJSContext({
           module: this.module,
           ctx,
           ffi: this.ffi,
@@ -75990,8 +75990,8 @@ var require_runtime = __commonJS({
           runtime: this,
           callbacks: this.callbacks
         });
-        this.contextMap.set(ctx.value, context4);
-        return context4;
+        this.contextMap.set(ctx.value, context5);
+        return context5;
       }
       /**
        * Set the loader for EcmaScript modules requested by any context in this
@@ -76071,17 +76071,17 @@ var require_runtime = __commonJS({
           this.ffi.QTS_FreeValuePointerRuntime(this.rt.value, valuePtr);
           return { value: 0 };
         }
-        const context4 = this.contextMap.get(ctxPtr) ?? this.newContext({
+        const context5 = this.contextMap.get(ctxPtr) ?? this.newContext({
           contextPointer: ctxPtr
         });
-        const resultValue = context4.getMemory(this.rt.value).heapValueHandle(valuePtr);
-        const typeOfRet = context4.typeof(resultValue);
+        const resultValue = context5.getMemory(this.rt.value).heapValueHandle(valuePtr);
+        const typeOfRet = context5.typeof(resultValue);
         if (typeOfRet === "number") {
-          const executedJobs = context4.getNumber(resultValue);
+          const executedJobs = context5.getNumber(resultValue);
           resultValue.dispose();
           return { value: executedJobs };
         } else {
-          const error2 = Object.assign(resultValue, { context: context4 });
+          const error2 = Object.assign(resultValue, { context: context5 });
           return {
             error: error2
           };
@@ -76346,12 +76346,12 @@ Attempted to suspend at:`);
        */
       newContext(options = {}) {
         const runtime = this.newRuntime();
-        const context4 = runtime.newContext({
+        const context5 = runtime.newContext({
           ...options,
           ownedLifetimes: (0, types_1.concat)(runtime, options.ownedLifetimes)
         });
-        runtime.context = context4;
-        return context4;
+        runtime.context = context5;
+        return context5;
       }
       /**
        * One-off evaluate code without needing to create a [[QuickJSRuntime]] or
@@ -76484,7 +76484,7 @@ var require_runtime_asyncify = __commonJS({
           this.callbacks.deleteContext(ctx_ptr);
           this.ffi.QTS_FreeContext(ctx_ptr);
         });
-        const context4 = new context_asyncify_1.QuickJSAsyncContext({
+        const context5 = new context_asyncify_1.QuickJSAsyncContext({
           module: this.module,
           ctx,
           ffi: this.ffi,
@@ -76493,8 +76493,8 @@ var require_runtime_asyncify = __commonJS({
           runtime: this,
           callbacks: this.callbacks
         });
-        this.contextMap.set(ctx.value, context4);
-        return context4;
+        this.contextMap.set(ctx.value, context5);
+        return context5;
       }
       setModuleLoader(moduleLoader, moduleNormalizer) {
         super.setModuleLoader(moduleLoader, moduleNormalizer);
@@ -76561,9 +76561,9 @@ var require_module_asyncify = __commonJS({
       newContext(options = {}) {
         const runtime = this.newRuntime();
         const lifetimes = options.ownedLifetimes ? options.ownedLifetimes.concat([runtime]) : [runtime];
-        const context4 = runtime.newContext({ ...options, ownedLifetimes: lifetimes });
-        runtime.context = context4;
-        return context4;
+        const context5 = runtime.newContext({ ...options, ownedLifetimes: lifetimes });
+        runtime.context = context5;
+        return context5;
       }
       /** Synchronous evalCode is not supported. */
       evalCode() {
@@ -77561,15 +77561,15 @@ var require_module_test = __commonJS({
         return runtime;
       }
       newContext(options) {
-        const context4 = this.parent.newContext({
+        const context5 = this.parent.newContext({
           ...options,
           ownedLifetimes: [
-            new lifetime_1.Lifetime(void 0, void 0, () => this.contexts.delete(context4)),
+            new lifetime_1.Lifetime(void 0, void 0, () => this.contexts.delete(context5)),
             ...options?.ownedLifetimes ?? []
           ]
         });
-        this.contexts.add(context4);
-        return context4;
+        this.contexts.add(context5);
+        return context5;
       }
       evalCode(code, options) {
         return this.parent.evalCode(code, options);
@@ -80306,10 +80306,10 @@ var require_fd_slicer = __commonJS({
       }
     };
     util.inherits(ReadStream, Readable);
-    function ReadStream(context4, options) {
+    function ReadStream(context5, options) {
       options = options || {};
       Readable.call(this, options);
-      this.context = context4;
+      this.context = context5;
       this.context.ref();
       this.start = options.start || 0;
       this.endOffset = options.end;
@@ -80358,10 +80358,10 @@ var require_fd_slicer = __commonJS({
       this.context.unref();
     };
     util.inherits(WriteStream, Writable);
-    function WriteStream(context4, options) {
+    function WriteStream(context5, options) {
       options = options || {};
       Writable.call(this, options);
-      this.context = context4;
+      this.context = context5;
       this.context.ref();
       this.start = options.start || 0;
       this.endOffset = options.end == null ? Infinity : +options.end;
@@ -81461,9 +81461,9 @@ var require_yauzl = __commonJS({
       setImmediate(callback);
     };
     util.inherits(RefUnrefFilter, PassThrough);
-    function RefUnrefFilter(context4) {
+    function RefUnrefFilter(context5) {
       PassThrough.call(this);
-      this.context = context4;
+      this.context = context5;
       this.context.ref();
       this.unreffedYet = false;
     }
@@ -87244,8 +87244,8 @@ var init_command = __esm({
         const maybePromiseArgv = applyMiddleware(innerArgv, yargs, middlewares, true);
         return isPromise(maybePromiseArgv) ? maybePromiseArgv.then((resolvedInnerArgv) => this.handleValidationAndGetResult(isDefaultCommand, commandHandler, resolvedInnerArgv, currentContext, aliases, yargs, middlewares, positionalMap)) : this.handleValidationAndGetResult(isDefaultCommand, commandHandler, maybePromiseArgv, currentContext, aliases, yargs, middlewares, positionalMap);
       }
-      populatePositionals(commandHandler, argv, context4, yargs) {
-        argv._ = argv._.slice(context4.commands.length);
+      populatePositionals(commandHandler, argv, context5, yargs) {
+        argv._ = argv._.slice(context5.commands.length);
         const demanded = commandHandler.demanded.slice(0);
         const optional = commandHandler.optional.slice(0);
         const positionalMap = {};
@@ -87258,7 +87258,7 @@ var init_command = __esm({
           const maybe = optional.shift();
           this.populatePositional(maybe, argv, positionalMap);
         }
-        argv._ = context4.commands.concat(argv._.map((a) => "" + a));
+        argv._ = context5.commands.concat(argv._.map((a) => "" + a));
         this.postProcessPositionals(argv, positionalMap, this.cmdToParseOptions(commandHandler.original), yargs);
         return positionalMap;
       }
@@ -87632,8 +87632,8 @@ function usage(yargs, shim3) {
     }
     if (commands.length > 1 || commands.length === 1 && !commands[0][2]) {
       ui2.div(__("Commands:"));
-      const context4 = yargs.getInternalMethods().getContext();
-      const parentCommands = context4.commands.length ? `${context4.commands.join(" ")} ` : "";
+      const context5 = yargs.getInternalMethods().getContext();
+      const parentCommands = context5.commands.length ? `${context5.commands.join(" ")} ` : "";
       if (yargs.getInternalMethods().getParserConfiguration()["sort-commands"] === true) {
         commands = commands.sort((a, b) => a[0].localeCompare(b[0]));
       }
@@ -96436,8 +96436,8 @@ var require_dist_node2 = __commonJS({
     function isKeyOperator(operator) {
       return operator === ";" || operator === "&" || operator === "?";
     }
-    function getValues(context4, operator, key, modifier) {
-      var value = context4[key], result = [];
+    function getValues(context5, operator, key, modifier) {
+      var value = context5[key], result = [];
       if (isDefined(value) && value !== "") {
         if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
           value = value.toString();
@@ -96497,7 +96497,7 @@ var require_dist_node2 = __commonJS({
         expand: expand.bind(null, template)
       };
     }
-    function expand(template, context4) {
+    function expand(template, context5) {
       var operators = ["+", "#", ".", "/", ";", "?", "&"];
       return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function(_, expression, literal) {
         if (expression) {
@@ -96509,7 +96509,7 @@ var require_dist_node2 = __commonJS({
           }
           expression.split(/,/g).forEach(function(variable) {
             var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-            values.push(getValues(context4, operator, tmp[1], tmp[2] || tmp[3]));
+            values.push(getValues(context5, operator, tmp[1], tmp[2] || tmp[3]));
           });
           if (operator && operator !== "+") {
             var separator = ",";
@@ -102346,22 +102346,22 @@ var require_lib4 = __commonJS({
           flush2();
         }
         args = args.map((arg) => new exports2.Parser(arg, this.settings));
-        return function(context4) {
+        return function(context5) {
           const innerValues = [];
           for (const arg of args) {
-            innerValues.push(arg.evaluate(context4));
+            innerValues.push(arg.evaluate(context5));
           }
-          return method.call(context4, ...innerValues);
+          return method.call(context5, ...innerValues);
         };
       }
-      evaluate(context4) {
+      evaluate(context5) {
         const parts = this._parts.slice();
         for (let i = parts.length - 2; i >= 0; --i) {
           const part = parts[i];
           if (part && part.type === "operator") {
             const current = parts[i + 1];
             parts.splice(i + 1, 1);
-            const value = internals.evaluate(current, context4);
+            const value = internals.evaluate(current, context5);
             parts[i] = internals.single(part.value, value);
           }
         }
@@ -102369,8 +102369,8 @@ var require_lib4 = __commonJS({
           for (let i = 1; i < parts.length - 1; ) {
             if (set.includes(parts[i])) {
               const operator = parts[i];
-              const left2 = internals.evaluate(parts[i - 1], context4);
-              const right2 = internals.evaluate(parts[i + 1], context4);
+              const left2 = internals.evaluate(parts[i - 1], context5);
+              const right2 = internals.evaluate(parts[i + 1], context5);
               parts.splice(i, 2);
               const result = internals.calculate(operator, left2, right2);
               parts[i - 1] = result === 0 ? 0 : result;
@@ -102379,24 +102379,24 @@ var require_lib4 = __commonJS({
             }
           }
         });
-        return internals.evaluate(parts[0], context4);
+        return internals.evaluate(parts[0], context5);
       }
     };
     exports2.Parser.prototype[internals.symbol] = true;
     internals.reference = function(name) {
-      return function(context4) {
-        return context4 && context4[name] !== void 0 ? context4[name] : null;
+      return function(context5) {
+        return context5 && context5[name] !== void 0 ? context5[name] : null;
       };
     };
-    internals.evaluate = function(part, context4) {
+    internals.evaluate = function(part, context5) {
       if (part === null) {
         return null;
       }
       if (typeof part === "function") {
-        return part(context4);
+        return part(context5);
       }
       if (part[internals.symbol]) {
-        return part.evaluate(context4);
+        return part.evaluate(context5);
       }
       return part;
     };
@@ -102796,11 +102796,11 @@ var require_ref = __commonJS({
       const ref = Object.assign({}, internals.defaults, options);
       delete ref.prefix;
       const separator = ref.separator;
-      const context4 = internals.context(key, separator, options.prefix);
-      ref.type = context4.type;
-      key = context4.key;
+      const context5 = internals.context(key, separator, options.prefix);
+      ref.type = context5.type;
+      key = context5.key;
       if (ref.type === "value") {
-        if (context4.root) {
+        if (context5.root) {
           Assert(!separator || key[0] !== separator, "Cannot specify relative path with root prefix");
           ref.ancestor = "root";
           if (!key) {
@@ -103236,8 +103236,8 @@ var require_template = __commonJS({
         const reference = (variable) => {
           const ref = Ref.create(variable, this._settings);
           refs.push(ref);
-          return (context4) => {
-            const resolved = ref.resolve(...context4);
+          return (context5) => {
+            const resolved = ref.resolve(...context5);
             return resolved !== void 0 ? resolved : null;
           };
         };
@@ -106900,19 +106900,19 @@ var require_alternatives = __commonJS({
             }
           }
           if (matched.length === 0) {
-            const context4 = {
+            const context5 = {
               details: failed.map((f) => Errors.details(f, { override: false }))
             };
-            return { errors: error2("alternatives.any", context4) };
+            return { errors: error2("alternatives.any", context5) };
           }
           if (schema._flags.match === "one") {
             return matched.length === 1 ? { value: matched[0] } : { errors: error2("alternatives.one") };
           }
           if (matched.length !== schema.$_terms.matches.length) {
-            const context4 = {
+            const context5 = {
               details: failed.map((f) => Errors.details(f, { override: false }))
             };
-            return { errors: error2("alternatives.all", context4) };
+            return { errors: error2("alternatives.all", context5) };
           }
           const isAnyObj = (alternative) => {
             return alternative.$_terms.matches.some((v) => {
@@ -107472,32 +107472,32 @@ var require_array = __commonJS({
                 while (!(current = entries.next()).done) {
                   if (compare(current.value[0], item)) {
                     const localState = state.localize([...state.path, i], [value, ...state.ancestors]);
-                    const context4 = {
+                    const context5 = {
                       pos: i,
                       value: value[i],
                       dupePos: current.value[1],
                       dupeValue: value[current.value[1]]
                     };
                     if (path) {
-                      context4.path = raw;
+                      context5.path = raw;
                     }
-                    return error2("array.unique", context4, localState);
+                    return error2("array.unique", context5, localState);
                   }
                 }
                 records.set(item, i);
               } else {
                 if ((!ignoreUndefined || item !== void 0) && records[item] !== void 0) {
-                  const context4 = {
+                  const context5 = {
                     pos: i,
                     value: value[i],
                     dupePos: records[item],
                     dupeValue: value[records[item]]
                   };
                   if (path) {
-                    context4.path = raw;
+                    context5.path = raw;
                   }
                   const localState = state.localize([...state.path, i], [value, ...state.ancestors]);
-                  return error2("array.unique", context4, localState);
+                  return error2("array.unique", context5, localState);
                 }
                 records[item] = i;
               }
@@ -108693,10 +108693,10 @@ var require_keys = __commonJS({
         if (!present.length || present.length === 1) {
           return;
         }
-        const context4 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
-        context4.present = present;
-        context4.presentWithLabels = internals.keysToLabels(schema, present);
-        return { code: "object.oxor", context: context4 };
+        const context5 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
+        context5.present = present;
+        context5.presentWithLabels = internals.keysToLabels(schema, present);
+        return { code: "object.oxor", context: context5 };
       },
       with(schema, dep, value, state, prefs) {
         const isPresent = internals.isPresent(dep.options);
@@ -108741,13 +108741,13 @@ var require_keys = __commonJS({
         if (present.length === 1) {
           return;
         }
-        const context4 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
+        const context5 = { peers: dep.paths, peersWithLabels: internals.keysToLabels(schema, dep.paths) };
         if (present.length === 0) {
-          return { code: "object.missing", context: context4 };
+          return { code: "object.missing", context: context5 };
         }
-        context4.present = present;
-        context4.presentWithLabels = internals.keysToLabels(schema, present);
-        return { code: "object.xor", context: context4 };
+        context5.present = present;
+        context5.presentWithLabels = internals.keysToLabels(schema, present);
+        return { code: "object.xor", context: context5 };
       }
     };
     internals.keysToLabels = function(schema, keys) {
@@ -117502,15 +117502,15 @@ var require_cst_scalar = __commonJS({
       }
       return null;
     }
-    function createScalarToken(value, context4) {
-      const { implicitKey = false, indent, inFlow = false, offset = -1, type = "PLAIN" } = context4;
+    function createScalarToken(value, context5) {
+      const { implicitKey = false, indent, inFlow = false, offset = -1, type = "PLAIN" } = context5;
       const source = stringifyString.stringifyString({ type, value }, {
         implicitKey,
         indent: indent > 0 ? " ".repeat(indent) : "",
         inFlow,
         options: { blockQuote: true, lineWidth: -1 }
       });
-      const end = context4.end ?? [
+      const end = context5.end ?? [
         { type: "newline", offset: -1, indent, source: "\n" }
       ];
       switch (source[0]) {
@@ -117534,8 +117534,8 @@ var require_cst_scalar = __commonJS({
           return { type: "scalar", offset, indent, source, end };
       }
     }
-    function setScalarValue(token, value, context4 = {}) {
-      let { afterKey = false, implicitKey = false, inFlow = false, type } = context4;
+    function setScalarValue(token, value, context5 = {}) {
+      let { afterKey = false, implicitKey = false, inFlow = false, type } = context5;
       let indent = "indent" in token ? token.indent : null;
       if (afterKey && typeof indent === "number")
         indent += 2;
@@ -119691,59 +119691,59 @@ function timestampInSeconds() {
 }
 
 // node_modules/.pnpm/@sentry+core@9.47.1/node_modules/@sentry/core/build/esm/session.js
-function updateSession(session, context4 = {}) {
-  if (context4.user) {
-    if (!session.ipAddress && context4.user.ip_address) {
-      session.ipAddress = context4.user.ip_address;
+function updateSession(session, context5 = {}) {
+  if (context5.user) {
+    if (!session.ipAddress && context5.user.ip_address) {
+      session.ipAddress = context5.user.ip_address;
     }
-    if (!session.did && !context4.did) {
-      session.did = context4.user.id || context4.user.email || context4.user.username;
+    if (!session.did && !context5.did) {
+      session.did = context5.user.id || context5.user.email || context5.user.username;
     }
   }
-  session.timestamp = context4.timestamp || timestampInSeconds();
-  if (context4.abnormal_mechanism) {
-    session.abnormal_mechanism = context4.abnormal_mechanism;
+  session.timestamp = context5.timestamp || timestampInSeconds();
+  if (context5.abnormal_mechanism) {
+    session.abnormal_mechanism = context5.abnormal_mechanism;
   }
-  if (context4.ignoreDuration) {
-    session.ignoreDuration = context4.ignoreDuration;
+  if (context5.ignoreDuration) {
+    session.ignoreDuration = context5.ignoreDuration;
   }
-  if (context4.sid) {
-    session.sid = context4.sid.length === 32 ? context4.sid : uuid4();
+  if (context5.sid) {
+    session.sid = context5.sid.length === 32 ? context5.sid : uuid4();
   }
-  if (context4.init !== void 0) {
-    session.init = context4.init;
+  if (context5.init !== void 0) {
+    session.init = context5.init;
   }
-  if (!session.did && context4.did) {
-    session.did = `${context4.did}`;
+  if (!session.did && context5.did) {
+    session.did = `${context5.did}`;
   }
-  if (typeof context4.started === "number") {
-    session.started = context4.started;
+  if (typeof context5.started === "number") {
+    session.started = context5.started;
   }
   if (session.ignoreDuration) {
     session.duration = void 0;
-  } else if (typeof context4.duration === "number") {
-    session.duration = context4.duration;
+  } else if (typeof context5.duration === "number") {
+    session.duration = context5.duration;
   } else {
     const duration = session.timestamp - session.started;
     session.duration = duration >= 0 ? duration : 0;
   }
-  if (context4.release) {
-    session.release = context4.release;
+  if (context5.release) {
+    session.release = context5.release;
   }
-  if (context4.environment) {
-    session.environment = context4.environment;
+  if (context5.environment) {
+    session.environment = context5.environment;
   }
-  if (!session.ipAddress && context4.ipAddress) {
-    session.ipAddress = context4.ipAddress;
+  if (!session.ipAddress && context5.ipAddress) {
+    session.ipAddress = context5.ipAddress;
   }
-  if (!session.userAgent && context4.userAgent) {
-    session.userAgent = context4.userAgent;
+  if (!session.userAgent && context5.userAgent) {
+    session.userAgent = context5.userAgent;
   }
-  if (typeof context4.errors === "number") {
-    session.errors = context4.errors;
+  if (typeof context5.errors === "number") {
+    session.errors = context5.errors;
   }
-  if (context4.status) {
-    session.status = context4.status;
+  if (context5.status) {
+    session.status = context5.status;
   }
 }
 
@@ -119997,11 +119997,11 @@ var Scope = class _Scope {
    * Data passed as context will be normalized. You can also pass `null` to unset the context.
    * Note that context data will not be merged - calling `setContext` will overwrite an existing context with the same key.
    */
-  setContext(key, context4) {
-    if (context4 === null) {
+  setContext(key, context5) {
+    if (context5 === null) {
       delete this._contexts[key];
     } else {
-      this._contexts[key] = context4;
+      this._contexts[key] = context5;
     }
     this._notifyScopeListeners();
     return this;
@@ -120155,8 +120155,8 @@ var Scope = class _Scope {
   /**
    * Add propagation context to the scope, used for distributed tracing
    */
-  setPropagationContext(context4) {
-    this._propagationContext = context4;
+  setPropagationContext(context5) {
+    this._propagationContext = context5;
     return this;
   }
   /**
@@ -120582,7 +120582,19 @@ var getCommentIdentifier = (testSuiteOrProjectId) => {
 
 // src/common/get-base-and-head-commit-shas.ts
 var import_child_process = require("child_process");
+var import_github5 = __toESM(require_github());
+
+// src/common/get-merge-base-via-compare-api.ts
 var import_github4 = __toESM(require_github());
+
+// src/common/constants.ts
+var METICULIOUS_APP_URL = "https://app.meticulous.ai";
+var DOCS_URL = `${METICULIOUS_APP_URL}/docs/github-actions-v2`;
+
+// src/common/error.utils.ts
+var DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE = `Please check www.githubstatus.com, and that you have setup the action correctly, including with the correct permissions: see ${DOCS_URL} for the correct setup.`;
+
+// src/common/get-base-and-head-commit-shas.ts
 var getActualCommitShaFromRepo = () => {
   return (0, import_child_process.execFileSync)("git", ["rev-list", "--max-count=1", "HEAD"]).toString().trim();
 };

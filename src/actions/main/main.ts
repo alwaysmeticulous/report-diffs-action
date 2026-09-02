@@ -81,6 +81,7 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
         event,
         {
           useDeploymentUrl,
+          octokit,
         },
         logger
       );

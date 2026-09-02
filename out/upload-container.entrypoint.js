@@ -958,7 +958,7 @@ var require_source_map_consumer = __commonJS({
     SourceMapConsumer.GREATEST_LOWER_BOUND = 1;
     SourceMapConsumer.LEAST_UPPER_BOUND = 2;
     SourceMapConsumer.prototype.eachMapping = function SourceMapConsumer_eachMapping(aCallback, aContext, aOrder) {
-      var context5 = aContext || null;
+      var context6 = aContext || null;
       var order = aOrder || SourceMapConsumer.GENERATED_ORDER;
       var mappings;
       switch (order) {
@@ -983,7 +983,7 @@ var require_source_map_consumer = __commonJS({
           originalColumn: mapping.originalColumn,
           name: mapping.name === null ? null : this._names.at(mapping.name)
         };
-      }, this).forEach(aCallback, context5);
+      }, this).forEach(aCallback, context6);
     };
     SourceMapConsumer.prototype.allGeneratedPositionsFor = function SourceMapConsumer_allGeneratedPositionsFor(aArgs) {
       var line = util.getArg(aArgs, "line");
@@ -6540,18 +6540,18 @@ var require_webidl = __commonJS({
     webidl.errors.exception = function(message) {
       return new TypeError(`${message.header}: ${message.message}`);
     };
-    webidl.errors.conversionFailed = function(context5) {
-      const plural = context5.types.length === 1 ? "" : " one of";
-      const message = `${context5.argument} could not be converted to${plural}: ${context5.types.join(", ")}.`;
+    webidl.errors.conversionFailed = function(context6) {
+      const plural = context6.types.length === 1 ? "" : " one of";
+      const message = `${context6.argument} could not be converted to${plural}: ${context6.types.join(", ")}.`;
       return webidl.errors.exception({
-        header: context5.prefix,
+        header: context6.prefix,
         message
       });
     };
-    webidl.errors.invalidArgument = function(context5) {
+    webidl.errors.invalidArgument = function(context6) {
       return webidl.errors.exception({
-        header: context5.prefix,
-        message: `"${context5.value}" is an invalid ${context5.type}.`
+        header: context6.prefix,
+        message: `"${context6.value}" is an invalid ${context6.type}.`
       });
     };
     webidl.brandCheck = function(V, I, opts = void 0) {
@@ -11897,15 +11897,15 @@ var require_api_request = __commonJS({
         }
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context6) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context5;
+        this.context = context6;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { callback, opaque, abort, context: context5, responseHeaders, highWaterMark } = this;
+        const { callback, opaque, abort, context: context6, responseHeaders, highWaterMark } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -11932,7 +11932,7 @@ var require_api_request = __commonJS({
               trailers: this.trailers,
               opaque,
               body,
-              context: context5
+              context: context6
             });
           }
         }
@@ -12052,15 +12052,15 @@ var require_api_stream = __commonJS({
         }
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context6) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context5;
+        this.context = context6;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { factory, opaque, context: context5, callback, responseHeaders } = this;
+        const { factory, opaque, context: context6, callback, responseHeaders } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -12088,7 +12088,7 @@ var require_api_stream = __commonJS({
             statusCode,
             headers,
             opaque,
-            context: context5
+            context: context6
           });
           if (!res || typeof res.write !== "function" || typeof res.end !== "function" || typeof res.on !== "function") {
             throw new InvalidReturnValueError("expected Writable");
@@ -12280,17 +12280,17 @@ var require_api_pipeline = __commonJS({
         this.res = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context6) {
         const { ret, res } = this;
         assert(!res, "pipeline cannot be retried");
         if (ret.destroyed) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context5;
+        this.context = context6;
       }
       onHeaders(statusCode, rawHeaders, resume) {
-        const { opaque, handler, context: context5 } = this;
+        const { opaque, handler, context: context6 } = this;
         if (statusCode < 200) {
           if (this.onInfo) {
             const headers = this.responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
@@ -12308,7 +12308,7 @@ var require_api_pipeline = __commonJS({
             headers,
             opaque,
             body: this.res,
-            context: context5
+            context: context6
           });
         } catch (err) {
           this.res.on("error", util.nop);
@@ -12392,7 +12392,7 @@ var require_api_upgrade = __commonJS({
         this.context = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context6) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
@@ -12403,7 +12403,7 @@ var require_api_upgrade = __commonJS({
         throw new SocketError("bad upgrade", null);
       }
       onUpgrade(statusCode, rawHeaders, socket) {
-        const { callback, opaque, context: context5 } = this;
+        const { callback, opaque, context: context6 } = this;
         assert.strictEqual(statusCode, 101);
         removeSignal(this);
         this.callback = null;
@@ -12412,7 +12412,7 @@ var require_api_upgrade = __commonJS({
           headers,
           socket,
           opaque,
-          context: context5
+          context: context6
         });
       }
       onError(err) {
@@ -12480,18 +12480,18 @@ var require_api_connect = __commonJS({
         this.abort = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context6) {
         if (!this.callback) {
           throw new RequestAbortedError();
         }
         this.abort = abort;
-        this.context = context5;
+        this.context = context6;
       }
       onHeaders() {
         throw new SocketError("bad connect", null);
       }
       onUpgrade(statusCode, rawHeaders, socket) {
-        const { callback, opaque, context: context5 } = this;
+        const { callback, opaque, context: context6 } = this;
         removeSignal(this);
         this.callback = null;
         let headers = rawHeaders;
@@ -12503,7 +12503,7 @@ var require_api_connect = __commonJS({
           headers,
           socket,
           opaque,
-          context: context5
+          context: context6
         });
       }
       onError(err) {
@@ -22699,14 +22699,14 @@ var init_context = __esm({
           return self2._currentContext.get(key);
         };
         self2.setValue = function(key, value) {
-          var context5 = new BaseContext3(self2._currentContext);
-          context5._currentContext.set(key, value);
-          return context5;
+          var context6 = new BaseContext3(self2._currentContext);
+          context6._currentContext.set(key, value);
+          return context6;
         };
         self2.deleteValue = function(key) {
-          var context5 = new BaseContext3(self2._currentContext);
-          context5._currentContext.delete(key);
-          return context5;
+          var context6 = new BaseContext3(self2._currentContext);
+          context6._currentContext.delete(key);
+          return context6;
         };
       }
       return BaseContext3;
@@ -23067,16 +23067,16 @@ var init_context2 = __esm({
       ContextAPI3.prototype.active = function() {
         return this._getContextManager().active();
       };
-      ContextAPI3.prototype.with = function(context5, fn, thisArg) {
+      ContextAPI3.prototype.with = function(context6, fn, thisArg) {
         var _a2;
         var args = [];
         for (var _i = 3; _i < arguments.length; _i++) {
           args[_i - 3] = arguments[_i];
         }
-        return (_a2 = this._getContextManager()).with.apply(_a2, __spreadArray4([context5, fn, thisArg], __read5(args), false));
+        return (_a2 = this._getContextManager()).with.apply(_a2, __spreadArray4([context6, fn, thisArg], __read5(args), false));
       };
-      ContextAPI3.prototype.bind = function(context5, target) {
-        return this._getContextManager().bind(context5, target);
+      ContextAPI3.prototype.bind = function(context6, target) {
+        return this._getContextManager().bind(context6, target);
       };
       ContextAPI3.prototype._getContextManager = function() {
         return getGlobal(API_NAME2) || NOOP_CONTEXT_MANAGER;
@@ -23166,24 +23166,24 @@ var init_NonRecordingSpan = __esm({
 });
 
 // node_modules/.pnpm/@opentelemetry+api@1.9.0/node_modules/@opentelemetry/api/build/esm/trace/context-utils.js
-function getSpan(context5) {
-  return context5.getValue(SPAN_KEY) || void 0;
+function getSpan(context6) {
+  return context6.getValue(SPAN_KEY) || void 0;
 }
 function getActiveSpan() {
   return getSpan(ContextAPI.getInstance().active());
 }
-function setSpan(context5, span) {
-  return context5.setValue(SPAN_KEY, span);
+function setSpan(context6, span) {
+  return context6.setValue(SPAN_KEY, span);
 }
-function deleteSpan(context5) {
-  return context5.deleteValue(SPAN_KEY);
+function deleteSpan(context6) {
+  return context6.deleteValue(SPAN_KEY);
 }
-function setSpanContext(context5, spanContext) {
-  return setSpan(context5, new NonRecordingSpan(spanContext));
+function setSpanContext(context6, spanContext) {
+  return setSpan(context6, new NonRecordingSpan(spanContext));
 }
-function getSpanContext(context5) {
+function getSpanContext(context6) {
   var _a2;
-  return (_a2 = getSpan(context5)) === null || _a2 === void 0 ? void 0 : _a2.spanContext();
+  return (_a2 = getSpan(context6)) === null || _a2 === void 0 ? void 0 : _a2.spanContext();
 }
 var SPAN_KEY;
 var init_context_utils = __esm({
@@ -23234,15 +23234,15 @@ var init_NoopTracer = __esm({
     function() {
       function NoopTracer3() {
       }
-      NoopTracer3.prototype.startSpan = function(name, options, context5) {
-        if (context5 === void 0) {
-          context5 = contextApi.active();
+      NoopTracer3.prototype.startSpan = function(name, options, context6) {
+        if (context6 === void 0) {
+          context6 = contextApi.active();
         }
         var root = Boolean(options === null || options === void 0 ? void 0 : options.root);
         if (root) {
           return new NonRecordingSpan();
         }
-        var parentFromContext = context5 && getSpanContext(context5);
+        var parentFromContext = context6 && getSpanContext(context6);
         if (isSpanContext(parentFromContext) && isSpanContextValid(parentFromContext)) {
           return new NonRecordingSpan(parentFromContext);
         } else {
@@ -23289,8 +23289,8 @@ var init_ProxyTracer = __esm({
         this.version = version;
         this.options = options;
       }
-      ProxyTracer3.prototype.startSpan = function(name, options, context5) {
-        return this._getTracer().startSpan(name, options, context5);
+      ProxyTracer3.prototype.startSpan = function(name, options, context6) {
+        return this._getTracer().startSpan(name, options, context6);
       };
       ProxyTracer3.prototype.startActiveSpan = function(_name, _options, _context, _fn) {
         var tracer = this._getTracer();
@@ -23589,8 +23589,8 @@ var init_NoopTextMapPropagator = __esm({
       }
       NoopTextMapPropagator3.prototype.inject = function(_context, _carrier) {
       };
-      NoopTextMapPropagator3.prototype.extract = function(context5, _carrier) {
-        return context5;
+      NoopTextMapPropagator3.prototype.extract = function(context6, _carrier) {
+        return context6;
       };
       NoopTextMapPropagator3.prototype.fields = function() {
         return [];
@@ -23601,17 +23601,17 @@ var init_NoopTextMapPropagator = __esm({
 });
 
 // node_modules/.pnpm/@opentelemetry+api@1.9.0/node_modules/@opentelemetry/api/build/esm/baggage/context-helpers.js
-function getBaggage(context5) {
-  return context5.getValue(BAGGAGE_KEY) || void 0;
+function getBaggage(context6) {
+  return context6.getValue(BAGGAGE_KEY) || void 0;
 }
 function getActiveBaggage() {
   return getBaggage(ContextAPI.getInstance().active());
 }
-function setBaggage(context5, baggage) {
-  return context5.setValue(BAGGAGE_KEY, baggage);
+function setBaggage(context6, baggage) {
+  return context6.setValue(BAGGAGE_KEY, baggage);
 }
-function deleteBaggage(context5) {
-  return context5.deleteValue(BAGGAGE_KEY);
+function deleteBaggage(context6) {
+  return context6.deleteValue(BAGGAGE_KEY);
 }
 var BAGGAGE_KEY;
 var init_context_helpers = __esm({
@@ -23652,17 +23652,17 @@ var init_propagation = __esm({
       PropagationAPI3.prototype.setGlobalPropagator = function(propagator) {
         return registerGlobal(API_NAME4, propagator, DiagAPI.instance());
       };
-      PropagationAPI3.prototype.inject = function(context5, carrier, setter) {
+      PropagationAPI3.prototype.inject = function(context6, carrier, setter) {
         if (setter === void 0) {
           setter = defaultTextMapSetter;
         }
-        return this._getGlobalPropagator().inject(context5, carrier, setter);
+        return this._getGlobalPropagator().inject(context6, carrier, setter);
       };
-      PropagationAPI3.prototype.extract = function(context5, carrier, getter) {
+      PropagationAPI3.prototype.extract = function(context6, carrier, getter) {
         if (getter === void 0) {
           getter = defaultTextMapGetter;
         }
-        return this._getGlobalPropagator().extract(context5, carrier, getter);
+        return this._getGlobalPropagator().extract(context6, carrier, getter);
       };
       PropagationAPI3.prototype.fields = function() {
         return this._getGlobalPropagator().fields();
@@ -24236,8 +24236,8 @@ var require_dist_node2 = __commonJS({
     function isKeyOperator(operator) {
       return operator === ";" || operator === "&" || operator === "?";
     }
-    function getValues(context5, operator, key, modifier) {
-      var value = context5[key], result = [];
+    function getValues(context6, operator, key, modifier) {
+      var value = context6[key], result = [];
       if (isDefined(value) && value !== "") {
         if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
           value = value.toString();
@@ -24297,7 +24297,7 @@ var require_dist_node2 = __commonJS({
         expand: expand.bind(null, template)
       };
     }
-    function expand(template, context5) {
+    function expand(template, context6) {
       var operators = ["+", "#", ".", "/", ";", "?", "&"];
       return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function(_, expression, literal) {
         if (expression) {
@@ -24309,7 +24309,7 @@ var require_dist_node2 = __commonJS({
           }
           expression.split(/,/g).forEach(function(variable) {
             var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-            values.push(getValues(context5, operator, tmp[1], tmp[2] || tmp[3]));
+            values.push(getValues(context6, operator, tmp[1], tmp[2] || tmp[3]));
           });
           if (operator && operator !== "+") {
             var separator = ",";
@@ -29652,10 +29652,10 @@ var require_agent_api = __commonJS({
       return data;
     };
     exports2.getTestRunDiffsSummaryCounts = getTestRunDiffsSummaryCounts;
-    var getScreenshotDomDiff = async (client, replayDiffId, screenshotName, context5) => {
+    var getScreenshotDomDiff = async (client, replayDiffId, screenshotName, context6) => {
       const params = {};
-      if (context5 != null) {
-        params.context = context5;
+      if (context6 != null) {
+        params.context = context6;
       }
       const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/dom-diff`, { params }).catch((error2) => {
         throw (0, errors_1.maybeEnrichFetchError)(error2);
@@ -40923,18 +40923,18 @@ var require_webidl2 = __commonJS({
     webidl.errors.exception = function(message) {
       return new TypeError(`${message.header}: ${message.message}`);
     };
-    webidl.errors.conversionFailed = function(context5) {
-      const plural = context5.types.length === 1 ? "" : " one of";
-      const message = `${context5.argument} could not be converted to${plural}: ${context5.types.join(", ")}.`;
+    webidl.errors.conversionFailed = function(context6) {
+      const plural = context6.types.length === 1 ? "" : " one of";
+      const message = `${context6.argument} could not be converted to${plural}: ${context6.types.join(", ")}.`;
       return webidl.errors.exception({
-        header: context5.prefix,
+        header: context6.prefix,
         message
       });
     };
-    webidl.errors.invalidArgument = function(context5) {
+    webidl.errors.invalidArgument = function(context6) {
       return webidl.errors.exception({
-        header: context5.prefix,
-        message: `"${context5.value}" is an invalid ${context5.type}.`
+        header: context6.prefix,
+        message: `"${context6.value}" is an invalid ${context6.type}.`
       });
     };
     webidl.brandCheck = function(V, I, opts) {
@@ -47059,17 +47059,17 @@ var require_api_request2 = __commonJS({
           }
         }
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context6) {
         if (this.reason) {
           abort(this.reason);
           return;
         }
         assert(this.callback);
         this.abort = abort;
-        this.context = context5;
+        this.context = context6;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { callback, opaque, abort, context: context5, responseHeaders, highWaterMark } = this;
+        const { callback, opaque, abort, context: context6, responseHeaders, highWaterMark } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -47106,7 +47106,7 @@ var require_api_request2 = __commonJS({
               trailers: this.trailers,
               opaque,
               body: res,
-              context: context5
+              context: context6
             });
           }
         }
@@ -47275,17 +47275,17 @@ var require_api_stream2 = __commonJS({
         }
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context6) {
         if (this.reason) {
           abort(this.reason);
           return;
         }
         assert(this.callback);
         this.abort = abort;
-        this.context = context5;
+        this.context = context6;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const { factory, opaque, context: context5, callback, responseHeaders } = this;
+        const { factory, opaque, context: context6, callback, responseHeaders } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
           if (this.onInfo) {
@@ -47313,7 +47313,7 @@ var require_api_stream2 = __commonJS({
             statusCode,
             headers,
             opaque,
-            context: context5
+            context: context6
           });
           if (!res || typeof res.write !== "function" || typeof res.end !== "function" || typeof res.on !== "function") {
             throw new InvalidReturnValueError("expected Writable");
@@ -47505,7 +47505,7 @@ var require_api_pipeline2 = __commonJS({
         this.res = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context6) {
         const { ret, res } = this;
         if (this.reason) {
           abort(this.reason);
@@ -47514,10 +47514,10 @@ var require_api_pipeline2 = __commonJS({
         assert(!res, "pipeline cannot be retried");
         assert(!ret.destroyed);
         this.abort = abort;
-        this.context = context5;
+        this.context = context6;
       }
       onHeaders(statusCode, rawHeaders, resume) {
-        const { opaque, handler, context: context5 } = this;
+        const { opaque, handler, context: context6 } = this;
         if (statusCode < 200) {
           if (this.onInfo) {
             const headers = this.responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
@@ -47535,7 +47535,7 @@ var require_api_pipeline2 = __commonJS({
             headers,
             opaque,
             body: this.res,
-            context: context5
+            context: context6
           });
         } catch (err) {
           this.res.on("error", util.nop);
@@ -47619,7 +47619,7 @@ var require_api_upgrade2 = __commonJS({
         this.context = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context6) {
         if (this.reason) {
           abort(this.reason);
           return;
@@ -47633,7 +47633,7 @@ var require_api_upgrade2 = __commonJS({
       }
       onUpgrade(statusCode, rawHeaders, socket) {
         assert(statusCode === 101);
-        const { callback, opaque, context: context5 } = this;
+        const { callback, opaque, context: context6 } = this;
         removeSignal(this);
         this.callback = null;
         const headers = this.responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
@@ -47641,7 +47641,7 @@ var require_api_upgrade2 = __commonJS({
           headers,
           socket,
           opaque,
-          context: context5
+          context: context6
         });
       }
       onError(err) {
@@ -47710,20 +47710,20 @@ var require_api_connect2 = __commonJS({
         this.abort = null;
         addSignal(this, signal);
       }
-      onConnect(abort, context5) {
+      onConnect(abort, context6) {
         if (this.reason) {
           abort(this.reason);
           return;
         }
         assert(this.callback);
         this.abort = abort;
-        this.context = context5;
+        this.context = context6;
       }
       onHeaders() {
         throw new SocketError("bad connect", null);
       }
       onUpgrade(statusCode, rawHeaders, socket) {
-        const { callback, opaque, context: context5 } = this;
+        const { callback, opaque, context: context6 } = this;
         removeSignal(this);
         this.callback = null;
         let headers = rawHeaders;
@@ -47735,7 +47735,7 @@ var require_api_connect2 = __commonJS({
           headers,
           socket,
           opaque,
-          context: context5
+          context: context6
         });
       }
       onError(err) {
@@ -58970,7 +58970,7 @@ var require_lru_cache = __commonJS({
           return this.isBackgroundFetch(v) ? v.__staleWhileFetching : v;
         }
       }
-      backgroundFetch(k, index, options, context5) {
+      backgroundFetch(k, index, options, context6) {
         const v = index === void 0 ? void 0 : this.valList[index];
         if (this.isBackgroundFetch(v)) {
           return v;
@@ -58985,7 +58985,7 @@ var require_lru_cache = __commonJS({
         const fetchOpts = {
           signal: ac.signal,
           options,
-          context: context5
+          context: context6
         };
         const cb = (v2, updateCache = false) => {
           const { aborted } = ac.signal;
@@ -77256,17 +77256,17 @@ function __esDecorate(ctor, descriptorIn, decorators, contextIn, initializers, e
   var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
   var _, done = false;
   for (var i = decorators.length - 1; i >= 0; i--) {
-    var context5 = {};
+    var context6 = {};
     for (var p in contextIn)
-      context5[p] = p === "access" ? {} : contextIn[p];
+      context6[p] = p === "access" ? {} : contextIn[p];
     for (var p in contextIn.access)
-      context5.access[p] = contextIn.access[p];
-    context5.addInitializer = function(f) {
+      context6.access[p] = contextIn.access[p];
+    context6.addInitializer = function(f) {
       if (done)
         throw new TypeError("Cannot add initializers after decoration has completed");
       extraInitializers.push(accept(f || null));
     };
-    var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context5);
+    var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context6);
     if (kind === "accessor") {
       if (result === void 0)
         continue;
@@ -78364,15 +78364,15 @@ var require_types2 = __commonJS({
         }
         return object && object[fieldName];
       }
-      function eachField(object, callback, context5) {
+      function eachField(object, callback, context6) {
         getFieldNames(object).forEach(function(name) {
           callback.call(this, name, getFieldValue(object, name));
-        }, context5);
+        }, context6);
       }
-      function someField(object, callback, context5) {
+      function someField(object, callback, context6) {
         return getFieldNames(object).some(function(name) {
           return callback.call(this, name, getFieldValue(object, name));
-        }, context5);
+        }, context6);
       }
       function wrapExpressionBuilderWithStatement(typeName) {
         var wrapperName = getStatementBuilderName(typeName);
@@ -78511,7 +78511,7 @@ var require_path = __commonJS({
         }
         return path;
       };
-      Pp.each = function each(callback, context5) {
+      Pp.each = function each(callback, context6) {
         var childPaths = [];
         var len = this.value.length;
         var i = 0;
@@ -78520,27 +78520,27 @@ var require_path = __commonJS({
             childPaths[i] = this.get(i);
           }
         }
-        context5 = context5 || this;
+        context6 = context6 || this;
         for (i = 0; i < len; ++i) {
           if (hasOwn.call(childPaths, i)) {
-            callback.call(context5, childPaths[i]);
+            callback.call(context6, childPaths[i]);
           }
         }
       };
-      Pp.map = function map(callback, context5) {
+      Pp.map = function map(callback, context6) {
         var result = [];
         this.each(function(childPath) {
           result.push(callback.call(this, childPath));
-        }, context5);
+        }, context6);
         return result;
       };
-      Pp.filter = function filter(callback, context5) {
+      Pp.filter = function filter(callback, context6) {
         var result = [];
         this.each(function(childPath) {
           if (callback.call(this, childPath)) {
             result.push(childPath);
           }
-        }, context5);
+        }, context6);
         return result;
       };
       function emptyMoves() {
@@ -79503,11 +79503,11 @@ var require_path_visitor = __commonJS({
         var value = path.value;
         var methodName = value && typeof value === "object" && typeof value.type === "string" && this._methodNameTable[value.type];
         if (methodName) {
-          var context5 = this.acquireContext(path);
+          var context6 = this.acquireContext(path);
           try {
-            return context5.invokeVisitorMethod(methodName);
+            return context6.invokeVisitorMethod(methodName);
           } finally {
-            this.releaseContext(context5);
+            this.releaseContext(context6);
           }
         } else {
           return visitChildren(path, this);
@@ -79550,12 +79550,12 @@ var require_path_visitor = __commonJS({
         }
         return this._reusableContextStack.pop().reset(path);
       };
-      PVp.releaseContext = function(context5) {
-        if (!(context5 instanceof this.Context)) {
+      PVp.releaseContext = function(context6) {
+        if (!(context6 instanceof this.Context)) {
           throw new Error("");
         }
-        this._reusableContextStack.push(context5);
-        context5.currentPath = null;
+        this._reusableContextStack.push(context6);
+        context6.currentPath = null;
       };
       PVp.reportChanged = function() {
         this._changeReported = true;
@@ -81905,16 +81905,16 @@ var require_dist8 = __commonJS({
     var weekdayRange_1 = __importDefault2(require_weekdayRange());
     function createPacResolver(qjs, _str, _opts = {}) {
       const str = Buffer.isBuffer(_str) ? _str.toString("utf8") : _str;
-      const context5 = {
+      const context6 = {
         ...exports2.sandbox,
         ..._opts.sandbox
       };
-      const names = Object.keys(context5).filter((k) => isAsyncFunction(context5[k]));
+      const names = Object.keys(context6).filter((k) => isAsyncFunction(context6[k]));
       const opts = {
         filename: "proxy.pac",
         names,
         ..._opts,
-        sandbox: context5
+        sandbox: context6
       };
       const resolver = (0, degenerator_1.compile)(qjs, str, "FindProxyForURL", opts);
       function FindProxyForURL(url, _host) {
@@ -81996,10 +81996,10 @@ var require_errors4 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.QuickJSMemoryLeakDetected = exports2.QuickJSAsyncifySuspended = exports2.QuickJSAsyncifyError = exports2.QuickJSNotImplemented = exports2.QuickJSUseAfterFree = exports2.QuickJSWrongOwner = exports2.QuickJSUnwrapError = void 0;
     var QuickJSUnwrapError = class extends Error {
-      constructor(cause, context5) {
+      constructor(cause, context6) {
         super(String(cause));
         this.cause = cause;
-        this.context = context5;
+        this.context = context6;
         this.name = "QuickJSUnwrapError";
       }
     };
@@ -83039,7 +83039,7 @@ var require_context2 = __commonJS({
        */
       unwrapResult(result) {
         if (result.error) {
-          const context5 = "context" in result.error ? result.error.context : this;
+          const context6 = "context" in result.error ? result.error.context : this;
           const cause = result.error.consume((error2) => this.dump(error2));
           if (cause && typeof cause === "object" && typeof cause.message === "string") {
             const { message, name, stack } = cause;
@@ -83052,10 +83052,10 @@ var require_context2 = __commonJS({
               exception.stack = `${name}: ${message}
 ${cause.stack}Host: ${hostStack}`;
             }
-            Object.assign(exception, { cause, context: context5, message });
+            Object.assign(exception, { cause, context: context6, message });
             throw exception;
           }
-          throw new errors_1.QuickJSUnwrapError(cause, context5);
+          throw new errors_1.QuickJSUnwrapError(cause, context6);
         }
         return result.value;
       }
@@ -83126,11 +83126,11 @@ var require_runtime = __commonJS({
             if (rt !== this.rt.value) {
               throw new Error("Runtime pointer mismatch");
             }
-            const context5 = this.contextMap.get(ctx) ?? this.newContext({
+            const context6 = this.contextMap.get(ctx) ?? this.newContext({
               contextPointer: ctx
             });
             try {
-              const result = yield* awaited(moduleLoader(moduleName, context5));
+              const result = yield* awaited(moduleLoader(moduleName, context6));
               if (typeof result === "object" && "error" in result && result.error) {
                 (0, debug_1.debugLog)("cToHostLoadModule: loader returned error", result.error);
                 throw result.error;
@@ -83139,7 +83139,7 @@ var require_runtime = __commonJS({
               return this.memory.newHeapCharPointer(moduleSource).value;
             } catch (error2) {
               (0, debug_1.debugLog)("cToHostLoadModule: caught error", error2);
-              context5.throw(error2);
+              context6.throw(error2);
               return 0;
             }
           }),
@@ -83151,21 +83151,21 @@ var require_runtime = __commonJS({
             if (rt !== this.rt.value) {
               throw new Error("Runtime pointer mismatch");
             }
-            const context5 = this.contextMap.get(ctx) ?? this.newContext({
+            const context6 = this.contextMap.get(ctx) ?? this.newContext({
               /* TODO: Does this happen? Are we responsible for disposing? I don't think so */
               contextPointer: ctx
             });
             try {
-              const result = yield* awaited(moduleNormalizer(baseModuleName, moduleNameRequest, context5));
+              const result = yield* awaited(moduleNormalizer(baseModuleName, moduleNameRequest, context6));
               if (typeof result === "object" && "error" in result && result.error) {
                 (0, debug_1.debugLog)("cToHostNormalizeModule: normalizer returned error", result.error);
                 throw result.error;
               }
               const name = typeof result === "string" ? result : result.value;
-              return context5.getMemory(this.rt.value).newHeapCharPointer(name).value;
+              return context6.getMemory(this.rt.value).newHeapCharPointer(name).value;
             } catch (error2) {
               (0, debug_1.debugLog)("normalizeModule: caught error", error2);
-              context5.throw(error2);
+              context6.throw(error2);
               return 0;
             }
           })
@@ -83195,7 +83195,7 @@ var require_runtime = __commonJS({
           this.callbacks.deleteContext(ctx_ptr);
           this.ffi.QTS_FreeContext(ctx_ptr);
         });
-        const context5 = new context_1.QuickJSContext({
+        const context6 = new context_1.QuickJSContext({
           module: this.module,
           ctx,
           ffi: this.ffi,
@@ -83204,8 +83204,8 @@ var require_runtime = __commonJS({
           runtime: this,
           callbacks: this.callbacks
         });
-        this.contextMap.set(ctx.value, context5);
-        return context5;
+        this.contextMap.set(ctx.value, context6);
+        return context6;
       }
       /**
        * Set the loader for EcmaScript modules requested by any context in this
@@ -83285,17 +83285,17 @@ var require_runtime = __commonJS({
           this.ffi.QTS_FreeValuePointerRuntime(this.rt.value, valuePtr);
           return { value: 0 };
         }
-        const context5 = this.contextMap.get(ctxPtr) ?? this.newContext({
+        const context6 = this.contextMap.get(ctxPtr) ?? this.newContext({
           contextPointer: ctxPtr
         });
-        const resultValue = context5.getMemory(this.rt.value).heapValueHandle(valuePtr);
-        const typeOfRet = context5.typeof(resultValue);
+        const resultValue = context6.getMemory(this.rt.value).heapValueHandle(valuePtr);
+        const typeOfRet = context6.typeof(resultValue);
         if (typeOfRet === "number") {
-          const executedJobs = context5.getNumber(resultValue);
+          const executedJobs = context6.getNumber(resultValue);
           resultValue.dispose();
           return { value: executedJobs };
         } else {
-          const error2 = Object.assign(resultValue, { context: context5 });
+          const error2 = Object.assign(resultValue, { context: context6 });
           return {
             error: error2
           };
@@ -83560,12 +83560,12 @@ Attempted to suspend at:`);
        */
       newContext(options = {}) {
         const runtime = this.newRuntime();
-        const context5 = runtime.newContext({
+        const context6 = runtime.newContext({
           ...options,
           ownedLifetimes: (0, types_1.concat)(runtime, options.ownedLifetimes)
         });
-        runtime.context = context5;
-        return context5;
+        runtime.context = context6;
+        return context6;
       }
       /**
        * One-off evaluate code without needing to create a [[QuickJSRuntime]] or
@@ -83698,7 +83698,7 @@ var require_runtime_asyncify = __commonJS({
           this.callbacks.deleteContext(ctx_ptr);
           this.ffi.QTS_FreeContext(ctx_ptr);
         });
-        const context5 = new context_asyncify_1.QuickJSAsyncContext({
+        const context6 = new context_asyncify_1.QuickJSAsyncContext({
           module: this.module,
           ctx,
           ffi: this.ffi,
@@ -83707,8 +83707,8 @@ var require_runtime_asyncify = __commonJS({
           runtime: this,
           callbacks: this.callbacks
         });
-        this.contextMap.set(ctx.value, context5);
-        return context5;
+        this.contextMap.set(ctx.value, context6);
+        return context6;
       }
       setModuleLoader(moduleLoader, moduleNormalizer) {
         super.setModuleLoader(moduleLoader, moduleNormalizer);
@@ -83775,9 +83775,9 @@ var require_module_asyncify = __commonJS({
       newContext(options = {}) {
         const runtime = this.newRuntime();
         const lifetimes = options.ownedLifetimes ? options.ownedLifetimes.concat([runtime]) : [runtime];
-        const context5 = runtime.newContext({ ...options, ownedLifetimes: lifetimes });
-        runtime.context = context5;
-        return context5;
+        const context6 = runtime.newContext({ ...options, ownedLifetimes: lifetimes });
+        runtime.context = context6;
+        return context6;
       }
       /** Synchronous evalCode is not supported. */
       evalCode() {
@@ -84775,15 +84775,15 @@ var require_module_test = __commonJS({
         return runtime;
       }
       newContext(options) {
-        const context5 = this.parent.newContext({
+        const context6 = this.parent.newContext({
           ...options,
           ownedLifetimes: [
-            new lifetime_1.Lifetime(void 0, void 0, () => this.contexts.delete(context5)),
+            new lifetime_1.Lifetime(void 0, void 0, () => this.contexts.delete(context6)),
             ...options?.ownedLifetimes ?? []
           ]
         });
-        this.contexts.add(context5);
-        return context5;
+        this.contexts.add(context6);
+        return context6;
       }
       evalCode(code, options) {
         return this.parent.evalCode(code, options);
@@ -87444,10 +87444,10 @@ var require_fd_slicer = __commonJS({
       }
     };
     util.inherits(ReadStream, Readable);
-    function ReadStream(context5, options) {
+    function ReadStream(context6, options) {
       options = options || {};
       Readable.call(this, options);
-      this.context = context5;
+      this.context = context6;
       this.context.ref();
       this.start = options.start || 0;
       this.endOffset = options.end;
@@ -87496,10 +87496,10 @@ var require_fd_slicer = __commonJS({
       this.context.unref();
     };
     util.inherits(WriteStream, Writable);
-    function WriteStream(context5, options) {
+    function WriteStream(context6, options) {
       options = options || {};
       Writable.call(this, options);
-      this.context = context5;
+      this.context = context6;
       this.context.ref();
       this.start = options.start || 0;
       this.endOffset = options.end == null ? Infinity : +options.end;
@@ -88599,9 +88599,9 @@ var require_yauzl = __commonJS({
       setImmediate(callback);
     };
     util.inherits(RefUnrefFilter, PassThrough);
-    function RefUnrefFilter(context5) {
+    function RefUnrefFilter(context6) {
       PassThrough.call(this);
-      this.context = context5;
+      this.context = context6;
       this.context.ref();
       this.unreffedYet = false;
     }
@@ -94382,8 +94382,8 @@ var init_command = __esm({
         const maybePromiseArgv = applyMiddleware(innerArgv, yargs, middlewares, true);
         return isPromise(maybePromiseArgv) ? maybePromiseArgv.then((resolvedInnerArgv) => this.handleValidationAndGetResult(isDefaultCommand, commandHandler, resolvedInnerArgv, currentContext, aliases, yargs, middlewares, positionalMap)) : this.handleValidationAndGetResult(isDefaultCommand, commandHandler, maybePromiseArgv, currentContext, aliases, yargs, middlewares, positionalMap);
       }
-      populatePositionals(commandHandler, argv, context5, yargs) {
-        argv._ = argv._.slice(context5.commands.length);
+      populatePositionals(commandHandler, argv, context6, yargs) {
+        argv._ = argv._.slice(context6.commands.length);
         const demanded = commandHandler.demanded.slice(0);
         const optional = commandHandler.optional.slice(0);
         const positionalMap = {};
@@ -94396,7 +94396,7 @@ var init_command = __esm({
           const maybe = optional.shift();
           this.populatePositional(maybe, argv, positionalMap);
         }
-        argv._ = context5.commands.concat(argv._.map((a) => "" + a));
+        argv._ = context6.commands.concat(argv._.map((a) => "" + a));
         this.postProcessPositionals(argv, positionalMap, this.cmdToParseOptions(commandHandler.original), yargs);
         return positionalMap;
       }
@@ -94770,8 +94770,8 @@ function usage(yargs, shim3) {
     }
     if (commands.length > 1 || commands.length === 1 && !commands[0][2]) {
       ui2.div(__("Commands:"));
-      const context5 = yargs.getInternalMethods().getContext();
-      const parentCommands = context5.commands.length ? `${context5.commands.join(" ")} ` : "";
+      const context6 = yargs.getInternalMethods().getContext();
+      const parentCommands = context6.commands.length ? `${context6.commands.join(" ")} ` : "";
       if (yargs.getInternalMethods().getParserConfiguration()["sort-commands"] === true) {
         commands = commands.sort((a, b) => a[0].localeCompare(b[0]));
       }
@@ -104384,7 +104384,7 @@ var require_session = __commonJS({
     Object.defineProperty(exports2, Symbol.toStringTag, { value: "Module" });
     var misc = require_misc();
     var time = require_time();
-    function makeSession(context5) {
+    function makeSession(context6) {
       const startingTime = time.timestampInSeconds();
       const session = {
         sid: misc.uuid4(),
@@ -104397,74 +104397,74 @@ var require_session = __commonJS({
         ignoreDuration: false,
         toJSON: () => sessionToJSON(session)
       };
-      if (context5) {
-        updateSession2(session, context5);
+      if (context6) {
+        updateSession2(session, context6);
       }
       return session;
     }
-    function updateSession2(session, context5 = {}) {
-      if (context5.user) {
-        if (!session.ipAddress && context5.user.ip_address) {
-          session.ipAddress = context5.user.ip_address;
+    function updateSession2(session, context6 = {}) {
+      if (context6.user) {
+        if (!session.ipAddress && context6.user.ip_address) {
+          session.ipAddress = context6.user.ip_address;
         }
-        if (!session.did && !context5.did) {
-          session.did = context5.user.id || context5.user.email || context5.user.username;
+        if (!session.did && !context6.did) {
+          session.did = context6.user.id || context6.user.email || context6.user.username;
         }
       }
-      session.timestamp = context5.timestamp || time.timestampInSeconds();
-      if (context5.abnormal_mechanism) {
-        session.abnormal_mechanism = context5.abnormal_mechanism;
+      session.timestamp = context6.timestamp || time.timestampInSeconds();
+      if (context6.abnormal_mechanism) {
+        session.abnormal_mechanism = context6.abnormal_mechanism;
       }
-      if (context5.ignoreDuration) {
-        session.ignoreDuration = context5.ignoreDuration;
+      if (context6.ignoreDuration) {
+        session.ignoreDuration = context6.ignoreDuration;
       }
-      if (context5.sid) {
-        session.sid = context5.sid.length === 32 ? context5.sid : misc.uuid4();
+      if (context6.sid) {
+        session.sid = context6.sid.length === 32 ? context6.sid : misc.uuid4();
       }
-      if (context5.init !== void 0) {
-        session.init = context5.init;
+      if (context6.init !== void 0) {
+        session.init = context6.init;
       }
-      if (!session.did && context5.did) {
-        session.did = `${context5.did}`;
+      if (!session.did && context6.did) {
+        session.did = `${context6.did}`;
       }
-      if (typeof context5.started === "number") {
-        session.started = context5.started;
+      if (typeof context6.started === "number") {
+        session.started = context6.started;
       }
       if (session.ignoreDuration) {
         session.duration = void 0;
-      } else if (typeof context5.duration === "number") {
-        session.duration = context5.duration;
+      } else if (typeof context6.duration === "number") {
+        session.duration = context6.duration;
       } else {
         const duration = session.timestamp - session.started;
         session.duration = duration >= 0 ? duration : 0;
       }
-      if (context5.release) {
-        session.release = context5.release;
+      if (context6.release) {
+        session.release = context6.release;
       }
-      if (context5.environment) {
-        session.environment = context5.environment;
+      if (context6.environment) {
+        session.environment = context6.environment;
       }
-      if (!session.ipAddress && context5.ipAddress) {
-        session.ipAddress = context5.ipAddress;
+      if (!session.ipAddress && context6.ipAddress) {
+        session.ipAddress = context6.ipAddress;
       }
-      if (!session.userAgent && context5.userAgent) {
-        session.userAgent = context5.userAgent;
+      if (!session.userAgent && context6.userAgent) {
+        session.userAgent = context6.userAgent;
       }
-      if (typeof context5.errors === "number") {
-        session.errors = context5.errors;
+      if (typeof context6.errors === "number") {
+        session.errors = context6.errors;
       }
-      if (context5.status) {
-        session.status = context5.status;
+      if (context6.status) {
+        session.status = context6.status;
       }
     }
     function closeSession(session, status) {
-      let context5 = {};
+      let context6 = {};
       if (status) {
-        context5 = { status };
+        context6 = { status };
       } else if (session.status === "ok") {
-        context5 = { status: "exited" };
+        context6 = { status: "exited" };
       }
-      updateSession2(session, context5);
+      updateSession2(session, context6);
     }
     function sessionToJSON(session) {
       return {
@@ -104863,11 +104863,11 @@ var require_scope2 = __commonJS({
        * Data passed as context will be normalized. You can also pass `null` to unset the context.
        * Note that context data will not be merged - calling `setContext` will overwrite an existing context with the same key.
        */
-      setContext(key, context5) {
-        if (context5 === null) {
+      setContext(key, context6) {
+        if (context6 === null) {
           delete this._contexts[key];
         } else {
-          this._contexts[key] = context5;
+          this._contexts[key] = context6;
         }
         this._notifyScopeListeners();
         return this;
@@ -105042,8 +105042,8 @@ var require_scope2 = __commonJS({
       /**
        * Add propagation context to the scope, used for distributed tracing
        */
-      setPropagationContext(context5) {
-        this._propagationContext = context5;
+      setPropagationContext(context6) {
+        this._propagationContext = context6;
         return this;
       }
       /**
@@ -109999,8 +109999,8 @@ var require_exports = __commonJS({
     function captureEvent2(event, hint) {
       return currentScopes.getCurrentScope().captureEvent(event, hint);
     }
-    function setContext2(name, context5) {
-      currentScopes.getIsolationScope().setContext(name, context5);
+    function setContext2(name, context6) {
+      currentScopes.getIsolationScope().setContext(name, context6);
     }
     function setExtras2(extras) {
       currentScopes.getIsolationScope().setExtras(extras);
@@ -110098,14 +110098,14 @@ var require_exports = __commonJS({
     function addEventProcessor2(callback) {
       currentScopes.getIsolationScope().addEventProcessor(callback);
     }
-    function startSession2(context5) {
+    function startSession2(context6) {
       const isolationScope = currentScopes.getIsolationScope();
       const { user } = scopeData.getCombinedScopeData(isolationScope, currentScopes.getCurrentScope());
       const { userAgent } = worldwide.GLOBAL_OBJ.navigator || {};
       const session$1 = session.makeSession({
         user,
         ...userAgent && { userAgent },
-        ...context5
+        ...context6
       });
       const currentSession = isolationScope.getSession();
       if (currentSession?.status === "ok") {
@@ -117910,7 +117910,7 @@ var require_openai = __commonJS({
         span.setAttribute(genAiAttributes.GEN_AI_INPUT_MESSAGES_ORIGINAL_LENGTH_ATTRIBUTE, 1);
       }
     }
-    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context5, options) {
+    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context6, options) {
       return function instrumentedCall(...args) {
         const operationName = instrumentedMethod.operation || "unknown";
         const requestAttributes = extractRequestAttributes(args, operationName);
@@ -117925,7 +117925,7 @@ var require_openai = __commonJS({
         if (isStreamRequested) {
           let originalResult2;
           const instrumentedPromise2 = trace3.startSpanManual(spanConfig, (span) => {
-            originalResult2 = originalMethod.apply(context5, args);
+            originalResult2 = originalMethod.apply(context6, args);
             if (options.recordInputs && params) {
               addRequestAttributes(span, params, operationName, utils.shouldEnableTruncation(options.enableTruncation));
             }
@@ -117955,7 +117955,7 @@ var require_openai = __commonJS({
         }
         let originalResult;
         const instrumentedPromise = trace3.startSpan(spanConfig, (span) => {
-          originalResult = originalMethod.apply(context5, args);
+          originalResult = originalMethod.apply(context6, args);
           if (options.recordInputs && params) {
             addRequestAttributes(span, params, operationName, utils.shouldEnableTruncation(options.enableTruncation));
           }
@@ -118427,10 +118427,10 @@ var require_anthropic_ai = __commonJS({
         });
       }
     }
-    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context5, options) {
+    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context6, options) {
       return new Proxy(originalMethod, {
         apply(target, thisArg, args) {
-          const invocationThis = thisArg !== void 0 ? thisArg : context5;
+          const invocationThis = thisArg !== void 0 ? thisArg : context6;
           const isStreamingMethod = instrumentedMethod.streaming === true;
           if (!isStreamingMethod && suppressDelegatedCreate) {
             return target.apply(invocationThis, args);
@@ -118668,12 +118668,12 @@ var require_google_genai = __commonJS({
     var constants = require_constants24();
     var streaming = require_streaming3();
     var utils = require_utils15();
-    function extractModel(params, context5) {
+    function extractModel(params, context6) {
       if ("model" in params && typeof params.model === "string") {
         return params.model;
       }
-      if (context5 && typeof context5 === "object") {
-        const contextObj = context5;
+      if (context6 && typeof context6 === "object") {
+        const contextObj = context6;
         if ("model" in contextObj && typeof contextObj.model === "string") {
           return contextObj.model;
         }
@@ -118705,14 +118705,14 @@ var require_google_genai = __commonJS({
       }
       return attributes;
     }
-    function extractRequestAttributes(operationName, params, context5) {
+    function extractRequestAttributes(operationName, params, context6) {
       const attributes = {
         [genAiAttributes.GEN_AI_SYSTEM_ATTRIBUTE]: constants.GOOGLE_GENAI_SYSTEM_NAME,
         [genAiAttributes.GEN_AI_OPERATION_NAME_ATTRIBUTE]: operationName,
         [semanticAttributes.SEMANTIC_ATTRIBUTE_SENTRY_ORIGIN]: "auto.ai.google_genai"
       };
       if (params) {
-        attributes[genAiAttributes.GEN_AI_REQUEST_MODEL_ATTRIBUTE] = extractModel(params, context5);
+        attributes[genAiAttributes.GEN_AI_REQUEST_MODEL_ATTRIBUTE] = extractModel(params, context6);
         if ("config" in params && typeof params.config === "object" && params.config) {
           const config = params.config;
           Object.assign(attributes, extractConfigAttributes(config));
@@ -118724,7 +118724,7 @@ var require_google_genai = __commonJS({
           }
         }
       } else {
-        attributes[genAiAttributes.GEN_AI_REQUEST_MODEL_ATTRIBUTE] = extractModel({}, context5);
+        attributes[genAiAttributes.GEN_AI_REQUEST_MODEL_ATTRIBUTE] = extractModel({}, context6);
       }
       return attributes;
     }
@@ -118810,13 +118810,13 @@ var require_google_genai = __commonJS({
         }
       }
     }
-    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context5, options) {
+    function instrumentMethod(originalMethod, methodPath, instrumentedMethod, context6, options) {
       const isEmbeddings = instrumentedMethod.operation === "embeddings";
       return new Proxy(originalMethod, {
         apply(target, _, args) {
           const operationName = instrumentedMethod.operation || "unknown";
           const params = args[0];
-          const requestAttributes = extractRequestAttributes(operationName, params, context5);
+          const requestAttributes = extractRequestAttributes(operationName, params, context6);
           const model = requestAttributes[genAiAttributes.GEN_AI_REQUEST_MODEL_ATTRIBUTE] ?? "unknown";
           if (instrumentedMethod.streaming) {
             return trace3.startSpanManual(
@@ -118835,7 +118835,7 @@ var require_google_genai = __commonJS({
                       utils$1.shouldEnableTruncation(options.enableTruncation)
                     );
                   }
-                  const stream = await target.apply(context5, args);
+                  const stream = await target.apply(context6, args);
                   return streaming.instrumentStream(stream, span, Boolean(options.recordOutputs));
                 } catch (error2) {
                   span.setStatus({ code: spanstatus.SPAN_STATUS_ERROR, message: "internal_error" });
@@ -118863,7 +118863,7 @@ var require_google_genai = __commonJS({
                 addPrivateRequestAttributes(span, params, operationName, utils$1.shouldEnableTruncation(options.enableTruncation));
               }
               return handleCallbackErrors2.handleCallbackErrors(
-                () => target.apply(context5, args),
+                () => target.apply(context6, args),
                 (error2) => {
                   exports$1.captureException(error2, {
                     mechanism: { handled: false, type: "auto.ai.google_genai", data: { function: methodPath } }
@@ -120395,10 +120395,10 @@ var require_workers_ai = __commonJS({
     function isReadableStream(value) {
       return is.isObjectLike(value) && typeof value.pipeThrough === "function" && typeof value.getReader === "function";
     }
-    function instrumentRun(originalRun, context5, options) {
+    function instrumentRun(originalRun, context6, options) {
       return function instrumentedRun(...args) {
         if (providerSkip._INTERNAL_shouldSkipAiProviderWrapping(constants.WORKERS_AI_INTEGRATION_NAME)) {
-          return originalRun.apply(context5, args);
+          return originalRun.apply(context6, args);
         }
         const [model, inputs, runOptions] = args;
         const operationName = utils$1.getOperationName(inputs);
@@ -120420,7 +120420,7 @@ var require_workers_ai = __commonJS({
             };
             let originalResult;
             try {
-              originalResult = originalRun.apply(context5, args);
+              originalResult = originalRun.apply(context6, args);
             } catch (error2) {
               return handleError(error2);
             }
@@ -120438,7 +120438,7 @@ var require_workers_ai = __commonJS({
           });
         }
         return trace3.startSpan(spanConfig, (span) => {
-          const originalResult = originalRun.apply(context5, args);
+          const originalResult = originalRun.apply(context6, args);
           if (options.recordInputs) {
             utils$1.addRequestAttributes(span, inputs, operationName, utils.shouldEnableTruncation(options.enableTruncation));
           }
@@ -125667,14 +125667,14 @@ var init_context3 = __esm({
         self2._currentContext = parentContext ? new Map(parentContext) : /* @__PURE__ */ new Map();
         self2.getValue = (key) => self2._currentContext.get(key);
         self2.setValue = (key, value) => {
-          const context5 = new _BaseContext(self2._currentContext);
-          context5._currentContext.set(key, value);
-          return context5;
+          const context6 = new _BaseContext(self2._currentContext);
+          context6._currentContext.set(key, value);
+          return context6;
         };
         self2.deleteValue = (key) => {
-          const context5 = new _BaseContext(self2._currentContext);
-          context5._currentContext.delete(key);
-          return context5;
+          const context6 = new _BaseContext(self2._currentContext);
+          context6._currentContext.delete(key);
+          return context6;
         };
       }
     };
@@ -125947,8 +125947,8 @@ var init_context4 = __esm({
        * @param thisArg optional receiver to be used for calling fn
        * @param args optional arguments forwarded to fn
        */
-      with(context5, fn, thisArg, ...args) {
-        return this._getContextManager().with(context5, fn, thisArg, ...args);
+      with(context6, fn, thisArg, ...args) {
+        return this._getContextManager().with(context6, fn, thisArg, ...args);
       }
       /**
        * Bind a context to a target function or event emitter
@@ -125956,8 +125956,8 @@ var init_context4 = __esm({
        * @param context context to bind to the event emitter or function. Defaults to the currently active context
        * @param target function or event emitter to bind
        */
-      bind(context5, target) {
-        return this._getContextManager().bind(context5, target);
+      bind(context6, target) {
+        return this._getContextManager().bind(context6, target);
       }
       _getContextManager() {
         return getGlobal2(API_NAME7) || NOOP_CONTEXT_MANAGER2;
@@ -126051,24 +126051,24 @@ var init_NonRecordingSpan2 = __esm({
 });
 
 // node_modules/.pnpm/@opentelemetry+api@1.9.1/node_modules/@opentelemetry/api/build/esm/trace/context-utils.js
-function getSpan2(context5) {
-  return context5.getValue(SPAN_KEY2) || void 0;
+function getSpan2(context6) {
+  return context6.getValue(SPAN_KEY2) || void 0;
 }
 function getActiveSpan3() {
   return getSpan2(ContextAPI2.getInstance().active());
 }
-function setSpan2(context5, span) {
-  return context5.setValue(SPAN_KEY2, span);
+function setSpan2(context6, span) {
+  return context6.setValue(SPAN_KEY2, span);
 }
-function deleteSpan2(context5) {
-  return context5.deleteValue(SPAN_KEY2);
+function deleteSpan2(context6) {
+  return context6.deleteValue(SPAN_KEY2);
 }
-function setSpanContext2(context5, spanContext) {
-  return setSpan2(context5, new NonRecordingSpan2(spanContext));
+function setSpanContext2(context6, spanContext) {
+  return setSpan2(context6, new NonRecordingSpan2(spanContext));
 }
-function getSpanContext2(context5) {
+function getSpanContext2(context6) {
   var _a2;
-  return (_a2 = getSpan2(context5)) === null || _a2 === void 0 ? void 0 : _a2.spanContext();
+  return (_a2 = getSpan2(context6)) === null || _a2 === void 0 ? void 0 : _a2.spanContext();
 }
 var SPAN_KEY2;
 var init_context_utils2 = __esm({
@@ -126229,12 +126229,12 @@ var init_NoopTracer2 = __esm({
     contextApi2 = ContextAPI2.getInstance();
     NoopTracer2 = class {
       // startSpan starts a noop span.
-      startSpan(name, options, context5 = contextApi2.active()) {
+      startSpan(name, options, context6 = contextApi2.active()) {
         const root = Boolean(options === null || options === void 0 ? void 0 : options.root);
         if (root) {
           return new NonRecordingSpan2();
         }
-        const parentFromContext = context5 && getSpanContext2(context5);
+        const parentFromContext = context6 && getSpanContext2(context6);
         if (isSpanContext2(parentFromContext) && isSpanContextValid2(parentFromContext)) {
           return new NonRecordingSpan2(parentFromContext);
         } else {
@@ -126279,8 +126279,8 @@ var init_ProxyTracer2 = __esm({
         this.version = version;
         this.options = options;
       }
-      startSpan(name, options, context5) {
-        return this._getTracer().startSpan(name, options, context5);
+      startSpan(name, options, context6) {
+        return this._getTracer().startSpan(name, options, context6);
       }
       startActiveSpan(_name, _options, _context, _fn) {
         const tracer = this._getTracer();
@@ -126584,8 +126584,8 @@ var init_NoopTextMapPropagator2 = __esm({
       inject(_context, _carrier) {
       }
       /** Noop extract function does nothing and returns the input context */
-      extract(context5, _carrier) {
-        return context5;
+      extract(context6, _carrier) {
+        return context6;
       }
       fields() {
         return [];
@@ -126595,17 +126595,17 @@ var init_NoopTextMapPropagator2 = __esm({
 });
 
 // node_modules/.pnpm/@opentelemetry+api@1.9.1/node_modules/@opentelemetry/api/build/esm/baggage/context-helpers.js
-function getBaggage2(context5) {
-  return context5.getValue(BAGGAGE_KEY2) || void 0;
+function getBaggage2(context6) {
+  return context6.getValue(BAGGAGE_KEY2) || void 0;
 }
 function getActiveBaggage2() {
   return getBaggage2(ContextAPI2.getInstance().active());
 }
-function setBaggage2(context5, baggage) {
-  return context5.setValue(BAGGAGE_KEY2, baggage);
+function setBaggage2(context6, baggage) {
+  return context6.setValue(BAGGAGE_KEY2, baggage);
 }
-function deleteBaggage2(context5) {
-  return context5.deleteValue(BAGGAGE_KEY2);
+function deleteBaggage2(context6) {
+  return context6.deleteValue(BAGGAGE_KEY2);
 }
 var BAGGAGE_KEY2;
 var init_context_helpers2 = __esm({
@@ -126659,8 +126659,8 @@ var init_propagation2 = __esm({
        * @param carrier carrier to inject context into
        * @param setter Function used to set values on the carrier
        */
-      inject(context5, carrier, setter = defaultTextMapSetter2) {
-        return this._getGlobalPropagator().inject(context5, carrier, setter);
+      inject(context6, carrier, setter = defaultTextMapSetter2) {
+        return this._getGlobalPropagator().inject(context6, carrier, setter);
       }
       /**
        * Extract context from a carrier
@@ -126669,8 +126669,8 @@ var init_propagation2 = __esm({
        * @param carrier Carrier to extract context from
        * @param getter Function used to extract keys from a carrier
        */
-      extract(context5, carrier, getter = defaultTextMapGetter2) {
-        return this._getGlobalPropagator().extract(context5, carrier, getter);
+      extract(context6, carrier, getter = defaultTextMapGetter2) {
+        return this._getGlobalPropagator().extract(context6, carrier, getter);
       }
       /**
        * Return a list of all fields which may be used by the propagator.
@@ -126933,16 +126933,16 @@ var require_suppress_tracing = __commonJS({
     exports2.isTracingSuppressed = exports2.unsuppressTracing = exports2.suppressTracing = void 0;
     var api_1 = (init_esm(), __toCommonJS(esm_exports));
     var SUPPRESS_TRACING_KEY2 = (0, api_1.createContextKey)("OpenTelemetry SDK Context Key SUPPRESS_TRACING");
-    function suppressTracing2(context5) {
-      return context5.setValue(SUPPRESS_TRACING_KEY2, true);
+    function suppressTracing2(context6) {
+      return context6.setValue(SUPPRESS_TRACING_KEY2, true);
     }
     exports2.suppressTracing = suppressTracing2;
-    function unsuppressTracing(context5) {
-      return context5.deleteValue(SUPPRESS_TRACING_KEY2);
+    function unsuppressTracing(context6) {
+      return context6.deleteValue(SUPPRESS_TRACING_KEY2);
     }
     exports2.unsuppressTracing = unsuppressTracing;
-    function isTracingSuppressed(context5) {
-      return context5.getValue(SUPPRESS_TRACING_KEY2) === true;
+    function isTracingSuppressed(context6) {
+      return context6.getValue(SUPPRESS_TRACING_KEY2) === true;
     }
     exports2.isTracingSuppressed = isTracingSuppressed;
   }
@@ -127068,9 +127068,9 @@ var require_W3CBaggagePropagator = __commonJS({
     var constants_1 = require_constants28();
     var utils_1 = require_utils20();
     var W3CBaggagePropagator = class {
-      inject(context5, carrier, setter) {
-        const baggage = api_1.propagation.getBaggage(context5);
-        if (!baggage || (0, suppress_tracing_1.isTracingSuppressed)(context5))
+      inject(context6, carrier, setter) {
+        const baggage = api_1.propagation.getBaggage(context6);
+        if (!baggage || (0, suppress_tracing_1.isTracingSuppressed)(context6))
           return;
         const keyPairs = (0, utils_1.getKeyPairs)(baggage).filter((pair) => {
           return pair.length <= constants_1.BAGGAGE_MAX_PER_NAME_VALUE_PAIRS;
@@ -127080,10 +127080,10 @@ var require_W3CBaggagePropagator = __commonJS({
           setter.set(carrier, constants_1.BAGGAGE_HEADER, headerValue);
         }
       }
-      extract(context5, carrier, getter) {
+      extract(context6, carrier, getter) {
         const headerValue = getter.get(carrier, constants_1.BAGGAGE_HEADER);
         if (!headerValue) {
-          return context5;
+          return context6;
         }
         const baggage = {};
         let count = 0;
@@ -127096,9 +127096,9 @@ var require_W3CBaggagePropagator = __commonJS({
           [count] = (0, utils_1.parseBaggageHeaderString)(headerValue, baggage, count, totalSize);
         }
         if (count === 0) {
-          return context5;
+          return context6;
         }
-        return api_1.propagation.setBaggage(context5, api_1.propagation.createBaggage(baggage));
+        return api_1.propagation.setBaggage(context6, api_1.propagation.createBaggage(baggage));
       }
       fields() {
         return [constants_1.BAGGAGE_HEADER];
@@ -129804,10 +129804,10 @@ var require_composite = __commonJS({
        * @param context Context to inject
        * @param carrier Carrier into which context will be injected
        */
-      inject(context5, carrier, setter) {
+      inject(context6, carrier, setter) {
         for (const propagator of this._propagators) {
           try {
-            propagator.inject(context5, carrier, setter);
+            propagator.inject(context6, carrier, setter);
           } catch (err) {
             api_1.diag.warn(`Failed to inject with ${propagator.constructor.name}. Err: ${err.message}`);
           }
@@ -129822,7 +129822,7 @@ var require_composite = __commonJS({
        * @param context Context to add values to
        * @param carrier Carrier from which to extract context
        */
-      extract(context5, carrier, getter) {
+      extract(context6, carrier, getter) {
         return this._propagators.reduce((ctx, propagator) => {
           try {
             return propagator.extract(ctx, carrier, getter);
@@ -129830,7 +129830,7 @@ var require_composite = __commonJS({
             api_1.diag.warn(`Failed to extract with ${propagator.constructor.name}. Err: ${err.message}`);
           }
           return ctx;
-        }, context5);
+        }, context6);
       }
       fields() {
         return this._fields.slice();
@@ -130006,9 +130006,9 @@ var require_W3CTraceContextPropagator = __commonJS({
     }
     exports2.parseTraceParent = parseTraceParent;
     var W3CTraceContextPropagator = class {
-      inject(context5, carrier, setter) {
-        const spanContext = api_1.trace.getSpanContext(context5);
-        if (!spanContext || (0, suppress_tracing_1.isTracingSuppressed)(context5) || !(0, api_1.isSpanContextValid)(spanContext))
+      inject(context6, carrier, setter) {
+        const spanContext = api_1.trace.getSpanContext(context6);
+        if (!spanContext || (0, suppress_tracing_1.isTracingSuppressed)(context6) || !(0, api_1.isSpanContextValid)(spanContext))
           return;
         const traceParent = `${VERSION3}-${spanContext.traceId}-${spanContext.spanId}-0${Number(spanContext.traceFlags || api_1.TraceFlags.NONE).toString(16)}`;
         setter.set(carrier, exports2.TRACE_PARENT_HEADER, traceParent);
@@ -130016,23 +130016,23 @@ var require_W3CTraceContextPropagator = __commonJS({
           setter.set(carrier, exports2.TRACE_STATE_HEADER, spanContext.traceState.serialize());
         }
       }
-      extract(context5, carrier, getter) {
+      extract(context6, carrier, getter) {
         const traceParentHeader = getter.get(carrier, exports2.TRACE_PARENT_HEADER);
         if (!traceParentHeader)
-          return context5;
+          return context6;
         const traceParent = Array.isArray(traceParentHeader) ? traceParentHeader[0] : traceParentHeader;
         if (typeof traceParent !== "string")
-          return context5;
+          return context6;
         const spanContext = parseTraceParent(traceParent);
         if (!spanContext)
-          return context5;
+          return context6;
         spanContext.isRemote = true;
         const traceStateHeader = getter.get(carrier, exports2.TRACE_STATE_HEADER);
         if (traceStateHeader) {
           const state = Array.isArray(traceStateHeader) ? traceStateHeader.join(",") : traceStateHeader;
           spanContext.traceState = new TraceState_1.TraceState(typeof state === "string" ? state : void 0);
         }
-        return api_1.trace.setSpanContext(context5, spanContext);
+        return api_1.trace.setSpanContext(context6, spanContext);
       }
       fields() {
         return [exports2.TRACE_PARENT_HEADER, exports2.TRACE_STATE_HEADER];
@@ -130054,16 +130054,16 @@ var require_rpc_metadata = __commonJS({
     (function(RPCType2) {
       RPCType2["HTTP"] = "http";
     })(RPCType || (exports2.RPCType = RPCType = {}));
-    function setRPCMetadata(context5, meta) {
-      return context5.setValue(RPC_METADATA_KEY, meta);
+    function setRPCMetadata(context6, meta) {
+      return context6.setValue(RPC_METADATA_KEY, meta);
     }
     exports2.setRPCMetadata = setRPCMetadata;
-    function deleteRPCMetadata(context5) {
-      return context5.deleteValue(RPC_METADATA_KEY);
+    function deleteRPCMetadata(context6) {
+      return context6.deleteValue(RPC_METADATA_KEY);
     }
     exports2.deleteRPCMetadata = deleteRPCMetadata;
-    function getRPCMetadata(context5) {
-      return context5.getValue(RPC_METADATA_KEY);
+    function getRPCMetadata(context6) {
+      return context6.getValue(RPC_METADATA_KEY);
     }
     exports2.getRPCMetadata = getRPCMetadata;
   }
@@ -133727,16 +133727,16 @@ var require_suppress_tracing2 = __commonJS({
     exports2.isTracingSuppressed = exports2.unsuppressTracing = exports2.suppressTracing = void 0;
     var api_1 = (init_esm3(), __toCommonJS(esm_exports2));
     var SUPPRESS_TRACING_KEY2 = (0, api_1.createContextKey)("OpenTelemetry SDK Context Key SUPPRESS_TRACING");
-    function suppressTracing2(context5) {
-      return context5.setValue(SUPPRESS_TRACING_KEY2, true);
+    function suppressTracing2(context6) {
+      return context6.setValue(SUPPRESS_TRACING_KEY2, true);
     }
     exports2.suppressTracing = suppressTracing2;
-    function unsuppressTracing(context5) {
-      return context5.deleteValue(SUPPRESS_TRACING_KEY2);
+    function unsuppressTracing(context6) {
+      return context6.deleteValue(SUPPRESS_TRACING_KEY2);
     }
     exports2.unsuppressTracing = unsuppressTracing;
-    function isTracingSuppressed(context5) {
-      return context5.getValue(SUPPRESS_TRACING_KEY2) === true;
+    function isTracingSuppressed(context6) {
+      return context6.getValue(SUPPRESS_TRACING_KEY2) === true;
     }
     exports2.isTracingSuppressed = isTracingSuppressed;
   }
@@ -133862,9 +133862,9 @@ var require_W3CBaggagePropagator2 = __commonJS({
     var constants_1 = require_constants30();
     var utils_1 = require_utils22();
     var W3CBaggagePropagator = class {
-      inject(context5, carrier, setter) {
-        const baggage = api_1.propagation.getBaggage(context5);
-        if (!baggage || (0, suppress_tracing_1.isTracingSuppressed)(context5))
+      inject(context6, carrier, setter) {
+        const baggage = api_1.propagation.getBaggage(context6);
+        if (!baggage || (0, suppress_tracing_1.isTracingSuppressed)(context6))
           return;
         const keyPairs = (0, utils_1.getKeyPairs)(baggage).filter((pair) => {
           return pair.length <= constants_1.BAGGAGE_MAX_PER_NAME_VALUE_PAIRS;
@@ -133874,10 +133874,10 @@ var require_W3CBaggagePropagator2 = __commonJS({
           setter.set(carrier, constants_1.BAGGAGE_HEADER, headerValue);
         }
       }
-      extract(context5, carrier, getter) {
+      extract(context6, carrier, getter) {
         const headerValue = getter.get(carrier, constants_1.BAGGAGE_HEADER);
         if (!headerValue) {
-          return context5;
+          return context6;
         }
         const baggage = {};
         let count = 0;
@@ -133890,9 +133890,9 @@ var require_W3CBaggagePropagator2 = __commonJS({
           [count] = (0, utils_1.parseBaggageHeaderString)(headerValue, baggage, count, totalSize);
         }
         if (count === 0) {
-          return context5;
+          return context6;
         }
-        return api_1.propagation.setBaggage(context5, api_1.propagation.createBaggage(baggage));
+        return api_1.propagation.setBaggage(context6, api_1.propagation.createBaggage(baggage));
       }
       fields() {
         return [constants_1.BAGGAGE_HEADER];
@@ -134400,10 +134400,10 @@ var require_composite2 = __commonJS({
        * @param context Context to inject
        * @param carrier Carrier into which context will be injected
        */
-      inject(context5, carrier, setter) {
+      inject(context6, carrier, setter) {
         for (const propagator of this._propagators) {
           try {
-            propagator.inject(context5, carrier, setter);
+            propagator.inject(context6, carrier, setter);
           } catch (err) {
             api_1.diag.warn(`Failed to inject with ${propagator.constructor.name}. Err: ${err.message}`);
           }
@@ -134418,7 +134418,7 @@ var require_composite2 = __commonJS({
        * @param context Context to add values to
        * @param carrier Carrier from which to extract context
        */
-      extract(context5, carrier, getter) {
+      extract(context6, carrier, getter) {
         return this._propagators.reduce((ctx, propagator) => {
           try {
             return propagator.extract(ctx, carrier, getter);
@@ -134426,7 +134426,7 @@ var require_composite2 = __commonJS({
             api_1.diag.warn(`Failed to extract with ${propagator.constructor.name}. Err: ${err.message}`);
           }
           return ctx;
-        }, context5);
+        }, context6);
       }
       fields() {
         return this._fields.slice();
@@ -134602,9 +134602,9 @@ var require_W3CTraceContextPropagator2 = __commonJS({
     }
     exports2.parseTraceParent = parseTraceParent;
     var W3CTraceContextPropagator = class {
-      inject(context5, carrier, setter) {
-        const spanContext = api_1.trace.getSpanContext(context5);
-        if (!spanContext || (0, suppress_tracing_1.isTracingSuppressed)(context5) || !(0, api_1.isSpanContextValid)(spanContext))
+      inject(context6, carrier, setter) {
+        const spanContext = api_1.trace.getSpanContext(context6);
+        if (!spanContext || (0, suppress_tracing_1.isTracingSuppressed)(context6) || !(0, api_1.isSpanContextValid)(spanContext))
           return;
         const traceParent = `${VERSION3}-${spanContext.traceId}-${spanContext.spanId}-0${Number(spanContext.traceFlags || api_1.TraceFlags.NONE).toString(16)}`;
         setter.set(carrier, exports2.TRACE_PARENT_HEADER, traceParent);
@@ -134612,23 +134612,23 @@ var require_W3CTraceContextPropagator2 = __commonJS({
           setter.set(carrier, exports2.TRACE_STATE_HEADER, spanContext.traceState.serialize());
         }
       }
-      extract(context5, carrier, getter) {
+      extract(context6, carrier, getter) {
         const traceParentHeader = getter.get(carrier, exports2.TRACE_PARENT_HEADER);
         if (!traceParentHeader)
-          return context5;
+          return context6;
         const traceParent = Array.isArray(traceParentHeader) ? traceParentHeader[0] : traceParentHeader;
         if (typeof traceParent !== "string")
-          return context5;
+          return context6;
         const spanContext = parseTraceParent(traceParent);
         if (!spanContext)
-          return context5;
+          return context6;
         spanContext.isRemote = true;
         const traceStateHeader = getter.get(carrier, exports2.TRACE_STATE_HEADER);
         if (traceStateHeader) {
           const state = Array.isArray(traceStateHeader) ? traceStateHeader.join(",") : traceStateHeader;
           spanContext.traceState = new TraceState_1.TraceState(typeof state === "string" ? state : void 0);
         }
-        return api_1.trace.setSpanContext(context5, spanContext);
+        return api_1.trace.setSpanContext(context6, spanContext);
       }
       fields() {
         return [exports2.TRACE_PARENT_HEADER, exports2.TRACE_STATE_HEADER];
@@ -134650,16 +134650,16 @@ var require_rpc_metadata2 = __commonJS({
     (function(RPCType2) {
       RPCType2["HTTP"] = "http";
     })(RPCType || (exports2.RPCType = RPCType = {}));
-    function setRPCMetadata(context5, meta) {
-      return context5.setValue(RPC_METADATA_KEY, meta);
+    function setRPCMetadata(context6, meta) {
+      return context6.setValue(RPC_METADATA_KEY, meta);
     }
     exports2.setRPCMetadata = setRPCMetadata;
-    function deleteRPCMetadata(context5) {
-      return context5.deleteValue(RPC_METADATA_KEY);
+    function deleteRPCMetadata(context6) {
+      return context6.deleteValue(RPC_METADATA_KEY);
     }
     exports2.deleteRPCMetadata = deleteRPCMetadata;
-    function getRPCMetadata(context5) {
-      return context5.getValue(RPC_METADATA_KEY);
+    function getRPCMetadata(context6) {
+      return context6.getValue(RPC_METADATA_KEY);
     }
     exports2.getRPCMetadata = getRPCMetadata;
   }
@@ -136584,12 +136584,12 @@ var require_Tracer = __commonJS({
        * Starts a new Span or returns the default NoopSpan based on the sampling
        * decision.
        */
-      startSpan(name, options = {}, context5 = api.context.active()) {
+      startSpan(name, options = {}, context6 = api.context.active()) {
         if (options.root) {
-          context5 = api.trace.deleteSpan(context5);
+          context6 = api.trace.deleteSpan(context6);
         }
-        const parentSpan = api.trace.getSpan(context5);
-        if ((0, core_1.isTracingSuppressed)(context5)) {
+        const parentSpan = api.trace.getSpan(context6);
+        if ((0, core_1.isTracingSuppressed)(context6)) {
           api.diag.debug("Instrumentation suppressed, returning Noop Span");
           const nonRecordingSpan = api.trace.wrapSpanContext(api.INVALID_SPAN_CONTEXT);
           return nonRecordingSpan;
@@ -136614,7 +136614,7 @@ var require_Tracer = __commonJS({
           };
         });
         const attributes = (0, core_1.sanitizeAttributes)(options.attributes);
-        const samplingResult = this._sampler.shouldSample(context5, traceId, name, spanKind, attributes, links);
+        const samplingResult = this._sampler.shouldSample(context6, traceId, name, spanKind, attributes, links);
         const recordEndMetrics = this._tracerMetrics.startSpan(parentSpanContext, samplingResult.decision);
         traceState = samplingResult.traceState ?? traceState;
         const traceFlags = samplingResult.decision === api.SamplingDecision.RECORD_AND_SAMPLED ? api.TraceFlags.SAMPLED : api.TraceFlags.NONE;
@@ -136628,7 +136628,7 @@ var require_Tracer = __commonJS({
         const span = new Span_1.SpanImpl({
           resource: this._resource,
           scope: this.instrumentationScope,
-          context: context5,
+          context: context6,
           spanContext,
           name,
           kind: spanKind,
@@ -136702,9 +136702,9 @@ var require_MultiSpanProcessor = __commonJS({
           });
         });
       }
-      onStart(span, context5) {
+      onStart(span, context6) {
         for (const spanProcessor of this._spanProcessors) {
-          spanProcessor.onStart(span, context5);
+          spanProcessor.onStart(span, context6);
         }
       }
       onEnding(span) {
@@ -136804,21 +136804,21 @@ var require_ParentBasedSampler = __commonJS({
         this._localParentSampled = config.localParentSampled ?? new AlwaysOnSampler_1.AlwaysOnSampler();
         this._localParentNotSampled = config.localParentNotSampled ?? new AlwaysOffSampler_1.AlwaysOffSampler();
       }
-      shouldSample(context5, traceId, spanName, spanKind, attributes, links) {
-        const parentContext = api_1.trace.getSpanContext(context5);
+      shouldSample(context6, traceId, spanName, spanKind, attributes, links) {
+        const parentContext = api_1.trace.getSpanContext(context6);
         if (!parentContext || !(0, api_1.isSpanContextValid)(parentContext)) {
-          return this._root.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+          return this._root.shouldSample(context6, traceId, spanName, spanKind, attributes, links);
         }
         if (parentContext.isRemote) {
           if (parentContext.traceFlags & api_1.TraceFlags.SAMPLED) {
-            return this._remoteParentSampled.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+            return this._remoteParentSampled.shouldSample(context6, traceId, spanName, spanKind, attributes, links);
           }
-          return this._remoteParentNotSampled.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+          return this._remoteParentNotSampled.shouldSample(context6, traceId, spanName, spanKind, attributes, links);
         }
         if (parentContext.traceFlags & api_1.TraceFlags.SAMPLED) {
-          return this._localParentSampled.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+          return this._localParentSampled.shouldSample(context6, traceId, spanName, spanKind, attributes, links);
         }
-        return this._localParentNotSampled.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+        return this._localParentNotSampled.shouldSample(context6, traceId, spanName, spanKind, attributes, links);
       }
       toString() {
         return `ParentBased{root=${this._root.toString()}, remoteParentSampled=${this._remoteParentSampled.toString()}, remoteParentNotSampled=${this._remoteParentNotSampled.toString()}, localParentSampled=${this._localParentSampled.toString()}, localParentNotSampled=${this._localParentNotSampled.toString()}}`;
@@ -137510,8 +137510,8 @@ var require_AlwaysRecordSampler = __commonJS({
         throw new Error("createAlwaysRecordSampler requires a delegate sampler");
       }
       return {
-        shouldSample(context5, traceId, spanName, spanKind, attributes, links) {
-          const result = delegate.shouldSample(context5, traceId, spanName, spanKind, attributes, links);
+        shouldSample(context6, traceId, spanName, spanKind, attributes, links) {
+          const result = delegate.shouldSample(context6, traceId, spanName, spanKind, attributes, links);
           if (result.decision === Sampler_1.SamplingDecision.NOT_RECORD) {
             return {
               decision: Sampler_1.SamplingDecision.RECORD,
@@ -137545,7 +137545,7 @@ var require_TraceIdRatioBasedSampler = __commonJS({
         this._ratio = this._normalize(ratio);
         this._upperBound = this._ratio === 1 ? 4294967296 : Math.floor(this._ratio * 4294967295);
       }
-      shouldSample(context5, traceId) {
+      shouldSample(context6, traceId) {
         return {
           decision: (0, api_1.isValidTraceId)(traceId) && this._accumulate(traceId) < this._upperBound ? Sampler_1.SamplingDecision.RECORD_AND_SAMPLED : Sampler_1.SamplingDecision.NOT_RECORD
         };
@@ -137974,14 +137974,14 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
     var SENTRY_FORK_SET_SCOPE_CONTEXT_KEY = api.createContextKey("sentry_fork_set_scope");
     var SENTRY_FORK_SET_ISOLATION_SCOPE_CONTEXT_KEY = api.createContextKey("sentry_fork_set_isolation_scope");
     var SCOPE_CONTEXT_FIELD = "_scopeContext";
-    function getScopesFromContext(context5) {
-      return context5.getValue(SENTRY_SCOPES_CONTEXT_KEY);
+    function getScopesFromContext(context6) {
+      return context6.getValue(SENTRY_SCOPES_CONTEXT_KEY);
     }
-    function setScopesOnContext(context5, scopes) {
-      return context5.setValue(SENTRY_SCOPES_CONTEXT_KEY, scopes);
+    function setScopesOnContext(context6, scopes) {
+      return context6.setValue(SENTRY_SCOPES_CONTEXT_KEY, scopes);
     }
-    function setContextOnScope(scope, context5) {
-      core.addNonEnumerableProperty(scope, SCOPE_CONTEXT_FIELD, core.makeWeakRef(context5));
+    function setContextOnScope(scope, context6) {
+      core.addNonEnumerableProperty(scope, SCOPE_CONTEXT_FIELD, core.makeWeakRef(context6));
     }
     function getContextFromScope(scope) {
       return core.derefWeakRef(scope[SCOPE_CONTEXT_FIELD]);
@@ -138635,15 +138635,15 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
         return event;
       });
     }
-    function buildContextWithSentryScopes(context5, activeContext) {
-      const span = api.trace.getSpan(context5);
+    function buildContextWithSentryScopes(context6, activeContext) {
+      const span = api.trace.getSpan(context6);
       let effectiveContext;
       if (span?.spanContext().traceState?.get(SENTRY_TRACE_STATE_CHILD_IGNORED) === "1") {
-        const contextWithoutSpan = api.trace.deleteSpan(context5);
+        const contextWithoutSpan = api.trace.deleteSpan(context6);
         const parentSpan = api.trace.getSpan(activeContext);
         effectiveContext = parentSpan ? api.trace.setSpan(contextWithoutSpan, parentSpan) : contextWithoutSpan;
       } else {
-        effectiveContext = context5;
+        effectiveContext = context6;
       }
       const currentScopes = getScopesFromContext(effectiveContext);
       const currentScope = currentScopes?.scope || core.getCurrentScope();
@@ -138669,8 +138669,8 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
          * Overwrite with() of the original AsyncLocalStorageContextManager
          * to ensure we also create new scopes per context.
          */
-        with(context5, fn, thisArg, ...args) {
-          const ctx2 = buildContextWithSentryScopes(context5, this.active());
+        with(context6, fn, thisArg, ...args) {
+          const ctx2 = buildContextWithSentryScopes(context6, this.active());
           return super.with(ctx2, fn, thisArg, ...args);
         }
         /**
@@ -139168,19 +139168,19 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
         setIsSetup("SentrySampler");
       }
       /** @inheritDoc */
-      shouldSample(context5, traceId, spanName, spanKind, spanAttributes, _links) {
+      shouldSample(context6, traceId, spanName, spanKind, spanAttributes, _links) {
         const options = this._client.getOptions();
         const { ignoreSpans } = options;
-        const parentSpan = getValidSpan(context5);
+        const parentSpan = getValidSpan(context6);
         const parentContext = parentSpan?.spanContext();
         if (!core.hasSpansEnabled(options)) {
-          return wrapSamplingDecision({ decision: void 0, context: context5, spanAttributes });
+          return wrapSamplingDecision({ decision: void 0, context: context6, spanAttributes });
         }
         const maybeSpanHttpMethod = spanAttributes[attributes.HTTP_METHOD] || spanAttributes[attributes.HTTP_REQUEST_METHOD];
         if (spanKind === api.SpanKind.CLIENT && maybeSpanHttpMethod && (!parentSpan || parentContext?.isRemote)) {
           if (!this._isSpanStreaming) {
             this._client.recordDroppedEvent("no_parent_span", "span");
-            return wrapSamplingDecision({ decision: void 0, context: context5, spanAttributes });
+            return wrapSamplingDecision({ decision: void 0, context: context6, spanAttributes });
           }
         }
         const parentSampled = parentSpan ? getParentSampled(parentSpan, traceId, spanName) : void 0;
@@ -139201,7 +139201,7 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
                   this._client.recordDroppedEvent("ignored", "span");
                   return wrapSamplingDecision({
                     decision: sdkTraceBase.SamplingDecision.NOT_RECORD,
-                    context: context5,
+                    context: context6,
                     spanAttributes,
                     ignoredChildSpan: true
                   });
@@ -139215,7 +139215,7 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
           }
           return wrapSamplingDecision({
             decision: parentSampled ? sdkTraceBase.SamplingDecision.RECORD_AND_SAMPLED : sdkTraceBase.SamplingDecision.NOT_RECORD,
-            context: context5,
+            context: context6,
             spanAttributes
           });
         }
@@ -139242,7 +139242,7 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
           this._client.recordDroppedEvent("ignored", "span");
           return wrapSamplingDecision({
             decision: sdkTraceBase.SamplingDecision.NOT_RECORD,
-            context: context5,
+            context: context6,
             spanAttributes,
             ignoredSegmentSpan: true
           });
@@ -139259,9 +139259,9 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
           mutableSamplingDecision
         );
         if (!mutableSamplingDecision.decision) {
-          return wrapSamplingDecision({ decision: void 0, context: context5, spanAttributes });
+          return wrapSamplingDecision({ decision: void 0, context: context6, spanAttributes });
         }
-        const { isolationScope } = getScopesFromContext(context5) ?? {};
+        const { isolationScope } = getScopesFromContext(context6) ?? {};
         const dscString = parentContext?.traceState ? parentContext.traceState.get(SENTRY_TRACE_STATE_DSC) : void 0;
         const dsc = dscString ? core.baggageHeaderToDynamicSamplingContext(dscString) : void 0;
         const sampleRand = core.parseSampleRate(dsc?.sample_rand) ?? core._INTERNAL_safeMathRandom();
@@ -139281,7 +139281,7 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
           DEBUG_BUILD2 && core.debug.log(`[Tracing] Not sampling span because HTTP method is '${method}' for ${spanName}`);
           return wrapSamplingDecision({
             decision: sdkTraceBase.SamplingDecision.NOT_RECORD,
-            context: context5,
+            context: context6,
             spanAttributes,
             sampleRand,
             downstreamTraceSampleRate: 0
@@ -139296,7 +139296,7 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
         return {
           ...wrapSamplingDecision({
             decision: sampled ? sdkTraceBase.SamplingDecision.RECORD_AND_SAMPLED : sdkTraceBase.SamplingDecision.NOT_RECORD,
-            context: context5,
+            context: context6,
             spanAttributes,
             sampleRand,
             downstreamTraceSampleRate: localSampleRateWasApplied ? sampleRate : void 0
@@ -139328,14 +139328,14 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
     }
     function wrapSamplingDecision({
       decision,
-      context: context5,
+      context: context6,
       spanAttributes,
       sampleRand,
       downstreamTraceSampleRate,
       ignoredChildSpan,
       ignoredSegmentSpan
     }) {
-      let traceState = getBaseTraceState(context5, spanAttributes);
+      let traceState = getBaseTraceState(context6, spanAttributes);
       if (downstreamTraceSampleRate !== void 0) {
         traceState = traceState.set(SENTRY_TRACE_STATE_SAMPLE_RATE, `${downstreamTraceSampleRate}`);
       }
@@ -139356,8 +139356,8 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
       }
       return { decision, traceState };
     }
-    function getBaseTraceState(context5, spanAttributes) {
-      const parentSpan = api.trace.getSpan(context5);
+    function getBaseTraceState(context6, spanAttributes) {
+      const parentSpan = api.trace.getSpan(context6);
       const parentContext = parentSpan?.spanContext();
       let traceState = parentContext?.traceState || new TraceState();
       const url = spanAttributes[attributes.HTTP_URL] || spanAttributes[attributes.URL_FULL];
@@ -139366,8 +139366,8 @@ var require_asyncContextStrategy_volGaYqZ = __commonJS({
       }
       return traceState;
     }
-    function getValidSpan(context5) {
-      const span = api.trace.getSpan(context5);
+    function getValidSpan(context6) {
+      const span = api.trace.getSpan(context6);
       return span && api.isSpanContextValid(span.spanContext()) ? span : void 0;
     }
     function applyOtelSpanData(span, options = {}) {
@@ -139738,8 +139738,8 @@ var require_cjs2 = __commonJS({
       active() {
         return this._asyncLocalStorage.getStore() ?? api.ROOT_CONTEXT;
       }
-      with(context5, fn, thisArg, ...args) {
-        const ctx2 = asyncContextStrategy.buildContextWithSentryScopes(context5, this.active());
+      with(context6, fn, thisArg, ...args) {
+        const ctx2 = asyncContextStrategy.buildContextWithSentryScopes(context6, this.active());
         const cb = thisArg == null ? fn : fn.bind(thisArg);
         return this._asyncLocalStorage.run(ctx2, cb, ...args);
       }
@@ -139750,12 +139750,12 @@ var require_cjs2 = __commonJS({
         this._asyncLocalStorage.disable();
         return this;
       }
-      bind(context5, target) {
+      bind(context6, target) {
         if (target instanceof node_events.EventEmitter) {
-          return this._bindEventEmitter(context5, target);
+          return this._bindEventEmitter(context6, target);
         }
         if (typeof target === "function") {
-          return this._bindFunction(context5, target);
+          return this._bindFunction(context6, target);
         }
         return target;
       }
@@ -139769,10 +139769,10 @@ var require_cjs2 = __commonJS({
           contextSymbol: asyncContextStrategy.SENTRY_SCOPES_CONTEXT_KEY
         };
       }
-      _bindFunction(context5, target) {
+      _bindFunction(context6, target) {
         const managerWith = this.with.bind(this);
         const contextWrapper = function(...args) {
-          return managerWith(context5, () => target.apply(this, args));
+          return managerWith(context6, () => target.apply(this, args));
         };
         Object.defineProperty(contextWrapper, "length", {
           enumerable: false,
@@ -139782,7 +139782,7 @@ var require_cjs2 = __commonJS({
         });
         return contextWrapper;
       }
-      _bindEventEmitter(context5, ee) {
+      _bindEventEmitter(context6, ee) {
         if (this._getPatchMap(ee) !== void 0) {
           return ee;
         }
@@ -139793,7 +139793,7 @@ var require_cjs2 = __commonJS({
           ee[methodName] = this._patchAddListener(
             ee,
             ee[methodName],
-            context5
+            context6
           );
         }
         if (typeof ee.removeListener === "function") {
@@ -139836,7 +139836,7 @@ var require_cjs2 = __commonJS({
           return original.apply(this, arguments);
         };
       }
-      _patchAddListener(ee, original, context5) {
+      _patchAddListener(ee, original, context6) {
         const contextManager = this;
         return function(event, listener) {
           if (contextManager._wrapped) {
@@ -139851,7 +139851,7 @@ var require_cjs2 = __commonJS({
             listeners = /* @__PURE__ */ new WeakMap();
             map[event] = listeners;
           }
-          const patchedListener = contextManager.bind(context5, listener);
+          const patchedListener = contextManager.bind(context6, listener);
           listeners.set(listener, patchedListener);
           contextManager._wrapped = true;
           try {
@@ -142560,7 +142560,7 @@ var require_sdk2 = __commonJS({
     var opentelemetry = require_cjs2();
     var debugBuild = require_debug_build2();
     var childProcess = require_childProcess();
-    var context5 = require_context3();
+    var context6 = require_context3();
     var contextlines = require_contextlines();
     var index = require_http2();
     var index$2 = require_local_variables();
@@ -142598,7 +142598,7 @@ var require_sdk2 = __commonJS({
         // Event Info
         contextlines.contextLinesIntegration(),
         index$2.localVariablesIntegration(),
-        context5.nodeContextIntegration(),
+        context6.nodeContextIntegration(),
         childProcess.childProcessIntegration(),
         processSession.processSessionIntegration(),
         modules.modulesIntegration()
@@ -143492,12 +143492,12 @@ var require_cron = __commonJS({
           }
           jobScheduled = true;
           const cronString = common.replaceCronNames(cronTime);
-          async function monitoredTick(context5, onComplete2) {
+          async function monitoredTick(context6, onComplete2) {
             return core.withMonitor(
               monitorSlug,
               async () => {
                 try {
-                  await onTick(context5, onComplete2);
+                  await onTick(context6, onComplete2);
                 } catch (e) {
                   core.captureException(e, {
                     mechanism: {
@@ -143528,12 +143528,12 @@ var require_cron = __commonJS({
               }
               jobScheduled = true;
               const cronString = common.replaceCronNames(cronTime);
-              param.onTick = async (context5, onComplete) => {
+              param.onTick = async (context6, onComplete) => {
                 return core.withMonitor(
                   monitorSlug,
                   async () => {
                     try {
-                      await onTick(context5, onComplete);
+                      await onTick(context6, onComplete);
                     } catch (e) {
                       core.captureException(e, {
                         mechanism: {
@@ -143698,7 +143698,7 @@ var require_cjs3 = __commonJS({
     var index = require_anr2();
     var core = require_cjs();
     var exports$1 = require_exports3();
-    var context5 = require_context3();
+    var context6 = require_context3();
     var nodeRuntimeMetrics = require_nodeRuntimeMetrics();
     var contextlines = require_contextlines();
     var index$4 = require_local_variables();
@@ -143827,7 +143827,7 @@ var require_cjs3 = __commonJS({
     exports2.wrapMcpServerWithSentry = core.wrapMcpServerWithSentry;
     exports2.zodErrorsIntegration = core.zodErrorsIntegration;
     exports2.logger = exports$1;
-    exports2.nodeContextIntegration = context5.nodeContextIntegration;
+    exports2.nodeContextIntegration = context6.nodeContextIntegration;
     exports2._INTERNAL_normalizeCollectionInterval = nodeRuntimeMetrics._INTERNAL_normalizeCollectionInterval;
     exports2.nodeRuntimeMetricsIntegration = nodeRuntimeMetrics.nodeRuntimeMetricsIntegration;
     exports2.contextLinesIntegration = contextlines.contextLinesIntegration;
@@ -151797,22 +151797,22 @@ var require_hono = __commonJS({
     };
     var honoIntegration = core.defineIntegration(_honoIntegration);
     function honoRequestHandler() {
-      return async function sentryRequestMiddleware(context5, next) {
-        const normalizedRequest = core.httpRequestToRequestData(context5.req);
+      return async function sentryRequestMiddleware(context6, next) {
+        const normalizedRequest = core.httpRequestToRequestData(context6.req);
         core.getIsolationScope().setSDKProcessingMetadata({ normalizedRequest });
         await next();
       };
     }
-    function defaultShouldHandleError(context5) {
-      const statusCode = context5.res.status;
+    function defaultShouldHandleError(context6) {
+      const statusCode = context6.res.status;
       return statusCode >= 500;
     }
     function honoErrorHandler(options) {
-      return async function sentryErrorMiddleware(context5, next) {
+      return async function sentryErrorMiddleware(context6, next) {
         await next();
         const shouldHandleError = options?.shouldHandleError || defaultShouldHandleError;
-        if (shouldHandleError(context5)) {
-          context5.res.sentry = core.captureException(context5.error, {
+        if (shouldHandleError(context6)) {
+          context6.res.sentry = core.captureException(context6.error, {
             mechanism: {
               type: "auto.middleware.hono",
               handled: false
@@ -151865,7 +151865,7 @@ var require_utils37 = __commonJS({
     var types = require_types5();
     var AttributeNames = require_AttributeNames5();
     var attributes = require_attributes2();
-    var getMiddlewareMetadata = (context5, layer, isRouter, layerPath) => {
+    var getMiddlewareMetadata = (context6, layer, isRouter, layerPath) => {
       if (isRouter) {
         return {
           attributes: {
@@ -151874,7 +151874,7 @@ var require_utils37 = __commonJS({
             [AttributeNames.AttributeNames.KOA_TYPE]: types.KoaLayerType.ROUTER,
             [attributes.HTTP_ROUTE]: layerPath?.toString()
           },
-          name: context5._matchedRouteName || `router - ${layerPath}`
+          name: context6._matchedRouteName || `router - ${layerPath}`
         };
       } else {
         return {
@@ -151997,14 +151997,14 @@ var require_instrumentation15 = __commonJS({
           return middlewareLayer;
         }
         middlewareLayer[internalTypes.kLayerPatched] = true;
-        return (context5, next) => {
+        return (context6, next) => {
           const parent = api.trace.getSpan(api.context.active());
           if (parent === void 0) {
-            return middlewareLayer(context5, next);
+            return middlewareLayer(context6, next);
           }
-          const metadata = utils.getMiddlewareMetadata(context5, middlewareLayer, isRouter, layerPath);
-          if (context5._matchedRoute) {
-            setHttpServerSpanRouteAttribute.setHttpServerSpanRouteAttribute(context5._matchedRoute.toString());
+          const metadata = utils.getMiddlewareMetadata(context6, middlewareLayer, isRouter, layerPath);
+          if (context6._matchedRoute) {
+            setHttpServerSpanRouteAttribute.setHttpServerSpanRouteAttribute(context6._matchedRoute.toString());
           }
           const koaName = metadata.attributes[AttributeNames.AttributeNames.KOA_NAME];
           const name = typeof koaName === "string" ? koaName || "< unknown >" : metadata.name;
@@ -152022,10 +152022,10 @@ var require_instrumentation15 = __commonJS({
               if (core.getIsolationScope() === core.getDefaultIsolationScope()) {
                 debugBuild.DEBUG_BUILD && core.debug.warn("Isolation scope is default isolation scope - skipping setting transactionName");
               } else if (route) {
-                const method = context5.request?.method?.toUpperCase() || "GET";
+                const method = context6.request?.method?.toUpperCase() || "GET";
                 core.getIsolationScope().setTransactionName(`${method} ${route}`);
               }
-              return middlewareLayer(context5, next);
+              return middlewareLayer(context6, next);
             }
           );
         };
@@ -156935,13 +156935,13 @@ var require_koa3 = __commonJS({
         return middlewareLayer;
       }
       middlewareLayer[kLayerPatched] = true;
-      return (context5, next) => {
+      return (context6, next) => {
         if (!core.getActiveSpan()) {
-          return middlewareLayer(context5, next);
+          return middlewareLayer(context6, next);
         }
-        const metadata = getMiddlewareMetadata(context5, middlewareLayer, isRouter, layerPath);
-        if (context5._matchedRoute) {
-          setHttpServerSpanRouteAttribute(context5._matchedRoute.toString());
+        const metadata = getMiddlewareMetadata(context6, middlewareLayer, isRouter, layerPath);
+        if (context6._matchedRoute) {
+          setHttpServerSpanRouteAttribute(context6._matchedRoute.toString());
         }
         const koaName = metadata.attributes[attributes.KOA_NAME];
         const name = typeof koaName === "string" ? koaName || "< unknown >" : metadata.name;
@@ -156959,15 +156959,15 @@ var require_koa3 = __commonJS({
             if (core.getIsolationScope() === core.getDefaultIsolationScope()) {
               debugBuild.DEBUG_BUILD && core.debug.warn("Isolation scope is default isolation scope - skipping setting transactionName");
             } else if (route) {
-              const method = context5.request?.method?.toUpperCase() || "GET";
+              const method = context6.request?.method?.toUpperCase() || "GET";
               core.getIsolationScope().setTransactionName(`${method} ${route}`);
             }
-            return middlewareLayer(context5, next);
+            return middlewareLayer(context6, next);
           }
         );
       };
     }
-    function getMiddlewareMetadata(context5, layer, isRouter, layerPath) {
+    function getMiddlewareMetadata(context6, layer, isRouter, layerPath) {
       if (isRouter) {
         return {
           attributes: {
@@ -156977,7 +156977,7 @@ var require_koa3 = __commonJS({
             [attributes.KOA_TYPE]: LAYER_TYPE.ROUTER,
             [attributes.HTTP_ROUTE]: layerPath?.toString()
           },
-          name: context5._matchedRouteName || `router - ${layerPath}`
+          name: context6._matchedRouteName || `router - ${layerPath}`
         };
       }
       return {
@@ -158480,12 +158480,12 @@ var require_postgres_js = __commonJS({
     var SPAN_ENDED = /* @__PURE__ */ Symbol("sentryPostgresJsSpanEnded");
     var connectionContexts = /* @__PURE__ */ new WeakMap();
     var endpointRegistry = [];
-    function registerEndpoint(context5) {
+    function registerEndpoint(context6) {
       const alreadyKnown = endpointRegistry.some(
-        (e) => e.ATTR_SERVER_ADDRESS === context5.ATTR_SERVER_ADDRESS && e.ATTR_SERVER_PORT === context5.ATTR_SERVER_PORT && e.ATTR_DB_NAMESPACE === context5.ATTR_DB_NAMESPACE
+        (e) => e.ATTR_SERVER_ADDRESS === context6.ATTR_SERVER_ADDRESS && e.ATTR_SERVER_PORT === context6.ATTR_SERVER_PORT && e.ATTR_DB_NAMESPACE === context6.ATTR_DB_NAMESPACE
       );
       if (!alreadyKnown) {
-        endpointRegistry.push(context5);
+        endpointRegistry.push(context6);
       }
     }
     function resolveSingleEndpoint() {
@@ -158497,17 +158497,17 @@ var require_postgres_js = __commonJS({
       if (!connection || typeof connection !== "object" || !options) {
         return;
       }
-      const context5 = core._INTERNAL_buildPostgresConnectionContext(options);
-      connectionContexts.set(connection, context5);
-      registerEndpoint(context5);
+      const context6 = core._INTERNAL_buildPostgresConnectionContext(options);
+      connectionContexts.set(connection, context6);
+      registerEndpoint(context6);
     }
-    function setConnectionAttributes(span, query, context5) {
+    function setConnectionAttributes(span, query, context6) {
       const queryRecord = query;
       if (queryRecord[CONNECTION_ATTRS_SET]) {
         return;
       }
       queryRecord[CONNECTION_ATTRS_SET] = true;
-      core._INTERNAL_setPostgresConnectionAttributes(span, context5);
+      core._INTERNAL_setPostgresConnectionAttributes(span, context6);
     }
     function attachConnectionAttributesFromChannel(message) {
       const connection = message.self;
@@ -158516,9 +158516,9 @@ var require_postgres_js = __commonJS({
         return;
       }
       const span = query[QUERY_SPAN];
-      const context5 = connectionContexts.get(connection);
-      if (span && context5) {
-        setConnectionAttributes(span, query, context5);
+      const context6 = connectionContexts.get(connection);
+      if (span && context6) {
+        setConnectionAttributes(span, query, context6);
       }
     }
     function wrapQuerySettlement(data, span, sanitizedSqlQuery) {
@@ -158615,13 +158615,13 @@ var require_postgres_js = __commonJS({
                   }
                 });
                 query[QUERY_SPAN] = span;
-                const context5 = resolveSingleEndpoint();
-                if (context5) {
-                  setConnectionAttributes(span, query, context5);
+                const context6 = resolveSingleEndpoint();
+                if (context6) {
+                  setConnectionAttributes(span, query, context6);
                 }
                 if (requestHook) {
                   try {
-                    requestHook(span, sanitizedSqlQuery, context5);
+                    requestHook(span, sanitizedSqlQuery, context6);
                   } catch (e) {
                     span.setAttribute("sentry.hook.error", "requestHook failed");
                     debugBuild.DEBUG_BUILD && core.debug.error("[orchestrion:postgresjs] error in requestHook:", e);
@@ -210068,7 +210068,7 @@ var require_modem = __commonJS({
       this.socketPathCache = socketPathValue;
       return Promise.resolve(socketPathValue);
     };
-    Modem.prototype.buildRequest = function(options, context5, data, callback) {
+    Modem.prototype.buildRequest = function(options, context6, data, callback) {
       var self2 = this;
       var connectionTimeoutTimer;
       var finished = false;
@@ -210106,7 +210106,7 @@ var require_modem = __commonJS({
           req.destroy();
         });
       }
-      if (context5.hijack === true) {
+      if (context6.hijack === true) {
         clearTimeout(connectionTimeoutTimer);
         req.on("upgrade", function(res, sock, head) {
           if (finished === false) {
@@ -210126,10 +210126,10 @@ var require_modem = __commonJS({
       });
       req.on("response", function(res) {
         clearTimeout(connectionTimeoutTimer);
-        if (context5.isStream === true) {
+        if (context6.isStream === true) {
           if (finished === false) {
             finished = true;
-            self2.buildPayload(null, context5.isStream, context5.statusCodes, context5.openStdin, req, res, null, callback);
+            self2.buildPayload(null, context6.isStream, context6.statusCodes, context6.openStdin, req, res, null, callback);
           }
         } else {
           if (options.signal != null) {
@@ -210146,7 +210146,7 @@ var require_modem = __commonJS({
             var json = utils.parseJSON(result) || buffer;
             if (finished === false) {
               finished = true;
-              self2.buildPayload(null, context5.isStream, context5.statusCodes, false, req, res, json, callback);
+              self2.buildPayload(null, context6.isStream, context6.statusCodes, false, req, res, json, callback);
             }
           });
         }
@@ -210155,7 +210155,7 @@ var require_modem = __commonJS({
         clearTimeout(connectionTimeoutTimer);
         if (finished === false) {
           finished = true;
-          self2.buildPayload(error2, context5.isStream, context5.statusCodes, false, {}, {}, null, callback);
+          self2.buildPayload(error2, context6.isStream, context6.statusCodes, false, {}, {}, null, callback);
         }
       });
       if (typeof data === "string" || Buffer.isBuffer(data)) {
@@ -210166,7 +210166,7 @@ var require_modem = __commonJS({
         });
         data.pipe(req);
       }
-      if (!context5.openStdin && (typeof data === "string" || data === void 0 || Buffer.isBuffer(data))) {
+      if (!context6.openStdin && (typeof data === "string" || data === void 0 || Buffer.isBuffer(data))) {
         req.end();
       }
     };
@@ -218045,14 +218045,14 @@ ${callerStack}`;
       }
       _write(chunk, encoding, cb) {
         var _a2;
-        const context5 = {
+        const context6 = {
           callback: cb
         };
         const flags = Number(encoding);
         if (!Number.isNaN(flags)) {
-          context5.flags = flags;
+          context6.flags = flags;
         }
-        (_a2 = this.call) === null || _a2 === void 0 ? void 0 : _a2.sendMessageWithContext(context5, chunk);
+        (_a2 = this.call) === null || _a2 === void 0 ? void 0 : _a2.sendMessageWithContext(context6, chunk);
       }
       _final(cb) {
         var _a2;
@@ -218085,14 +218085,14 @@ ${callerStack}`;
       }
       _write(chunk, encoding, cb) {
         var _a2;
-        const context5 = {
+        const context6 = {
           callback: cb
         };
         const flags = Number(encoding);
         if (!Number.isNaN(flags)) {
-          context5.flags = flags;
+          context6.flags = flags;
         }
-        (_a2 = this.call) === null || _a2 === void 0 ? void 0 : _a2.sendMessageWithContext(context5, chunk);
+        (_a2 = this.call) === null || _a2 === void 0 ? void 0 : _a2.sendMessageWithContext(context6, chunk);
       }
       _final(cb) {
         var _a2;
@@ -218362,15 +218362,15 @@ var require_client_interceptors = __commonJS({
         });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context6, message) {
         this.processingMessage = true;
         this.requester.sendMessage(message, (finalMessage) => {
           this.processingMessage = false;
           if (this.processingMetadata) {
-            this.pendingMessageContext = context5;
+            this.pendingMessageContext = context6;
             this.pendingMessage = message;
           } else {
-            this.nextCall.sendMessageWithContext(context5, finalMessage);
+            this.nextCall.sendMessageWithContext(context6, finalMessage);
             this.processPendingHalfClose();
           }
         });
@@ -218421,7 +218421,7 @@ var require_client_interceptors = __commonJS({
         return this.call.getPeer();
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context6, message) {
         let serialized;
         try {
           serialized = this.methodDefinition.requestSerialize(message);
@@ -218429,7 +218429,7 @@ var require_client_interceptors = __commonJS({
           this.call.cancelWithStatus(constants_1.Status.INTERNAL, `Request message serialization failure: ${(0, error_1.getErrorMessage)(e)}`);
           return;
         }
-        this.call.sendMessageWithContext(context5, serialized);
+        this.call.sendMessageWithContext(context6, serialized);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       sendMessage(message) {
@@ -229855,17 +229855,17 @@ var require_single_subchannel_channel = __commonJS({
           this.childCall.halfClose();
         }
       }
-      async sendMessageWithContext(context5, message) {
+      async sendMessageWithContext(context6, message) {
         this.writeFilterPending = true;
-        const filteredMessage = await this.filterStack.sendMessage(Promise.resolve({ message, flags: context5.flags }));
+        const filteredMessage = await this.filterStack.sendMessage(Promise.resolve({ message, flags: context6.flags }));
         this.writeFilterPending = false;
         if (this.childCall) {
-          this.childCall.sendMessageWithContext(context5, filteredMessage.message);
+          this.childCall.sendMessageWithContext(context6, filteredMessage.message);
           if (this.halfClosePending) {
             this.childCall.halfClose();
           }
         } else {
-          this.pendingMessage = { context: context5, message: filteredMessage.message };
+          this.pendingMessage = { context: context6, message: filteredMessage.message };
         }
       }
       startRead() {
@@ -231248,7 +231248,7 @@ var require_subchannel_call = __commonJS({
         }
         this.http2Stream.resume();
       }
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context6, message) {
         this.trace("write() called with message of length " + message.length);
         const cb = (error2) => {
           process.nextTick(() => {
@@ -231260,7 +231260,7 @@ var require_subchannel_call = __commonJS({
             if (error2) {
               this.cancelWithStatus(code, `Write error: ${error2.message}`);
             }
-            (_a2 = context5.callback) === null || _a2 === void 0 ? void 0 : _a2.call(context5);
+            (_a2 = context6.callback) === null || _a2 === void 0 ? void 0 : _a2.call(context6);
           });
         };
         this.trace("sending data chunk of length " + message.length);
@@ -232111,12 +232111,12 @@ var require_load_balancing_call = __commonJS({
         this.metadata = metadata;
         this.doPick();
       }
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context6, message) {
         this.trace("write() called with message of length " + message.length);
         if (this.child) {
-          this.child.sendMessageWithContext(context5, message);
+          this.child.sendMessageWithContext(context6, message);
         } else {
-          this.pendingMessage = { context: context5, message };
+          this.pendingMessage = { context: context6, message };
         }
       }
       startRead() {
@@ -232266,15 +232266,15 @@ var require_resolving_call = __commonJS({
           });
         }
       }
-      sendMessageOnChild(context5, message) {
+      sendMessageOnChild(context6, message) {
         if (!this.child) {
           throw new Error("sendMessageonChild called with child not populated");
         }
         const child = this.child;
         this.writeFilterPending = true;
-        this.filterStack.sendMessage(Promise.resolve({ message, flags: context5.flags })).then((filteredMessage) => {
+        this.filterStack.sendMessage(Promise.resolve({ message, flags: context6.flags })).then((filteredMessage) => {
           this.writeFilterPending = false;
-          child.sendMessageWithContext(context5, filteredMessage.message);
+          child.sendMessageWithContext(context6, filteredMessage.message);
           if (this.pendingHalfClose) {
             child.halfClose();
           }
@@ -232393,12 +232393,12 @@ var require_resolving_call = __commonJS({
         this.listener = listener;
         this.getConfig();
       }
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context6, message) {
         this.trace("write() called with message of length " + message.length);
         if (this.child) {
-          this.sendMessageOnChild(context5, message);
+          this.sendMessageOnChild(context6, message);
         } else {
-          this.pendingMessage = { context: context5, message };
+          this.pendingMessage = { context: context6, message };
         }
       }
       startRead() {
@@ -232974,11 +232974,11 @@ var require_retrying_call = __commonJS({
           }
         }
       }
-      sendMessageWithContext(context5, message) {
+      sendMessageWithContext(context6, message) {
         this.trace("write() called with message of length " + message.length);
         const writeObj = {
           message,
-          flags: context5.flags
+          flags: context6.flags
         };
         const messageIndex = this.getNextBufferIndex();
         const bufferEntry = {
@@ -232990,7 +232990,7 @@ var require_retrying_call = __commonJS({
         if (bufferEntry.allocated) {
           process.nextTick(() => {
             var _a2;
-            (_a2 = context5.callback) === null || _a2 === void 0 ? void 0 : _a2.call(context5);
+            (_a2 = context6.callback) === null || _a2 === void 0 ? void 0 : _a2.call(context6);
           });
           for (const [callIndex, call] of this.underlyingCalls.entries()) {
             if (call.state === "ACTIVE" && call.nextMessageToSend === messageIndex) {
@@ -233007,7 +233007,7 @@ var require_retrying_call = __commonJS({
             return;
           }
           const call = this.underlyingCalls[this.committedCallIndex];
-          bufferEntry.callback = context5.callback;
+          bufferEntry.callback = context6.callback;
           if (call.state === "ACTIVE" && call.nextMessageToSend === messageIndex) {
             call.call.sendMessageWithContext({
               callback: (error2) => {
@@ -235363,17 +235363,17 @@ var require_server2 = __commonJS({
       var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
       var _, done = false;
       for (var i = decorators.length - 1; i >= 0; i--) {
-        var context5 = {};
+        var context6 = {};
         for (var p in contextIn)
-          context5[p] = p === "access" ? {} : contextIn[p];
+          context6[p] = p === "access" ? {} : contextIn[p];
         for (var p in contextIn.access)
-          context5.access[p] = contextIn.access[p];
-        context5.addInitializer = function(f) {
+          context6.access[p] = contextIn.access[p];
+        context6.addInitializer = function(f) {
           if (done)
             throw new TypeError("Cannot add initializers after decoration has completed");
           extraInitializers.push(accept(f || null));
         };
-        var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context5);
+        var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context6);
         if (kind === "accessor") {
           if (result === void 0)
             continue;
@@ -235422,7 +235422,7 @@ var require_server2 = __commonJS({
     function noop() {
     }
     function deprecate(message) {
-      return function(target, context5) {
+      return function(target, context6) {
         return util.deprecate(target, message);
       };
     }
@@ -243602,59 +243602,59 @@ function timestampInSeconds() {
 }
 
 // node_modules/.pnpm/@sentry+core@9.47.1/node_modules/@sentry/core/build/esm/session.js
-function updateSession(session, context5 = {}) {
-  if (context5.user) {
-    if (!session.ipAddress && context5.user.ip_address) {
-      session.ipAddress = context5.user.ip_address;
+function updateSession(session, context6 = {}) {
+  if (context6.user) {
+    if (!session.ipAddress && context6.user.ip_address) {
+      session.ipAddress = context6.user.ip_address;
     }
-    if (!session.did && !context5.did) {
-      session.did = context5.user.id || context5.user.email || context5.user.username;
+    if (!session.did && !context6.did) {
+      session.did = context6.user.id || context6.user.email || context6.user.username;
     }
   }
-  session.timestamp = context5.timestamp || timestampInSeconds();
-  if (context5.abnormal_mechanism) {
-    session.abnormal_mechanism = context5.abnormal_mechanism;
+  session.timestamp = context6.timestamp || timestampInSeconds();
+  if (context6.abnormal_mechanism) {
+    session.abnormal_mechanism = context6.abnormal_mechanism;
   }
-  if (context5.ignoreDuration) {
-    session.ignoreDuration = context5.ignoreDuration;
+  if (context6.ignoreDuration) {
+    session.ignoreDuration = context6.ignoreDuration;
   }
-  if (context5.sid) {
-    session.sid = context5.sid.length === 32 ? context5.sid : uuid4();
+  if (context6.sid) {
+    session.sid = context6.sid.length === 32 ? context6.sid : uuid4();
   }
-  if (context5.init !== void 0) {
-    session.init = context5.init;
+  if (context6.init !== void 0) {
+    session.init = context6.init;
   }
-  if (!session.did && context5.did) {
-    session.did = `${context5.did}`;
+  if (!session.did && context6.did) {
+    session.did = `${context6.did}`;
   }
-  if (typeof context5.started === "number") {
-    session.started = context5.started;
+  if (typeof context6.started === "number") {
+    session.started = context6.started;
   }
   if (session.ignoreDuration) {
     session.duration = void 0;
-  } else if (typeof context5.duration === "number") {
-    session.duration = context5.duration;
+  } else if (typeof context6.duration === "number") {
+    session.duration = context6.duration;
   } else {
     const duration = session.timestamp - session.started;
     session.duration = duration >= 0 ? duration : 0;
   }
-  if (context5.release) {
-    session.release = context5.release;
+  if (context6.release) {
+    session.release = context6.release;
   }
-  if (context5.environment) {
-    session.environment = context5.environment;
+  if (context6.environment) {
+    session.environment = context6.environment;
   }
-  if (!session.ipAddress && context5.ipAddress) {
-    session.ipAddress = context5.ipAddress;
+  if (!session.ipAddress && context6.ipAddress) {
+    session.ipAddress = context6.ipAddress;
   }
-  if (!session.userAgent && context5.userAgent) {
-    session.userAgent = context5.userAgent;
+  if (!session.userAgent && context6.userAgent) {
+    session.userAgent = context6.userAgent;
   }
-  if (typeof context5.errors === "number") {
-    session.errors = context5.errors;
+  if (typeof context6.errors === "number") {
+    session.errors = context6.errors;
   }
-  if (context5.status) {
-    session.status = context5.status;
+  if (context6.status) {
+    session.status = context6.status;
   }
 }
 
@@ -243911,11 +243911,11 @@ var Scope = class _Scope {
    * Data passed as context will be normalized. You can also pass `null` to unset the context.
    * Note that context data will not be merged - calling `setContext` will overwrite an existing context with the same key.
    */
-  setContext(key, context5) {
-    if (context5 === null) {
+  setContext(key, context6) {
+    if (context6 === null) {
       delete this._contexts[key];
     } else {
-      this._contexts[key] = context5;
+      this._contexts[key] = context6;
     }
     this._notifyScopeListeners();
     return this;
@@ -244069,8 +244069,8 @@ var Scope = class _Scope {
   /**
    * Add propagation context to the scope, used for distributed tracing
    */
-  setPropagationContext(context5) {
-    this._propagationContext = context5;
+  setPropagationContext(context6) {
+    this._propagationContext = context6;
     return this;
   }
   /**
@@ -245433,8 +245433,8 @@ function hintIsScopeContext(hint) {
 function captureException(exception, hint) {
   return getCurrentScope().captureException(exception, parseEventHintOrCaptureContext(hint));
 }
-function setContext(name, context5) {
-  getIsolationScope().setContext(name, context5);
+function setContext(name, context6) {
+  getIsolationScope().setContext(name, context6);
 }
 function setTags(tags) {
   getIsolationScope().setTags(tags);
@@ -245450,7 +245450,7 @@ async function flush(timeout) {
 
 // src/actions/upload-container/upload-container.ts
 var import_core4 = __toESM(require_core());
-var import_github3 = __toESM(require_github());
+var import_github4 = __toESM(require_github());
 var import_client2 = __toESM(require_dist13());
 var import_remote_replay_launcher = __toESM(require_dist15());
 var import_sentry = __toESM(require_dist17());
@@ -252059,14 +252059,14 @@ var ALL_REQUIRED_PERMISSIONS = [
   "pull-requests: write",
   "statuses: read"
 ];
-var getDetailedGitHubPermissionsError = (error2, context5) => {
+var getDetailedGitHubPermissionsError = (error2, context6) => {
   if (!isGithubPermissionsError(error2)) {
     return getErrorMessage(error2);
   }
   const acceptedPermissions = error2?.response?.headers?.["x-accepted-github-permissions"];
   const apiUrl = error2?.response?.url;
   let message = "GitHub API Error: Resource not accessible by integration (403)\n\n";
-  switch (context5.operation) {
+  switch (context6.operation) {
     case "get_workflow_run":
       message += "Failed to retrieve workflow run information.\n";
       message += "This typically happens when:\n";
@@ -252086,6 +252086,12 @@ var getDetailedGitHubPermissionsError = (error2, context5) => {
       message += "1. The GitHub token doesn't have 'contents: read' permission\n";
       message += "2. The branch is protected and requires additional permissions\n";
       break;
+    case "compare_commits":
+      message += "Failed to compare commits to resolve the merge base.\n";
+      message += "This typically happens when:\n";
+      message += "1. The GitHub token doesn't have 'contents: read' permission\n";
+      message += "2. One of the commits is not reachable with the current token\n";
+      break;
     case "comment":
       message += "Failed to create or update PR comment.\n";
       message += "This typically happens when:\n";
@@ -252095,7 +252101,7 @@ var getDetailedGitHubPermissionsError = (error2, context5) => {
   }
   message += "\n**To fix this issue:**\n\n";
   message += getCommonPermissionsErrorMessage();
-  if (context5.operation === "trigger_workflow") {
+  if (context6.operation === "trigger_workflow") {
     message += "Also ensure your workflow has the 'workflow_dispatch' trigger:\n\n";
     message += "```yaml\n";
     message += "on:\n";
@@ -252198,11 +252204,11 @@ var WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL = Duration.fromObject({ hours: 1 });
 var GITHUB_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 var MAX_WORKFLOW_RUNS_TO_SEARCH = 500;
 var getCurrentWorkflowId = async ({
-  context: context5,
+  context: context6,
   octokit
 }) => {
-  const { owner, repo } = context5.repo;
-  const workflowRunId = context5.runId;
+  const { owner, repo } = context6.repo;
+  const workflowRunId = context6.runId;
   try {
     const { data } = await octokit.rest.actions.getWorkflowRun({
       owner,
@@ -252520,7 +252526,7 @@ var ensureBaseTestsExists = async ({
   event,
   base,
   // from the PR event
-  context: context5,
+  context: context6,
   octokit,
   getBaseTestRun,
   getBaseTestRunResolvedByBackend: getBaseTestRunResolvedByBackend2,
@@ -252560,7 +252566,7 @@ var ensureBaseTestsExists = async ({
     logger,
     event,
     base,
-    context: context5,
+    context: context6,
     octokit,
     dispatchedRunReportsCheckedOutCommit,
     // Racing the workflow against a poll for the test run lets someone else's build of the same
@@ -252593,12 +252599,12 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     logger,
     event,
     base,
-    context: context5,
+    context: context6,
     octokit,
     dispatchedRunReportsCheckedOutCommit
   } = opts;
-  const { owner, repo } = context5.repo;
-  const { workflowId } = await getCurrentWorkflowId({ context: context5, octokit });
+  const { owner, repo } = context6.repo;
+  const { workflowId } = await getCurrentWorkflowId({ context: context6, octokit });
   const alreadyPending = await getPendingWorkflowRun({
     owner,
     repo,
@@ -252904,12 +252910,62 @@ ${detailedError}`
 
 // src/common/get-base-and-head-commit-shas.ts
 var import_child_process = require("child_process");
+var import_github2 = __toESM(require_github());
+
+// src/common/get-merge-base-via-compare-api.ts
 var import_github = __toESM(require_github());
+var tryGetMergeBaseViaCompareApi = async ({
+  headSha,
+  baseRef,
+  pullRequestBaseSha,
+  octokit,
+  logger
+}) => {
+  const { owner, repo } = import_github.context.repo;
+  try {
+    const { data } = await octokit.rest.repos.compareCommits({
+      owner,
+      repo,
+      base: baseRef,
+      head: headSha
+    });
+    const mergeBase = data.merge_base_commit?.sha;
+    if (mergeBase == null || !isValidGitSha(mergeBase)) {
+      logger.error(
+        `Failed to get merge base of ${headSha} and ${baseRef} via the GitHub compare API: merge_base_commit.sha was not a valid git SHA ('${mergeBase}'). Using the base of the pull request instead (${pullRequestBaseSha}).`
+      );
+      return null;
+    }
+    return mergeBase;
+  } catch (error2) {
+    if (isGithubPermissionsError(error2)) {
+      const detailedError = getDetailedGitHubPermissionsError(error2, {
+        operation: "compare_commits",
+        requiredPermissions: ["contents: read"]
+      });
+      logger.error(
+        `Missing permission to compare ${headSha} with ${baseRef}. This is required in order to calculate the merge base.
+
+${detailedError}`
+      );
+      return null;
+    }
+    logger.error(
+      `Failed to get merge base of ${headSha} and ${baseRef} via the GitHub compare API. Error: ${error2}. Using the base of the pull request instead (${pullRequestBaseSha}).`
+    );
+    return null;
+  }
+};
+var isValidGitSha = (sha) => {
+  return /^[a-f0-9]{40}$/.test(sha);
+};
+
+// src/common/get-base-and-head-commit-shas.ts
 var getActualCommitShaFromRepoOrContext = (logger) => {
   try {
     return getActualCommitShaFromRepo();
   } catch (error2) {
-    const fallback = import_github.context.sha;
+    const fallback = import_github2.context.sha;
     if (fallback) {
       logger.info(
         `Could not read HEAD from a git repository (${error2 instanceof Error ? error2.message : error2}). Falling back to GITHUB_SHA (${fallback}).`
@@ -252927,19 +252983,21 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
     const head = event.payload.pull_request.head.sha;
     const base = event.payload.pull_request.base.sha;
     const baseRef = event.payload.pull_request.base.ref;
+    const mergeBaseOpts = {
+      pullRequestHeadSha: head,
+      pullRequestBaseSha: base,
+      baseRef,
+      octokit: options.octokit,
+      logger
+    };
     if (options.useDeploymentUrl) {
       return {
-        base: await tryGetMergeBaseOfHeadCommit(head, base, baseRef, logger) ?? base,
+        base: await tryGetMergeBaseOfHeadCommit(mergeBaseOpts) ?? base,
         head
       };
     }
     return {
-      base: await tryGetMergeBaseOfTemporaryMergeCommit(
-        head,
-        base,
-        baseRef,
-        logger
-      ) ?? base,
+      base: await tryGetMergeBaseOfTemporaryMergeCommit(mergeBaseOpts) ?? base,
       head
     };
   }
@@ -252952,7 +253010,7 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
   if (event.type === "workflow_dispatch") {
     return {
       base: null,
-      head: import_github.context.sha
+      head: import_github2.context.sha
     };
   }
   return assertNever(event);
@@ -252960,40 +253018,41 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
 var assertNever = (event) => {
   throw new Error("Unexpected event: " + JSON.stringify(event));
 };
-var tryGetMergeBaseOfHeadCommit = (pullRequestHeadSha, pullRequestBaseSha, baseRef, logger) => {
-  try {
-    markGitDirectoryAsSafe();
-    (0, import_child_process.execFileSync)("git", ["fetch", "origin", pullRequestHeadSha, "--unshallow"]);
-    (0, import_child_process.execFileSync)("git", ["fetch", "origin", "--", baseRef]);
-    const mergeBase = (0, import_child_process.execFileSync)("git", [
-      "merge-base",
-      pullRequestHeadSha,
-      `origin/${baseRef}`
-    ]).toString().trim();
-    if (!isValidGitSha(mergeBase)) {
-      logger.error(
-        `Failed to get merge base of ${pullRequestHeadSha} and ${baseRef}: value returned by 'git merge-base' was not a valid git SHA ('${mergeBase}').Using the base of the pull request instead (${pullRequestBaseSha}).`
-      );
-      return null;
-    }
-    return mergeBase;
-  } catch (error2) {
-    logger.error(
-      `Failed to get merge base of ${pullRequestHeadSha} and ${baseRef}. Error: ${error2}. Using the base of the pull request instead (${pullRequestBaseSha}).`
-    );
-    return null;
-  }
+var tryGetMergeBaseOfHeadCommit = ({
+  pullRequestHeadSha,
+  pullRequestBaseSha,
+  baseRef,
+  octokit,
+  logger
+}) => {
+  return tryGetMergeBaseViaCompareApi({
+    headSha: pullRequestHeadSha,
+    baseRef,
+    pullRequestBaseSha,
+    octokit,
+    logger
+  });
 };
 var getActualCommitShaFromRepo = () => {
   return (0, import_child_process.execFileSync)("git", ["rev-list", "--max-count=1", "HEAD"]).toString().trim();
 };
-var tryGetMergeBaseOfTemporaryMergeCommit = (pullRequestHeadSha, pullRequestBaseSha, pullRequestBaseRef, logger) => {
+var tryGetMergeBaseOfTemporaryMergeCommit = async ({
+  pullRequestHeadSha,
+  pullRequestBaseSha,
+  baseRef,
+  octokit,
+  logger
+}) => {
+  const mergeBaseFromCompare = (headSha) => tryGetMergeBaseViaCompareApi({
+    headSha,
+    baseRef,
+    pullRequestBaseSha,
+    octokit,
+    logger
+  });
   const mergeCommitSha = process.env.GITHUB_SHA;
   if (mergeCommitSha == null) {
-    logger.error(
-      `No GITHUB_SHA environment var set, so can't work out true base of the merge commit. Using the base of the pull request instead (${pullRequestBaseSha}).`
-    );
-    return null;
+    return mergeBaseFromCompare(pullRequestHeadSha);
   }
   try {
     markGitDirectoryAsSafe();
@@ -253006,36 +253065,30 @@ var tryGetMergeBaseOfTemporaryMergeCommit = (pullRequestHeadSha, pullRequestBase
           using the branching point of the PR branch to compare the visual snapshots against, and not the base
           of GitHub's temporary merge commit.`
       );
-      return tryGetMergeBaseOfHeadCommit(
-        headCommitSha,
-        pullRequestBaseSha,
-        pullRequestBaseRef,
-        logger
-      );
+      return mergeBaseFromCompare(headCommitSha);
     }
     const parents = (0, import_child_process.execFileSync)("git", ["cat-file", "-p", mergeCommitSha]).toString().split("\n").filter((line) => line.startsWith("parent ")).map((line) => line.substring("parent ".length).trim());
     if (parents.length !== 2) {
       logger.error(
-        `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit. Using the base of the pull request instead.`
+        `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit from its parents. Falling back to the GitHub compare API.`
       );
-      return null;
+      return mergeBaseFromCompare(pullRequestHeadSha);
     }
     const mergeBaseSha = parents[0];
     const mergeHeadSha = parents[1];
     if (mergeHeadSha !== pullRequestHeadSha) {
       logger.error(
         `The second parent (${parents[1]}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
-        so can not confidently determine the base of the merge commit to compare against. Using the base of the pull request instead (${pullRequestBaseSha}).`
+        so can not confidently determine the base of the merge commit from its parents. Falling back to the GitHub compare API.`
       );
-      return null;
+      return mergeBaseFromCompare(pullRequestHeadSha);
     }
     return mergeBaseSha;
   } catch (e) {
-    logger.error(
-      `Error getting base of merge commit (${mergeCommitSha}). Using the base of the pull request instead (${pullRequestBaseSha}).`,
-      e
+    logger.info(
+      `Could not read the merge commit (${mergeCommitSha}) from the local git repository (${e}). Falling back to the GitHub compare API.`
     );
-    return null;
+    return mergeBaseFromCompare(pullRequestHeadSha);
   }
 };
 var markGitDirectoryAsSafe = () => {
@@ -253046,9 +253099,6 @@ var markGitDirectoryAsSafe = () => {
     "safe.directory",
     process.cwd()
   ]);
-};
-var isValidGitSha = (sha) => {
-  return /^[a-f0-9]{40}$/.test(sha);
 };
 
 // src/common/get-code-change-event.ts
@@ -253069,7 +253119,7 @@ var getCodeChangeEvent = (eventName, payload) => {
 };
 
 // src/common/octokit.ts
-var import_github2 = __toESM(require_github());
+var import_github3 = __toESM(require_github());
 var import_common2 = __toESM(require_dist16());
 var import_loglevel2 = __toESM(require_loglevel());
 var getOctokitOrFail = (githubToken) => {
@@ -253077,7 +253127,7 @@ var getOctokitOrFail = (githubToken) => {
     throw new Error("github-token is required");
   }
   try {
-    return (0, import_github2.getOctokit)(githubToken);
+    return (0, import_github3.getOctokit)(githubToken);
   } catch (err) {
     const logger = import_loglevel2.default.getLogger(import_common2.METICULOUS_LOGGER_NAME);
     logger.error(err);
@@ -253226,24 +253276,24 @@ var runMeticulousUploadContainerAction = async () => {
           commitSha: commitShaInput,
           companionAssets
         } = getUploadContainerInputs();
-        const event = getCodeChangeEvent(import_github3.context.eventName, import_github3.context.payload);
+        const event = getCodeChangeEvent(import_github4.context.eventName, import_github4.context.payload);
         const octokit = getOctokitOrFail(githubToken);
         if (event == null) {
           logger.error(
-            `Running this Action is only supported for 'push',             'pull_request' and 'workflow_dispatch' events, but was triggered             on a '${import_github3.context.eventName}' event. Skipping execution.`
+            `Running this Action is only supported for 'push',             'pull_request' and 'workflow_dispatch' events, but was triggered             on a '${import_github4.context.eventName}' event. Skipping execution.`
           );
           return;
         }
         const { base, head } = await getBaseAndHeadCommitShas(
           event,
-          { useDeploymentUrl: false },
+          { useDeploymentUrl: false, octokit },
           logger
         );
         const { baseResolutionDetails } = await safeEnsureBaseTestsExists({
           event,
           apiToken,
           base,
-          context: import_github3.context,
+          context: import_github4.context,
           octokit,
           dispatchedRunReportsCheckedOutCommit: true,
           getBaseTestRun: async ({ baseSha }) => await (0, import_client2.getLatestTestRunResults)({
