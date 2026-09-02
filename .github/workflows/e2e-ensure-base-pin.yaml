@@ -1,0 +1,28 @@
+name: e2e ensure-base pin
+on:
+  pull_request: {}
+  workflow_dispatch:
+    inputs:
+      meticulous-commit-sha:
+        description: Commit Meticulous has asked this run to build. Defaults to the branch head.
+        required: false
+permissions:
+  actions: write
+  contents: read
+  issues: write
+  pull-requests: write
+  statuses: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure base tests exist
+        uses: alwaysmeticulous/report-diffs-action/ensure-base@86e460a909d5b0ec8eb6041a5349d4d7d9a49883
+        with:
+          api-token: ${{ secrets.METICULOUS_API_TOKEN }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
+      - name: Marker
+        run: echo "after ensure-base on $(git rev-parse HEAD)"
