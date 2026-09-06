@@ -7,6 +7,7 @@ import {
 import { uploadContainerAndTriggerTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import * as Sentry from "@sentry/node";
+import { parseWorkflowRunId } from "../../common/base-workflow-run-id";
 import { getBaseTestRunResolvedByBackend } from "../../common/cloud-replay-base.utils";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import { getActualCommitShaFromRepoOrContext } from "../../common/get-actual-commit-sha";
@@ -38,6 +39,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           containerHealthCheckEndpoint,
           commitSha: commitShaInput,
           companionAssets,
+          baseWorkflowRunId,
         } = getUploadContainerInputs();
         const event = getCodeChangeEvent(context.eventName, context.payload);
         const octokit = getOctokitOrFail(githubToken);
@@ -63,6 +65,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           context,
           octokit,
           dispatchedRunReportsCheckedOutCommit: true,
+          knownWorkflowRunId: parseWorkflowRunId(baseWorkflowRunId),
           getBaseTestRun: async ({ baseSha }) =>
             await getLatestTestRunResults({
               client: createClient({ apiToken }),

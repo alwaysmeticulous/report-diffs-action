@@ -10,7 +10,15 @@ import {
 import log from "loglevel";
 import { Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
-import { COMMIT_SHA_WORKFLOW_INPUT, DOCS_URL } from "./constants";
+import {
+  parseWorkflowRunId,
+  recordBaseWorkflowRunId,
+} from "./base-workflow-run-id";
+import {
+  BASE_WORKFLOW_RUN_ID_ENV,
+  COMMIT_SHA_WORKFLOW_INPUT,
+  DOCS_URL,
+} from "./constants";
 import {
   DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
   isGithubPermissionsError,
@@ -68,6 +76,7 @@ export const ensureBaseTestsExists = async ({
   getBaseTestRunResolvedByBackend,
   dispatchedRunReportsCheckedOutCommit = false,
   waitForCompletion = true,
+  knownWorkflowRunId,
   logger,
 }: {
   event: CodeChangeEvent;
@@ -81,6 +90,12 @@ export const ensureBaseTestsExists = async ({
    * Used by the ensure-base companion action so the PR build can run in parallel.
    */
   waitForCompletion?: boolean;
+  /**
+   * A base-build run already dispatched (typically by ensure-base). When set,
+   * we wait on this run instead of looking it up by commit SHA or dispatching
+   * again. A pinned `workflow_dispatch` run cannot be found by `head_sha`.
+   */
+  knownWorkflowRunId?: number;
   getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
   /**
    * A second, optional source of an already-usable base, asked only if nothing has been tested at
@@ -134,6 +149,7 @@ export const ensureBaseTestsExists = async ({
     octokit,
     dispatchedRunReportsCheckedOutCommit,
     waitForCompletion,
+    knownWorkflowRunId,
     takeDispatchLease: ({ baseCommitSha, workflowId }) =>
       takeBaseWorkflowDispatchLease({
         client: createClient({ apiToken }),
@@ -161,6 +177,7 @@ export interface TryTriggerTestsWorkflowOnBaseOpts {
    */
   dispatchedRunReportsCheckedOutCommit?: boolean;
   waitForCompletion?: boolean;
+  knownWorkflowRunId?: number;
   /**
    * Asked immediately before `workflow_dispatch`. An explicit false means another
    * caller is dispatching this commit; we must not dispatch too.
@@ -212,6 +229,55 @@ const waitOnWorkflowRun = async (
   const { owner, repo } = context.repo;
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
 
+  const knownWorkflowRunId =
+    opts.knownWorkflowRunId ??
+    parseWorkflowRunId(process.env[BASE_WORKFLOW_RUN_ID_ENV]);
+  if (knownWorkflowRunId != null) {
+    if (!waitForCompletion) {
+      logger.info(
+        `Base workflow run already recorded (${knownWorkflowRunId}); not dispatching again.`
+      );
+      recordBaseWorkflowRunId(knownWorkflowRunId);
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "waited-for-existing-workflow-run",
+          workflowId: `${knownWorkflowRunId}`,
+          baseCommitSha: base,
+          msTaken: 0,
+        },
+      };
+    }
+
+    logger.info(
+      `Waiting on workflow run already recorded for base commit (${base}): ${knownWorkflowRunId}`
+    );
+
+    if (event.type === "pull_request") {
+      const waitStartMs = Date.now();
+      await waitForWorkflowCompletionAndThrowIfFailed({
+        owner,
+        repo,
+        workflowRunId: knownWorkflowRunId,
+        octokit,
+        commitSha: base,
+        timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+        isCancelled,
+        logger,
+      });
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "waited-for-existing-workflow-run",
+          workflowId: `${knownWorkflowRunId}`,
+          baseCommitSha: base,
+          msTaken: Date.now() - waitStartMs,
+        },
+      };
+    }
+    return { baseTestRunExists: false };
+  }
+
   const alreadyPending = await getPendingWorkflowRun({
     owner,
     repo,
@@ -219,12 +285,14 @@ const waitOnWorkflowRun = async (
     commitSha: base,
     octokit,
     logger,
+    includeUnmatchedDispatches: true,
   });
   if (alreadyPending != null) {
     if (!waitForCompletion) {
       logger.info(
         `Workflow run already pending on base commit (${base}): ${alreadyPending.html_url}`
       );
+      recordBaseWorkflowRunId(alreadyPending.workflowRunId);
       return {
         baseTestRunExists: true,
         baseResolutionDetails: {
@@ -299,6 +367,7 @@ const waitOnWorkflowRun = async (
         commitSha: base,
         octokit,
         logger,
+        includeUnmatchedDispatches: true,
       });
       if (pendingAfterLease != null) {
         const waitStartMs = Date.now();
@@ -436,6 +505,7 @@ const waitOnWorkflowRun = async (
         workflowRun.html_url ?? workflowRun.workflowRunId
       }`
     );
+    recordBaseWorkflowRunId(workflowRun.workflowRunId);
     return {
       baseTestRunExists: true,
       baseResolutionDetails: {

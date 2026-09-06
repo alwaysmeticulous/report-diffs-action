@@ -21994,7 +21994,7 @@ var require_core = __commonJS({
       ExitCode2[ExitCode2["Success"] = 0] = "Success";
       ExitCode2[ExitCode2["Failure"] = 1] = "Failure";
     })(ExitCode || (exports2.ExitCode = ExitCode = {}));
-    function exportVariable(name, val) {
+    function exportVariable2(name, val) {
       const convertedVal = (0, utils_1.toCommandValue)(val);
       process.env[name] = convertedVal;
       const filePath = process.env["GITHUB_ENV"] || "";
@@ -22003,7 +22003,7 @@ var require_core = __commonJS({
       }
       (0, command_1.issueCommand)("set-env", { name }, convertedVal);
     }
-    exports2.exportVariable = exportVariable;
+    exports2.exportVariable = exportVariable2;
     function setSecret(secret) {
       (0, command_1.issueCommand)("add-mask", {}, secret);
     }
@@ -22049,7 +22049,7 @@ var require_core = __commonJS({
 Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     }
     exports2.getBooleanInput = getBooleanInput2;
-    function setOutput(name, value) {
+    function setOutput2(name, value) {
       const filePath = process.env["GITHUB_OUTPUT"] || "";
       if (filePath) {
         return (0, file_command_1.issueFileCommand)("OUTPUT", (0, file_command_1.prepareKeyValueMessage)(name, value));
@@ -22057,7 +22057,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       process.stdout.write(os.EOL);
       (0, command_1.issueCommand)("set-output", { name }, (0, utils_1.toCommandValue)(value));
     }
-    exports2.setOutput = setOutput;
+    exports2.setOutput = setOutput2;
     function setCommandEcho(enabled) {
       (0, command_1.issue)("echo", enabled ? "on" : "off");
     }
@@ -265678,7 +265678,7 @@ var require_retry3 = __commonJS({
 require_source_map_support().install();
 
 // src/cloud-compute.entrypoint.ts
-var import_core5 = __toESM(require_core());
+var import_core6 = __toESM(require_core());
 
 // node_modules/.pnpm/@sentry+core@9.47.1/node_modules/@sentry/core/build/esm/debug-build.js
 var DEBUG_BUILD = typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__;
@@ -267712,7 +267712,7 @@ async function flush(timeout) {
 }
 
 // src/actions/cloud-compute/cloud-compute.ts
-var import_core4 = __toESM(require_core());
+var import_core5 = __toESM(require_core());
 var import_sentry = __toESM(require_dist13());
 
 // src/common/logger.utils.ts
@@ -268004,9 +268004,11 @@ var METICULIOUS_APP_URL = "https://app.meticulous.ai";
 var DOCS_URL = `${METICULIOUS_APP_URL}/docs/github-actions-v2`;
 var METICULOUS_DEBUGGING_PR_TAG = "[meticulous debug]";
 var COMMIT_SHA_WORKFLOW_INPUT = "meticulous-commit-sha";
+var BASE_WORKFLOW_RUN_ID_OUTPUT = "base-workflow-run-id";
+var BASE_WORKFLOW_RUN_ID_ENV = "METICULOUS_BASE_WORKFLOW_RUN_ID";
 
 // src/common/ensure-base-exists.utils.ts
-var import_core3 = __toESM(require_core());
+var import_core4 = __toESM(require_core());
 var import_client2 = __toESM(require_dist16());
 
 // node_modules/.pnpm/luxon@3.7.2/node_modules/luxon/build/es6/luxon.mjs
@@ -274557,6 +274559,22 @@ function friendlyDateTime(dateTimeish) {
   }
 }
 
+// src/common/base-workflow-run-id.ts
+var import_core3 = __toESM(require_core());
+var parseWorkflowRunId = (value) => {
+  const trimmed = value?.trim();
+  if (!trimmed || !/^\d+$/.test(trimmed)) {
+    return void 0;
+  }
+  const id = Number(trimmed);
+  return id > 0 ? id : void 0;
+};
+var recordBaseWorkflowRunId = (workflowRunId) => {
+  const id = String(workflowRunId);
+  (0, import_core3.setOutput)(BASE_WORKFLOW_RUN_ID_OUTPUT, id);
+  (0, import_core3.exportVariable)(BASE_WORKFLOW_RUN_ID_ENV, id);
+};
+
 // src/common/error.utils.ts
 var isGithubPermissionsError = (error2) => {
   const message = getErrorMessage(error2);
@@ -274926,7 +274944,8 @@ var getPendingWorkflowRun = async ({
   workflowId,
   commitSha,
   octokit,
-  logger
+  logger,
+  includeUnmatchedDispatches = false
 }) => {
   try {
     const since = DateTime.utc().minus(WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL).toFormat(GITHUB_DATE_FORMAT);
@@ -274946,16 +274965,34 @@ var getPendingWorkflowRun = async ({
       if (workflowRuns.length >= MAX_WORKFLOW_RUNS_TO_SEARCH)
         break;
     }
-    const pendingRun = workflowRuns.find(
-      (run) => run.head_sha === commitSha && // Note we ignore runs on PR events because these are actually running on the temporary
+    const isUsablePendingRun = (run) => (
+      // Note we ignore runs on PR events because these are actually running on the temporary
       // merge commit created by GitHub so they are not useable for comparisons.
       run.event !== "pull_request" && isPendingStatus(run.status)
+    );
+    const pendingRun = workflowRuns.find(
+      (run) => run.head_sha === commitSha && isUsablePendingRun(run)
     );
     if (pendingRun) {
       return {
         ...pendingRun,
         workflowRunId: pendingRun.id
       };
+    }
+    if (includeUnmatchedDispatches) {
+      const pendingDispatches = workflowRuns.filter(
+        (run) => run.event === "workflow_dispatch" && isPendingStatus(run.status)
+      );
+      if (pendingDispatches.length === 1) {
+        const [run] = pendingDispatches;
+        logger.info(
+          `No pending run on commit ${commitSha}, but found a uniquely pending workflow_dispatch (${run.id}); treating it as the base build. A pinned dispatch reports the branch tip as head_sha, not the commit it was asked to check out.`
+        );
+        return {
+          ...run,
+          workflowRunId: run.id
+        };
+      }
     }
     return void 0;
   } catch (err) {
@@ -274966,7 +275003,7 @@ var getPendingWorkflowRun = async ({
   }
 };
 var isPendingStatus = (status) => {
-  return ["in_progress", "queued", "requested", "waiting"].some(
+  return ["in_progress", "queued", "requested", "waiting", "pending"].some(
     (pending) => pending === status
   );
 };
@@ -275013,19 +275050,65 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
   const waitForCompletion = opts.waitForCompletion !== false;
   const { owner, repo } = context7.repo;
   const { workflowId } = await getCurrentWorkflowId({ context: context7, octokit });
+  const knownWorkflowRunId = opts.knownWorkflowRunId ?? parseWorkflowRunId(process.env[BASE_WORKFLOW_RUN_ID_ENV]);
+  if (knownWorkflowRunId != null) {
+    if (!waitForCompletion) {
+      logger.info(
+        `Base workflow run already recorded (${knownWorkflowRunId}); not dispatching again.`
+      );
+      recordBaseWorkflowRunId(knownWorkflowRunId);
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "waited-for-existing-workflow-run",
+          workflowId: `${knownWorkflowRunId}`,
+          baseCommitSha: base,
+          msTaken: 0
+        }
+      };
+    }
+    logger.info(
+      `Waiting on workflow run already recorded for base commit (${base}): ${knownWorkflowRunId}`
+    );
+    if (event.type === "pull_request") {
+      const waitStartMs2 = Date.now();
+      await waitForWorkflowCompletionAndThrowIfFailed({
+        owner,
+        repo,
+        workflowRunId: knownWorkflowRunId,
+        octokit,
+        commitSha: base,
+        timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+        isCancelled,
+        logger
+      });
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "waited-for-existing-workflow-run",
+          workflowId: `${knownWorkflowRunId}`,
+          baseCommitSha: base,
+          msTaken: Date.now() - waitStartMs2
+        }
+      };
+    }
+    return { baseTestRunExists: false };
+  }
   const alreadyPending = await getPendingWorkflowRun({
     owner,
     repo,
     workflowId,
     commitSha: base,
     octokit,
-    logger
+    logger,
+    includeUnmatchedDispatches: true
   });
   if (alreadyPending != null) {
     if (!waitForCompletion) {
       logger.info(
         `Workflow run already pending on base commit (${base}): ${alreadyPending.html_url}`
       );
+      recordBaseWorkflowRunId(alreadyPending.workflowRunId);
       return {
         baseTestRunExists: true,
         baseResolutionDetails: {
@@ -275086,7 +275169,8 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
         workflowId,
         commitSha: base,
         octokit,
-        logger
+        logger,
+        includeUnmatchedDispatches: true
       });
       if (pendingAfterLease != null) {
         const waitStartMs2 = Date.now();
@@ -275145,7 +275229,7 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     };
     if (fallback.type === "gave-up") {
       logger.warn(fallback.message);
-      (0, import_core3.warning)(fallback.message);
+      (0, import_core4.warning)(fallback.message);
       return {
         baseTestRunExists: false,
         baseResolutionDetails: {
@@ -275172,7 +275256,7 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     In addition we were not able to trigger a run on ${base} since the '${baseRef}' branch is now pointing to ${currentBaseSha}, and the Meticulous workflow on '${baseRef}' does not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input that would let us ask for ${base} specifically.
     Therefore no diffs will be reported for this run. Re-running the tests may fix this, as would adding the input: see ${DOCS_URL}.`;
       logger.warn(message);
-      (0, import_core3.warning)(message);
+      (0, import_core4.warning)(message);
       return {
         baseTestRunExists: false,
         baseResolutionDetails: {
@@ -275198,7 +275282,7 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
   if (workflowRun == null) {
     const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${base}.`;
     logger.warn(message);
-    (0, import_core3.warning)(message);
+    (0, import_core4.warning)(message);
     return {
       baseTestRunExists: false,
       baseResolutionDetails: {
@@ -275211,6 +275295,7 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     logger.info(
       `Dispatched workflow run on base commit ${base}: ${workflowRun.html_url ?? workflowRun.workflowRunId}`
     );
+    recordBaseWorkflowRunId(workflowRun.workflowRunId);
     return {
       baseTestRunExists: true,
       baseResolutionDetails: {
@@ -275947,7 +276032,7 @@ var runMeticulousTestsCloudComputeAction = async () => {
         }
       });
       if (failureMessage2) {
-        (0, import_core4.setFailed)(failureMessage2);
+        (0, import_core5.setFailed)(failureMessage2);
         span.setStatus({ code: 2, message: "unknown_error" });
         return failureMessage2;
       } else {
@@ -275971,7 +276056,7 @@ setMeticulousClientUserAgentSuffix("cloud-compute");
 runMeticulousTestsCloudComputeAction().catch(async (error2) => {
   captureException(error2);
   const message = error2 instanceof Error ? error2.message : `${error2}`;
-  (0, import_core5.setFailed)(message);
+  (0, import_core6.setFailed)(message);
   await flush(5e3);
   process.exit(1);
 });

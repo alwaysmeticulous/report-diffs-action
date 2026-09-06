@@ -7,6 +7,7 @@ import {
 import { uploadAssetsAndTriggerTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import * as Sentry from "@sentry/node";
+import { parseWorkflowRunId } from "../../common/base-workflow-run-id";
 import { getBaseTestRunResolvedByBackend } from "../../common/cloud-replay-base.utils";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import { getActualCommitShaFromRepoOrContext } from "../../common/get-actual-commit-sha";
@@ -36,6 +37,7 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           rewrites,
           baseApiUrl,
           commitSha: commitShaInput,
+          baseWorkflowRunId,
         } = getUploadAssetsInputs();
 
         if (baseApiUrl) {
@@ -65,6 +67,7 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           context,
           octokit,
           dispatchedRunReportsCheckedOutCommit: true,
+          knownWorkflowRunId: parseWorkflowRunId(baseWorkflowRunId),
           getBaseTestRun: async ({ baseSha }) =>
             await getLatestTestRunResults({
               client: createClient({ apiToken }),

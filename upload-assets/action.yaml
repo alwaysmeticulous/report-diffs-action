@@ -27,6 +27,12 @@ inputs:
       from the checked-out git repository, falling back to the GITHUB_SHA environment variable. Provide this
       explicitly when running without 'actions/checkout' (e.g. in a job that only downloads a pre-built artifact).
     required: false
+  base-workflow-run-id:
+    description: |
+      GitHub workflow run ID of a base build already dispatched by ensure-base.
+      If omitted, the action reads METICULOUS_BASE_WORKFLOW_RUN_ID from the
+      environment (set automatically by ensure-base in the same job).
+    required: false
 
 outputs: {}
 runs:

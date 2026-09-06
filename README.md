@@ -125,8 +125,10 @@ jobs:
 ```
 
 `ensure-base` needs no checkout. It asks GitHub for the PR merge base and, if that commit
-has no test run yet, dispatches this workflow and returns immediately. The upload step still
-calls `ensureBaseTestsExists` and only waits if the base is still missing when it finishes.
+has no test run yet, dispatches this workflow and returns immediately, recording the
+dispatched run ID as `base-workflow-run-id` / `METICULOUS_BASE_WORKFLOW_RUN_ID`. The upload
+step waits on that run — a pinned `workflow_dispatch` cannot be found by commit SHA, because
+its `head_sha` is the dispatched ref's tip rather than `meticulous-commit-sha`.
 
 `meticulous-commit-sha` lets Meticulous ask this workflow to build a specific commit when a
 PR's base hasn't been tested yet. Without it a dispatched run can only build whatever the base

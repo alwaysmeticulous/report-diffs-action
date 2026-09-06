@@ -429,11 +429,16 @@ export const waitForWorkflowCompletion = async ({
 };
 
 /**
- * Searches for a pending workflow run on the commit passed in, dispatched within the last hour.
+ * Searches for a pending workflow run on the commit passed in, created within the last hour.
  *
- * Only a run whose `head_sha` is that commit counts. A run on an ancestor built a different tree,
- * so there are no snapshots at this commit to compare against however close the two commits are,
- * and waiting on one leaves the caller believing a base exists that the backend then can't find.
+ * A run whose `head_sha` is that commit is always accepted. A run on an ancestor built a
+ * different tree, so there are no snapshots at this commit to compare against however close
+ * the two commits are, and waiting on one leaves the caller believing a base exists that
+ * the backend then can't find.
+ *
+ * Pinned `workflow_dispatch` runs are the exception: their `head_sha` is the dispatched
+ * ref's tip. Pass `includeUnmatchedDispatches` to accept a uniquely pending dispatch
+ * of this workflow even when the SHAs do not match.
  */
 export const getPendingWorkflowRun = async ({
   owner,
@@ -442,6 +447,7 @@ export const getPendingWorkflowRun = async ({
   commitSha,
   octokit,
   logger,
+  includeUnmatchedDispatches = false,
 }: {
   owner: string;
   repo: string;
@@ -449,6 +455,15 @@ export const getPendingWorkflowRun = async ({
   commitSha: string;
   octokit: InstanceType<typeof GitHub>;
   logger: log.Logger;
+  /**
+   * Also accept a uniquely pending `workflow_dispatch` whose `head_sha` is not
+   * `commitSha`. Pinned dispatches report the ref tip as `head_sha`, so a
+   * lookup by commit otherwise never finds the run ensure-base just started.
+   *
+   * Callers that just dispatched and are trying to identify *that* run should
+   * leave this off: an older pending dispatch would be the wrong answer.
+   */
+  includeUnmatchedDispatches?: boolean;
 }): Promise<{ workflowRunId: number; [key: string]: unknown } | undefined> => {
   try {
     const since = DateTime.utc()
@@ -471,13 +486,13 @@ export const getPendingWorkflowRun = async ({
       workflowRuns.push(...workflowRunResponse.data);
       if (workflowRuns.length >= MAX_WORKFLOW_RUNS_TO_SEARCH) break;
     }
+    const isUsablePendingRun = (run: (typeof workflowRuns)[number]): boolean =>
+      // Note we ignore runs on PR events because these are actually running on the temporary
+      // merge commit created by GitHub so they are not useable for comparisons.
+      run.event !== "pull_request" && isPendingStatus(run.status);
+
     const pendingRun = workflowRuns.find(
-      (run) =>
-        run.head_sha === commitSha &&
-        // Note we ignore runs on PR events because these are actually running on the temporary
-        // merge commit created by GitHub so they are not useable for comparisons.
-        run.event !== "pull_request" &&
-        isPendingStatus(run.status)
+      (run) => run.head_sha === commitSha && isUsablePendingRun(run)
     );
     if (pendingRun) {
       return {
@@ -485,6 +500,31 @@ export const getPendingWorkflowRun = async ({
         workflowRunId: pendingRun.id,
       };
     }
+
+    // A pinned workflow_dispatch run's head_sha is the dispatched ref's tip, not
+    // the commit named in meticulous-commit-sha, so the match above misses it.
+    // If this workflow has exactly one pending dispatch, that is the base build
+    // we (or a sibling job) just asked for. Several candidates cannot be told
+    // apart, so we do not guess.
+    if (includeUnmatchedDispatches) {
+      const pendingDispatches = workflowRuns.filter(
+        (run) =>
+          run.event === "workflow_dispatch" && isPendingStatus(run.status)
+      );
+      if (pendingDispatches.length === 1) {
+        const [run] = pendingDispatches;
+        logger.info(
+          `No pending run on commit ${commitSha}, but found a uniquely pending workflow_dispatch (${run.id});` +
+            ` treating it as the base build. A pinned dispatch reports the branch tip as head_sha,` +
+            ` not the commit it was asked to check out.`
+        );
+        return {
+          ...run,
+          workflowRunId: run.id,
+        };
+      }
+    }
+
     return undefined;
   } catch (err) {
     logger.warn(
@@ -495,7 +535,11 @@ export const getPendingWorkflowRun = async ({
 };
 
 export const isPendingStatus = (status: string | null): boolean => {
-  return ["in_progress", "queued", "requested", "waiting"].some(
+  // `pending` is GitHub's status for a run waiting on a concurrency group (or
+  // a deployment review). Omitting it treats that run as already finished, so
+  // waitForWorkflowCompletion returns immediately and the caller throws
+  // "did not complete successfully" instead of waiting.
+  return ["in_progress", "queued", "requested", "waiting", "pending"].some(
     (pending) => pending === status
   );
 };

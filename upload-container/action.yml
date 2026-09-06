@@ -55,6 +55,12 @@ inputs:
       The regex to check when deciding if a request should be served from the companion assets. Required if any
       of 'companion-assets-folder', 'companion-assets-zip' or 'companion-assets-path-in-image' is provided.
     required: false
+  base-workflow-run-id:
+    description: |
+      GitHub workflow run ID of a base build already dispatched by ensure-base.
+      If omitted, the action reads METICULOUS_BASE_WORKFLOW_RUN_ID from the
+      environment (set automatically by ensure-base in the same job).
+    required: false
 
 outputs: {}
 runs:
