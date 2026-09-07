@@ -107,6 +107,11 @@ permissions:
   pull-requests: write
   statuses: read
 
+env:
+  # Prefer the dispatched commit when set; otherwise the PR head. On pull_request
+  # github.sha is the merge commit, not the PR head SHA that Meticulous looks up.
+  METICULOUS_COMMIT_SHA: ${{ github.event.inputs['meticulous-commit-sha'] || (github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha) }}
+
 jobs:
   test:
     steps:
@@ -116,27 +121,30 @@ jobs:
       - uses: alwaysmeticulous/report-diffs-action/ensure-base@v1
         with:
           api-token: ${{ secrets.METICULOUS_API_TOKEN }}
+          # Same ref as checkout, so we pre-warm the base the upload step will ask for.
+          ref: ${{ env.METICULOUS_COMMIT_SHA }}
 
       - uses: actions/checkout@v4
         with:
-          # Hyphenated inputs need index syntax, and reading them off `github.event`
-          # keeps this valid on `push` and `pull_request` runs too.
-          ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
+          ref: ${{ env.METICULOUS_COMMIT_SHA }}
 ```
 
 `ensure-base` needs no checkout. It works out the commit the upload step will compare
-against — the first parent of GitHub's temporary merge commit, read over the API rather than
-from a checkout — and, if that commit has no test run yet, dispatches this workflow and
-returns immediately, recording the dispatched run ID and that commit as the
+against — by default the first parent of GitHub's temporary merge commit, read over the API
+rather than from a checkout — and, if that commit has no test run yet, dispatches this
+workflow and returns immediately, recording the dispatched run ID and that commit as the
 `base-workflow-run-id` and `base-commit-sha` outputs, and as
 `METICULOUS_BASE_WORKFLOW_RUN_ID` / `METICULOUS_BASE_WORKFLOW_COMMIT_SHA` for later steps in
 the same job. The upload step waits on that run — a pinned `workflow_dispatch` cannot be found
 by commit SHA, because its `head_sha` is the dispatched ref's tip rather than
 `meticulous-commit-sha`.
 
-Checking out something other than `github.sha` is the one case `ensure-base` cannot predict:
-the upload step then compares against the branching point of the PR branch instead. The
-upload step resolves the base for itself and refuses the recorded run when it isn't building
+The example above checks out the PR head via `METICULOUS_COMMIT_SHA`, matching the
+[setup guide](https://app.meticulous.ai/docs/github-actions-v2). Pass that same value as
+`ensure-base`'s `ref` so it pre-warms the merge base of that commit and the base branch —
+what the upload step will resolve after seeing `HEAD !== GITHUB_SHA`. Omit `ref` only if
+checkout uses `github.sha`. If `ref` does not match the later checkout, the upload step
+still resolves the base for itself and refuses the recorded run when it isn't building
 that commit, so the base is built afresh rather than compared wrongly.
 
 ### When the Upload Step Is in a Different Job
