@@ -257329,7 +257329,7 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
       switch (options.baseCommitResolution) {
         case "merge-base-of-pull-request-head":
           return tryGetMergeBaseViaCompareApi({
-            headSha: head,
+            headSha: options.compareHeadSha ?? head,
             baseRef,
             pullRequestBaseSha: base,
             octokit: options.octokit,

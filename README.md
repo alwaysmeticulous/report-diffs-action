@@ -116,6 +116,9 @@ jobs:
       - uses: alwaysmeticulous/report-diffs-action/ensure-base@v1
         with:
           api-token: ${{ secrets.METICULOUS_API_TOKEN }}
+          # Omit `ref` when checkout uses github.sha (the default below).
+          # Pass the same ref as checkout if that is the pull request head:
+          #   ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: actions/checkout@v4
         with:
@@ -125,19 +128,21 @@ jobs:
 ```
 
 `ensure-base` needs no checkout. It works out the commit the upload step will compare
-against — the first parent of GitHub's temporary merge commit, read over the API rather than
-from a checkout — and, if that commit has no test run yet, dispatches this workflow and
-returns immediately, recording the dispatched run ID and that commit as the
+against — by default the first parent of GitHub's temporary merge commit, read over the API
+rather than from a checkout — and, if that commit has no test run yet, dispatches this
+workflow and returns immediately, recording the dispatched run ID and that commit as the
 `base-workflow-run-id` and `base-commit-sha` outputs, and as
 `METICULOUS_BASE_WORKFLOW_RUN_ID` / `METICULOUS_BASE_WORKFLOW_COMMIT_SHA` for later steps in
 the same job. The upload step waits on that run — a pinned `workflow_dispatch` cannot be found
 by commit SHA, because its `head_sha` is the dispatched ref's tip rather than
 `meticulous-commit-sha`.
 
-Checking out something other than `github.sha` is the one case `ensure-base` cannot predict:
-the upload step then compares against the branching point of the PR branch instead. The
-upload step resolves the base for itself and refuses the recorded run when it isn't building
-that commit, so the base is built afresh rather than compared wrongly.
+If checkout is not `github.sha` — typically `github.event.pull_request.head.sha` — pass that
+same value as `ensure-base`'s `ref` so it pre-warms the merge base of that commit and the
+base branch, which is what the upload step will resolve after seeing `HEAD !== GITHUB_SHA`.
+If `ref` is omitted or does not match the later checkout, the upload step still resolves the
+base for itself and refuses the recorded run when it isn't building that commit, so the base
+is built afresh rather than compared wrongly.
 
 ### When the Upload Step Is in a Different Job
 

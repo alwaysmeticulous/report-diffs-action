@@ -8,6 +8,14 @@ inputs:
     description: "GITHUB_TOKEN or a repo scoped PAT."
     required: true
     default: ${{ github.token }}
+  ref:
+    description: |
+      The same ref you will pass to actions/checkout. Used only to predict which
+      base the upload step will resolve; this action does not check anything out.
+      Omit it to assume github.sha (GitHub's temporary merge commit). Pass the
+      pull request head — github.event.pull_request.head.sha, or the branch name
+      — if that is what you will check out.
+    required: false
 
 outputs:
   base-workflow-run-id:
