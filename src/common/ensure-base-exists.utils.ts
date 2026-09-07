@@ -8,8 +8,9 @@ import {
   TestRun,
 } from "@alwaysmeticulous/client";
 import log from "loglevel";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
+import { recordBaseWorkflowRunId } from "./base-workflow-run-id";
 import { COMMIT_SHA_WORKFLOW_INPUT, DOCS_URL } from "./constants";
 import {
   DEFAULT_FAILED_OCTOKIT_REQUEST_MESSAGE,
@@ -31,6 +32,14 @@ const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST = Duration.fromObject({
 
 const POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
   seconds: 10,
+});
+
+/**
+ * How long a failed base workflow run's error is held back while the poll for a base test run
+ * at that commit keeps going. See {@link holdBackFailureWhileBaseTestRunMayAppear}.
+ */
+const BASE_TEST_RUN_GRACE_PERIOD = Duration.fromObject({
+  minutes: 2,
 });
 
 export interface BaseTestsResolutionResult {
@@ -68,6 +77,7 @@ export const ensureBaseTestsExists = async ({
   getBaseTestRunResolvedByBackend,
   dispatchedRunReportsCheckedOutCommit = false,
   waitForCompletion = true,
+  knownWorkflowRunId,
   logger,
 }: {
   event: CodeChangeEvent;
@@ -81,6 +91,13 @@ export const ensureBaseTestsExists = async ({
    * Used by the ensure-base companion action so the PR build can run in parallel.
    */
   waitForCompletion?: boolean;
+  /**
+   * A base-build run already dispatched (typically by ensure-base) that is building `base`.
+   * When set, we wait on this run instead of looking it up by commit SHA or dispatching again;
+   * a pinned `workflow_dispatch` run cannot be found by `head_sha`. Establishing that the run
+   * belongs to `base` is the caller's job: see `readKnownBaseWorkflowRunId`.
+   */
+  knownWorkflowRunId?: number | undefined;
   getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
   /**
    * A second, optional source of an already-usable base, asked only if nothing has been tested at
@@ -134,6 +151,7 @@ export const ensureBaseTestsExists = async ({
     octokit,
     dispatchedRunReportsCheckedOutCommit,
     waitForCompletion,
+    knownWorkflowRunId,
     takeDispatchLease: ({ baseCommitSha, workflowId }) =>
       takeBaseWorkflowDispatchLease({
         client: createClient({ apiToken }),
@@ -161,6 +179,7 @@ export interface TryTriggerTestsWorkflowOnBaseOpts {
    */
   dispatchedRunReportsCheckedOutCommit?: boolean;
   waitForCompletion?: boolean;
+  knownWorkflowRunId?: number | undefined;
   /**
    * Asked immediately before `workflow_dispatch`. An explicit false means another
    * caller is dispatching this commit; we must not dispatch too.
@@ -187,11 +206,65 @@ export const tryTriggerTestsWorkflowOnBase = async (
     isCancelled
   );
   try {
-    return await Promise.race([workflowRunPromise, baseTestRunPromise]);
+    return await Promise.race([
+      holdBackFailureWhileBaseTestRunMayAppear(
+        workflowRunPromise,
+        isCancelled,
+        opts.logger
+      ),
+      baseTestRunPromise,
+    ]);
   } finally {
     // A workflow run that fails or times out throws, and the poll has no timeout of its own, so
     // cancelling only on the happy path leaves it running until the job exits.
     isDone = true;
+  }
+};
+
+/**
+ * A base workflow run that finished without succeeding.
+ *
+ * Told apart from the other ways the workflow leg can fail — missing permissions, a base branch
+ * that no longer exists, a run that never completes — because it is the only one somebody else's
+ * build of the same commit can still make good on.
+ */
+class BaseWorkflowRunUnsuccessfulError extends Error {}
+
+/**
+ * Delays a failed workflow run's error long enough for the base test run poll to overtake it.
+ *
+ * The run we watched is not the only thing that can produce a base: a build dispatched by another
+ * job, or one already in flight for a sibling pull request, can land a test run at the same commit
+ * moments later. Rejecting the instant our own run fails settles the race and abandons a poll that
+ * was about to succeed, which costs the pull request every diff it would have reported.
+ *
+ * Bounded, because a base that is never coming has to surface the failure rather than hang.
+ */
+const holdBackFailureWhileBaseTestRunMayAppear = async (
+  workflowRun: Promise<BaseTestsResolutionResult>,
+  isCancelled: () => boolean,
+  logger: log.Logger
+): Promise<BaseTestsResolutionResult> => {
+  try {
+    return await workflowRun;
+  } catch (error) {
+    if (!(error instanceof BaseWorkflowRunUnsuccessfulError)) {
+      // Nothing built the base and nothing is going to, so waiting costs runner time for a poll
+      // that cannot succeed.
+      throw error;
+    }
+    logger.warn(
+      `${error}\nStill waiting up to ${BASE_TEST_RUN_GRACE_PERIOD.as(
+        "minutes"
+      )} minutes in case a base test run for this commit appears anyway.`
+    );
+    const deadline = DateTime.now().plus(BASE_TEST_RUN_GRACE_PERIOD);
+    while (!isCancelled() && DateTime.now() < deadline) {
+      await new Promise((resolve) =>
+        setTimeout(resolve, POLL_FOR_BASE_TEST_RUN_INTERVAL.as("milliseconds"))
+      );
+    }
+    throw error;
   }
 };
 
@@ -206,11 +279,74 @@ const waitOnWorkflowRun = async (
     context,
     octokit,
     dispatchedRunReportsCheckedOutCommit,
+    knownWorkflowRunId,
     takeDispatchLease,
   } = opts;
   const waitForCompletion = opts.waitForCompletion !== false;
   const { owner, repo } = context.repo;
   const { workflowId } = await getCurrentWorkflowId({ context, octokit });
+
+  if (knownWorkflowRunId != null) {
+    if (!waitForCompletion) {
+      logger.info(
+        `Base workflow run already recorded (${knownWorkflowRunId}); not dispatching again.`
+      );
+      recordBaseWorkflowRunId({
+        workflowRunId: knownWorkflowRunId,
+        baseCommitSha: base,
+      });
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "waited-for-existing-workflow-run",
+          workflowId: `${knownWorkflowRunId}`,
+          baseCommitSha: base,
+          msTaken: 0,
+        },
+      };
+    }
+
+    if (event.type !== "pull_request") {
+      return { baseTestRunExists: false };
+    }
+
+    logger.info(
+      `Waiting on workflow run already recorded for base commit (${base}): ${knownWorkflowRunId}`
+    );
+    const waitStartMs = Date.now();
+    const outcome = await waitForWorkflowRunOutcome({
+      owner,
+      repo,
+      workflowRunId: knownWorkflowRunId,
+      octokit,
+      commitSha: base,
+      timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+      isCancelled,
+      logger,
+    });
+
+    if (outcome.type === "succeeded") {
+      recordBaseWorkflowRunId({
+        workflowRunId: knownWorkflowRunId,
+        baseCommitSha: base,
+      });
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "waited-for-existing-workflow-run",
+          workflowId: `${knownWorkflowRunId}`,
+          baseCommitSha: base,
+          msTaken: Date.now() - waitStartMs,
+        },
+      };
+    }
+
+    // The base is unbuilt and the run that was going to build it is over, so carry on as though
+    // no id had been recorded: build it ourselves rather than fail on somebody else's run.
+    logger.warn(
+      `${outcome.message}\nLooking for another build of ${base}, and dispatching one if there is none.`
+    );
+  }
 
   const alreadyPending = await getPendingWorkflowRun({
     owner,
@@ -225,6 +361,10 @@ const waitOnWorkflowRun = async (
       logger.info(
         `Workflow run already pending on base commit (${base}): ${alreadyPending.html_url}`
       );
+      recordBaseWorkflowRunId({
+        workflowRunId: alreadyPending.workflowRunId,
+        baseCommitSha: base,
+      });
       return {
         baseTestRunExists: true,
         baseResolutionDetails: {
@@ -251,6 +391,10 @@ const waitOnWorkflowRun = async (
         timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
         isCancelled,
         logger,
+      });
+      recordBaseWorkflowRunId({
+        workflowRunId: alreadyPending.workflowRunId,
+        baseCommitSha: base,
       });
       return {
         baseTestRunExists: true,
@@ -312,6 +456,10 @@ const waitOnWorkflowRun = async (
           isCancelled,
           logger,
         });
+        recordBaseWorkflowRunId({
+          workflowRunId: pendingAfterLease.workflowRunId,
+          baseCommitSha: base,
+        });
         return {
           baseTestRunExists: true,
           baseResolutionDetails: {
@@ -323,7 +471,33 @@ const waitOnWorkflowRun = async (
         };
       }
       if (opts.getBaseTestRun != null) {
-        return waitOnBaseTestRun(opts.getBaseTestRun, isCancelled);
+        // The other job's dispatch is pinned to the base commit, so its run is not findable by
+        // SHA and the test run landing is the only signal we get. Given the same deadline as a
+        // run we can watch, so a build that never arrives ends the job rather than holding the
+        // runner until GitHub's own job timeout.
+        const result = await waitOnBaseTestRun(
+          opts.getBaseTestRun,
+          isCancelled,
+          DateTime.now().plus(WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST)
+        );
+        if (!result.baseTestRunExists && !isCancelled()) {
+          const message = couldNotBuildBase({
+            base,
+            reason: `another job was already building it, and no test run for it appeared within ${WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as(
+              "minutes"
+            )} minutes.`,
+          });
+          logger.warn(message);
+          ghWarning(message);
+          return {
+            baseTestRunExists: false,
+            baseResolutionDetails: {
+              type: "failed-for-other-reason",
+              message,
+            },
+          };
+        }
+        return result;
       }
       return { baseTestRunExists: false };
     }
@@ -436,6 +610,10 @@ const waitOnWorkflowRun = async (
         workflowRun.html_url ?? workflowRun.workflowRunId
       }`
     );
+    recordBaseWorkflowRunId({
+      workflowRunId: workflowRun.workflowRunId,
+      baseCommitSha: base,
+    });
     return {
       baseTestRunExists: true,
       baseResolutionDetails: {
@@ -463,6 +641,10 @@ const waitOnWorkflowRun = async (
     logger,
   });
 
+  recordBaseWorkflowRunId({
+    workflowRunId: workflowRun.workflowRunId,
+    baseCommitSha: base,
+  });
   return {
     baseTestRunExists: true,
     baseResolutionDetails: {
@@ -606,11 +788,12 @@ const getDefaultBranch = async ({
 
 const waitOnBaseTestRun = async (
   getBaseTestRun: () => Promise<TestRun | null>,
-  isCancelled: () => boolean
+  isCancelled: () => boolean,
+  deadline?: DateTime
 ): Promise<BaseTestsResolutionResult> => {
   let baseTestRun = await getBaseTestRun();
   while (!baseTestRun) {
-    if (isCancelled()) {
+    if (isCancelled() || (deadline != null && DateTime.now() >= deadline)) {
       return { baseTestRunExists: false };
     }
     await new Promise((resolve) =>
@@ -627,10 +810,7 @@ const waitOnBaseTestRun = async (
   };
 };
 
-const waitForWorkflowCompletionAndThrowIfFailed = async ({
-  commitSha,
-  ...otherOpts
-}: {
+interface WaitForWorkflowRunOpts {
   owner: string;
   repo: string;
   workflowRunId: number;
@@ -639,7 +819,21 @@ const waitForWorkflowCompletionAndThrowIfFailed = async ({
   timeout: Duration;
   isCancelled: () => boolean;
   logger: log.Logger;
-}) => {
+}
+
+/**
+ * Waits for a workflow run to finish, reporting whether it built the base.
+ *
+ * A run that never finishes throws: no build of the commit has happened and none is in sight.
+ * A run that finishes unsuccessfully is reported rather than thrown, so a caller holding a run
+ * id it did not dispatch can build the base itself instead.
+ */
+const waitForWorkflowRunOutcome = async ({
+  commitSha,
+  ...otherOpts
+}: WaitForWorkflowRunOpts): Promise<
+  { type: "succeeded" } | { type: "did-not-succeed"; message: string }
+> => {
   const finalWorkflowRun = await waitForWorkflowCompletion(otherOpts);
 
   if (finalWorkflowRun == null || isPendingStatus(finalWorkflowRun.status)) {
@@ -652,9 +846,21 @@ const waitForWorkflowCompletionAndThrowIfFailed = async ({
     finalWorkflowRun.status !== "completed" ||
     finalWorkflowRun.conclusion !== "success"
   ) {
-    throw new Error(
-      `Comparing against visual snapshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
-    );
+    return {
+      type: "did-not-succeed",
+      message: `Comparing against visual snapshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`,
+    };
+  }
+
+  return { type: "succeeded" };
+};
+
+const waitForWorkflowCompletionAndThrowIfFailed = async (
+  opts: WaitForWorkflowRunOpts
+) => {
+  const outcome = await waitForWorkflowRunOutcome(opts);
+  if (outcome.type === "did-not-succeed") {
+    throw new BaseWorkflowRunUnsuccessfulError(outcome.message);
   }
 };
 

@@ -19,6 +19,8 @@ export interface UploadContainerInputs {
   containerHealthCheckEndpoint: string | undefined;
   commitSha?: string;
   companionAssets: CompanionAssetsOptions | undefined;
+  baseWorkflowRunId?: string;
+  baseCommitSha?: string;
 }
 
 export const getUploadContainerInputs = (): UploadContainerInputs => {
@@ -40,6 +42,10 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
     undefined;
   const companionAssetsRegex =
     getInput("companion-assets-regex", { required: false }) || undefined;
+  const baseWorkflowRunId =
+    getInput("base-workflow-run-id", { required: false }) || undefined;
+  const baseCommitSha =
+    getInput("base-commit-sha", { required: false }) || undefined;
 
   if (!imageTag || imageTag.trim() === "") {
     throw new Error("image-tag must be a non-empty string");
@@ -126,5 +132,7 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
     containerHealthCheckEndpoint,
     commitSha,
     companionAssets,
+    baseWorkflowRunId,
+    baseCommitSha,
   };
 };

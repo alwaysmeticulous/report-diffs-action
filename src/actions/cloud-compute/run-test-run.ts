@@ -123,7 +123,7 @@ export const runOneTestRun = async ({
     const { base: codeChangeBase } = await getBaseAndHeadCommitShas(
       event,
       {
-        useDeploymentUrl: false,
+        baseCommitResolution: "first-parent-of-merge-commit-via-local-git",
         octokit,
       },
       logger

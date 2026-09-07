@@ -8,8 +8,30 @@ inputs:
     description: "GITHUB_TOKEN or a repo scoped PAT."
     required: true
     default: ${{ github.token }}
+  ref:
+    description: |
+      The same ref you will pass to actions/checkout. Used only to predict which
+      base the upload step will resolve; this action does not check anything out.
+      Omit it to assume github.sha (GitHub's temporary merge commit). Pass the
+      pull request head — github.event.pull_request.head.sha, or the branch name
+      — if that is what you will check out.
+    required: false
 
-outputs: {}
+outputs:
+  base-workflow-run-id:
+    description: |
+      GitHub workflow run ID of the base build this step dispatched or found
+      already pending. Later upload-assets / upload-container steps in the same
+      job pick this up automatically via METICULOUS_BASE_WORKFLOW_RUN_ID, paired
+      with the base commit it is building in METICULOUS_BASE_WORKFLOW_COMMIT_SHA;
+      pass it explicitly only when the upload step is in a different job, and
+      pass base-commit-sha with it.
+  base-commit-sha:
+    description: |
+      The base commit this step resolved, which is the commit the run in
+      base-workflow-run-id is building. Pass both to an upload step in another
+      job: the upload step resolves the base for itself and only waits on that
+      run when the two agree.
 runs:
   using: node24
   main: "../out/ensure-base.entrypoint.js"

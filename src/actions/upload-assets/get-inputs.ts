@@ -8,6 +8,8 @@ export interface UploadAssetsInputs {
   rewrites: AssetUploadMetadata["rewrites"];
   baseApiUrl?: string;
   commitSha?: string;
+  baseWorkflowRunId?: string;
+  baseCommitSha?: string;
 }
 
 export const getUploadAssetsInputs = (): UploadAssetsInputs => {
@@ -17,6 +19,10 @@ export const getUploadAssetsInputs = (): UploadAssetsInputs => {
   const rewrites = JSON.parse(getInput("rewrites") || "[]");
   const baseApiUrl = getInput("base-api-url", { required: false }) || undefined;
   const commitSha = getInput("commit-sha", { required: false }) || undefined;
+  const baseWorkflowRunId =
+    getInput("base-workflow-run-id", { required: false }) || undefined;
+  const baseCommitSha =
+    getInput("base-commit-sha", { required: false }) || undefined;
 
   if (!Array.isArray(rewrites)) {
     throw new Error("Rewrites must be an array");
@@ -45,5 +51,7 @@ export const getUploadAssetsInputs = (): UploadAssetsInputs => {
     rewrites,
     baseApiUrl,
     commitSha,
+    baseWorkflowRunId,
+    baseCommitSha,
   };
 };

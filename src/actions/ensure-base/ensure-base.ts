@@ -6,12 +6,17 @@ import {
 } from "@alwaysmeticulous/client";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import * as Sentry from "@sentry/node";
+import { readKnownBaseWorkflowRunId } from "../../common/base-workflow-run-id";
 import { getBaseTestRunResolvedByBackend } from "../../common/cloud-replay-base.utils";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
+import {
+  getEnsureBaseCommitResolution,
+  resolveCheckoutRefToSha,
+} from "../../common/resolve-checkout-ref";
 import { enrichSentryContextWithGitHubActionsContext } from "../../common/sentry.utils";
 import { getEnsureBaseInputs } from "./get-inputs";
 
@@ -27,7 +32,7 @@ export const runMeticulousEnsureBaseAction = async (): Promise<void> => {
     },
     async (span) => {
       try {
-        const { apiToken, githubToken } = getEnsureBaseInputs();
+        const { apiToken, githubToken, ref } = getEnsureBaseInputs();
         const event = getCodeChangeEvent(context.eventName, context.payload);
         const octokit = getOctokitOrFail(githubToken);
 
@@ -48,9 +53,23 @@ export const runMeticulousEnsureBaseAction = async (): Promise<void> => {
           return 0;
         }
 
+        // Resolved the way the upload step that waits on this build will resolve it, so the
+        // build we dispatch is the one it asks for. `ref` is the caller's checkout; omitted
+        // means github.sha (the temporary merge commit).
+        const checkoutSha = await resolveCheckoutRefToSha({
+          ref,
+          octokit,
+          logger,
+        });
+        const { baseCommitResolution, compareHeadSha } =
+          getEnsureBaseCommitResolution(checkoutSha);
         const { base, head } = await getBaseAndHeadCommitShas(
           event,
-          { useDeploymentUrl: true, octokit },
+          {
+            baseCommitResolution,
+            octokit,
+            ...(compareHeadSha != null ? { compareHeadSha } : {}),
+          },
           logger
         );
 
@@ -62,6 +81,11 @@ export const runMeticulousEnsureBaseAction = async (): Promise<void> => {
           octokit,
           dispatchedRunReportsCheckedOutCommit: true,
           waitForCompletion: false,
+          // Two ensure-base steps in one job should dispatch one build between them.
+          knownWorkflowRunId: readKnownBaseWorkflowRunId({
+            baseCommitSha: base,
+            logger,
+          }),
           getBaseTestRun: async ({ baseSha }) =>
             await getLatestTestRunResults({
               client: createClient({ apiToken }),

@@ -1,8 +1,14 @@
 import { GitHub } from "@actions/github/lib/utils";
 import log from "loglevel";
+import { Duration } from "luxon";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { COMMIT_SHA_WORKFLOW_INPUT } from "../constants";
-import { startNewWorkflowRun } from "../workflow.utils";
+import {
+  getPendingWorkflowRun,
+  isPendingStatus,
+  startNewWorkflowRun,
+  waitForWorkflowCompletion,
+} from "../workflow.utils";
 
 const BASE_SHA = "2345721c00000000000000000000000000001234";
 
@@ -294,5 +300,140 @@ describe("startNewWorkflowRun", () => {
       type: "started",
       workflowRun: undefined,
     });
+  });
+});
+
+describe("isPendingStatus", () => {
+  it.each(["in_progress", "queued", "requested", "waiting", "pending"])(
+    "treats %s as still running",
+    (status) => {
+      expect(isPendingStatus(status)).toBe(true);
+    }
+  );
+
+  it.each(["completed", "action_required", null])(
+    "does not treat %s as still running",
+    (status) => {
+      expect(isPendingStatus(status)).toBe(false);
+    }
+  );
+});
+
+const BRANCH_TIP_SHA = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+const listRun = ({
+  id,
+  head_sha,
+  event,
+  status,
+}: {
+  id: number;
+  head_sha: string;
+  event: string;
+  status: string;
+}) => ({ id, head_sha, event, status });
+
+const buildListingOctokit = (workflowRuns: unknown[]) =>
+  ({
+    paginate: {
+      iterator: vi.fn(async function* () {
+        yield { data: workflowRuns };
+      }),
+    },
+    rest: { actions: { listWorkflowRuns: vi.fn() } },
+  } as unknown as InstanceType<typeof GitHub>);
+
+const pendingOn = (octokit: InstanceType<typeof GitHub>) =>
+  getPendingWorkflowRun({
+    owner: "alwaysmeticulous",
+    repo: "meticulous",
+    workflowId: 42,
+    commitSha: BASE_SHA,
+    octokit,
+    logger,
+  });
+
+describe("getPendingWorkflowRun", () => {
+  it("finds a pending run whose head_sha is the base commit", async () => {
+    const octokit = buildListingOctokit([
+      listRun({
+        id: 5,
+        head_sha: BASE_SHA,
+        event: "push",
+        status: "queued",
+      }),
+    ]);
+
+    expect(await pendingOn(octokit)).toEqual(
+      expect.objectContaining({ workflowRunId: 5 })
+    );
+  });
+
+  it("treats GitHub's pending status as still running", async () => {
+    const octokit = buildListingOctokit([
+      listRun({
+        id: 6,
+        head_sha: BASE_SHA,
+        event: "push",
+        status: "pending",
+      }),
+    ]);
+
+    expect(await pendingOn(octokit)).toEqual(
+      expect.objectContaining({ workflowRunId: 6 })
+    );
+  });
+
+  // A pinned dispatch is only findable through the run id ensure-base publishes. Claiming one
+  // here on the strength of it being the only dispatch around would hand back a build of whatever
+  // commit someone else pinned, and the base we then reported would have no snapshots at all.
+  it("does not claim a pinned dispatch that reports the branch tip as its head_sha", async () => {
+    const octokit = buildListingOctokit([
+      listRun({
+        id: 7,
+        head_sha: BRANCH_TIP_SHA,
+        event: "workflow_dispatch",
+        status: "in_progress",
+      }),
+    ]);
+
+    expect(await pendingOn(octokit)).toBeUndefined();
+  });
+});
+
+describe("waitForWorkflowCompletion", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("keeps waiting while the run is in GitHub's pending status", async () => {
+    vi.useFakeTimers();
+    const getWorkflowRun = vi
+      .fn()
+      .mockResolvedValueOnce({
+        data: { id: 1, status: "pending", conclusion: null },
+      })
+      .mockResolvedValue({
+        data: { id: 1, status: "completed", conclusion: "success" },
+      });
+    const octokit = {
+      rest: { actions: { getWorkflowRun } },
+    } as unknown as InstanceType<typeof GitHub>;
+
+    const resultPromise = waitForWorkflowCompletion({
+      owner: "alwaysmeticulous",
+      repo: "meticulous",
+      workflowRunId: 1,
+      octokit,
+      timeout: Duration.fromObject({ minutes: 1 }),
+      isCancelled: () => false,
+      logger,
+    });
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    expect(await resultPromise).toEqual(
+      expect.objectContaining({ status: "completed", conclusion: "success" })
+    );
+    expect(getWorkflowRun.mock.calls.length).toBeGreaterThan(1);
   });
 });

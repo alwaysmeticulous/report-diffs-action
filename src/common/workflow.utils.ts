@@ -429,11 +429,17 @@ export const waitForWorkflowCompletion = async ({
 };
 
 /**
- * Searches for a pending workflow run on the commit passed in, dispatched within the last hour.
+ * Searches for a pending workflow run on the commit passed in, created within the last hour.
  *
  * Only a run whose `head_sha` is that commit counts. A run on an ancestor built a different tree,
  * so there are no snapshots at this commit to compare against however close the two commits are,
  * and waiting on one leaves the caller believing a base exists that the backend then can't find.
+ *
+ * That rules out finding a commit-pinned `workflow_dispatch` here, whose `head_sha` is the
+ * dispatched ref's tip rather than the commit it was asked to build, and which carries nothing
+ * else naming that commit. Callers that need to wait on one must be told its run id: ensure-base
+ * publishes `METICULOUS_BASE_WORKFLOW_RUN_ID` for later steps, and a caller that dispatched the
+ * run itself already holds the id.
  */
 export const getPendingWorkflowRun = async ({
   owner,
@@ -495,7 +501,11 @@ export const getPendingWorkflowRun = async ({
 };
 
 export const isPendingStatus = (status: string | null): boolean => {
-  return ["in_progress", "queued", "requested", "waiting"].some(
+  // `pending` is GitHub's status for a run waiting on a concurrency group (or
+  // a deployment review). Omitting it treats that run as already finished, so
+  // waitForWorkflowCompletion returns immediately and the caller throws
+  // "did not complete successfully" instead of waiting.
+  return ["in_progress", "queued", "requested", "waiting", "pending"].some(
     (pending) => pending === status
   );
 };
