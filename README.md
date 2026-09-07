@@ -124,9 +124,56 @@ jobs:
           ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
 ```
 
-`ensure-base` needs no checkout. It asks GitHub for the PR merge base and, if that commit
-has no test run yet, dispatches this workflow and returns immediately. The upload step still
-calls `ensureBaseTestsExists` and only waits if the base is still missing when it finishes.
+`ensure-base` needs no checkout. It works out the commit the upload step will compare
+against — the first parent of GitHub's temporary merge commit, read over the API rather than
+from a checkout — and, if that commit has no test run yet, dispatches this workflow and
+returns immediately, recording the dispatched run ID and that commit as the
+`base-workflow-run-id` and `base-commit-sha` outputs, and as
+`METICULOUS_BASE_WORKFLOW_RUN_ID` / `METICULOUS_BASE_WORKFLOW_COMMIT_SHA` for later steps in
+the same job. The upload step waits on that run — a pinned `workflow_dispatch` cannot be found
+by commit SHA, because its `head_sha` is the dispatched ref's tip rather than
+`meticulous-commit-sha`.
+
+Checking out something other than `github.sha` is the one case `ensure-base` cannot predict:
+the upload step then compares against the branching point of the PR branch instead. The
+upload step resolves the base for itself and refuses the recorded run when it isn't building
+that commit, so the base is built afresh rather than compared wrongly.
+
+### When the Upload Step Is in a Different Job
+
+Env vars don't cross jobs, so pass both of `ensure-base`'s outputs through. Without them the
+upload job builds the base a second time.
+
+```yaml
+jobs:
+  ensure-base:
+    runs-on: ubuntu-latest
+    outputs:
+      base-workflow-run-id: ${{ steps.ensure-base.outputs.base-workflow-run-id }}
+      base-commit-sha: ${{ steps.ensure-base.outputs.base-commit-sha }}
+    steps:
+      - uses: alwaysmeticulous/report-diffs-action/ensure-base@v1
+        id: ensure-base
+        with:
+          api-token: ${{ secrets.METICULOUS_API_TOKEN }}
+
+  test:
+    needs: ensure-base
+    runs-on: ubuntu-latest
+    steps:
+      # ... checkout and build ...
+      - uses: alwaysmeticulous/report-diffs-action/upload-assets@v1
+        with:
+          api-token: ${{ secrets.METICULOUS_API_TOKEN }}
+          app-directory: ./dist
+          base-workflow-run-id: ${{ needs.ensure-base.outputs.base-workflow-run-id }}
+          base-commit-sha: ${{ needs.ensure-base.outputs.base-commit-sha }}
+```
+
+`base-commit-sha` is what makes the run ID safe to use: the upload job resolves the base for
+itself and waits on that run only when the two agree, dispatching its own build when they
+don't. Passing the run ID without it makes the upload step wait unchecked and emit a warning,
+since there is then no way to tell whether the run is building the right commit.
 
 `meticulous-commit-sha` lets Meticulous ask this workflow to build a specific commit when a
 PR's base hasn't been tested yet. Without it a dispatched run can only build whatever the base

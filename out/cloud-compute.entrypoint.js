@@ -21994,7 +21994,7 @@ var require_core = __commonJS({
       ExitCode2[ExitCode2["Success"] = 0] = "Success";
       ExitCode2[ExitCode2["Failure"] = 1] = "Failure";
     })(ExitCode || (exports2.ExitCode = ExitCode = {}));
-    function exportVariable(name, val) {
+    function exportVariable2(name, val) {
       const convertedVal = (0, utils_1.toCommandValue)(val);
       process.env[name] = convertedVal;
       const filePath = process.env["GITHUB_ENV"] || "";
@@ -22003,7 +22003,7 @@ var require_core = __commonJS({
       }
       (0, command_1.issueCommand)("set-env", { name }, convertedVal);
     }
-    exports2.exportVariable = exportVariable;
+    exports2.exportVariable = exportVariable2;
     function setSecret(secret) {
       (0, command_1.issueCommand)("add-mask", {}, secret);
     }
@@ -22049,7 +22049,7 @@ var require_core = __commonJS({
 Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     }
     exports2.getBooleanInput = getBooleanInput2;
-    function setOutput(name, value) {
+    function setOutput2(name, value) {
       const filePath = process.env["GITHUB_OUTPUT"] || "";
       if (filePath) {
         return (0, file_command_1.issueFileCommand)("OUTPUT", (0, file_command_1.prepareKeyValueMessage)(name, value));
@@ -22057,7 +22057,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       process.stdout.write(os.EOL);
       (0, command_1.issueCommand)("set-output", { name }, (0, utils_1.toCommandValue)(value));
     }
-    exports2.setOutput = setOutput;
+    exports2.setOutput = setOutput2;
     function setCommandEcho(enabled) {
       (0, command_1.issue)("echo", enabled ? "on" : "off");
     }
@@ -265678,7 +265678,7 @@ var require_retry3 = __commonJS({
 require_source_map_support().install();
 
 // src/cloud-compute.entrypoint.ts
-var import_core5 = __toESM(require_core());
+var import_core6 = __toESM(require_core());
 
 // node_modules/.pnpm/@sentry+core@9.47.1/node_modules/@sentry/core/build/esm/debug-build.js
 var DEBUG_BUILD = typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__;
@@ -267712,7 +267712,7 @@ async function flush(timeout) {
 }
 
 // src/actions/cloud-compute/cloud-compute.ts
-var import_core4 = __toESM(require_core());
+var import_core5 = __toESM(require_core());
 var import_sentry = __toESM(require_dist13());
 
 // src/common/logger.utils.ts
@@ -268004,9 +268004,13 @@ var METICULIOUS_APP_URL = "https://app.meticulous.ai";
 var DOCS_URL = `${METICULIOUS_APP_URL}/docs/github-actions-v2`;
 var METICULOUS_DEBUGGING_PR_TAG = "[meticulous debug]";
 var COMMIT_SHA_WORKFLOW_INPUT = "meticulous-commit-sha";
+var BASE_WORKFLOW_RUN_ID_OUTPUT = "base-workflow-run-id";
+var BASE_WORKFLOW_RUN_ID_ENV = "METICULOUS_BASE_WORKFLOW_RUN_ID";
+var BASE_COMMIT_SHA_OUTPUT = "base-commit-sha";
+var BASE_WORKFLOW_COMMIT_SHA_ENV = "METICULOUS_BASE_WORKFLOW_COMMIT_SHA";
 
 // src/common/ensure-base-exists.utils.ts
-var import_core3 = __toESM(require_core());
+var import_core4 = __toESM(require_core());
 var import_client2 = __toESM(require_dist16());
 
 // node_modules/.pnpm/luxon@3.7.2/node_modules/luxon/build/es6/luxon.mjs
@@ -274557,6 +274561,19 @@ function friendlyDateTime(dateTimeish) {
   }
 }
 
+// src/common/base-workflow-run-id.ts
+var import_core3 = __toESM(require_core());
+var recordBaseWorkflowRunId = ({
+  workflowRunId,
+  baseCommitSha
+}) => {
+  const id = String(workflowRunId);
+  (0, import_core3.setOutput)(BASE_WORKFLOW_RUN_ID_OUTPUT, id);
+  (0, import_core3.setOutput)(BASE_COMMIT_SHA_OUTPUT, baseCommitSha);
+  (0, import_core3.exportVariable)(BASE_WORKFLOW_RUN_ID_ENV, id);
+  (0, import_core3.exportVariable)(BASE_WORKFLOW_COMMIT_SHA_ENV, baseCommitSha);
+};
+
 // src/common/error.utils.ts
 var isGithubPermissionsError = (error2) => {
   const message = getErrorMessage(error2);
@@ -274966,7 +274983,7 @@ var getPendingWorkflowRun = async ({
   }
 };
 var isPendingStatus = (status) => {
-  return ["in_progress", "queued", "requested", "waiting"].some(
+  return ["in_progress", "queued", "requested", "waiting", "pending"].some(
     (pending) => pending === status
   );
 };
@@ -274980,6 +274997,9 @@ var WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST = Duration.fromObject({
 });
 var POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
   seconds: 10
+});
+var BASE_TEST_RUN_GRACE_PERIOD = Duration.fromObject({
+  minutes: 2
 });
 var tryTriggerTestsWorkflowOnBase = async (opts) => {
   let isDone = false;
@@ -274995,9 +275015,40 @@ var tryTriggerTestsWorkflowOnBase = async (opts) => {
     isCancelled
   );
   try {
-    return await Promise.race([workflowRunPromise, baseTestRunPromise]);
+    return await Promise.race([
+      holdBackFailureWhileBaseTestRunMayAppear(
+        workflowRunPromise,
+        isCancelled,
+        opts.logger
+      ),
+      baseTestRunPromise
+    ]);
   } finally {
     isDone = true;
+  }
+};
+var BaseWorkflowRunUnsuccessfulError = class extends Error {
+};
+var holdBackFailureWhileBaseTestRunMayAppear = async (workflowRun, isCancelled, logger) => {
+  try {
+    return await workflowRun;
+  } catch (error2) {
+    if (!(error2 instanceof BaseWorkflowRunUnsuccessfulError)) {
+      throw error2;
+    }
+    logger.warn(
+      `${error2}
+Still waiting up to ${BASE_TEST_RUN_GRACE_PERIOD.as(
+        "minutes"
+      )} minutes in case a base test run for this commit appears anyway.`
+    );
+    const deadline = DateTime.now().plus(BASE_TEST_RUN_GRACE_PERIOD);
+    while (!isCancelled() && DateTime.now() < deadline) {
+      await new Promise(
+        (resolve5) => setTimeout(resolve5, POLL_FOR_BASE_TEST_RUN_INTERVAL.as("milliseconds"))
+      );
+    }
+    throw error2;
   }
 };
 var waitOnWorkflowRun = async (opts, isCancelled) => {
@@ -275008,11 +275059,68 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     context: context7,
     octokit,
     dispatchedRunReportsCheckedOutCommit,
+    knownWorkflowRunId,
     takeDispatchLease
   } = opts;
   const waitForCompletion = opts.waitForCompletion !== false;
   const { owner, repo } = context7.repo;
   const { workflowId } = await getCurrentWorkflowId({ context: context7, octokit });
+  if (knownWorkflowRunId != null) {
+    if (!waitForCompletion) {
+      logger.info(
+        `Base workflow run already recorded (${knownWorkflowRunId}); not dispatching again.`
+      );
+      recordBaseWorkflowRunId({
+        workflowRunId: knownWorkflowRunId,
+        baseCommitSha: base
+      });
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "waited-for-existing-workflow-run",
+          workflowId: `${knownWorkflowRunId}`,
+          baseCommitSha: base,
+          msTaken: 0
+        }
+      };
+    }
+    if (event.type !== "pull_request") {
+      return { baseTestRunExists: false };
+    }
+    logger.info(
+      `Waiting on workflow run already recorded for base commit (${base}): ${knownWorkflowRunId}`
+    );
+    const waitStartMs2 = Date.now();
+    const outcome = await waitForWorkflowRunOutcome({
+      owner,
+      repo,
+      workflowRunId: knownWorkflowRunId,
+      octokit,
+      commitSha: base,
+      timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+      isCancelled,
+      logger
+    });
+    if (outcome.type === "succeeded") {
+      recordBaseWorkflowRunId({
+        workflowRunId: knownWorkflowRunId,
+        baseCommitSha: base
+      });
+      return {
+        baseTestRunExists: true,
+        baseResolutionDetails: {
+          type: "waited-for-existing-workflow-run",
+          workflowId: `${knownWorkflowRunId}`,
+          baseCommitSha: base,
+          msTaken: Date.now() - waitStartMs2
+        }
+      };
+    }
+    logger.warn(
+      `${outcome.message}
+Looking for another build of ${base}, and dispatching one if there is none.`
+    );
+  }
   const alreadyPending = await getPendingWorkflowRun({
     owner,
     repo,
@@ -275026,6 +275134,10 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
       logger.info(
         `Workflow run already pending on base commit (${base}): ${alreadyPending.html_url}`
       );
+      recordBaseWorkflowRunId({
+        workflowRunId: alreadyPending.workflowRunId,
+        baseCommitSha: base
+      });
       return {
         baseTestRunExists: true,
         baseResolutionDetails: {
@@ -275050,6 +275162,10 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
         timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
         isCancelled,
         logger
+      });
+      recordBaseWorkflowRunId({
+        workflowRunId: alreadyPending.workflowRunId,
+        baseCommitSha: base
       });
       return {
         baseTestRunExists: true,
@@ -275100,6 +275216,10 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
           isCancelled,
           logger
         });
+        recordBaseWorkflowRunId({
+          workflowRunId: pendingAfterLease.workflowRunId,
+          baseCommitSha: base
+        });
         return {
           baseTestRunExists: true,
           baseResolutionDetails: {
@@ -275111,7 +275231,29 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
         };
       }
       if (opts.getBaseTestRun != null) {
-        return waitOnBaseTestRun(opts.getBaseTestRun, isCancelled);
+        const result = await waitOnBaseTestRun(
+          opts.getBaseTestRun,
+          isCancelled,
+          DateTime.now().plus(WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST)
+        );
+        if (!result.baseTestRunExists && !isCancelled()) {
+          const message = couldNotBuildBase({
+            base,
+            reason: `another job was already building it, and no test run for it appeared within ${WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as(
+              "minutes"
+            )} minutes.`
+          });
+          logger.warn(message);
+          (0, import_core4.warning)(message);
+          return {
+            baseTestRunExists: false,
+            baseResolutionDetails: {
+              type: "failed-for-other-reason",
+              message
+            }
+          };
+        }
+        return result;
       }
       return { baseTestRunExists: false };
     }
@@ -275145,7 +275287,7 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     };
     if (fallback.type === "gave-up") {
       logger.warn(fallback.message);
-      (0, import_core3.warning)(fallback.message);
+      (0, import_core4.warning)(fallback.message);
       return {
         baseTestRunExists: false,
         baseResolutionDetails: {
@@ -275172,7 +275314,7 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     In addition we were not able to trigger a run on ${base} since the '${baseRef}' branch is now pointing to ${currentBaseSha}, and the Meticulous workflow on '${baseRef}' does not accept the '${COMMIT_SHA_WORKFLOW_INPUT}' input that would let us ask for ${base} specifically.
     Therefore no diffs will be reported for this run. Re-running the tests may fix this, as would adding the input: see ${DOCS_URL}.`;
       logger.warn(message);
-      (0, import_core3.warning)(message);
+      (0, import_core4.warning)(message);
       return {
         baseTestRunExists: false,
         baseResolutionDetails: {
@@ -275198,7 +275340,7 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
   if (workflowRun == null) {
     const message = `Warning: Could not retrieve dispatched workflow run. Will not perform diffs against ${base}.`;
     logger.warn(message);
-    (0, import_core3.warning)(message);
+    (0, import_core4.warning)(message);
     return {
       baseTestRunExists: false,
       baseResolutionDetails: {
@@ -275211,6 +275353,10 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     logger.info(
       `Dispatched workflow run on base commit ${base}: ${workflowRun.html_url ?? workflowRun.workflowRunId}`
     );
+    recordBaseWorkflowRunId({
+      workflowRunId: workflowRun.workflowRunId,
+      baseCommitSha: base
+    });
     return {
       baseTestRunExists: true,
       baseResolutionDetails: {
@@ -275233,6 +275379,10 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
     isCancelled,
     logger
+  });
+  recordBaseWorkflowRunId({
+    workflowRunId: workflowRun.workflowRunId,
+    baseCommitSha: base
   });
   return {
     baseTestRunExists: true,
@@ -275322,10 +275472,10 @@ var getDefaultBranch = async ({
     return null;
   }
 };
-var waitOnBaseTestRun = async (getBaseTestRun, isCancelled) => {
+var waitOnBaseTestRun = async (getBaseTestRun, isCancelled, deadline) => {
   let baseTestRun = await getBaseTestRun();
   while (!baseTestRun) {
-    if (isCancelled()) {
+    if (isCancelled() || deadline != null && DateTime.now() >= deadline) {
       return { baseTestRunExists: false };
     }
     await new Promise(
@@ -275341,7 +275491,7 @@ var waitOnBaseTestRun = async (getBaseTestRun, isCancelled) => {
     }
   };
 };
-var waitForWorkflowCompletionAndThrowIfFailed = async ({
+var waitForWorkflowRunOutcome = async ({
   commitSha,
   ...otherOpts
 }) => {
@@ -275352,9 +275502,17 @@ var waitForWorkflowCompletionAndThrowIfFailed = async ({
     );
   }
   if (finalWorkflowRun.status !== "completed" || finalWorkflowRun.conclusion !== "success") {
-    throw new Error(
-      `Comparing against visual snapshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
-    );
+    return {
+      type: "did-not-succeed",
+      message: `Comparing against visual snapshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
+    };
+  }
+  return { type: "succeeded" };
+};
+var waitForWorkflowCompletionAndThrowIfFailed = async (opts) => {
+  const outcome = await waitForWorkflowRunOutcome(opts);
+  if (outcome.type === "did-not-succeed") {
+    throw new BaseWorkflowRunUnsuccessfulError(outcome.message);
   }
 };
 var getHeadCommitForRef = async ({
@@ -275460,20 +275618,29 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
       octokit: options.octokit,
       logger
     };
-    if (options.useDeploymentUrl) {
-      return {
-        base: await tryGetMergeBaseViaCompareApi({
-          headSha: head,
-          baseRef,
-          pullRequestBaseSha: base,
-          octokit: options.octokit,
-          logger
-        }) ?? base,
-        head
-      };
-    }
+    const resolveBase = () => {
+      switch (options.baseCommitResolution) {
+        case "merge-base-of-pull-request-head":
+          return tryGetMergeBaseViaCompareApi({
+            headSha: head,
+            baseRef,
+            pullRequestBaseSha: base,
+            octokit: options.octokit,
+            logger
+          });
+        case "first-parent-of-merge-commit-via-local-git":
+          return tryGetFirstParentOfMergeCommitViaLocalGit(mergeBaseOpts);
+        case "first-parent-of-merge-commit-via-github-api":
+          return tryGetFirstParentOfMergeCommitViaGithubApi(mergeBaseOpts);
+        default:
+          return assertNever(
+            options.baseCommitResolution,
+            "base commit resolution"
+          );
+      }
+    };
     return {
-      base: await tryGetMergeBaseOfTemporaryMergeCommit(mergeBaseOpts) ?? base,
+      base: await resolveBase() ?? base,
       head
     };
   }
@@ -275489,12 +275656,12 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
       head: import_github3.context.sha
     };
   }
-  return assertNever(event);
+  return assertNever(event, "event");
 };
-var assertNever = (event) => {
-  throw new Error("Unexpected event: " + JSON.stringify(event));
+var assertNever = (value, description) => {
+  throw new Error(`Unexpected ${description}: ` + JSON.stringify(value));
 };
-var tryGetMergeBaseOfTemporaryMergeCommit = async ({
+var tryGetFirstParentOfMergeCommitViaLocalGit = async ({
   pullRequestHeadSha,
   pullRequestBaseSha,
   baseRef,
@@ -275526,28 +275693,81 @@ var tryGetMergeBaseOfTemporaryMergeCommit = async ({
       return mergeBaseFromCompare(headCommitSha);
     }
     const parents = (0, import_child_process2.execFileSync)("git", ["cat-file", "-p", mergeCommitSha]).toString().split("\n").filter((line) => line.startsWith("parent ")).map((line) => line.substring("parent ".length).trim());
-    if (parents.length !== 2) {
-      logger.error(
-        `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit from its parents. Falling back to the GitHub compare API.`
-      );
-      return mergeBaseFromCompare(pullRequestHeadSha);
-    }
-    const mergeBaseSha = parents[0];
-    const mergeHeadSha = parents[1];
-    if (mergeHeadSha !== pullRequestHeadSha) {
-      logger.error(
-        `The second parent (${parents[1]}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
-        so can not confidently determine the base of the merge commit from its parents. Falling back to the GitHub compare API.`
-      );
-      return mergeBaseFromCompare(pullRequestHeadSha);
-    }
-    return mergeBaseSha;
+    return readFirstParentOfMergeCommit({
+      mergeCommitSha,
+      parents,
+      pullRequestHeadSha,
+      logger
+    }) ?? mergeBaseFromCompare(pullRequestHeadSha);
   } catch (e) {
     logger.info(
       `Could not read the merge commit (${mergeCommitSha}) from the local git repository (${e}). Falling back to the GitHub compare API.`
     );
     return mergeBaseFromCompare(pullRequestHeadSha);
   }
+};
+var tryGetFirstParentOfMergeCommitViaGithubApi = async ({
+  pullRequestHeadSha,
+  pullRequestBaseSha,
+  baseRef,
+  octokit,
+  logger
+}) => {
+  const mergeBaseFromCompare = (headSha) => tryGetMergeBaseViaCompareApi({
+    headSha,
+    baseRef,
+    pullRequestBaseSha,
+    octokit,
+    logger
+  });
+  const mergeCommitSha = process.env.GITHUB_SHA;
+  if (mergeCommitSha == null) {
+    return mergeBaseFromCompare(pullRequestHeadSha);
+  }
+  let parents;
+  try {
+    const { owner, repo } = import_github3.context.repo;
+    const { data } = await octokit.rest.repos.getCommit({
+      owner,
+      repo,
+      ref: mergeCommitSha
+    });
+    parents = data.parents.map(({ sha }) => sha);
+  } catch (e) {
+    logger.info(
+      `Could not read the merge commit (${mergeCommitSha}) from the GitHub API (${e}). Falling back to the GitHub compare API.`
+    );
+    return mergeBaseFromCompare(pullRequestHeadSha);
+  }
+  return readFirstParentOfMergeCommit({
+    mergeCommitSha,
+    parents,
+    pullRequestHeadSha,
+    logger
+  }) ?? mergeBaseFromCompare(pullRequestHeadSha);
+};
+var readFirstParentOfMergeCommit = ({
+  mergeCommitSha,
+  parents,
+  pullRequestHeadSha,
+  logger
+}) => {
+  if (parents.length !== 2) {
+    logger.error(
+      `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit from its parents. Falling back to the GitHub compare API.`
+    );
+    return null;
+  }
+  const mergeBaseSha = parents[0];
+  const mergeHeadSha = parents[1];
+  if (mergeHeadSha !== pullRequestHeadSha) {
+    logger.error(
+      `The second parent (${mergeHeadSha}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
+        so can not confidently determine the base of the merge commit from its parents. Falling back to the GitHub compare API.`
+    );
+    return null;
+  }
+  return mergeBaseSha;
 };
 var markGitDirectoryAsSafe = () => {
   (0, import_child_process2.execFileSync)("git", [
@@ -275737,7 +275957,7 @@ var runOneTestRun = async ({
     const { base: codeChangeBase } = await getBaseAndHeadCommitShas(
       event,
       {
-        useDeploymentUrl: false,
+        baseCommitResolution: "first-parent-of-merge-commit-via-local-git",
         octokit
       },
       logger
@@ -275947,7 +276167,7 @@ var runMeticulousTestsCloudComputeAction = async () => {
         }
       });
       if (failureMessage2) {
-        (0, import_core4.setFailed)(failureMessage2);
+        (0, import_core5.setFailed)(failureMessage2);
         span.setStatus({ code: 2, message: "unknown_error" });
         return failureMessage2;
       } else {
@@ -275971,7 +276191,7 @@ setMeticulousClientUserAgentSuffix("cloud-compute");
 runMeticulousTestsCloudComputeAction().catch(async (error2) => {
   captureException(error2);
   const message = error2 instanceof Error ? error2.message : `${error2}`;
-  (0, import_core5.setFailed)(message);
+  (0, import_core6.setFailed)(message);
   await flush(5e3);
   process.exit(1);
 });

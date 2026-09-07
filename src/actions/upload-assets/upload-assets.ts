@@ -7,6 +7,7 @@ import {
 import { uploadAssetsAndTriggerTestRun } from "@alwaysmeticulous/remote-replay-launcher";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import * as Sentry from "@sentry/node";
+import { readKnownBaseWorkflowRunId } from "../../common/base-workflow-run-id";
 import { getBaseTestRunResolvedByBackend } from "../../common/cloud-replay-base.utils";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import { getActualCommitShaFromRepoOrContext } from "../../common/get-actual-commit-sha";
@@ -36,6 +37,8 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           rewrites,
           baseApiUrl,
           commitSha: commitShaInput,
+          baseWorkflowRunId,
+          baseCommitSha: baseCommitShaInput,
         } = getUploadAssetsInputs();
 
         if (baseApiUrl) {
@@ -55,7 +58,10 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
 
         const { base, head } = await getBaseAndHeadCommitShas(
           event,
-          { useDeploymentUrl: false, octokit },
+          {
+            baseCommitResolution: "first-parent-of-merge-commit-via-local-git",
+            octokit,
+          },
           logger
         );
         const { baseResolutionDetails } = await safeEnsureBaseTestsExists({
@@ -65,6 +71,12 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           context,
           octokit,
           dispatchedRunReportsCheckedOutCommit: true,
+          knownWorkflowRunId: readKnownBaseWorkflowRunId({
+            workflowRunIdInput: baseWorkflowRunId,
+            baseCommitShaInput,
+            baseCommitSha: base,
+            logger,
+          }),
           getBaseTestRun: async ({ baseSha }) =>
             await getLatestTestRunResults({
               client: createClient({ apiToken }),

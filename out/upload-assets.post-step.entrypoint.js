@@ -102417,6 +102417,8 @@ var getUploadAssetsInputs = () => {
   const rewrites = JSON.parse((0, import_core2.getInput)("rewrites") || "[]");
   const baseApiUrl = (0, import_core2.getInput)("base-api-url", { required: false }) || void 0;
   const commitSha = (0, import_core2.getInput)("commit-sha", { required: false }) || void 0;
+  const baseWorkflowRunId = (0, import_core2.getInput)("base-workflow-run-id", { required: false }) || void 0;
+  const baseCommitSha = (0, import_core2.getInput)("base-commit-sha", { required: false }) || void 0;
   if (!Array.isArray(rewrites)) {
     throw new Error("Rewrites must be an array");
   }
@@ -102439,7 +102441,9 @@ var getUploadAssetsInputs = () => {
     appDirectory,
     rewrites,
     baseApiUrl,
-    commitSha
+    commitSha,
+    baseWorkflowRunId,
+    baseCommitSha
   };
 };
 

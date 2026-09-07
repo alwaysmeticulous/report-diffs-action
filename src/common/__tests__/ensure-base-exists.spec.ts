@@ -1,14 +1,26 @@
+import { exportVariable, setOutput } from "@actions/core";
 import { Context } from "@actions/github/lib/context";
 import { GitHub } from "@actions/github/lib/utils";
 import { TestRun } from "@alwaysmeticulous/client";
 import log from "loglevel";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { CodeChangeEvent } from "../../types";
-import { COMMIT_SHA_WORKFLOW_INPUT } from "../constants";
+import {
+  BASE_WORKFLOW_COMMIT_SHA_ENV,
+  BASE_WORKFLOW_RUN_ID_ENV,
+  BASE_WORKFLOW_RUN_ID_OUTPUT,
+  COMMIT_SHA_WORKFLOW_INPUT,
+} from "../constants";
 import {
   ensureBaseTestsExists,
   tryTriggerTestsWorkflowOnBase,
 } from "../ensure-base-exists.utils";
+
+vi.mock("@actions/core", () => ({
+  warning: vi.fn(),
+  setOutput: vi.fn(),
+  exportVariable: vi.fn(),
+}));
 
 vi.mock("@alwaysmeticulous/client", async (importOriginal) => {
   const actual = await importOriginal<
@@ -29,6 +41,10 @@ const WORKFLOW_ID = 42;
 const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS = 5_000;
 
 const POLL_FOR_BASE_TEST_RUN_INTERVAL_MS = 10_000;
+
+const BASE_TEST_RUN_GRACE_PERIOD_MS = 2 * 60_000;
+
+const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST_MS = 30 * 60_000;
 
 const logger = log.getLogger("ensure-base-exists.spec");
 logger.setLevel("silent");
@@ -83,11 +99,16 @@ const buildOctokit = ({
     .fn()
     .mockResolvedValue({ data: { workflow_run_id: 99 } }),
   dispatchedRunStatus = { status: "completed", conclusion: "success" },
+  // Serves both the lookup of the current workflow's id and the polling of a run we're waiting on.
+  getWorkflowRun = vi.fn().mockResolvedValue({
+    data: { workflow_id: WORKFLOW_ID, id: 99, ...dispatchedRunStatus },
+  }),
 }: {
   workflowRuns?: unknown[];
   commits?: unknown[];
   createWorkflowDispatch?: ReturnType<typeof vi.fn>;
   dispatchedRunStatus?: { status: string; conclusion: string | null };
+  getWorkflowRun?: ReturnType<typeof vi.fn>;
 } = {}) => {
   const listCommits = vi.fn();
   return {
@@ -98,11 +119,7 @@ const buildOctokit = ({
     },
     rest: {
       actions: {
-        // Serves both the lookup of the current workflow's id and the polling of a run we're
-        // waiting on.
-        getWorkflowRun: vi.fn().mockResolvedValue({
-          data: { workflow_id: WORKFLOW_ID, id: 99, ...dispatchedRunStatus },
-        }),
+        getWorkflowRun,
         createWorkflowDispatch,
         listWorkflowRuns: vi.fn(),
       },
@@ -128,6 +145,8 @@ const pushRun = (headSha: string, status: string, id: number) => ({
 describe("tryTriggerTestsWorkflowOnBase", () => {
   afterEach(() => {
     vi.useRealTimers();
+    vi.mocked(setOutput).mockClear();
+    vi.mocked(exportVariable).mockClear();
   });
 
   it("dispatches a build of the base when the pending run is on an ancestor", async () => {
@@ -369,6 +388,12 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
         msTaken: 0,
       }),
     });
+    expect(setOutput).toHaveBeenCalledWith(BASE_WORKFLOW_RUN_ID_OUTPUT, "99");
+    expect(exportVariable).toHaveBeenCalledWith(BASE_WORKFLOW_RUN_ID_ENV, "99");
+    expect(exportVariable).toHaveBeenCalledWith(
+      BASE_WORKFLOW_COMMIT_SHA_ENV,
+      BASE_SHA
+    );
   });
 
   it("does not wait on a pending run when waitForCompletion is false", async () => {
@@ -419,6 +444,214 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     });
     expect(createWorkflowDispatch).not.toHaveBeenCalled();
     expect(result).toEqual({ baseTestRunExists: true });
+  });
+
+  // The other job's dispatch is pinned to the base commit, so we can't find its run to watch and
+  // only the test run tells us it arrived. Unbounded, a base that never lands would hold the
+  // runner until GitHub's own job timeout.
+  it("gives up on a build another job holds the lease for once the deadline passes", async () => {
+    vi.useFakeTimers();
+    const getBaseTestRun = vi.fn().mockResolvedValue(null);
+    const octokit = buildOctokit();
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      base: BASE_SHA,
+      context,
+      octokit,
+      getBaseTestRun,
+      takeDispatchLease: vi.fn().mockResolvedValue(false),
+    });
+    await vi.advanceTimersByTimeAsync(
+      WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST_MS +
+        POLL_FOR_BASE_TEST_RUN_INTERVAL_MS
+    );
+
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: false,
+      baseResolutionDetails: expect.objectContaining({
+        type: "failed-for-other-reason",
+      }),
+    });
+  });
+
+  it("waits on a known run id instead of dispatching again", async () => {
+    vi.useFakeTimers();
+    const createWorkflowDispatch = vi.fn();
+    const octokit = buildOctokit({ createWorkflowDispatch });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      base: BASE_SHA,
+      context,
+      octokit,
+      knownWorkflowRunId: 33731751434,
+    });
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+
+    expect(createWorkflowDispatch).not.toHaveBeenCalled();
+    expect(octokit.rest.actions.getWorkflowRun).toHaveBeenCalledWith(
+      expect.objectContaining({ run_id: 33731751434 })
+    );
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: expect.objectContaining({
+        type: "waited-for-existing-workflow-run",
+        workflowId: "33731751434",
+        baseCommitSha: BASE_SHA,
+      }),
+    });
+    // The commit travels with the id so that a later step, which resolves the base for itself,
+    // can tell whether this run is building the base it wants.
+    expect(exportVariable).toHaveBeenCalledWith(
+      BASE_WORKFLOW_RUN_ID_ENV,
+      "33731751434"
+    );
+    expect(exportVariable).toHaveBeenCalledWith(
+      BASE_WORKFLOW_COMMIT_SHA_ENV,
+      BASE_SHA
+    );
+  });
+
+  // A recorded run that is over has not built the base, and failing on it leaves the pull request
+  // with no comparison at all where dispatching our own build might still produce one.
+  it.each(["failure", "cancelled"])(
+    "builds the base itself when the known run concluded %s",
+    async (conclusion) => {
+      vi.useFakeTimers();
+      const createWorkflowDispatch = vi
+        .fn()
+        .mockResolvedValue({ data: { workflow_run_id: 99 } });
+      const octokit = buildOctokit({
+        createWorkflowDispatch,
+        getWorkflowRun: vi
+          .fn()
+          .mockResolvedValueOnce({ data: { workflow_id: WORKFLOW_ID } })
+          .mockResolvedValueOnce({
+            data: { id: 33731751434, status: "completed", conclusion },
+          })
+          .mockResolvedValue({
+            data: { id: 99, status: "completed", conclusion: "success" },
+          }),
+      });
+
+      const resultPromise = tryTriggerTestsWorkflowOnBase({
+        logger,
+        event,
+        base: BASE_SHA,
+        context,
+        octokit,
+        knownWorkflowRunId: 33731751434,
+      });
+      await vi.advanceTimersByTimeAsync(
+        WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS * 2
+      );
+
+      expect(createWorkflowDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          inputs: { [COMMIT_SHA_WORKFLOW_INPUT]: BASE_SHA },
+        })
+      );
+      expect(await resultPromise).toEqual({
+        baseTestRunExists: true,
+        baseResolutionDetails: expect.objectContaining({
+          type: "triggered-new-workflow-run-successfully",
+          workflowId: "99",
+        }),
+      });
+    }
+  );
+
+  // Somebody else's pinned dispatch is indistinguishable from one building our base: the run
+  // names the branch tip as its head_sha and nothing on it names the commit it was asked for.
+  // Building the base ourselves costs a duplicate run; adopting theirs would report a base that
+  // was never built.
+  it("dispatches its own build rather than adopting an unrelated pinned dispatch", async () => {
+    vi.useFakeTimers();
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockResolvedValue({ data: { workflow_run_id: 99 } });
+    const octokit = buildOctokit({
+      workflowRuns: [
+        {
+          id: 33731751434,
+          head_sha: "9999999999999999999999999999999999999999",
+          event: "workflow_dispatch",
+          status: "in_progress",
+          html_url:
+            "https://github.com/alwaysmeticulous/meticulous/actions/runs/33731751434",
+        },
+      ],
+      createWorkflowDispatch,
+    });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      base: BASE_SHA,
+      context,
+      octokit,
+    });
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+
+    expect(createWorkflowDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        inputs: { [COMMIT_SHA_WORKFLOW_INPUT]: BASE_SHA },
+      })
+    );
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: expect.objectContaining({
+        type: "triggered-new-workflow-run-successfully",
+        workflowId: "99",
+      }),
+    });
+  });
+
+  it("waits on a run sitting in GitHub's pending concurrency status", async () => {
+    vi.useFakeTimers();
+    const createWorkflowDispatch = vi.fn();
+    const octokit = buildOctokit({
+      workflowRuns: [pushRun(BASE_SHA, "pending", 11)],
+      createWorkflowDispatch,
+      getWorkflowRun: vi
+        .fn()
+        .mockResolvedValueOnce({
+          data: { workflow_id: WORKFLOW_ID, id: 11 },
+        })
+        .mockResolvedValueOnce({
+          data: { id: 11, status: "pending", conclusion: null },
+        })
+        .mockResolvedValue({
+          data: {
+            id: 11,
+            status: "completed",
+            conclusion: "success",
+          },
+        }),
+    });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      base: BASE_SHA,
+      context,
+      octokit,
+    });
+    await vi.advanceTimersByTimeAsync(
+      WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS * 2
+    );
+
+    expect(createWorkflowDispatch).not.toHaveBeenCalled();
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: expect.objectContaining({
+        type: "waited-for-existing-workflow-run",
+        workflowId: "11",
+      }),
+    });
   });
 });
 
@@ -580,6 +813,8 @@ describe("ensureBaseTestsExists", () => {
       })
     ).rejects.toThrow("did not complete successfully");
     await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+    // The failure is held back while the poll still has a chance of finding a base test run.
+    await vi.advanceTimersByTimeAsync(BASE_TEST_RUN_GRACE_PERIOD_MS);
     await rejection;
 
     // The poll wakes from its sleep once more to notice it has been cancelled, and then stops.
@@ -590,5 +825,39 @@ describe("ensureBaseTestsExists", () => {
     expect(getBaseTestRun.mock.calls.length).toBe(
       callsOnceCancellationWasNoticed
     );
+  });
+
+  // The run we watched failing does not mean nothing built the base: a duplicate dispatch, or a
+  // sibling pull request off the same base, can land a test run seconds later.
+  it("uses a base test run that lands while the workflow failure is held back", async () => {
+    vi.useFakeTimers();
+    const getBaseTestRun = vi
+      .fn()
+      .mockResolvedValueOnce(null)
+      .mockResolvedValue({ id: "test-run-that-landed-late" } as TestRun);
+    const octokit = buildOctokit({
+      workflowRuns: [pushRun(BASE_SHA, "in_progress", 10)],
+      dispatchedRunStatus: { status: "completed", conclusion: "failure" },
+    });
+
+    const resultPromise = ensureBaseTestsExists({
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit,
+      getBaseTestRun,
+      logger,
+    });
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+    await vi.advanceTimersByTimeAsync(POLL_FOR_BASE_TEST_RUN_INTERVAL_MS * 2);
+
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: {
+        type: "suitable-test-run-already-existed",
+        testRunId: "test-run-that-landed-late",
+      },
+    });
   });
 });

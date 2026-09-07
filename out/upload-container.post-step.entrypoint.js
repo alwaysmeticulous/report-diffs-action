@@ -102424,6 +102424,8 @@ var getUploadContainerInputs = () => {
   const companionAssetsZip = (0, import_core2.getInput)("companion-assets-zip", { required: false }) || void 0;
   const companionAssetsPathInImage = (0, import_core2.getInput)("companion-assets-path-in-image", { required: false }) || void 0;
   const companionAssetsRegex = (0, import_core2.getInput)("companion-assets-regex", { required: false }) || void 0;
+  const baseWorkflowRunId = (0, import_core2.getInput)("base-workflow-run-id", { required: false }) || void 0;
+  const baseCommitSha = (0, import_core2.getInput)("base-commit-sha", { required: false }) || void 0;
   if (!imageTag || imageTag.trim() === "") {
     throw new Error("image-tag must be a non-empty string");
   }
@@ -102481,7 +102483,9 @@ var getUploadContainerInputs = () => {
     containerEnv,
     containerHealthCheckEndpoint,
     commitSha,
-    companionAssets
+    companionAssets,
+    baseWorkflowRunId,
+    baseCommitSha
   };
 };
 
