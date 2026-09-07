@@ -1,12 +1,15 @@
+# Scratch workflow used to end-to-end validate ensure-base's base-commit
+# resolution against a PR whose base branch has moved on. Throwaway.
+
 name: Tests - react-bmi-calculator
 
 on:
-  push:
-    branches:
-      - main
-      - releases/*
   pull_request: {}
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      meticulous-commit-sha:
+        description: Commit Meticulous has asked this run to build. Defaults to the branch head.
+        required: false
 
 permissions:
   actions: write
@@ -21,11 +24,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Print context SHAs
+        run: |
+          echo "event_name=${{ github.event_name }}"
+          echo "GITHUB_SHA=$GITHUB_SHA"
+          echo "pr.head.sha=${{ github.event.pull_request.head.sha }}"
+          echo "pr.base.sha=${{ github.event.pull_request.base.sha }}"
+          echo "pr.base.ref=${{ github.event.pull_request.base.ref }}"
+          echo "meticulous-commit-sha=${{ github.event.inputs['meticulous-commit-sha'] }}"
+
+      - name: Ensure base build
+        id: ensure-base
+        uses: alwaysmeticulous/report-diffs-action/ensure-base@af1b5f2e268c219af84bb3cfc1453cf847dccfa4
+        env:
+          RUNNER_DEBUG: "1"
+        with:
+          api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
+
+      - name: Print ensure-base handoff
+        run: |
+          echo "outputs.base-workflow-run-id=${{ steps.ensure-base.outputs.base-workflow-run-id }}"
+          echo "METICULOUS_BASE_WORKFLOW_RUN_ID=$METICULOUS_BASE_WORKFLOW_RUN_ID"
+          echo "METICULOUS_BASE_WORKFLOW_COMMIT_SHA=$METICULOUS_BASE_WORKFLOW_COMMIT_SHA"
+
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
+
+      - name: Print commits as local git sees them
+        run: |
+          git config --global --add safe.directory "$PWD"
+          echo "checked-out HEAD=$(git rev-parse HEAD)"
+          echo "--- parents of GITHUB_SHA ($GITHUB_SHA) ---"
+          git cat-file -p "$GITHUB_SHA" | sed -n '1,6p' || echo "(not fetched)"
 
       - name: Use Node.js LTS
-        id: nodejs
         uses: actions/setup-node@v3
         with:
           node-version: "20"
@@ -34,16 +68,6 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 10.27.0
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            tests/react-bmi-calculator/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            node-modules-${{ runner.os }}
 
       - name: Install react-bmi-calculator dependencies
         working-directory: ./tests/react-bmi-calculator
@@ -55,7 +79,9 @@ jobs:
 
       - name: Run report-diffs-action
         id: test
-        uses: ./upload-assets
+        uses: alwaysmeticulous/report-diffs-action/upload-assets@af1b5f2e268c219af84bb3cfc1453cf847dccfa4
+        env:
+          RUNNER_DEBUG: "1"
         with:
           api-token: "${{ secrets.METICULOUS_API_TOKEN }}"
           app-directory: ./tests/react-bmi-calculator/build
