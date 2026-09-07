@@ -46,6 +46,8 @@ const BASE_TEST_RUN_GRACE_PERIOD_MS = 2 * 60_000;
 
 const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST_MS = 30 * 60_000;
 
+const DISPATCH_LEASE_DURATION_MS = 2 * 60_000;
+
 const logger = log.getLogger("ensure-base-exists.spec");
 logger.setLevel("silent");
 
@@ -452,6 +454,7 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
   it("gives up on a build another job holds the lease for once the deadline passes", async () => {
     vi.useFakeTimers();
     const getBaseTestRun = vi.fn().mockResolvedValue(null);
+    const takeDispatchLease = vi.fn().mockResolvedValue(false);
     const octokit = buildOctokit();
 
     const resultPromise = tryTriggerTestsWorkflowOnBase({
@@ -461,7 +464,7 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
       context,
       octokit,
       getBaseTestRun,
-      takeDispatchLease: vi.fn().mockResolvedValue(false),
+      takeDispatchLease,
     });
     await vi.advanceTimersByTimeAsync(
       WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST_MS +
@@ -474,6 +477,75 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
         type: "failed-for-other-reason",
       }),
     });
+    expect(takeDispatchLease.mock.calls.length).toBeGreaterThan(1);
+  });
+
+  it("dispatches once the lease is free again", async () => {
+    vi.useFakeTimers();
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockResolvedValue({ data: { workflow_run_id: 99 } });
+    const takeDispatchLease = vi
+      .fn()
+      .mockResolvedValueOnce(false)
+      .mockResolvedValue(true);
+    const octokit = buildOctokit({ createWorkflowDispatch });
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      base: BASE_SHA,
+      context,
+      octokit,
+      takeDispatchLease,
+    });
+    await vi.advanceTimersByTimeAsync(
+      DISPATCH_LEASE_DURATION_MS + POLL_FOR_BASE_TEST_RUN_INTERVAL_MS
+    );
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+
+    expect(createWorkflowDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ref: "main",
+        inputs: { [COMMIT_SHA_WORKFLOW_INPUT]: BASE_SHA },
+      })
+    );
+    expect(takeDispatchLease).toHaveBeenCalledTimes(2);
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: expect.objectContaining({
+        type: "triggered-new-workflow-run-successfully",
+      }),
+    });
+  });
+
+  it("polls for a base test run once while another job holds the lease", async () => {
+    vi.useFakeTimers();
+    const getBaseTestRun = vi
+      .fn()
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValue({ id: "tr_1" } as TestRun);
+
+    const resultPromise = tryTriggerTestsWorkflowOnBase({
+      logger,
+      event,
+      base: BASE_SHA,
+      context,
+      octokit: buildOctokit(),
+      getBaseTestRun,
+      takeDispatchLease: vi.fn().mockResolvedValue(false),
+    });
+    await vi.advanceTimersByTimeAsync(POLL_FOR_BASE_TEST_RUN_INTERVAL_MS * 2);
+
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: expect.objectContaining({
+        type: "suitable-test-run-already-existed",
+        testRunId: "tr_1",
+      }),
+    });
+    expect(getBaseTestRun).toHaveBeenCalledTimes(3);
   });
 
   it("waits on a known run id instead of dispatching again", async () => {
