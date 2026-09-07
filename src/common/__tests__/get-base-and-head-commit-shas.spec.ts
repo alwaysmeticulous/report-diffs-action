@@ -166,6 +166,45 @@ describe("getBaseAndHeadCommitShas", () => {
     expect(octokit.rest.repos.getCommit).not.toHaveBeenCalled();
   });
 
+  it.each([
+    ["the merge commit does not have two parents", `parent ${PR_BASE_SHA}\n`],
+    [
+      "the second parent is not the pull request head",
+      `parent ${PR_BASE_SHA}\nparent ${CHECKED_OUT_SHA}\n`,
+    ],
+  ])("uses the compare API when %s", async (_case, catFileOutput) => {
+    execFileSyncMock.mockImplementation((_cmd, args) => {
+      const command = gitCommand(args as string[]);
+      if (command.startsWith("rev-list")) {
+        return Buffer.from(`${MERGE_COMMIT_SHA}\n`);
+      }
+      if (command.startsWith("cat-file")) {
+        return Buffer.from(catFileOutput);
+      }
+      return Buffer.from("");
+    });
+    const compareCommits = vi.fn().mockResolvedValue({
+      data: { merge_base_commit: { sha: MERGE_BASE_SHA } },
+    });
+
+    const result = await getBaseAndHeadCommitShas(
+      event,
+      {
+        baseCommitResolution: "first-parent-of-merge-commit-via-local-git",
+        octokit: buildOctokit(compareCommits),
+      },
+      logger
+    );
+
+    expect(result).toEqual({ base: MERGE_BASE_SHA, head: HEAD_SHA });
+    expect(compareCommits).toHaveBeenCalledWith({
+      owner: "acme",
+      repo: "app",
+      base: "main",
+      head: HEAD_SHA,
+    });
+  });
+
   it("uses the compare API when checkout HEAD is a custom ref", async () => {
     execFileSyncMock.mockImplementation((_cmd, args) => {
       const command = gitCommand(args as string[]);
@@ -256,8 +295,8 @@ describe("getBaseAndHeadCommitShas", () => {
       expect(execFileSyncMock).not.toHaveBeenCalled();
     });
 
-    // The same commit a job that checks out normally will resolve for itself, which is the point
-    // of resolving it this way at all.
+    // Both modes read the parents through the same helper, so this pins that they stay wired to
+    // it identically. Whether the two sources report the same parents is GitHub's business.
     it("agrees with the local git path on the same merge commit", async () => {
       execFileSyncMock.mockImplementation((_cmd, args) => {
         const command = gitCommand(args as string[]);

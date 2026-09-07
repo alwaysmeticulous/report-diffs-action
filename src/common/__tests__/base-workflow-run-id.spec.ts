@@ -1,4 +1,4 @@
-import { exportVariable, setOutput } from "@actions/core";
+import { exportVariable, setOutput, warning as ghWarning } from "@actions/core";
 import log from "loglevel";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
@@ -7,6 +7,7 @@ import {
   recordBaseWorkflowRunId,
 } from "../base-workflow-run-id";
 import {
+  BASE_COMMIT_SHA_OUTPUT,
   BASE_WORKFLOW_COMMIT_SHA_ENV,
   BASE_WORKFLOW_RUN_ID_ENV,
   BASE_WORKFLOW_RUN_ID_OUTPUT,
@@ -15,6 +16,7 @@ import {
 vi.mock("@actions/core", () => ({
   setOutput: vi.fn(),
   exportVariable: vi.fn(),
+  warning: vi.fn(),
 }));
 
 const BASE_SHA = "1111111111111111111111111111111111111111";
@@ -37,10 +39,11 @@ describe("parseWorkflowRunId", () => {
 });
 
 describe("recordBaseWorkflowRunId", () => {
-  it("writes the step output and the job env vars", () => {
+  it("writes the step outputs and the job env vars", () => {
     recordBaseWorkflowRunId({ workflowRunId: 99, baseCommitSha: BASE_SHA });
 
     expect(setOutput).toHaveBeenCalledWith(BASE_WORKFLOW_RUN_ID_OUTPUT, "99");
+    expect(setOutput).toHaveBeenCalledWith(BASE_COMMIT_SHA_OUTPUT, BASE_SHA);
     expect(exportVariable).toHaveBeenCalledWith(BASE_WORKFLOW_RUN_ID_ENV, "99");
     expect(exportVariable).toHaveBeenCalledWith(
       BASE_WORKFLOW_COMMIT_SHA_ENV,
@@ -66,29 +69,45 @@ describe("readKnownBaseWorkflowRunId", () => {
   afterEach(() => {
     restore(BASE_WORKFLOW_RUN_ID_ENV, original.runId);
     restore(BASE_WORKFLOW_COMMIT_SHA_ENV, original.commitSha);
+    vi.mocked(ghWarning).mockClear();
   });
 
-  it("prefers the explicit input over the env var", () => {
+  it("prefers the inputs over the env vars", () => {
     process.env[BASE_WORKFLOW_RUN_ID_ENV] = "1";
     process.env[BASE_WORKFLOW_COMMIT_SHA_ENV] = BASE_SHA;
 
     expect(
       readKnownBaseWorkflowRunId({
-        input: "2",
+        workflowRunIdInput: "2",
+        baseCommitShaInput: BASE_SHA,
         baseCommitSha: BASE_SHA,
         logger,
       })
     ).toBe(2);
   });
 
-  it("takes the explicit input for whatever base the caller resolved", () => {
+  // The cross-job handoff: the other job resolved the base for itself, and only its answer
+  // matching ours makes its run the one building the commit we will compare against.
+  it("refuses an input run building a different commit", () => {
     expect(
       readKnownBaseWorkflowRunId({
-        input: "2",
-        baseCommitSha: OTHER_SHA,
+        workflowRunIdInput: "2",
+        baseCommitShaInput: OTHER_SHA,
+        baseCommitSha: BASE_SHA,
+        logger,
+      })
+    ).toBeUndefined();
+  });
+
+  it("warns but honours an input run whose commit was not passed", () => {
+    expect(
+      readKnownBaseWorkflowRunId({
+        workflowRunIdInput: "2",
+        baseCommitSha: BASE_SHA,
         logger,
       })
     ).toBe(2);
+    expect(ghWarning).toHaveBeenCalledOnce();
   });
 
   it("falls back to the env var ensure-base exported", () => {

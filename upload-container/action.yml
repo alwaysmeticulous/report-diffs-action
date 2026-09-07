@@ -58,14 +58,28 @@ inputs:
   base-workflow-run-id:
     description: |
       GitHub workflow run ID of a base build already dispatched by an ensure-base
-      step in another job. Taken as given, so pass it only for a run you know is
-      building the base commit this step will compare against.
-      Not needed when ensure-base ran in this job: it records the run alongside
-      the commit that run is building, and the recording is used only when that
-      commit matches the base resolved here.
+      step in another job. Not needed when ensure-base ran in this job, where the
+      run is picked up from the environment automatically.
+      Pass base-commit-sha alongside it. Without that, the run is waited on
+      unchecked and a warning is emitted, because there is no way to tell whether
+      it is building the base this step resolved.
+    required: false
+  base-commit-sha:
+    description: |
+      The base commit the run in base-workflow-run-id is building, as reported by
+      that ensure-base step's base-commit-sha output. This step resolves the base
+      for itself and waits on that run only when the two agree; otherwise it
+      dispatches its own base build.
     required: false
 
-outputs: {}
+outputs:
+  base-workflow-run-id:
+    description: |
+      GitHub workflow run ID of the base build this step waited on or dispatched,
+      if any.
+  base-commit-sha:
+    description: |
+      The base commit that base-workflow-run-id is building, if any.
 runs:
   using: node24
   main: "../out/upload-container.entrypoint.js"

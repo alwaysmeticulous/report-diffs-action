@@ -268006,6 +268006,7 @@ var METICULOUS_DEBUGGING_PR_TAG = "[meticulous debug]";
 var COMMIT_SHA_WORKFLOW_INPUT = "meticulous-commit-sha";
 var BASE_WORKFLOW_RUN_ID_OUTPUT = "base-workflow-run-id";
 var BASE_WORKFLOW_RUN_ID_ENV = "METICULOUS_BASE_WORKFLOW_RUN_ID";
+var BASE_COMMIT_SHA_OUTPUT = "base-commit-sha";
 var BASE_WORKFLOW_COMMIT_SHA_ENV = "METICULOUS_BASE_WORKFLOW_COMMIT_SHA";
 
 // src/common/ensure-base-exists.utils.ts
@@ -274568,6 +274569,7 @@ var recordBaseWorkflowRunId = ({
 }) => {
   const id = String(workflowRunId);
   (0, import_core3.setOutput)(BASE_WORKFLOW_RUN_ID_OUTPUT, id);
+  (0, import_core3.setOutput)(BASE_COMMIT_SHA_OUTPUT, baseCommitSha);
   (0, import_core3.exportVariable)(BASE_WORKFLOW_RUN_ID_ENV, id);
   (0, import_core3.exportVariable)(BASE_WORKFLOW_COMMIT_SHA_ENV, baseCommitSha);
 };
@@ -275616,21 +275618,29 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
       octokit: options.octokit,
       logger
     };
-    if (options.baseCommitResolution === "merge-base-of-pull-request-head") {
-      return {
-        base: await tryGetMergeBaseViaCompareApi({
-          headSha: head,
-          baseRef,
-          pullRequestBaseSha: base,
-          octokit: options.octokit,
-          logger
-        }) ?? base,
-        head
-      };
-    }
-    const firstParent = options.baseCommitResolution === "first-parent-of-merge-commit-via-local-git" ? await tryGetFirstParentOfMergeCommitViaLocalGit(mergeBaseOpts) : await tryGetFirstParentOfMergeCommitViaGithubApi(mergeBaseOpts);
+    const resolveBase = () => {
+      switch (options.baseCommitResolution) {
+        case "merge-base-of-pull-request-head":
+          return tryGetMergeBaseViaCompareApi({
+            headSha: head,
+            baseRef,
+            pullRequestBaseSha: base,
+            octokit: options.octokit,
+            logger
+          });
+        case "first-parent-of-merge-commit-via-local-git":
+          return tryGetFirstParentOfMergeCommitViaLocalGit(mergeBaseOpts);
+        case "first-parent-of-merge-commit-via-github-api":
+          return tryGetFirstParentOfMergeCommitViaGithubApi(mergeBaseOpts);
+        default:
+          return assertNever(
+            options.baseCommitResolution,
+            "base commit resolution"
+          );
+      }
+    };
     return {
-      base: firstParent ?? base,
+      base: await resolveBase() ?? base,
       head
     };
   }
@@ -275646,10 +275656,10 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
       head: import_github3.context.sha
     };
   }
-  return assertNever(event);
+  return assertNever(event, "event");
 };
-var assertNever = (event) => {
-  throw new Error("Unexpected event: " + JSON.stringify(event));
+var assertNever = (value, description) => {
+  throw new Error(`Unexpected ${description}: ` + JSON.stringify(value));
 };
 var tryGetFirstParentOfMergeCommitViaLocalGit = async ({
   pullRequestHeadSha,

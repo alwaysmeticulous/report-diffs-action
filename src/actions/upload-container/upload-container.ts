@@ -40,6 +40,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           commitSha: commitShaInput,
           companionAssets,
           baseWorkflowRunId,
+          baseCommitSha: baseCommitShaInput,
         } = getUploadContainerInputs();
         const event = getCodeChangeEvent(context.eventName, context.payload);
         const octokit = getOctokitOrFail(githubToken);
@@ -69,7 +70,8 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           octokit,
           dispatchedRunReportsCheckedOutCommit: true,
           knownWorkflowRunId: readKnownBaseWorkflowRunId({
-            input: baseWorkflowRunId,
+            workflowRunIdInput: baseWorkflowRunId,
+            baseCommitShaInput,
             baseCommitSha: base,
             logger,
           }),

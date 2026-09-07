@@ -249486,6 +249486,7 @@ var DOCS_URL = `${METICULIOUS_APP_URL}/docs/github-actions-v2`;
 var COMMIT_SHA_WORKFLOW_INPUT = "meticulous-commit-sha";
 var BASE_WORKFLOW_RUN_ID_OUTPUT = "base-workflow-run-id";
 var BASE_WORKFLOW_RUN_ID_ENV = "METICULOUS_BASE_WORKFLOW_RUN_ID";
+var BASE_COMMIT_SHA_OUTPUT = "base-commit-sha";
 var BASE_WORKFLOW_COMMIT_SHA_ENV = "METICULOUS_BASE_WORKFLOW_COMMIT_SHA";
 
 // src/common/base-workflow-run-id.ts
@@ -249503,30 +249504,59 @@ var recordBaseWorkflowRunId = ({
 }) => {
   const id = String(workflowRunId);
   (0, import_core2.setOutput)(BASE_WORKFLOW_RUN_ID_OUTPUT, id);
+  (0, import_core2.setOutput)(BASE_COMMIT_SHA_OUTPUT, baseCommitSha);
   (0, import_core2.exportVariable)(BASE_WORKFLOW_RUN_ID_ENV, id);
   (0, import_core2.exportVariable)(BASE_WORKFLOW_COMMIT_SHA_ENV, baseCommitSha);
 };
 var readKnownBaseWorkflowRunId = ({
-  input,
+  workflowRunIdInput,
+  baseCommitShaInput,
   baseCommitSha,
   logger
 }) => {
-  const fromInput = parseWorkflowRunId(input);
+  const fromInput = parseWorkflowRunId(workflowRunIdInput);
   if (fromInput != null) {
-    return fromInput;
+    const assertedBaseCommitSha = baseCommitShaInput?.trim();
+    if (!assertedBaseCommitSha) {
+      const message = `Waiting on workflow run ${fromInput} for the base build without checking what it is building, because '${BASE_WORKFLOW_RUN_ID_OUTPUT}' was passed without '${BASE_COMMIT_SHA_OUTPUT}'. If that run is not building ${baseCommitSha ?? "this run's base commit"} there will be nothing to compare against. Pass both outputs of the ensure-base step to have this checked.`;
+      logger.warn(message);
+      (0, import_core2.warning)(message);
+      return fromInput;
+    }
+    return isBuildingBase({
+      source: "passed to this step",
+      workflowRunId: fromInput,
+      runBaseCommitSha: assertedBaseCommitSha,
+      baseCommitSha,
+      logger
+    }) ? fromInput : void 0;
   }
   const fromEnv = parseWorkflowRunId(process.env[BASE_WORKFLOW_RUN_ID_ENV]);
   if (fromEnv == null) {
     return void 0;
   }
-  const recordedBaseCommitSha = process.env[BASE_WORKFLOW_COMMIT_SHA_ENV]?.trim();
-  if (baseCommitSha == null || recordedBaseCommitSha !== baseCommitSha) {
-    logger.warn(
-      `Ignoring the base workflow run recorded for this job (${fromEnv}): it is building ${recordedBaseCommitSha ?? "a commit it did not record"}, and the base to compare against here is ${baseCommitSha ?? "unknown"}.`
-    );
-    return void 0;
+  return isBuildingBase({
+    source: "recorded for this job",
+    workflowRunId: fromEnv,
+    runBaseCommitSha: process.env[BASE_WORKFLOW_COMMIT_SHA_ENV]?.trim(),
+    baseCommitSha,
+    logger
+  }) ? fromEnv : void 0;
+};
+var isBuildingBase = ({
+  source,
+  workflowRunId,
+  runBaseCommitSha,
+  baseCommitSha,
+  logger
+}) => {
+  if (baseCommitSha != null && runBaseCommitSha === baseCommitSha) {
+    return true;
   }
-  return fromEnv;
+  logger.warn(
+    `Ignoring the base workflow run ${source} (${workflowRunId}): it is building ${runBaseCommitSha ?? "a commit it did not name"}, and the base to compare against here is ${baseCommitSha ?? "unknown"}.`
+  );
+  return false;
 };
 
 // src/common/cloud-replay-base.utils.ts
@@ -257295,21 +257325,29 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
       octokit: options.octokit,
       logger
     };
-    if (options.baseCommitResolution === "merge-base-of-pull-request-head") {
-      return {
-        base: await tryGetMergeBaseViaCompareApi({
-          headSha: head,
-          baseRef,
-          pullRequestBaseSha: base,
-          octokit: options.octokit,
-          logger
-        }) ?? base,
-        head
-      };
-    }
-    const firstParent = options.baseCommitResolution === "first-parent-of-merge-commit-via-local-git" ? await tryGetFirstParentOfMergeCommitViaLocalGit(mergeBaseOpts) : await tryGetFirstParentOfMergeCommitViaGithubApi(mergeBaseOpts);
+    const resolveBase = () => {
+      switch (options.baseCommitResolution) {
+        case "merge-base-of-pull-request-head":
+          return tryGetMergeBaseViaCompareApi({
+            headSha: head,
+            baseRef,
+            pullRequestBaseSha: base,
+            octokit: options.octokit,
+            logger
+          });
+        case "first-parent-of-merge-commit-via-local-git":
+          return tryGetFirstParentOfMergeCommitViaLocalGit(mergeBaseOpts);
+        case "first-parent-of-merge-commit-via-github-api":
+          return tryGetFirstParentOfMergeCommitViaGithubApi(mergeBaseOpts);
+        default:
+          return assertNever(
+            options.baseCommitResolution,
+            "base commit resolution"
+          );
+      }
+    };
     return {
-      base: firstParent ?? base,
+      base: await resolveBase() ?? base,
       head
     };
   }
@@ -257325,10 +257363,10 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
       head: import_github3.context.sha
     };
   }
-  return assertNever(event);
+  return assertNever(event, "event");
 };
-var assertNever = (event) => {
-  throw new Error("Unexpected event: " + JSON.stringify(event));
+var assertNever = (value, description) => {
+  throw new Error(`Unexpected ${description}: ` + JSON.stringify(value));
 };
 var tryGetFirstParentOfMergeCommitViaLocalGit = async ({
   pullRequestHeadSha,
@@ -257534,6 +257572,7 @@ var getUploadAssetsInputs = () => {
   const baseApiUrl = (0, import_core4.getInput)("base-api-url", { required: false }) || void 0;
   const commitSha = (0, import_core4.getInput)("commit-sha", { required: false }) || void 0;
   const baseWorkflowRunId = (0, import_core4.getInput)("base-workflow-run-id", { required: false }) || void 0;
+  const baseCommitSha = (0, import_core4.getInput)("base-commit-sha", { required: false }) || void 0;
   if (!Array.isArray(rewrites)) {
     throw new Error("Rewrites must be an array");
   }
@@ -257557,7 +257596,8 @@ var getUploadAssetsInputs = () => {
     rewrites,
     baseApiUrl,
     commitSha,
-    baseWorkflowRunId
+    baseWorkflowRunId,
+    baseCommitSha
   };
 };
 
@@ -257580,7 +257620,8 @@ var runMeticulousUploadAssetsAction = async () => {
           rewrites,
           baseApiUrl,
           commitSha: commitShaInput,
-          baseWorkflowRunId
+          baseWorkflowRunId,
+          baseCommitSha: baseCommitShaInput
         } = getUploadAssetsInputs();
         if (baseApiUrl) {
           process.env["METICULOUS_API_URL"] = baseApiUrl;
@@ -257609,7 +257650,8 @@ var runMeticulousUploadAssetsAction = async () => {
           octokit,
           dispatchedRunReportsCheckedOutCommit: true,
           knownWorkflowRunId: readKnownBaseWorkflowRunId({
-            input: baseWorkflowRunId,
+            workflowRunIdInput: baseWorkflowRunId,
+            baseCommitShaInput,
             baseCommitSha: base,
             logger
           }),

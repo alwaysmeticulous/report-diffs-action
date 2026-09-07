@@ -59,30 +59,35 @@ export const getBaseAndHeadCommitShas = async (
       octokit: options.octokit,
       logger,
     };
-    if (options.baseCommitResolution === "merge-base-of-pull-request-head") {
-      // Vercel deploys the head commit of the PR, not the github temporary merge commit, so the
-      // commit to compare against is where the PR branch left the base branch. The PR's own
-      // `base.sha` is the base branch tip, which is ahead of that branching point whenever the
-      // branch is behind, so it only serves as a fallback.
-      return {
-        base:
-          (await tryGetMergeBaseViaCompareApi({
+    const resolveBase = (): Promise<string | null> => {
+      switch (options.baseCommitResolution) {
+        case "merge-base-of-pull-request-head":
+          // Vercel deploys the head commit of the PR, not the github temporary merge commit, so
+          // the commit to compare against is where the PR branch left the base branch. The PR's
+          // own `base.sha` is the base branch tip, which is ahead of that branching point
+          // whenever the branch is behind, so it only serves as a fallback.
+          return tryGetMergeBaseViaCompareApi({
             headSha: head,
             baseRef,
             pullRequestBaseSha: base,
             octokit: options.octokit,
             logger,
-          })) ?? base,
-        head,
-      };
-    }
-    const firstParent =
-      options.baseCommitResolution ===
-      "first-parent-of-merge-commit-via-local-git"
-        ? await tryGetFirstParentOfMergeCommitViaLocalGit(mergeBaseOpts)
-        : await tryGetFirstParentOfMergeCommitViaGithubApi(mergeBaseOpts);
+          });
+        case "first-parent-of-merge-commit-via-local-git":
+          return tryGetFirstParentOfMergeCommitViaLocalGit(mergeBaseOpts);
+        case "first-parent-of-merge-commit-via-github-api":
+          return tryGetFirstParentOfMergeCommitViaGithubApi(mergeBaseOpts);
+        default:
+          // Falling through to a resolver that was not asked for would change which commit the
+          // comparison runs against, so an unhandled mode has to fail loudly.
+          return assertNever(
+            options.baseCommitResolution,
+            "base commit resolution"
+          );
+      }
+    };
     return {
-      base: firstParent ?? base,
+      base: (await resolveBase()) ?? base,
       head,
     };
   }
@@ -98,11 +103,11 @@ export const getBaseAndHeadCommitShas = async (
       head: context.sha,
     };
   }
-  return assertNever(event);
+  return assertNever(event, "event");
 };
 
-const assertNever = (event: never): never => {
-  throw new Error("Unexpected event: " + JSON.stringify(event));
+const assertNever = (value: never, description: string): never => {
+  throw new Error(`Unexpected ${description}: ` + JSON.stringify(value));
 };
 
 interface MergeBaseOpts {

@@ -38,6 +38,7 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           baseApiUrl,
           commitSha: commitShaInput,
           baseWorkflowRunId,
+          baseCommitSha: baseCommitShaInput,
         } = getUploadAssetsInputs();
 
         if (baseApiUrl) {
@@ -71,7 +72,8 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
           octokit,
           dispatchedRunReportsCheckedOutCommit: true,
           knownWorkflowRunId: readKnownBaseWorkflowRunId({
-            input: baseWorkflowRunId,
+            workflowRunIdInput: baseWorkflowRunId,
+            baseCommitShaInput,
             baseCommitSha: base,
             logger,
           }),
