@@ -41,6 +41,8 @@ const WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS = 5_000;
 
 const POLL_FOR_BASE_TEST_RUN_INTERVAL_MS = 10_000;
 
+const BASE_TEST_RUN_GRACE_PERIOD_MS = 2 * 60_000;
+
 const logger = log.getLogger("ensure-base-exists.spec");
 logger.setLevel("silent");
 
@@ -490,9 +492,15 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     });
   });
 
-  it("finds a pinned dispatch whose head_sha is the branch tip, not the base", async () => {
+  // Somebody else's pinned dispatch is indistinguishable from one building our base: the run
+  // names the branch tip as its head_sha and nothing on it names the commit it was asked for.
+  // Building the base ourselves costs a duplicate run; adopting theirs would report a base that
+  // was never built.
+  it("dispatches its own build rather than adopting an unrelated pinned dispatch", async () => {
     vi.useFakeTimers();
-    const createWorkflowDispatch = vi.fn();
+    const createWorkflowDispatch = vi
+      .fn()
+      .mockResolvedValue({ data: { workflow_run_id: 99 } });
     const octokit = buildOctokit({
       workflowRuns: [
         {
@@ -516,12 +524,16 @@ describe("tryTriggerTestsWorkflowOnBase", () => {
     });
     await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
 
-    expect(createWorkflowDispatch).not.toHaveBeenCalled();
+    expect(createWorkflowDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        inputs: { [COMMIT_SHA_WORKFLOW_INPUT]: BASE_SHA },
+      })
+    );
     expect(await resultPromise).toEqual({
       baseTestRunExists: true,
       baseResolutionDetails: expect.objectContaining({
-        type: "waited-for-existing-workflow-run",
-        workflowId: "33731751434",
+        type: "triggered-new-workflow-run-successfully",
+        workflowId: "99",
       }),
     });
   });
@@ -730,6 +742,8 @@ describe("ensureBaseTestsExists", () => {
       })
     ).rejects.toThrow("did not complete successfully");
     await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+    // The failure is held back while the poll still has a chance of finding a base test run.
+    await vi.advanceTimersByTimeAsync(BASE_TEST_RUN_GRACE_PERIOD_MS);
     await rejection;
 
     // The poll wakes from its sleep once more to notice it has been cancelled, and then stops.
@@ -740,5 +754,39 @@ describe("ensureBaseTestsExists", () => {
     expect(getBaseTestRun.mock.calls.length).toBe(
       callsOnceCancellationWasNoticed
     );
+  });
+
+  // The run we watched failing does not mean nothing built the base: a duplicate dispatch, or a
+  // sibling pull request off the same base, can land a test run seconds later.
+  it("uses a base test run that lands while the workflow failure is held back", async () => {
+    vi.useFakeTimers();
+    const getBaseTestRun = vi
+      .fn()
+      .mockResolvedValueOnce(null)
+      .mockResolvedValue({ id: "test-run-that-landed-late" } as TestRun);
+    const octokit = buildOctokit({
+      workflowRuns: [pushRun(BASE_SHA, "in_progress", 10)],
+      dispatchedRunStatus: { status: "completed", conclusion: "failure" },
+    });
+
+    const resultPromise = ensureBaseTestsExists({
+      event,
+      apiToken: "token",
+      base: BASE_SHA,
+      context,
+      octokit,
+      getBaseTestRun,
+      logger,
+    });
+    await vi.advanceTimersByTimeAsync(WORKFLOW_RUN_UPDATE_STATUS_INTERVAL_MS);
+    await vi.advanceTimersByTimeAsync(POLL_FOR_BASE_TEST_RUN_INTERVAL_MS * 2);
+
+    expect(await resultPromise).toEqual({
+      baseTestRunExists: true,
+      baseResolutionDetails: {
+        type: "suitable-test-run-already-existed",
+        testRunId: "test-run-that-landed-late",
+      },
+    });
   });
 });

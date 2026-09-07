@@ -256493,8 +256493,7 @@ var getPendingWorkflowRun = async ({
   workflowId,
   commitSha,
   octokit,
-  logger,
-  includeUnmatchedDispatches = false
+  logger
 }) => {
   try {
     const since = DateTime.utc().minus(WORKFLOW_RUN_SEARCH_COMMIT_INTERVAL).toFormat(GITHUB_DATE_FORMAT);
@@ -256514,34 +256513,16 @@ var getPendingWorkflowRun = async ({
       if (workflowRuns.length >= MAX_WORKFLOW_RUNS_TO_SEARCH)
         break;
     }
-    const isUsablePendingRun = (run) => (
-      // Note we ignore runs on PR events because these are actually running on the temporary
+    const pendingRun = workflowRuns.find(
+      (run) => run.head_sha === commitSha && // Note we ignore runs on PR events because these are actually running on the temporary
       // merge commit created by GitHub so they are not useable for comparisons.
       run.event !== "pull_request" && isPendingStatus(run.status)
-    );
-    const pendingRun = workflowRuns.find(
-      (run) => run.head_sha === commitSha && isUsablePendingRun(run)
     );
     if (pendingRun) {
       return {
         ...pendingRun,
         workflowRunId: pendingRun.id
       };
-    }
-    if (includeUnmatchedDispatches) {
-      const pendingDispatches = workflowRuns.filter(
-        (run) => run.event === "workflow_dispatch" && isPendingStatus(run.status)
-      );
-      if (pendingDispatches.length === 1) {
-        const [run] = pendingDispatches;
-        logger.info(
-          `No pending run on commit ${commitSha}, but found a uniquely pending workflow_dispatch (${run.id}); treating it as the base build. A pinned dispatch reports the branch tip as head_sha, not the commit it was asked to check out.`
-        );
-        return {
-          ...run,
-          workflowRunId: run.id
-        };
-      }
     }
     return void 0;
   } catch (err) {
@@ -256566,6 +256547,9 @@ var WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST = Duration.fromObject({
 });
 var POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
   seconds: 10
+});
+var BASE_TEST_RUN_GRACE_PERIOD = Duration.fromObject({
+  minutes: 2
 });
 var safeEnsureBaseTestsExists = async (...params) => {
   try {
@@ -256661,9 +256645,35 @@ var tryTriggerTestsWorkflowOnBase = async (opts) => {
     isCancelled
   );
   try {
-    return await Promise.race([workflowRunPromise, baseTestRunPromise]);
+    return await Promise.race([
+      holdBackFailureWhileBaseTestRunMayAppear(
+        workflowRunPromise,
+        isCancelled,
+        opts.logger
+      ),
+      baseTestRunPromise
+    ]);
   } finally {
     isDone = true;
+  }
+};
+var holdBackFailureWhileBaseTestRunMayAppear = async (workflowRun, isCancelled, logger) => {
+  try {
+    return await workflowRun;
+  } catch (error2) {
+    logger.warn(
+      `${error2}
+Still waiting up to ${BASE_TEST_RUN_GRACE_PERIOD.as(
+        "minutes"
+      )} minutes in case a base test run for this commit appears anyway.`
+    );
+    const deadline = DateTime.now().plus(BASE_TEST_RUN_GRACE_PERIOD);
+    while (!isCancelled() && DateTime.now() < deadline) {
+      await new Promise(
+        (resolve5) => setTimeout(resolve5, POLL_FOR_BASE_TEST_RUN_INTERVAL.as("milliseconds"))
+      );
+    }
+    throw error2;
   }
 };
 var waitOnWorkflowRun = async (opts, isCancelled) => {
@@ -256729,8 +256739,7 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     workflowId,
     commitSha: base,
     octokit,
-    logger,
-    includeUnmatchedDispatches: true
+    logger
   });
   if (alreadyPending != null) {
     if (!waitForCompletion) {
@@ -256798,8 +256807,7 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
         workflowId,
         commitSha: base,
         octokit,
-        logger,
-        includeUnmatchedDispatches: true
+        logger
       });
       if (pendingAfterLease != null) {
         const waitStartMs2 = Date.now();

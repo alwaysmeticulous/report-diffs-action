@@ -8,7 +8,7 @@ import {
   TestRun,
 } from "@alwaysmeticulous/client";
 import log from "loglevel";
-import { Duration } from "luxon";
+import { DateTime, Duration } from "luxon";
 import { CodeChangeEvent } from "../types";
 import {
   parseWorkflowRunId,
@@ -39,6 +39,14 @@ const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST = Duration.fromObject({
 
 const POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
   seconds: 10,
+});
+
+/**
+ * How long a failed base workflow run's error is held back while the poll for a base test run
+ * at that commit keeps going. See {@link holdBackFailureWhileBaseTestRunMayAppear}.
+ */
+const BASE_TEST_RUN_GRACE_PERIOD = Duration.fromObject({
+  minutes: 2,
 });
 
 export interface BaseTestsResolutionResult {
@@ -95,7 +103,7 @@ export const ensureBaseTestsExists = async ({
    * we wait on this run instead of looking it up by commit SHA or dispatching
    * again. A pinned `workflow_dispatch` run cannot be found by `head_sha`.
    */
-  knownWorkflowRunId?: number;
+  knownWorkflowRunId?: number | undefined;
   getBaseTestRun: (options: { baseSha: string }) => Promise<TestRun | null>;
   /**
    * A second, optional source of an already-usable base, asked only if nothing has been tested at
@@ -177,7 +185,7 @@ export interface TryTriggerTestsWorkflowOnBaseOpts {
    */
   dispatchedRunReportsCheckedOutCommit?: boolean;
   waitForCompletion?: boolean;
-  knownWorkflowRunId?: number;
+  knownWorkflowRunId?: number | undefined;
   /**
    * Asked immediately before `workflow_dispatch`. An explicit false means another
    * caller is dispatching this commit; we must not dispatch too.
@@ -204,11 +212,51 @@ export const tryTriggerTestsWorkflowOnBase = async (
     isCancelled
   );
   try {
-    return await Promise.race([workflowRunPromise, baseTestRunPromise]);
+    return await Promise.race([
+      holdBackFailureWhileBaseTestRunMayAppear(
+        workflowRunPromise,
+        isCancelled,
+        opts.logger
+      ),
+      baseTestRunPromise,
+    ]);
   } finally {
     // A workflow run that fails or times out throws, and the poll has no timeout of its own, so
     // cancelling only on the happy path leaves it running until the job exits.
     isDone = true;
+  }
+};
+
+/**
+ * Delays a failed workflow run's error long enough for the base test run poll to overtake it.
+ *
+ * The run we watched is not the only thing that can produce a base: a build dispatched by another
+ * job, or one already in flight for a sibling pull request, can land a test run at the same commit
+ * moments later. Rejecting the instant our own run fails settles the race and abandons a poll that
+ * was about to succeed, which costs the pull request every diff it would have reported.
+ *
+ * Bounded, because a base that is never coming has to surface the failure rather than hang.
+ */
+const holdBackFailureWhileBaseTestRunMayAppear = async (
+  workflowRun: Promise<BaseTestsResolutionResult>,
+  isCancelled: () => boolean,
+  logger: log.Logger
+): Promise<BaseTestsResolutionResult> => {
+  try {
+    return await workflowRun;
+  } catch (error) {
+    logger.warn(
+      `${error}\nStill waiting up to ${BASE_TEST_RUN_GRACE_PERIOD.as(
+        "minutes"
+      )} minutes in case a base test run for this commit appears anyway.`
+    );
+    const deadline = DateTime.now().plus(BASE_TEST_RUN_GRACE_PERIOD);
+    while (!isCancelled() && DateTime.now() < deadline) {
+      await new Promise((resolve) =>
+        setTimeout(resolve, POLL_FOR_BASE_TEST_RUN_INTERVAL.as("milliseconds"))
+      );
+    }
+    throw error;
   }
 };
 
@@ -285,7 +333,6 @@ const waitOnWorkflowRun = async (
     commitSha: base,
     octokit,
     logger,
-    includeUnmatchedDispatches: true,
   });
   if (alreadyPending != null) {
     if (!waitForCompletion) {
@@ -367,7 +414,6 @@ const waitOnWorkflowRun = async (
         commitSha: base,
         octokit,
         logger,
-        includeUnmatchedDispatches: true,
       });
       if (pendingAfterLease != null) {
         const waitStartMs = Date.now();

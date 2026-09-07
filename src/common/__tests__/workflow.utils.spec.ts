@@ -343,10 +343,7 @@ const buildListingOctokit = (workflowRuns: unknown[]) =>
     rest: { actions: { listWorkflowRuns: vi.fn() } },
   } as unknown as InstanceType<typeof GitHub>);
 
-const pendingOn = (
-  octokit: InstanceType<typeof GitHub>,
-  includeUnmatchedDispatches = false
-) =>
+const pendingOn = (octokit: InstanceType<typeof GitHub>) =>
   getPendingWorkflowRun({
     owner: "alwaysmeticulous",
     repo: "meticulous",
@@ -354,7 +351,6 @@ const pendingOn = (
     commitSha: BASE_SHA,
     octokit,
     logger,
-    includeUnmatchedDispatches,
   });
 
 describe("getPendingWorkflowRun", () => {
@@ -388,7 +384,10 @@ describe("getPendingWorkflowRun", () => {
     );
   });
 
-  it("does not match a pinned dispatch by the branch tip", async () => {
+  // A pinned dispatch is only findable through the run id ensure-base publishes. Claiming one
+  // here on the strength of it being the only dispatch around would hand back a build of whatever
+  // commit someone else pinned, and the base we then reported would have no snapshots at all.
+  it("does not claim a pinned dispatch that reports the branch tip as its head_sha", async () => {
     const octokit = buildListingOctokit([
       listRun({
         id: 7,
@@ -399,40 +398,6 @@ describe("getPendingWorkflowRun", () => {
     ]);
 
     expect(await pendingOn(octokit)).toBeUndefined();
-  });
-
-  it("falls back to a uniquely pending dispatch when asked", async () => {
-    const octokit = buildListingOctokit([
-      listRun({
-        id: 8,
-        head_sha: BRANCH_TIP_SHA,
-        event: "workflow_dispatch",
-        status: "in_progress",
-      }),
-    ]);
-
-    expect(await pendingOn(octokit, true)).toEqual(
-      expect.objectContaining({ workflowRunId: 8 })
-    );
-  });
-
-  it("does not guess when several dispatches are pending", async () => {
-    const octokit = buildListingOctokit([
-      listRun({
-        id: 8,
-        head_sha: BRANCH_TIP_SHA,
-        event: "workflow_dispatch",
-        status: "in_progress",
-      }),
-      listRun({
-        id: 9,
-        head_sha: BRANCH_TIP_SHA,
-        event: "workflow_dispatch",
-        status: "pending",
-      }),
-    ]);
-
-    expect(await pendingOn(octokit, true)).toBeUndefined();
   });
 });
 
