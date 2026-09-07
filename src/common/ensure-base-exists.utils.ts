@@ -30,6 +30,15 @@ const WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST = Duration.fromObject({
   minutes: 30,
 });
 
+/**
+ * How long the backend holds a dispatch lease. After this, another job may
+ * take over if the holder never dispatched. Must match
+ * `LEASE_DURATION` in webapp-backend's workflow-dispatch-lease service.
+ */
+const DISPATCH_LEASE_DURATION = Duration.fromObject({
+  minutes: 2,
+});
+
 const POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
   seconds: 10,
 });
@@ -470,36 +479,63 @@ const waitOnWorkflowRun = async (
           },
         };
       }
-      if (opts.getBaseTestRun != null) {
-        // The other job's dispatch is pinned to the base commit, so its run is not findable by
-        // SHA and the test run landing is the only signal we get. Given the same deadline as a
-        // run we can watch, so a build that never arrives ends the job rather than holding the
-        // runner until GitHub's own job timeout.
-        const result = await waitOnBaseTestRun(
-          opts.getBaseTestRun,
-          isCancelled,
-          DateTime.now().plus(WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST)
+      // The other job's dispatch is pinned, so it is not findable by SHA. Do not
+      // poll for a test run here — the outer race already does that. Retry the
+      // lease once it expires so a holder that died without dispatching can be
+      // taken over. A holder that did dispatch and is still building can lose
+      // the lease after two minutes; a second dispatch of the same commit is
+      // then possible. That wastes a build, it does not compare against the
+      // wrong one.
+      const deadline = DateTime.now().plus(
+        WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST
+      );
+      let nextLeaseAttempt = DateTime.now().plus(DISPATCH_LEASE_DURATION);
+      let acquiredOnRetry = false;
+      while (!isCancelled() && DateTime.now() < deadline) {
+        await new Promise((resolve) =>
+          setTimeout(
+            resolve,
+            POLL_FOR_BASE_TEST_RUN_INTERVAL.as("milliseconds")
+          )
         );
-        if (!result.baseTestRunExists && !isCancelled()) {
-          const message = couldNotBuildBase({
-            base,
-            reason: `another job was already building it, and no test run for it appeared within ${WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as(
-              "minutes"
-            )} minutes.`,
-          });
-          logger.warn(message);
-          ghWarning(message);
-          return {
-            baseTestRunExists: false,
-            baseResolutionDetails: {
-              type: "failed-for-other-reason",
-              message,
-            },
-          };
+        if (isCancelled() || DateTime.now() >= deadline) {
+          break;
         }
-        return result;
+        if (DateTime.now() >= nextLeaseAttempt) {
+          const acquired = await takeDispatchLease({
+            baseCommitSha: base,
+            workflowId: `${workflowId}`,
+          });
+          if (acquired) {
+            logger.info(
+              `The dispatch lease for ${base} is free again; dispatching.`
+            );
+            acquiredOnRetry = true;
+            break;
+          }
+          nextLeaseAttempt = DateTime.now().plus(DISPATCH_LEASE_DURATION);
+        }
       }
-      return { baseTestRunExists: false };
+      if (!acquiredOnRetry) {
+        if (isCancelled()) {
+          return { baseTestRunExists: false };
+        }
+        const message = couldNotBuildBase({
+          base,
+          reason: `another job was already building it, and no test run for it appeared within ${WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as(
+            "minutes"
+          )} minutes.`,
+        });
+        logger.warn(message);
+        ghWarning(message);
+        return {
+          baseTestRunExists: false,
+          baseResolutionDetails: {
+            type: "failed-for-other-reason",
+            message,
+          },
+        };
+      }
     }
   }
 

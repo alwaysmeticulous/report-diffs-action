@@ -172529,6 +172529,9 @@ var delay = async (delay2) => {
 var WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST = Duration.fromObject({
   minutes: 30
 });
+var DISPATCH_LEASE_DURATION = Duration.fromObject({
+  minutes: 2
+});
 var POLL_FOR_BASE_TEST_RUN_INTERVAL = Duration.fromObject({
   seconds: 10
 });
@@ -172844,32 +172847,56 @@ Looking for another build of ${base}, and dispatching one if there is none.`
           }
         };
       }
-      if (opts.getBaseTestRun != null) {
-        const result = await waitOnBaseTestRun(
-          opts.getBaseTestRun,
-          isCancelled,
-          DateTime.now().plus(WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST)
+      const deadline = DateTime.now().plus(
+        WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST
+      );
+      let nextLeaseAttempt = DateTime.now().plus(DISPATCH_LEASE_DURATION);
+      let acquiredOnRetry = false;
+      while (!isCancelled() && DateTime.now() < deadline) {
+        await new Promise(
+          (resolve5) => setTimeout(
+            resolve5,
+            POLL_FOR_BASE_TEST_RUN_INTERVAL.as("milliseconds")
+          )
         );
-        if (!result.baseTestRunExists && !isCancelled()) {
-          const message = couldNotBuildBase({
-            base,
-            reason: `another job was already building it, and no test run for it appeared within ${WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as(
-              "minutes"
-            )} minutes.`
-          });
-          logger.warn(message);
-          (0, import_core3.warning)(message);
-          return {
-            baseTestRunExists: false,
-            baseResolutionDetails: {
-              type: "failed-for-other-reason",
-              message
-            }
-          };
+        if (isCancelled() || DateTime.now() >= deadline) {
+          break;
         }
-        return result;
+        if (DateTime.now() >= nextLeaseAttempt) {
+          const acquired = await takeDispatchLease({
+            baseCommitSha: base,
+            workflowId: `${workflowId}`
+          });
+          if (acquired) {
+            logger.info(
+              `The dispatch lease for ${base} is free again; dispatching.`
+            );
+            acquiredOnRetry = true;
+            break;
+          }
+          nextLeaseAttempt = DateTime.now().plus(DISPATCH_LEASE_DURATION);
+        }
       }
-      return { baseTestRunExists: false };
+      if (!acquiredOnRetry) {
+        if (isCancelled()) {
+          return { baseTestRunExists: false };
+        }
+        const message = couldNotBuildBase({
+          base,
+          reason: `another job was already building it, and no test run for it appeared within ${WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as(
+            "minutes"
+          )} minutes.`
+        });
+        logger.warn(message);
+        (0, import_core3.warning)(message);
+        return {
+          baseTestRunExists: false,
+          baseResolutionDetails: {
+            type: "failed-for-other-reason",
+            message
+          }
+        };
+      }
     }
   }
   let dispatch = await startNewWorkflowRun({
