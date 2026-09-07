@@ -107,6 +107,11 @@ permissions:
   pull-requests: write
   statuses: read
 
+env:
+  # Prefer the dispatched commit when set; otherwise the PR head. On pull_request
+  # github.sha is the merge commit, not the PR head SHA that Meticulous looks up.
+  METICULOUS_COMMIT_SHA: ${{ github.event.inputs['meticulous-commit-sha'] || (github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha) }}
+
 jobs:
   test:
     steps:
@@ -119,9 +124,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          # Hyphenated inputs need index syntax, and reading them off `github.event`
-          # keeps this valid on `push` and `pull_request` runs too.
-          ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
+          ref: ${{ env.METICULOUS_COMMIT_SHA }}
 ```
 
 `ensure-base` needs no checkout. It works out the commit the upload step will compare
@@ -134,10 +137,12 @@ the same job. The upload step waits on that run — a pinned `workflow_dispatch`
 by commit SHA, because its `head_sha` is the dispatched ref's tip rather than
 `meticulous-commit-sha`.
 
-Checking out something other than `github.sha` is the one case `ensure-base` cannot predict:
-the upload step then compares against the branching point of the PR branch instead. The
-upload step resolves the base for itself and refuses the recorded run when it isn't building
-that commit, so the base is built afresh rather than compared wrongly.
+The example above checks out the PR head, not `github.sha`. That is the one case
+`ensure-base` cannot predict: the upload step then compares against the branching point of
+the PR branch instead of the merge commit's first parent. The upload step resolves the base
+for itself and refuses the recorded run when it isn't building that commit, so the base is
+built afresh rather than compared wrongly. This matches the
+[setup guide](https://app.meticulous.ai/docs/github-actions-v2).
 
 ### When the Upload Step Is in a Different Job
 
