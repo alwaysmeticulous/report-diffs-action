@@ -12,6 +12,26 @@ interface BaseAndHeadCommitShas {
 }
 
 /**
+ * How to resolve the commit a pull request's visual snapshots are compared against.
+ *
+ * `merge-base-of-pull-request-head` is for callers whose head artifact is the unmerged pull
+ * request head — a Vercel deployment, say — so the commit to compare against is where that
+ * branch left the base branch.
+ *
+ * The `first-parent-of-merge-commit` modes are for callers whose head artifact is built from
+ * GitHub's temporary merge commit, as a default `actions/checkout` produces. The commit that
+ * merge was made onto is its first parent, which is the base branch tip GitHub merged the head
+ * into rather than the branching point of the pull request, and the two differ on any pull
+ * request whose branch is behind its base branch. The modes differ only in where the parents are
+ * read from: `via-local-git` needs a checked-out repository, `via-github-api` does not, so a step
+ * running before checkout can resolve the same commit a later step in the job will.
+ */
+export type BaseCommitResolution =
+  | "merge-base-of-pull-request-head"
+  | "first-parent-of-merge-commit-via-local-git"
+  | "first-parent-of-merge-commit-via-github-api";
+
+/**
  * Get the base commit that we should compare the visual snapshots against, and the head commit to associate
  * the status check with.
  *
@@ -23,7 +43,7 @@ interface BaseAndHeadCommitShas {
 export const getBaseAndHeadCommitShas = async (
   event: CodeChangeEvent,
   options: {
-    useDeploymentUrl: boolean;
+    baseCommitResolution: BaseCommitResolution;
     octokit: InstanceType<typeof GitHub>;
   },
   logger: log.Logger
@@ -39,10 +59,11 @@ export const getBaseAndHeadCommitShas = async (
       octokit: options.octokit,
       logger,
     };
-    if (options.useDeploymentUrl) {
-      // Vercel deploys the head commit of the PR, not the github temporary merge commit
-      // The PR base can sometimes point to a commit ahead of the merge-base of the head commit
-      // (I believe it's based on the github temporary merge commit)
+    if (options.baseCommitResolution === "merge-base-of-pull-request-head") {
+      // Vercel deploys the head commit of the PR, not the github temporary merge commit, so the
+      // commit to compare against is where the PR branch left the base branch. The PR's own
+      // `base.sha` is the base branch tip, which is ahead of that branching point whenever the
+      // branch is behind, so it only serves as a fallback.
       return {
         base:
           (await tryGetMergeBaseViaCompareApi({
@@ -55,9 +76,13 @@ export const getBaseAndHeadCommitShas = async (
         head,
       };
     }
+    const firstParent =
+      options.baseCommitResolution ===
+      "first-parent-of-merge-commit-via-local-git"
+        ? await tryGetFirstParentOfMergeCommitViaLocalGit(mergeBaseOpts)
+        : await tryGetFirstParentOfMergeCommitViaGithubApi(mergeBaseOpts);
     return {
-      base:
-        (await tryGetMergeBaseOfTemporaryMergeCommit(mergeBaseOpts)) ?? base,
+      base: firstParent ?? base,
       head,
     };
   }
@@ -88,7 +113,7 @@ interface MergeBaseOpts {
   logger: log.Logger;
 }
 
-const tryGetMergeBaseOfTemporaryMergeCommit = async ({
+const tryGetFirstParentOfMergeCommitViaLocalGit = async ({
   pullRequestHeadSha,
   pullRequestBaseSha,
   baseRef,
@@ -131,32 +156,118 @@ const tryGetMergeBaseOfTemporaryMergeCommit = async ({
       .filter((line) => line.startsWith("parent "))
       .map((line) => line.substring("parent ".length).trim());
 
-    if (parents.length !== 2) {
-      // Note: the GITHUB_SHA is always a merge commit, even if the merge is a no-op because the PR is up to date
-      // So this should never happen
-      logger.error(
-        `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit from its parents. Falling back to the GitHub compare API.`
-      );
-      return mergeBaseFromCompare(pullRequestHeadSha);
-    }
-
-    // The first parent is always the base, and the second parent is the head of the PR
-    const mergeBaseSha = parents[0];
-    const mergeHeadSha = parents[1];
-    if (mergeHeadSha !== pullRequestHeadSha) {
-      logger.error(
-        `The second parent (${parents[1]}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
-        so can not confidently determine the base of the merge commit from its parents. Falling back to the GitHub compare API.`
-      );
-      return mergeBaseFromCompare(pullRequestHeadSha);
-    }
-    return mergeBaseSha;
+    return (
+      readFirstParentOfMergeCommit({
+        mergeCommitSha,
+        parents,
+        pullRequestHeadSha,
+        logger,
+      }) ?? mergeBaseFromCompare(pullRequestHeadSha)
+    );
   } catch (e) {
     logger.info(
       `Could not read the merge commit (${mergeCommitSha}) from the local git repository (${e}). Falling back to the GitHub compare API.`
     );
     return mergeBaseFromCompare(pullRequestHeadSha);
   }
+};
+
+/**
+ * Reads the merge commit's parents from the GitHub API rather than a checkout.
+ *
+ * `GITHUB_SHA` is set for a `pull_request` event whether or not the job has checked anything out,
+ * and the commit it names is fetchable, so this resolves the same commit
+ * `tryGetFirstParentOfMergeCommitViaLocalGit` will resolve later in the job.
+ *
+ * It cannot resolve the same commit in one case: a job that goes on to check out a custom ref
+ * sends that function to the compare API instead, and nothing observable before checkout says it
+ * will. A caller pre-warming a base build has to expect its commit to be refused by whoever does
+ * the comparison, and `readKnownBaseWorkflowRunId` is what refuses it.
+ */
+const tryGetFirstParentOfMergeCommitViaGithubApi = async ({
+  pullRequestHeadSha,
+  pullRequestBaseSha,
+  baseRef,
+  octokit,
+  logger,
+}: MergeBaseOpts): Promise<string | null> => {
+  const mergeBaseFromCompare = (headSha: string) =>
+    tryGetMergeBaseViaCompareApi({
+      headSha,
+      baseRef,
+      pullRequestBaseSha,
+      octokit,
+      logger,
+    });
+
+  const mergeCommitSha = process.env.GITHUB_SHA;
+  if (mergeCommitSha == null) {
+    return mergeBaseFromCompare(pullRequestHeadSha);
+  }
+
+  let parents: string[];
+  try {
+    const { owner, repo } = context.repo;
+    const { data } = await octokit.rest.repos.getCommit({
+      owner,
+      repo,
+      ref: mergeCommitSha,
+    });
+    parents = data.parents.map(({ sha }) => sha);
+  } catch (e) {
+    // A permissions failure is reported in full by the compare API call we fall back to, which
+    // needs the same `contents: read`.
+    logger.info(
+      `Could not read the merge commit (${mergeCommitSha}) from the GitHub API (${e}). Falling back to the GitHub compare API.`
+    );
+    return mergeBaseFromCompare(pullRequestHeadSha);
+  }
+
+  return (
+    readFirstParentOfMergeCommit({
+      mergeCommitSha,
+      parents,
+      pullRequestHeadSha,
+      logger,
+    }) ?? mergeBaseFromCompare(pullRequestHeadSha)
+  );
+};
+
+/**
+ * The commit GitHub's temporary merge commit was merged onto, or null when its parents don't
+ * describe that merge and the caller should ask the compare API instead.
+ */
+const readFirstParentOfMergeCommit = ({
+  mergeCommitSha,
+  parents,
+  pullRequestHeadSha,
+  logger,
+}: {
+  mergeCommitSha: string;
+  parents: string[];
+  pullRequestHeadSha: string;
+  logger: log.Logger;
+}): string | null => {
+  if (parents.length !== 2) {
+    // Note: the GITHUB_SHA is always a merge commit, even if the merge is a no-op because the PR is up to date
+    // So this should never happen
+    logger.error(
+      `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit from its parents. Falling back to the GitHub compare API.`
+    );
+    return null;
+  }
+
+  // The first parent is always the base, and the second parent is the head of the PR
+  const mergeBaseSha = parents[0];
+  const mergeHeadSha = parents[1];
+  if (mergeHeadSha !== pullRequestHeadSha) {
+    logger.error(
+      `The second parent (${mergeHeadSha}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
+        so can not confidently determine the base of the merge commit from its parents. Falling back to the GitHub compare API.`
+    );
+    return null;
+  }
+  return mergeBaseSha;
 };
 
 const markGitDirectoryAsSafe = () => {

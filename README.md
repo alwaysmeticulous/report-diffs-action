@@ -124,11 +124,18 @@ jobs:
           ref: ${{ github.event.inputs['meticulous-commit-sha'] || github.sha }}
 ```
 
-`ensure-base` needs no checkout. It asks GitHub for the PR merge base and, if that commit
-has no test run yet, dispatches this workflow and returns immediately, recording the
-dispatched run ID as `base-workflow-run-id` / `METICULOUS_BASE_WORKFLOW_RUN_ID`. The upload
-step waits on that run — a pinned `workflow_dispatch` cannot be found by commit SHA, because
-its `head_sha` is the dispatched ref's tip rather than `meticulous-commit-sha`.
+`ensure-base` needs no checkout. It works out the commit the upload step will compare
+against — the first parent of GitHub's temporary merge commit, read over the API rather than
+from a checkout — and, if that commit has no test run yet, dispatches this workflow and
+returns immediately, recording the dispatched run ID as `base-workflow-run-id` /
+`METICULOUS_BASE_WORKFLOW_RUN_ID`. The upload step waits on that run — a pinned
+`workflow_dispatch` cannot be found by commit SHA, because its `head_sha` is the dispatched
+ref's tip rather than `meticulous-commit-sha`.
+
+Checking out something other than `github.sha` is the one case `ensure-base` cannot predict:
+the upload step then compares against the branching point of the PR branch instead. The
+recorded run is refused when it isn't building that commit, so the base is built afresh rather
+than compared wrongly.
 
 ### When the Upload Step Is in a Different Job
 

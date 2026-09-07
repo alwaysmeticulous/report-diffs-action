@@ -49,9 +49,14 @@ export const runMeticulousEnsureBaseAction = async (): Promise<void> => {
           return 0;
         }
 
+        // Resolved the way the upload step that waits on this build will resolve it, so the
+        // build we dispatch is the one it asks for.
         const { base, head } = await getBaseAndHeadCommitShas(
           event,
-          { useDeploymentUrl: true, octokit },
+          {
+            baseCommitResolution: "first-parent-of-merge-commit-via-github-api",
+            octokit,
+          },
           logger
         );
 

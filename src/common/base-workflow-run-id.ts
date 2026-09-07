@@ -47,11 +47,11 @@ export const recordBaseWorkflowRunId = ({
  * A run id the caller already knows, from an explicit input or from an earlier ensure-base step
  * in the same job.
  *
- * The env var is only honoured for the commit it was recorded against. ensure-base resolves the
- * base from the compare API, while the upload actions take the first parent of GitHub's temporary
- * merge commit, so the two steps land on different commits whenever the pull request branch is
- * behind its base branch. Waiting on a build of the other commit would report a base with no
- * snapshots at it; refusing the id instead falls back to dispatching a build of this base.
+ * The env var is only honoured for the commit it was recorded against. Each step resolves the
+ * base for itself, and a job that checks out a custom ref lands on a different commit than the
+ * one ensure-base could see before the checkout happened. Waiting on a build of the other commit
+ * would report a base with no snapshots at it; refusing the id instead falls back to dispatching
+ * a build of this base.
  *
  * An explicit input is the caller's own assertion that the run builds their base — the only way
  * to wire the handoff across jobs, where we cannot know how they resolved it — so it is taken at

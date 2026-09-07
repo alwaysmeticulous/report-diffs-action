@@ -100,9 +100,9 @@ describe("readKnownBaseWorkflowRunId", () => {
     ).toBe(33731751434);
   });
 
-  // ensure-base resolves the base from the compare API and the upload actions from the temporary
-  // merge commit, so the same job can want two different commits. Waiting on the recorded run
-  // would then report a base with no snapshots at it.
+  // Each step resolves the base for itself, so the same job can want two different commits — a
+  // custom checkout ref is enough to do it. Waiting on the recorded run would then report a base
+  // with no snapshots at it.
   it("refuses a recorded run building a different commit", () => {
     process.env[BASE_WORKFLOW_RUN_ID_ENV] = "33731751434";
     process.env[BASE_WORKFLOW_COMMIT_SHA_ENV] = OTHER_SHA;

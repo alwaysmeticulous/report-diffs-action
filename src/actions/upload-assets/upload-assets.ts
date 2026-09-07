@@ -57,7 +57,10 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
 
         const { base, head } = await getBaseAndHeadCommitShas(
           event,
-          { useDeploymentUrl: false, octokit },
+          {
+            baseCommitResolution: "first-parent-of-merge-commit-via-local-git",
+            octokit,
+          },
           logger
         );
         const { baseResolutionDetails } = await safeEnsureBaseTestsExists({

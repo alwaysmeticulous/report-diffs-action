@@ -80,7 +80,9 @@ export const runMeticulousTestsAction = async (): Promise<void> => {
       const { base, head } = await getBaseAndHeadCommitShas(
         event,
         {
-          useDeploymentUrl,
+          baseCommitResolution: useDeploymentUrl
+            ? "merge-base-of-pull-request-head"
+            : "first-parent-of-merge-commit-via-local-git",
           octokit,
         },
         logger

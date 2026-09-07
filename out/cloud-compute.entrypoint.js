@@ -275616,7 +275616,7 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
       octokit: options.octokit,
       logger
     };
-    if (options.useDeploymentUrl) {
+    if (options.baseCommitResolution === "merge-base-of-pull-request-head") {
       return {
         base: await tryGetMergeBaseViaCompareApi({
           headSha: head,
@@ -275628,8 +275628,9 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
         head
       };
     }
+    const firstParent = options.baseCommitResolution === "first-parent-of-merge-commit-via-local-git" ? await tryGetFirstParentOfMergeCommitViaLocalGit(mergeBaseOpts) : await tryGetFirstParentOfMergeCommitViaGithubApi(mergeBaseOpts);
     return {
-      base: await tryGetMergeBaseOfTemporaryMergeCommit(mergeBaseOpts) ?? base,
+      base: firstParent ?? base,
       head
     };
   }
@@ -275650,7 +275651,7 @@ var getBaseAndHeadCommitShas = async (event, options, logger) => {
 var assertNever = (event) => {
   throw new Error("Unexpected event: " + JSON.stringify(event));
 };
-var tryGetMergeBaseOfTemporaryMergeCommit = async ({
+var tryGetFirstParentOfMergeCommitViaLocalGit = async ({
   pullRequestHeadSha,
   pullRequestBaseSha,
   baseRef,
@@ -275682,28 +275683,81 @@ var tryGetMergeBaseOfTemporaryMergeCommit = async ({
       return mergeBaseFromCompare(headCommitSha);
     }
     const parents = (0, import_child_process2.execFileSync)("git", ["cat-file", "-p", mergeCommitSha]).toString().split("\n").filter((line) => line.startsWith("parent ")).map((line) => line.substring("parent ".length).trim());
-    if (parents.length !== 2) {
-      logger.error(
-        `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit from its parents. Falling back to the GitHub compare API.`
-      );
-      return mergeBaseFromCompare(pullRequestHeadSha);
-    }
-    const mergeBaseSha = parents[0];
-    const mergeHeadSha = parents[1];
-    if (mergeHeadSha !== pullRequestHeadSha) {
-      logger.error(
-        `The second parent (${parents[1]}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
-        so can not confidently determine the base of the merge commit from its parents. Falling back to the GitHub compare API.`
-      );
-      return mergeBaseFromCompare(pullRequestHeadSha);
-    }
-    return mergeBaseSha;
+    return readFirstParentOfMergeCommit({
+      mergeCommitSha,
+      parents,
+      pullRequestHeadSha,
+      logger
+    }) ?? mergeBaseFromCompare(pullRequestHeadSha);
   } catch (e) {
     logger.info(
       `Could not read the merge commit (${mergeCommitSha}) from the local git repository (${e}). Falling back to the GitHub compare API.`
     );
     return mergeBaseFromCompare(pullRequestHeadSha);
   }
+};
+var tryGetFirstParentOfMergeCommitViaGithubApi = async ({
+  pullRequestHeadSha,
+  pullRequestBaseSha,
+  baseRef,
+  octokit,
+  logger
+}) => {
+  const mergeBaseFromCompare = (headSha) => tryGetMergeBaseViaCompareApi({
+    headSha,
+    baseRef,
+    pullRequestBaseSha,
+    octokit,
+    logger
+  });
+  const mergeCommitSha = process.env.GITHUB_SHA;
+  if (mergeCommitSha == null) {
+    return mergeBaseFromCompare(pullRequestHeadSha);
+  }
+  let parents;
+  try {
+    const { owner, repo } = import_github3.context.repo;
+    const { data } = await octokit.rest.repos.getCommit({
+      owner,
+      repo,
+      ref: mergeCommitSha
+    });
+    parents = data.parents.map(({ sha }) => sha);
+  } catch (e) {
+    logger.info(
+      `Could not read the merge commit (${mergeCommitSha}) from the GitHub API (${e}). Falling back to the GitHub compare API.`
+    );
+    return mergeBaseFromCompare(pullRequestHeadSha);
+  }
+  return readFirstParentOfMergeCommit({
+    mergeCommitSha,
+    parents,
+    pullRequestHeadSha,
+    logger
+  }) ?? mergeBaseFromCompare(pullRequestHeadSha);
+};
+var readFirstParentOfMergeCommit = ({
+  mergeCommitSha,
+  parents,
+  pullRequestHeadSha,
+  logger
+}) => {
+  if (parents.length !== 2) {
+    logger.error(
+      `GITHUB_SHA (${mergeCommitSha}) is not a merge commit, so can't work out true base of the merge commit from its parents. Falling back to the GitHub compare API.`
+    );
+    return null;
+  }
+  const mergeBaseSha = parents[0];
+  const mergeHeadSha = parents[1];
+  if (mergeHeadSha !== pullRequestHeadSha) {
+    logger.error(
+      `The second parent (${mergeHeadSha}) of the GITHUB_SHA merge commit (${mergeCommitSha}) is not equal to the head of the PR (${pullRequestHeadSha}),
+        so can not confidently determine the base of the merge commit from its parents. Falling back to the GitHub compare API.`
+    );
+    return null;
+  }
+  return mergeBaseSha;
 };
 var markGitDirectoryAsSafe = () => {
   (0, import_child_process2.execFileSync)("git", [
@@ -275893,7 +275947,7 @@ var runOneTestRun = async ({
     const { base: codeChangeBase } = await getBaseAndHeadCommitShas(
       event,
       {
-        useDeploymentUrl: false,
+        baseCommitResolution: "first-parent-of-merge-commit-via-local-git",
         octokit
       },
       logger
