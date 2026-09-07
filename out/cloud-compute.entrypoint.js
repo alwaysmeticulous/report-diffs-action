@@ -268006,6 +268006,7 @@ var METICULOUS_DEBUGGING_PR_TAG = "[meticulous debug]";
 var COMMIT_SHA_WORKFLOW_INPUT = "meticulous-commit-sha";
 var BASE_WORKFLOW_RUN_ID_OUTPUT = "base-workflow-run-id";
 var BASE_WORKFLOW_RUN_ID_ENV = "METICULOUS_BASE_WORKFLOW_RUN_ID";
+var BASE_WORKFLOW_COMMIT_SHA_ENV = "METICULOUS_BASE_WORKFLOW_COMMIT_SHA";
 
 // src/common/ensure-base-exists.utils.ts
 var import_core4 = __toESM(require_core());
@@ -274561,18 +274562,14 @@ function friendlyDateTime(dateTimeish) {
 
 // src/common/base-workflow-run-id.ts
 var import_core3 = __toESM(require_core());
-var parseWorkflowRunId = (value) => {
-  const trimmed = value?.trim();
-  if (!trimmed || !/^\d+$/.test(trimmed)) {
-    return void 0;
-  }
-  const id = Number(trimmed);
-  return id > 0 ? id : void 0;
-};
-var recordBaseWorkflowRunId = (workflowRunId) => {
+var recordBaseWorkflowRunId = ({
+  workflowRunId,
+  baseCommitSha
+}) => {
   const id = String(workflowRunId);
   (0, import_core3.setOutput)(BASE_WORKFLOW_RUN_ID_OUTPUT, id);
   (0, import_core3.exportVariable)(BASE_WORKFLOW_RUN_ID_ENV, id);
+  (0, import_core3.exportVariable)(BASE_WORKFLOW_COMMIT_SHA_ENV, baseCommitSha);
 };
 
 // src/common/error.utils.ts
@@ -275028,10 +275025,15 @@ var tryTriggerTestsWorkflowOnBase = async (opts) => {
     isDone = true;
   }
 };
+var BaseWorkflowRunUnsuccessfulError = class extends Error {
+};
 var holdBackFailureWhileBaseTestRunMayAppear = async (workflowRun, isCancelled, logger) => {
   try {
     return await workflowRun;
   } catch (error2) {
+    if (!(error2 instanceof BaseWorkflowRunUnsuccessfulError)) {
+      throw error2;
+    }
     logger.warn(
       `${error2}
 Still waiting up to ${BASE_TEST_RUN_GRACE_PERIOD.as(
@@ -275055,18 +275057,21 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     context: context7,
     octokit,
     dispatchedRunReportsCheckedOutCommit,
+    knownWorkflowRunId,
     takeDispatchLease
   } = opts;
   const waitForCompletion = opts.waitForCompletion !== false;
   const { owner, repo } = context7.repo;
   const { workflowId } = await getCurrentWorkflowId({ context: context7, octokit });
-  const knownWorkflowRunId = opts.knownWorkflowRunId ?? parseWorkflowRunId(process.env[BASE_WORKFLOW_RUN_ID_ENV]);
   if (knownWorkflowRunId != null) {
     if (!waitForCompletion) {
       logger.info(
         `Base workflow run already recorded (${knownWorkflowRunId}); not dispatching again.`
       );
-      recordBaseWorkflowRunId(knownWorkflowRunId);
+      recordBaseWorkflowRunId({
+        workflowRunId: knownWorkflowRunId,
+        baseCommitSha: base
+      });
       return {
         baseTestRunExists: true,
         baseResolutionDetails: {
@@ -275077,20 +275082,27 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
         }
       };
     }
+    if (event.type !== "pull_request") {
+      return { baseTestRunExists: false };
+    }
     logger.info(
       `Waiting on workflow run already recorded for base commit (${base}): ${knownWorkflowRunId}`
     );
-    if (event.type === "pull_request") {
-      const waitStartMs2 = Date.now();
-      await waitForWorkflowCompletionAndThrowIfFailed({
-        owner,
-        repo,
+    const waitStartMs2 = Date.now();
+    const outcome = await waitForWorkflowRunOutcome({
+      owner,
+      repo,
+      workflowRunId: knownWorkflowRunId,
+      octokit,
+      commitSha: base,
+      timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
+      isCancelled,
+      logger
+    });
+    if (outcome.type === "succeeded") {
+      recordBaseWorkflowRunId({
         workflowRunId: knownWorkflowRunId,
-        octokit,
-        commitSha: base,
-        timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
-        isCancelled,
-        logger
+        baseCommitSha: base
       });
       return {
         baseTestRunExists: true,
@@ -275102,7 +275114,10 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
         }
       };
     }
-    return { baseTestRunExists: false };
+    logger.warn(
+      `${outcome.message}
+Looking for another build of ${base}, and dispatching one if there is none.`
+    );
   }
   const alreadyPending = await getPendingWorkflowRun({
     owner,
@@ -275117,7 +275132,10 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
       logger.info(
         `Workflow run already pending on base commit (${base}): ${alreadyPending.html_url}`
       );
-      recordBaseWorkflowRunId(alreadyPending.workflowRunId);
+      recordBaseWorkflowRunId({
+        workflowRunId: alreadyPending.workflowRunId,
+        baseCommitSha: base
+      });
       return {
         baseTestRunExists: true,
         baseResolutionDetails: {
@@ -275142,6 +275160,10 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
         timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
         isCancelled,
         logger
+      });
+      recordBaseWorkflowRunId({
+        workflowRunId: alreadyPending.workflowRunId,
+        baseCommitSha: base
       });
       return {
         baseTestRunExists: true,
@@ -275192,6 +275214,10 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
           isCancelled,
           logger
         });
+        recordBaseWorkflowRunId({
+          workflowRunId: pendingAfterLease.workflowRunId,
+          baseCommitSha: base
+        });
         return {
           baseTestRunExists: true,
           baseResolutionDetails: {
@@ -275203,7 +275229,29 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
         };
       }
       if (opts.getBaseTestRun != null) {
-        return waitOnBaseTestRun(opts.getBaseTestRun, isCancelled);
+        const result = await waitOnBaseTestRun(
+          opts.getBaseTestRun,
+          isCancelled,
+          DateTime.now().plus(WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST)
+        );
+        if (!result.baseTestRunExists && !isCancelled()) {
+          const message = couldNotBuildBase({
+            base,
+            reason: `another job was already building it, and no test run for it appeared within ${WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST.as(
+              "minutes"
+            )} minutes.`
+          });
+          logger.warn(message);
+          (0, import_core4.warning)(message);
+          return {
+            baseTestRunExists: false,
+            baseResolutionDetails: {
+              type: "failed-for-other-reason",
+              message
+            }
+          };
+        }
+        return result;
       }
       return { baseTestRunExists: false };
     }
@@ -275303,7 +275351,10 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     logger.info(
       `Dispatched workflow run on base commit ${base}: ${workflowRun.html_url ?? workflowRun.workflowRunId}`
     );
-    recordBaseWorkflowRunId(workflowRun.workflowRunId);
+    recordBaseWorkflowRunId({
+      workflowRunId: workflowRun.workflowRunId,
+      baseCommitSha: base
+    });
     return {
       baseTestRunExists: true,
       baseResolutionDetails: {
@@ -275326,6 +275377,10 @@ var waitOnWorkflowRun = async (opts, isCancelled) => {
     timeout: WORKFLOW_RUN_COMPLETION_TIMEOUT_ON_PULL_REQUEST,
     isCancelled,
     logger
+  });
+  recordBaseWorkflowRunId({
+    workflowRunId: workflowRun.workflowRunId,
+    baseCommitSha: base
   });
   return {
     baseTestRunExists: true,
@@ -275415,10 +275470,10 @@ var getDefaultBranch = async ({
     return null;
   }
 };
-var waitOnBaseTestRun = async (getBaseTestRun, isCancelled) => {
+var waitOnBaseTestRun = async (getBaseTestRun, isCancelled, deadline) => {
   let baseTestRun = await getBaseTestRun();
   while (!baseTestRun) {
-    if (isCancelled()) {
+    if (isCancelled() || deadline != null && DateTime.now() >= deadline) {
       return { baseTestRunExists: false };
     }
     await new Promise(
@@ -275434,7 +275489,7 @@ var waitOnBaseTestRun = async (getBaseTestRun, isCancelled) => {
     }
   };
 };
-var waitForWorkflowCompletionAndThrowIfFailed = async ({
+var waitForWorkflowRunOutcome = async ({
   commitSha,
   ...otherOpts
 }) => {
@@ -275445,9 +275500,17 @@ var waitForWorkflowCompletionAndThrowIfFailed = async ({
     );
   }
   if (finalWorkflowRun.status !== "completed" || finalWorkflowRun.conclusion !== "success") {
-    throw new Error(
-      `Comparing against visual snapshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
-    );
+    return {
+      type: "did-not-succeed",
+      message: `Comparing against visual snapshots taken on ${commitSha}, but the corresponding workflow run [${finalWorkflowRun.id}] did not complete successfully. See: ${finalWorkflowRun.html_url}`
+    };
+  }
+  return { type: "succeeded" };
+};
+var waitForWorkflowCompletionAndThrowIfFailed = async (opts) => {
+  const outcome = await waitForWorkflowRunOutcome(opts);
+  if (outcome.type === "did-not-succeed") {
+    throw new BaseWorkflowRunUnsuccessfulError(outcome.message);
   }
 };
 var getHeadCommitForRef = async ({

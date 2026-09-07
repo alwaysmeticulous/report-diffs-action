@@ -1,4 +1,5 @@
 import { exportVariable, setOutput } from "@actions/core";
+import log from "loglevel";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   parseWorkflowRunId,
@@ -6,6 +7,7 @@ import {
   recordBaseWorkflowRunId,
 } from "../base-workflow-run-id";
 import {
+  BASE_WORKFLOW_COMMIT_SHA_ENV,
   BASE_WORKFLOW_RUN_ID_ENV,
   BASE_WORKFLOW_RUN_ID_OUTPUT,
 } from "../constants";
@@ -14,6 +16,12 @@ vi.mock("@actions/core", () => ({
   setOutput: vi.fn(),
   exportVariable: vi.fn(),
 }));
+
+const BASE_SHA = "1111111111111111111111111111111111111111";
+const OTHER_SHA = "2222222222222222222222222222222222222222";
+
+const logger = log.getLogger("base-workflow-run-id.spec");
+logger.setLevel("silent");
 
 describe("parseWorkflowRunId", () => {
   it("accepts a positive integer", () => {
@@ -29,32 +37,96 @@ describe("parseWorkflowRunId", () => {
 });
 
 describe("recordBaseWorkflowRunId", () => {
-  it("writes the step output and the job env var", () => {
-    recordBaseWorkflowRunId(99);
+  it("writes the step output and the job env vars", () => {
+    recordBaseWorkflowRunId({ workflowRunId: 99, baseCommitSha: BASE_SHA });
 
     expect(setOutput).toHaveBeenCalledWith(BASE_WORKFLOW_RUN_ID_OUTPUT, "99");
     expect(exportVariable).toHaveBeenCalledWith(BASE_WORKFLOW_RUN_ID_ENV, "99");
+    expect(exportVariable).toHaveBeenCalledWith(
+      BASE_WORKFLOW_COMMIT_SHA_ENV,
+      BASE_SHA
+    );
   });
 });
 
 describe("readKnownBaseWorkflowRunId", () => {
-  const original = process.env[BASE_WORKFLOW_RUN_ID_ENV];
+  const original = {
+    runId: process.env[BASE_WORKFLOW_RUN_ID_ENV],
+    commitSha: process.env[BASE_WORKFLOW_COMMIT_SHA_ENV],
+  };
+
+  const restore = (name: string, value: string | undefined) => {
+    if (value == null) {
+      delete process.env[name];
+    } else {
+      process.env[name] = value;
+    }
+  };
 
   afterEach(() => {
-    if (original == null) {
-      delete process.env[BASE_WORKFLOW_RUN_ID_ENV];
-    } else {
-      process.env[BASE_WORKFLOW_RUN_ID_ENV] = original;
-    }
+    restore(BASE_WORKFLOW_RUN_ID_ENV, original.runId);
+    restore(BASE_WORKFLOW_COMMIT_SHA_ENV, original.commitSha);
   });
 
   it("prefers the explicit input over the env var", () => {
     process.env[BASE_WORKFLOW_RUN_ID_ENV] = "1";
-    expect(readKnownBaseWorkflowRunId("2")).toBe(2);
+    process.env[BASE_WORKFLOW_COMMIT_SHA_ENV] = BASE_SHA;
+
+    expect(
+      readKnownBaseWorkflowRunId({
+        input: "2",
+        baseCommitSha: BASE_SHA,
+        logger,
+      })
+    ).toBe(2);
+  });
+
+  it("takes the explicit input for whatever base the caller resolved", () => {
+    expect(
+      readKnownBaseWorkflowRunId({
+        input: "2",
+        baseCommitSha: OTHER_SHA,
+        logger,
+      })
+    ).toBe(2);
   });
 
   it("falls back to the env var ensure-base exported", () => {
     process.env[BASE_WORKFLOW_RUN_ID_ENV] = "33731751434";
-    expect(readKnownBaseWorkflowRunId()).toBe(33731751434);
+    process.env[BASE_WORKFLOW_COMMIT_SHA_ENV] = BASE_SHA;
+
+    expect(
+      readKnownBaseWorkflowRunId({ baseCommitSha: BASE_SHA, logger })
+    ).toBe(33731751434);
+  });
+
+  // ensure-base resolves the base from the compare API and the upload actions from the temporary
+  // merge commit, so the same job can want two different commits. Waiting on the recorded run
+  // would then report a base with no snapshots at it.
+  it("refuses a recorded run building a different commit", () => {
+    process.env[BASE_WORKFLOW_RUN_ID_ENV] = "33731751434";
+    process.env[BASE_WORKFLOW_COMMIT_SHA_ENV] = OTHER_SHA;
+
+    expect(
+      readKnownBaseWorkflowRunId({ baseCommitSha: BASE_SHA, logger })
+    ).toBeUndefined();
+  });
+
+  it("refuses a recorded run that names no commit", () => {
+    process.env[BASE_WORKFLOW_RUN_ID_ENV] = "33731751434";
+    delete process.env[BASE_WORKFLOW_COMMIT_SHA_ENV];
+
+    expect(
+      readKnownBaseWorkflowRunId({ baseCommitSha: BASE_SHA, logger })
+    ).toBeUndefined();
+  });
+
+  it("refuses a recorded run when there is no base to compare against", () => {
+    process.env[BASE_WORKFLOW_RUN_ID_ENV] = "33731751434";
+    process.env[BASE_WORKFLOW_COMMIT_SHA_ENV] = BASE_SHA;
+
+    expect(
+      readKnownBaseWorkflowRunId({ baseCommitSha: null, logger })
+    ).toBeUndefined();
   });
 });

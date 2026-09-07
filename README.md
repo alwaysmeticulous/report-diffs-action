@@ -130,6 +130,39 @@ dispatched run ID as `base-workflow-run-id` / `METICULOUS_BASE_WORKFLOW_RUN_ID`.
 step waits on that run — a pinned `workflow_dispatch` cannot be found by commit SHA, because
 its `head_sha` is the dispatched ref's tip rather than `meticulous-commit-sha`.
 
+### When the Upload Step Is in a Different Job
+
+Env vars don't cross jobs, so pass the run ID through as an output. Without it the upload
+job builds the base a second time.
+
+```yaml
+jobs:
+  ensure-base:
+    runs-on: ubuntu-latest
+    outputs:
+      base-workflow-run-id: ${{ steps.ensure-base.outputs.base-workflow-run-id }}
+    steps:
+      - uses: alwaysmeticulous/report-diffs-action/ensure-base@v1
+        id: ensure-base
+        with:
+          api-token: ${{ secrets.METICULOUS_API_TOKEN }}
+
+  test:
+    needs: ensure-base
+    runs-on: ubuntu-latest
+    steps:
+      # ... checkout and build ...
+      - uses: alwaysmeticulous/report-diffs-action/upload-assets@v1
+        with:
+          api-token: ${{ secrets.METICULOUS_API_TOKEN }}
+          app-directory: ./dist
+          base-workflow-run-id: ${{ needs.ensure-base.outputs.base-workflow-run-id }}
+```
+
+Both jobs must resolve the same base commit for this to be worth wiring: an explicitly passed
+run ID is taken as given, whereas the within-a-job handoff also carries the commit being built
+and is ignored when that commit isn't the base the upload step resolved.
+
 `meticulous-commit-sha` lets Meticulous ask this workflow to build a specific commit when a
 PR's base hasn't been tested yet. Without it a dispatched run can only build whatever the base
 branch points at now, so the comparison is skipped when that branch has moved on, and always

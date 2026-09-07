@@ -1,5 +1,7 @@
 import { exportVariable, setOutput } from "@actions/core";
+import log from "loglevel";
 import {
+  BASE_WORKFLOW_COMMIT_SHA_ENV,
   BASE_WORKFLOW_RUN_ID_ENV,
   BASE_WORKFLOW_RUN_ID_OUTPUT,
 } from "./constants";
@@ -22,26 +24,68 @@ export const parseWorkflowRunId = (
 };
 
 /**
- * Records a base-build run id as both a step output and a job env var.
+ * Records a base-build run id, and the commit it is building, as a step output and job env vars.
  *
- * The env var is what makes the handoff work without the caller wiring
+ * The env vars are what make the handoff work without the caller wiring
  * `${{ steps.*.outputs.base-workflow-run-id }}`: `exportVariable` writes
- * `GITHUB_ENV`, so later steps in the same job see it automatically.
+ * `GITHUB_ENV`, so later steps in the same job see them automatically.
  */
-export const recordBaseWorkflowRunId = (
-  workflowRunId: number | string
-): void => {
+export const recordBaseWorkflowRunId = ({
+  workflowRunId,
+  baseCommitSha,
+}: {
+  workflowRunId: number | string;
+  baseCommitSha: string;
+}): void => {
   const id = String(workflowRunId);
   setOutput(BASE_WORKFLOW_RUN_ID_OUTPUT, id);
   exportVariable(BASE_WORKFLOW_RUN_ID_ENV, id);
+  exportVariable(BASE_WORKFLOW_COMMIT_SHA_ENV, baseCommitSha);
 };
 
 /**
- * A run id the caller already knows, from an explicit input or from
- * {@link BASE_WORKFLOW_RUN_ID_ENV} left by an earlier ensure-base step.
+ * A run id the caller already knows, from an explicit input or from an earlier ensure-base step
+ * in the same job.
+ *
+ * The env var is only honoured for the commit it was recorded against. ensure-base resolves the
+ * base from the compare API, while the upload actions take the first parent of GitHub's temporary
+ * merge commit, so the two steps land on different commits whenever the pull request branch is
+ * behind its base branch. Waiting on a build of the other commit would report a base with no
+ * snapshots at it; refusing the id instead falls back to dispatching a build of this base.
+ *
+ * An explicit input is the caller's own assertion that the run builds their base — the only way
+ * to wire the handoff across jobs, where we cannot know how they resolved it — so it is taken at
+ * face value.
  */
-export const readKnownBaseWorkflowRunId = (
-  input?: string
-): number | undefined =>
-  parseWorkflowRunId(input) ??
-  parseWorkflowRunId(process.env[BASE_WORKFLOW_RUN_ID_ENV]);
+export const readKnownBaseWorkflowRunId = ({
+  input,
+  baseCommitSha,
+  logger,
+}: {
+  input?: string | undefined;
+  baseCommitSha: string | null;
+  logger: log.Logger;
+}): number | undefined => {
+  const fromInput = parseWorkflowRunId(input);
+  if (fromInput != null) {
+    return fromInput;
+  }
+
+  const fromEnv = parseWorkflowRunId(process.env[BASE_WORKFLOW_RUN_ID_ENV]);
+  if (fromEnv == null) {
+    return undefined;
+  }
+
+  const recordedBaseCommitSha =
+    process.env[BASE_WORKFLOW_COMMIT_SHA_ENV]?.trim();
+  if (baseCommitSha == null || recordedBaseCommitSha !== baseCommitSha) {
+    logger.warn(
+      `Ignoring the base workflow run recorded for this job (${fromEnv}): it is building ${
+        recordedBaseCommitSha ?? "a commit it did not record"
+      }, and the base to compare against here is ${baseCommitSha ?? "unknown"}.`
+    );
+    return undefined;
+  }
+
+  return fromEnv;
+};

@@ -6,6 +6,7 @@ import {
 } from "@alwaysmeticulous/client";
 import { initSentry } from "@alwaysmeticulous/sentry";
 import * as Sentry from "@sentry/node";
+import { readKnownBaseWorkflowRunId } from "../../common/base-workflow-run-id";
 import { getBaseTestRunResolvedByBackend } from "../../common/cloud-replay-base.utils";
 import { safeEnsureBaseTestsExists } from "../../common/ensure-base-exists.utils";
 import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-shas";
@@ -62,6 +63,11 @@ export const runMeticulousEnsureBaseAction = async (): Promise<void> => {
           octokit,
           dispatchedRunReportsCheckedOutCommit: true,
           waitForCompletion: false,
+          // Two ensure-base steps in one job should dispatch one build between them.
+          knownWorkflowRunId: readKnownBaseWorkflowRunId({
+            baseCommitSha: base,
+            logger,
+          }),
           getBaseTestRun: async ({ baseSha }) =>
             await getLatestTestRunResults({
               client: createClient({ apiToken }),

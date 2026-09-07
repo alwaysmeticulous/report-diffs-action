@@ -57,9 +57,12 @@ inputs:
     required: false
   base-workflow-run-id:
     description: |
-      GitHub workflow run ID of a base build already dispatched by ensure-base.
-      If omitted, the action reads METICULOUS_BASE_WORKFLOW_RUN_ID from the
-      environment (set automatically by ensure-base in the same job).
+      GitHub workflow run ID of a base build already dispatched by an ensure-base
+      step in another job. Taken as given, so pass it only for a run you know is
+      building the base commit this step will compare against.
+      Not needed when ensure-base ran in this job: it records the run alongside
+      the commit that run is building, and the recording is used only when that
+      commit matches the base resolved here.
     required: false
 
 outputs: {}

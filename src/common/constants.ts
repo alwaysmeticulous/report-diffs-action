@@ -24,3 +24,14 @@ export const COMMIT_SHA_WORKFLOW_INPUT = "meticulous-commit-sha";
  */
 export const BASE_WORKFLOW_RUN_ID_OUTPUT = "base-workflow-run-id";
 export const BASE_WORKFLOW_RUN_ID_ENV = "METICULOUS_BASE_WORKFLOW_RUN_ID";
+
+/**
+ * Env var naming the base commit that {@link BASE_WORKFLOW_RUN_ID_ENV}'s run is building.
+ *
+ * Steps in a job resolve the base independently and can land on different commits, so a run id
+ * on its own does not say which base it belongs to. Waiting on a build of the other commit would
+ * report a base that has no snapshots at it, so the two travel together and the id is only
+ * honoured for the commit it was recorded against.
+ */
+export const BASE_WORKFLOW_COMMIT_SHA_ENV =
+  "METICULOUS_BASE_WORKFLOW_COMMIT_SHA";

@@ -14,8 +14,9 @@ outputs:
     description: |
       GitHub workflow run ID of the base build this step dispatched or found
       already pending. Later upload-assets / upload-container steps in the same
-      job pick this up automatically via METICULOUS_BASE_WORKFLOW_RUN_ID; pass
-      it explicitly only when the upload step is in a different job.
+      job pick this up automatically via METICULOUS_BASE_WORKFLOW_RUN_ID, paired
+      with the base commit it is building in METICULOUS_BASE_WORKFLOW_COMMIT_SHA;
+      pass it explicitly only when the upload step is in a different job.
 runs:
   using: node24
   main: "../out/ensure-base.entrypoint.js"
