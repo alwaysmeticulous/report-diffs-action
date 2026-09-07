@@ -13,6 +13,10 @@ import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
+import {
+  getEnsureBaseCommitResolution,
+  resolveCheckoutRefToSha,
+} from "../../common/resolve-checkout-ref";
 import { enrichSentryContextWithGitHubActionsContext } from "../../common/sentry.utils";
 import { getEnsureBaseInputs } from "./get-inputs";
 
@@ -28,7 +32,7 @@ export const runMeticulousEnsureBaseAction = async (): Promise<void> => {
     },
     async (span) => {
       try {
-        const { apiToken, githubToken } = getEnsureBaseInputs();
+        const { apiToken, githubToken, ref } = getEnsureBaseInputs();
         const event = getCodeChangeEvent(context.eventName, context.payload);
         const octokit = getOctokitOrFail(githubToken);
 
@@ -50,12 +54,21 @@ export const runMeticulousEnsureBaseAction = async (): Promise<void> => {
         }
 
         // Resolved the way the upload step that waits on this build will resolve it, so the
-        // build we dispatch is the one it asks for.
+        // build we dispatch is the one it asks for. `ref` is the caller's checkout; omitted
+        // means github.sha (the temporary merge commit).
+        const checkoutSha = await resolveCheckoutRefToSha({
+          ref,
+          octokit,
+          logger,
+        });
+        const { baseCommitResolution, compareHeadSha } =
+          getEnsureBaseCommitResolution(checkoutSha);
         const { base, head } = await getBaseAndHeadCommitShas(
           event,
           {
-            baseCommitResolution: "first-parent-of-merge-commit-via-github-api",
+            baseCommitResolution,
             octokit,
+            ...(compareHeadSha != null ? { compareHeadSha } : {}),
           },
           logger
         );

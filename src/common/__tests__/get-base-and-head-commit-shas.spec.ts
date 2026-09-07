@@ -92,6 +92,31 @@ describe("getBaseAndHeadCommitShas", () => {
     expect(execFileSyncMock).not.toHaveBeenCalled();
   });
 
+  it("compares the override head when compareHeadSha is set", async () => {
+    const compareCommits = vi.fn().mockResolvedValue({
+      data: { merge_base_commit: { sha: MERGE_BASE_SHA } },
+    });
+
+    const result = await getBaseAndHeadCommitShas(
+      event,
+      {
+        baseCommitResolution: "merge-base-of-pull-request-head",
+        compareHeadSha: CHECKED_OUT_SHA,
+        octokit: buildOctokit(compareCommits),
+      },
+      logger
+    );
+
+    expect(result).toEqual({ base: MERGE_BASE_SHA, head: HEAD_SHA });
+    expect(compareCommits).toHaveBeenCalledWith({
+      owner: "acme",
+      repo: "app",
+      base: "main",
+      head: CHECKED_OUT_SHA,
+    });
+    expect(execFileSyncMock).not.toHaveBeenCalled();
+  });
+
   it("falls back to the pull request base SHA when the compare API fails", async () => {
     const compareCommits = vi
       .fn()

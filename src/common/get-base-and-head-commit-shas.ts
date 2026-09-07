@@ -45,6 +45,13 @@ export const getBaseAndHeadCommitShas = async (
   options: {
     baseCommitResolution: BaseCommitResolution;
     octokit: InstanceType<typeof GitHub>;
+    /**
+     * When `baseCommitResolution` is `merge-base-of-pull-request-head`, the
+     * commit compared against the base branch. Defaults to the pull request
+     * head. Pass the SHA a later checkout will land on when that is not the
+     * pull request head (and is not the temporary merge commit).
+     */
+    compareHeadSha?: string;
   },
   logger: log.Logger
 ): Promise<BaseAndHeadCommitShas> => {
@@ -67,7 +74,7 @@ export const getBaseAndHeadCommitShas = async (
           // own `base.sha` is the base branch tip, which is ahead of that branching point
           // whenever the branch is behind, so it only serves as a fallback.
           return tryGetMergeBaseViaCompareApi({
-            headSha: head,
+            headSha: options.compareHeadSha ?? head,
             baseRef,
             pullRequestBaseSha: base,
             octokit: options.octokit,
@@ -185,9 +192,9 @@ const tryGetFirstParentOfMergeCommitViaLocalGit = async ({
  * `tryGetFirstParentOfMergeCommitViaLocalGit` will resolve later in the job.
  *
  * It cannot resolve the same commit in one case: a job that goes on to check out a custom ref
- * sends that function to the compare API instead, and nothing observable before checkout says it
- * will. A caller pre-warming a base build has to expect its commit to be refused by whoever does
- * the comparison, and `readKnownBaseWorkflowRunId` is what refuses it.
+ * sends that function to the compare API instead. `ensure-base` accepts a `ref` input for that
+ * case so it can pre-warm the merge base instead. If the caller omits `ref` or it does not match
+ * the later checkout, `readKnownBaseWorkflowRunId` refuses the recorded run.
  */
 const tryGetFirstParentOfMergeCommitViaGithubApi = async ({
   pullRequestHeadSha,
