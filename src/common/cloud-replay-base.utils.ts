@@ -43,6 +43,9 @@ export const getCloudReplayBaseTestRun = async ({
  * backend fell back to an older commit whose stored build it can re-run on demand (the same
  * reasoning the callers' `getBaseTestRun` uses for not filtering by environment version), so
  * we check whether that commit was ever tested rather than build the merge base it replaced.
+ * Callers omit `getTestRunAtCommit` when the commit they upload isn't the one the backend
+ * resolved the base for — a custom checkout of something other than the pull request head —
+ * because then the backend's `baseCommitSha` may not be a valid base for the uploaded commit.
  */
 export const getBaseTestRunResolvedByBackend = async ({
   apiToken,
@@ -54,7 +57,9 @@ export const getBaseTestRunResolvedByBackend = async ({
   apiToken: string;
   headCommitSha: string;
   baseSha: string;
-  getTestRunAtCommit: (options: { baseSha: string }) => Promise<TestRun | null>;
+  getTestRunAtCommit?: (options: {
+    baseSha: string;
+  }) => Promise<TestRun | null>;
   logger: log.Logger;
 }): Promise<TestRun | null> => {
   try {
@@ -66,7 +71,11 @@ export const getBaseTestRunResolvedByBackend = async ({
     if (baseTestRun != null) {
       return baseTestRun;
     }
-    if (baseCommitSha != null && baseCommitSha !== baseSha) {
+    if (
+      getTestRunAtCommit != null &&
+      baseCommitSha != null &&
+      baseCommitSha !== baseSha
+    ) {
       const run = await getTestRunAtCommit({ baseSha: baseCommitSha });
       if (run != null) {
         logger.info(

@@ -130,6 +130,25 @@ describe("getBaseTestRunResolvedByBackend", () => {
     ).toBeNull();
   });
 
+  it("does not look up an older base commit when getTestRunAtCommit is omitted", async () => {
+    // Callers checking out a commit other than the pull request head omit the lookup, since
+    // the backend's baseCommitSha is resolved for the head, not for what they upload.
+    getGitHubCloudReplayBaseTestRun.mockResolvedValue({
+      baseCommitSha: OLDER_SHA,
+      baseTestRun: null,
+      commitIsInPullRequest: true,
+    });
+
+    expect(
+      await getBaseTestRunResolvedByBackend({
+        apiToken: "token",
+        headCommitSha: HEAD_SHA,
+        baseSha: BASE_SHA,
+        logger,
+      })
+    ).toBeNull();
+  });
+
   it("does not look up the base commit the caller already checked", async () => {
     getGitHubCloudReplayBaseTestRun.mockResolvedValue({
       baseCommitSha: BASE_SHA,

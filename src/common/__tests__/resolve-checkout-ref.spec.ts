@@ -3,6 +3,7 @@ import log from "loglevel";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   getEnsureBaseCommitResolution,
+  isCheckoutResolvedByBackend,
   resolveCheckoutRefToSha,
 } from "../resolve-checkout-ref";
 
@@ -165,5 +166,57 @@ describe("getEnsureBaseCommitResolution", () => {
       baseCommitResolution: "merge-base-of-pull-request-head",
       compareHeadSha: HEAD_SHA,
     });
+  });
+});
+
+describe("isCheckoutResolvedByBackend", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("treats the default checkout as resolved by the backend", () => {
+    expect(
+      isCheckoutResolvedByBackend({
+        checkoutSha: undefined,
+        pullRequestHeadSha: HEAD_SHA,
+      })
+    ).toBe(true);
+  });
+
+  it("treats a checkout of the merge commit as resolved by the backend", () => {
+    vi.stubEnv("GITHUB_SHA", MERGE_COMMIT_SHA);
+
+    expect(
+      isCheckoutResolvedByBackend({
+        checkoutSha: MERGE_COMMIT_SHA,
+        pullRequestHeadSha: HEAD_SHA,
+      })
+    ).toBe(true);
+  });
+
+  it("treats a checkout of the pull request head as resolved by the backend", () => {
+    expect(
+      isCheckoutResolvedByBackend({
+        checkoutSha: HEAD_SHA,
+        pullRequestHeadSha: HEAD_SHA,
+      })
+    ).toBe(true);
+    expect(
+      isCheckoutResolvedByBackend({
+        checkoutSha: HEAD_SHA.toUpperCase(),
+        pullRequestHeadSha: HEAD_SHA,
+      })
+    ).toBe(true);
+  });
+
+  it("does not treat a checkout of another commit as resolved by the backend", () => {
+    vi.stubEnv("GITHUB_SHA", MERGE_COMMIT_SHA);
+
+    expect(
+      isCheckoutResolvedByBackend({
+        checkoutSha: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        pullRequestHeadSha: HEAD_SHA,
+      })
+    ).toBe(false);
   });
 });

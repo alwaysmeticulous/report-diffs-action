@@ -78,6 +78,22 @@ export const resolveCheckoutRefToSha = async ({
 };
 
 /**
+ * Whether the backend's base resolution, which works from the pull request head, describes the
+ * commit this job checked out: true for the default checkout (GitHub's temporary merge commit)
+ * and for a checkout of the pull request head itself.
+ */
+export const isCheckoutResolvedByBackend = ({
+  checkoutSha,
+  pullRequestHeadSha,
+}: {
+  checkoutSha: string | undefined | null;
+  pullRequestHeadSha: string;
+}): boolean =>
+  checkoutSha == null ||
+  checkoutSha === process.env.GITHUB_SHA ||
+  checkoutSha.toLowerCase() === pullRequestHeadSha.toLowerCase();
+
+/**
  * Picks how ensure-base should resolve the base, given the commit the caller
  * says they will check out.
  *

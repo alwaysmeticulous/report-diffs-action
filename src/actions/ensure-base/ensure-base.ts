@@ -15,6 +15,7 @@ import { initLogger } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
 import {
   getEnsureBaseCommitResolution,
+  isCheckoutResolvedByBackend,
   resolveCheckoutRefToSha,
 } from "../../common/resolve-checkout-ref";
 import { enrichSentryContextWithGitHubActionsContext } from "../../common/sentry.utils";
@@ -98,7 +99,15 @@ export const runMeticulousEnsureBaseAction = async (): Promise<void> => {
                   apiToken,
                   headCommitSha: head,
                   baseSha: base,
-                  getTestRunAtCommit: getBaseTestRun,
+                  // The backend resolves the base for the pull request head; when the job
+                  // checks out some other commit its baseCommitSha is not a base for what
+                  // gets uploaded, so don't treat it as covered.
+                  ...(isCheckoutResolvedByBackend({
+                    checkoutSha,
+                    pullRequestHeadSha: head,
+                  })
+                    ? { getTestRunAtCommit: getBaseTestRun }
+                    : {}),
                   logger,
                 })
               : null,

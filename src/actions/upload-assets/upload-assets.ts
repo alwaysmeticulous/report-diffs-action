@@ -15,6 +15,7 @@ import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
+import { isCheckoutResolvedByBackend } from "../../common/resolve-checkout-ref";
 import { enrichSentryContextWithGitHubActionsContext } from "../../common/sentry.utils";
 import { getUploadAssetsInputs } from "./get-inputs";
 
@@ -72,6 +73,14 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
             // the backend can trigger a re-run. So we don't care whether we have a valid base now,
             // just whether the commit was tested at some point which means we have the assets.
           });
+        const commitSha =
+          commitShaInput ?? getActualCommitShaFromRepoOrContext(logger);
+        if (!commitSha) {
+          throw new Error(
+            "Could not determine a commit SHA to associate the uploaded assets with. " +
+              "Either run 'actions/checkout' before this action, or pass the 'commit-sha' input explicitly."
+          );
+        }
         const { baseResolutionDetails } = await safeEnsureBaseTestsExists({
           event,
           apiToken,
@@ -92,7 +101,15 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
                   apiToken,
                   headCommitSha: head,
                   baseSha: base,
-                  getTestRunAtCommit: getBaseTestRun,
+                  // The backend resolves the base for the pull request head; when the job
+                  // checked out some other commit its baseCommitSha is not a base for what we
+                  // upload, so don't treat it as covered.
+                  ...(isCheckoutResolvedByBackend({
+                    checkoutSha: commitSha,
+                    pullRequestHeadSha: head,
+                  })
+                    ? { getTestRunAtCommit: getBaseTestRun }
+                    : {}),
                   logger,
                 })
               : null,
@@ -100,15 +117,6 @@ export const runMeticulousUploadAssetsAction = async (): Promise<void> => {
         });
 
         logger.info(`Uploading assets from directory: ${appDirectory}`);
-
-        const commitSha =
-          commitShaInput ?? getActualCommitShaFromRepoOrContext(logger);
-        if (!commitSha) {
-          throw new Error(
-            "Could not determine a commit SHA to associate the uploaded assets with. " +
-              "Either run 'actions/checkout' before this action, or pass the 'commit-sha' input explicitly."
-          );
-        }
 
         await uploadAssetsAndTriggerTestRun({
           apiToken,

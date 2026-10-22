@@ -165513,7 +165513,7 @@ var getBaseTestRunResolvedByBackend = async ({
     if (baseTestRun != null) {
       return baseTestRun;
     }
-    if (baseCommitSha != null && baseCommitSha !== baseSha) {
+    if (getTestRunAtCommit != null && baseCommitSha != null && baseCommitSha !== baseSha) {
       const run = await getTestRunAtCommit({ baseSha: baseCommitSha });
       if (run != null) {
         logger.info(
@@ -173519,6 +173519,10 @@ var resolveCheckoutRefToSha = async ({
     );
   }
 };
+var isCheckoutResolvedByBackend = ({
+  checkoutSha,
+  pullRequestHeadSha
+}) => checkoutSha == null || checkoutSha === process.env.GITHUB_SHA || checkoutSha.toLowerCase() === pullRequestHeadSha.toLowerCase();
 var getEnsureBaseCommitResolution = (checkoutSha) => {
   if (checkoutSha == null || checkoutSha === process.env.GITHUB_SHA) {
     return {
@@ -173645,7 +173649,13 @@ var runMeticulousEnsureBaseAction = async () => {
             apiToken,
             headCommitSha: head,
             baseSha: base,
-            getTestRunAtCommit: getBaseTestRun,
+            // The backend resolves the base for the pull request head; when the job
+            // checks out some other commit its baseCommitSha is not a base for what
+            // gets uploaded, so don't treat it as covered.
+            ...isCheckoutResolvedByBackend({
+              checkoutSha,
+              pullRequestHeadSha: head
+            }) ? { getTestRunAtCommit: getBaseTestRun } : {},
             logger
           }) : null,
           logger
