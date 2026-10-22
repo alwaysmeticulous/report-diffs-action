@@ -62,6 +62,14 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           },
           logger
         );
+        const getBaseTestRun = async ({ baseSha }: { baseSha: string }) =>
+          await getLatestTestRunResults({
+            client: createClient({ apiToken }),
+            commitSha: baseSha,
+            // We deliberately don't filter by environment version here because when containers are uploaded,
+            // the backend can trigger a re-run. So we don't care whether we have a valid base now,
+            // just whether the commit was tested at some point which means we have the container.
+          });
         const { baseResolutionDetails } = await safeEnsureBaseTestsExists({
           event,
           apiToken,
@@ -75,20 +83,17 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
             baseCommitSha: base,
             logger,
           }),
-          getBaseTestRun: async ({ baseSha }) =>
-            await getLatestTestRunResults({
-              client: createClient({ apiToken }),
-              commitSha: baseSha,
-              // We deliberately don't filter by environment version here because when containers are uploaded,
-              // the backend can trigger a re-run. So we don't care whether we have a valid base now,
-              // just whether the commit was tested at some point which means we have the container.
-            }),
+          getBaseTestRun,
           getBaseTestRunResolvedByBackend: async () =>
-            await getBaseTestRunResolvedByBackend({
-              apiToken,
-              headCommitSha: head,
-              logger,
-            }),
+            base != null
+              ? await getBaseTestRunResolvedByBackend({
+                  apiToken,
+                  headCommitSha: head,
+                  baseSha: base,
+                  getTestRunAtCommit: getBaseTestRun,
+                  logger,
+                })
+              : null,
           logger,
         });
 

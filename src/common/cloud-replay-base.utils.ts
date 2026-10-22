@@ -38,23 +38,44 @@ export const getCloudReplayBaseTestRun = async ({
  *   outright, and it is not this function's place to fail a run over that;
  * - outside a pull request the backend will hand back an arbitrary recent run that it keeps for
  *   flake detection, which is not a base to skip a build over.
+ *
+ * A `baseCommitSha` older than `baseSha` with no `baseTestRun` is also a yes: it means the
+ * backend fell back to an older commit whose stored build it can re-run on demand (the same
+ * reasoning the callers' `getBaseTestRun` uses for not filtering by environment version), so
+ * we check whether that commit was ever tested rather than build the merge base it replaced.
  */
 export const getBaseTestRunResolvedByBackend = async ({
   apiToken,
   headCommitSha,
+  baseSha,
+  getTestRunAtCommit,
   logger,
 }: {
   apiToken: string;
   headCommitSha: string;
+  baseSha: string;
+  getTestRunAtCommit: (options: { baseSha: string }) => Promise<TestRun | null>;
   logger: log.Logger;
 }): Promise<TestRun | null> => {
   try {
-    const { baseTestRun, commitIsInPullRequest } =
+    const { baseTestRun, baseCommitSha, commitIsInPullRequest } =
       await getCloudReplayBaseTestRun({ apiToken, headCommitSha });
     if (!commitIsInPullRequest) {
       return null;
     }
-    return baseTestRun;
+    if (baseTestRun != null) {
+      return baseTestRun;
+    }
+    if (baseCommitSha != null && baseCommitSha !== baseSha) {
+      const run = await getTestRunAtCommit({ baseSha: baseCommitSha });
+      if (run != null) {
+        logger.info(
+          `The backend will compare against ${baseCommitSha}, which already has a build it can re-run (${run.id}), so not building ${baseSha}`
+        );
+        return run;
+      }
+    }
+    return null;
   } catch (error) {
     logger.debug(
       `Could not ask which base commit ${headCommitSha} would be compared against: ${error}`

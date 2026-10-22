@@ -165501,14 +165501,28 @@ var getCloudReplayBaseTestRun = async ({
 var getBaseTestRunResolvedByBackend = async ({
   apiToken,
   headCommitSha,
+  baseSha,
+  getTestRunAtCommit,
   logger
 }) => {
   try {
-    const { baseTestRun, commitIsInPullRequest } = await getCloudReplayBaseTestRun({ apiToken, headCommitSha });
+    const { baseTestRun, baseCommitSha, commitIsInPullRequest } = await getCloudReplayBaseTestRun({ apiToken, headCommitSha });
     if (!commitIsInPullRequest) {
       return null;
     }
-    return baseTestRun;
+    if (baseTestRun != null) {
+      return baseTestRun;
+    }
+    if (baseCommitSha != null && baseCommitSha !== baseSha) {
+      const run = await getTestRunAtCommit({ baseSha: baseCommitSha });
+      if (run != null) {
+        logger.info(
+          `The backend will compare against ${baseCommitSha}, which already has a build it can re-run (${run.id}), so not building ${baseSha}`
+        );
+        return run;
+      }
+    }
+    return null;
   } catch (error2) {
     logger.debug(
       `Could not ask which base commit ${headCommitSha} would be compared against: ${error2}`
@@ -173609,6 +173623,10 @@ var runMeticulousEnsureBaseAction = async () => {
           },
           logger
         );
+        const getBaseTestRun = async ({ baseSha }) => await (0, import_client3.getLatestTestRunResults)({
+          client: (0, import_client3.createClient)({ apiToken }),
+          commitSha: baseSha
+        });
         await safeEnsureBaseTestsExists({
           event,
           apiToken,
@@ -173622,15 +173640,14 @@ var runMeticulousEnsureBaseAction = async () => {
             baseCommitSha: base,
             logger
           }),
-          getBaseTestRun: async ({ baseSha }) => await (0, import_client3.getLatestTestRunResults)({
-            client: (0, import_client3.createClient)({ apiToken }),
-            commitSha: baseSha
-          }),
-          getBaseTestRunResolvedByBackend: async () => await getBaseTestRunResolvedByBackend({
+          getBaseTestRun,
+          getBaseTestRunResolvedByBackend: async () => base != null ? await getBaseTestRunResolvedByBackend({
             apiToken,
             headCommitSha: head,
+            baseSha: base,
+            getTestRunAtCommit: getBaseTestRun,
             logger
-          }),
+          }) : null,
           logger
         });
         span.setStatus({ code: 1, message: "ok" });
