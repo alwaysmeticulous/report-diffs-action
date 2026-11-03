@@ -15,20 +15,20 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       '@alwaysmeticulous/client':
-        specifier: ^2.336.0
-        version: 2.336.0
+        specifier: ^3.4.1
+        version: 3.4.1
       '@alwaysmeticulous/common':
-        specifier: ^2.326.0
-        version: 2.326.0
+        specifier: ^3.4.0
+        version: 3.4.0
       '@alwaysmeticulous/remote-replay-launcher':
-        specifier: ^2.335.0
-        version: 2.335.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))
+        specifier: ^3.4.1
+        version: 3.4.1(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))
       '@alwaysmeticulous/replay-orchestrator-launcher':
         specifier: ^2.331.1
         version: 2.331.1
       '@alwaysmeticulous/sentry':
-        specifier: ^2.326.0
-        version: 2.326.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))
+        specifier: ^3.4.0
+        version: 3.4.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))
       '@sentry/cli':
         specifier: ^2.58.4
         version: 2.58.4
@@ -132,48 +132,40 @@ packages:
   '@actions/io@1.1.3':
     resolution: {integrity: sha512-wi9JjgKLYS7U/z8PPbco+PvTb/nRWjeoFlJ1Qer83k/3C5PHQi28hiVdeE2kHXmIL99mQFawx8qt/JPjZilJ8Q==}
 
+  '@alwaysmeticulous/agent-traces@3.2.0':
+    resolution: {integrity: sha512-Hq3xaqdAbyEGsbP+jXFbiIra1WFaEr1ia5YMB5oo5KGSIn08atqI7VjQMmsT7NTK/oyPCECH6iGTF8HufnyP+g==}
+    engines: {node: '>= 18'}
+
   '@alwaysmeticulous/api@2.327.0':
     resolution: {integrity: sha512-EqbjYPLuZRAS+H4Tf9LP98lM9ugbHvzaMticrGyHrp4SNv6GXIuI2uPxSePtyJpxZksrmt5W9E3bsRd75VdgUA==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/api@2.334.0':
-    resolution: {integrity: sha512-Q4jkI9jK1WIMB/LZiJ4wgNIYbzPxzbMOcNSTdG/YYPz+mBfB9xEK/O6GsAo7uEi9h7zc0TUpKiNWwoYDOGALKA==}
-    engines: {node: '>= 18'}
-
-  '@alwaysmeticulous/api@2.336.0':
-    resolution: {integrity: sha512-mfjlBZxd9Bqx4xuyRCdmthCkD/v6u+sM/XdN+hrBTjj04+XIXmwhBnna19TlgPAZej4ozQKCGKFsKyxEpaqMWw==}
+  '@alwaysmeticulous/api@3.4.1':
+    resolution: {integrity: sha512-kd3wsxhwAaE/tiJp7AIY4K3InlVRlprjvHohkHKBYWb5/qtP1DDzKTIU80xREXlLP6qcstBruZze1rXlsbfqzw==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/client@2.331.1':
     resolution: {integrity: sha512-9ozCPlmk6sw2Dz3rB9LrCklMCjHw5yqrJ7kxGGeNMvrk0vORUkHbHacc5DAGDwuX19L6EvzzItgFIq9/d3VXBQ==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/client@2.335.0':
-    resolution: {integrity: sha512-PudrVlJssT2w8aC4NipGywAX1QXGRg/wLy5jXh0OoKTV4VUSkaJA+1l2ZKk09kWocXIncagVv7YBhK9/1v22CQ==}
-    engines: {node: '>= 18'}
-
-  '@alwaysmeticulous/client@2.336.0':
-    resolution: {integrity: sha512-A6Kvsw/LA+ncabHKcbMlDqDYxEjpGHgpfFKFA0njL3xWxII+pfjctoQDdYJu9vqeIDmT+yk8t3sNRVCXnyix4g==}
+  '@alwaysmeticulous/client@3.4.1':
+    resolution: {integrity: sha512-diTBu/YvE6iIBukRb0lu+lCGeEXdAmFfn47kf3gcfwNgPx5+IHehjWogwpU3vIlr7GODIKhApWgnbQzkN1aEVg==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/common@2.326.0':
     resolution: {integrity: sha512-6eOrR9B36AU4uhY2D08uzs0w6pYjSvA99+fgmymYt4eLDZ8BSOOfoxHmFRDmDb/gSgAUQ91WmrO+7/lDHbHTIg==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/common@2.333.1':
-    resolution: {integrity: sha512-3tk+Sf9hjS5DgTRoFDgGWuUEuG/nxZm1+0qDOVlZFrpcHXl0xMTTPF1rtHvV2o8lXctqPe9p9KZQr1Lhu2eipQ==}
-    engines: {node: '>= 18'}
-
-  '@alwaysmeticulous/common@2.336.0':
-    resolution: {integrity: sha512-O23VvQ0PqslnDwksURIkYZy+hUmTaXINusnr5FwdX9o6ocVUzn6MqOed6GbyhvjvTlcjEKQdx3UHDdyH4hfPJw==}
+  '@alwaysmeticulous/common@3.4.0':
+    resolution: {integrity: sha512-Ff7eex3atl8Z1yQochjTDgVPDubnjefVLGBvt69y66ij6IZWFxzYGh54IZRXjp7eIaNVALfKsXpfvYeXBQMpwA==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/downloading-helpers@2.331.1':
     resolution: {integrity: sha512-G5N4w9e3M4nMRbCufa/DAfuCEKAnKdArtwgs3Q4p9jUcA3d7jj4euWwveSuyb9BoI8gIHfJsuC99y02tebbzjQ==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/remote-replay-launcher@2.335.0':
-    resolution: {integrity: sha512-NRYDiYh6Wz55DwnW6hI2qkCyEchuntTinJwELTLPAr2u9KKrlTAPdaVE6y57INQxVMfluXOFXL6fxsX5mNHfNA==}
+  '@alwaysmeticulous/remote-replay-launcher@3.4.1':
+    resolution: {integrity: sha512-4yW/+f0LstTgLsPlmtJDBYGGCdtpPWHy07yu5cUnA9PYn7yWj9MkSOnbY44EUA7Rwodnz28AUQCXCoJn/fsHzQ==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/replay-orchestrator-launcher@2.331.1':
@@ -184,16 +176,16 @@ packages:
     resolution: {integrity: sha512-+FawpJNXO/zYlwm83nsxafjXaey5Jw14z+RzNF0FKYdofbo4pJH/2P60wUpnsRKHGtFxFzhAJoTOEqvNc25Etg==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/sentry@2.326.0':
-    resolution: {integrity: sha512-0sb8YvSKSyUM2OYLiZDlig112YCbEL5VgL0Tw6znTKWC3q74YUi9XqGdgnTXhlmx28R2rgNabySzR4NxLqnwSg==}
+  '@alwaysmeticulous/sentry@3.4.0':
+    resolution: {integrity: sha512-MKXUQ/l4giUNZ3UP7P8TjptfFot55tYBDI5gye6A/owJXEH6UUemc3MjFbtAu/wexuf6VPbUCrEsOE7Rr4NPiA==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/tunnels-client@2.326.0':
     resolution: {integrity: sha512-egbgM3gox0N7P8D1Udx71ZrBDDOs25G1N1vtvRLo4UG+idZ3SnNbH9si1f0oqc9adIK2kS0gn2v5jV74bMq/Lw==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/tunnels-client@2.333.1':
-    resolution: {integrity: sha512-H6QJXqZNDatzlNLJ5EbNOw3EHYUt2dOgW/zlavi6Rby50uqj+OkbNtqPrMGo+EMHIbVBvwJtuvt55vlBSSpgoQ==}
+  '@alwaysmeticulous/tunnels-client@3.4.0':
+    resolution: {integrity: sha512-lvFkvOZM5P7dAq1uxSyA78Ak11+cyfUP/aMLDlIm7u1f1LVVnA2tznBptbR0yiJlQsHlaerRE189W/4TCsipVQ==}
     engines: {node: '>= 18'}
 
   '@apm-js-collab/code-transformer-bundler-plugins@0.7.4':
@@ -849,6 +841,7 @@ packages:
   '@opentelemetry/sdk-trace-base@2.10.0':
     resolution: {integrity: sha512-GuYQQT7QD2EeO8lcZLRQzcbOyhqAzL+6WWTKTU9mSUBYBazkEDl+VrQcXQhbB08OWM9anD1aHleVadzulpOaUQ==}
     engines: {node: ^18.19.0 || >=20.6.0}
+    deprecated: Use @opentelemetry/sdk-trace package
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
@@ -3501,11 +3494,11 @@ snapshots:
 
   '@actions/io@1.1.3': {}
 
+  '@alwaysmeticulous/agent-traces@3.2.0': {}
+
   '@alwaysmeticulous/api@2.327.0': {}
 
-  '@alwaysmeticulous/api@2.334.0': {}
-
-  '@alwaysmeticulous/api@2.336.0': {}
+  '@alwaysmeticulous/api@3.4.1': {}
 
   '@alwaysmeticulous/client@2.331.1':
     dependencies:
@@ -3522,35 +3515,16 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/client@2.335.0':
+  '@alwaysmeticulous/client@3.4.1':
     dependencies:
-      '@alwaysmeticulous/api': 2.334.0
-      '@alwaysmeticulous/common': 2.333.1
+      '@alwaysmeticulous/agent-traces': 3.2.0
+      '@alwaysmeticulous/api': 3.4.1
+      '@alwaysmeticulous/common': 3.4.0
       loglevel: 1.9.2
       proxy-agent: 6.5.0
       undici: 6.28.0
     transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
-      - react-native-b4a
       - supports-color
-      - utf-8-validate
-
-  '@alwaysmeticulous/client@2.336.0':
-    dependencies:
-      '@alwaysmeticulous/api': 2.336.0
-      '@alwaysmeticulous/common': 2.336.0
-      loglevel: 1.9.2
-      proxy-agent: 6.5.0
-      undici: 6.28.0
-    transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
-      - react-native-b4a
-      - supports-color
-      - utf-8-validate
 
   '@alwaysmeticulous/common@2.326.0':
     dependencies:
@@ -3568,37 +3542,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/common@2.333.1':
+  '@alwaysmeticulous/common@3.4.0':
     dependencies:
-      '@puppeteer/browsers': 2.10.6
-      chalk: 4.1.2
       loglevel: 1.9.2
       luxon: 3.7.2
-      puppeteer-core: 24.42.0
       undici: 6.28.0
-    transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
-      - react-native-b4a
-      - supports-color
-      - utf-8-validate
-
-  '@alwaysmeticulous/common@2.336.0':
-    dependencies:
-      '@puppeteer/browsers': 2.10.6
-      chalk: 4.1.2
-      loglevel: 1.9.2
-      luxon: 3.7.2
-      puppeteer-core: 24.42.0
-      undici: 6.28.0
-    transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
-      - react-native-b4a
-      - supports-color
-      - utf-8-validate
 
   '@alwaysmeticulous/downloading-helpers@2.331.1':
     dependencies:
@@ -3623,12 +3571,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/remote-replay-launcher@2.335.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))':
+  '@alwaysmeticulous/remote-replay-launcher@3.4.1(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))':
     dependencies:
-      '@alwaysmeticulous/api': 2.334.0
-      '@alwaysmeticulous/client': 2.335.0
-      '@alwaysmeticulous/common': 2.333.1
-      '@alwaysmeticulous/tunnels-client': 2.333.1
+      '@alwaysmeticulous/api': 3.4.1
+      '@alwaysmeticulous/client': 3.4.1
+      '@alwaysmeticulous/common': 3.4.0
+      '@alwaysmeticulous/tunnels-client': 3.4.0
       '@sentry/node': 10.70.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))
       dockerode: 5.0.1
       fast-zlib: 2.0.1
@@ -3639,12 +3587,7 @@ snapshots:
     transitivePeerDependencies:
       - '@opentelemetry/core'
       - '@opentelemetry/exporter-trace-otlp-http'
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
-      - react-native-b4a
       - supports-color
-      - utf-8-validate
 
   '@alwaysmeticulous/replay-orchestrator-launcher@2.331.1':
     dependencies:
@@ -3664,20 +3607,15 @@ snapshots:
     dependencies:
       '@alwaysmeticulous/api': 2.327.0
 
-  '@alwaysmeticulous/sentry@2.326.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))':
+  '@alwaysmeticulous/sentry@3.4.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))':
     dependencies:
-      '@alwaysmeticulous/common': 2.326.0
+      '@alwaysmeticulous/common': 3.4.0
       '@sentry/node': 10.70.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))
       luxon: 3.7.2
     transitivePeerDependencies:
       - '@opentelemetry/core'
       - '@opentelemetry/exporter-trace-otlp-http'
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
-      - react-native-b4a
       - supports-color
-      - utf-8-validate
 
   '@alwaysmeticulous/tunnels-client@2.326.0':
     dependencies:
@@ -3694,20 +3632,15 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/tunnels-client@2.333.1':
+  '@alwaysmeticulous/tunnels-client@3.4.0':
     dependencies:
-      '@alwaysmeticulous/common': 2.333.1
+      '@alwaysmeticulous/common': 3.4.0
       agentkeepalive: 4.6.0
       cacheable-lookup: 6.1.0
       loglevel: 1.9.2
       proxy-agent: 6.5.0
     transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
-      - react-native-b4a
       - supports-color
-      - utf-8-validate
 
   '@apm-js-collab/code-transformer-bundler-plugins@0.7.4':
     dependencies:
