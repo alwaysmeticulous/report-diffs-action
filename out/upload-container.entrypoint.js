@@ -29366,9 +29366,9 @@ var require_github = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/errors.js
 var require_errors2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.WRONG_CREDENTIAL_TYPE_GUIDANCE = exports2.MISSING_AUTH_GUIDANCE = exports2.isAuthFailureStatus = exports2.isFetchError = void 0;
@@ -29463,13 +29463,13 @@ ${requestAndResponse}`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
 var require_agent_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.SELECTED_SINCE_UNKNOWN_REASONS = exports2.getStructuredSessionData = exports2.getTimelineEventDiff = exports2.getTimelineEvent = exports2.getReplayTimeline = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverageSummary = exports2.getTestRunJsCoverageSummary = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.promoteSessions = exports2.completeBaseRun = exports2.TEST_RUN_PROJECT_MISMATCH_REASON = exports2.assertTestRunInProject = exports2.getTestRunForPullRequest = exports2.getTestRunForCommit = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummaryCounts = exports2.replyToDiffComment = exports2.createDiffComment = exports2.ignoreDiff = exports2.approveDiff = exports2.rejectDiff = exports2.getDiffComments = exports2.getTestRunDiffsSummary = exports2.submitAgentFeedback = exports2.trackAgentFeatureUsage = exports2.TIMELINE_DISPLAY_KINDS = exports2.MAX_TIMELINE_LIMIT = exports2.TIMELINE_DIFF_CLIENT_VERSION = exports2.IMAGE_URLS_CLIENT_VERSION = exports2.getTestRunJsCoverageDiff = exports2.COVERAGE_ORDER_BY_FIELDS = exports2.shouldDefaultToExecutedRanges = exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = exports2.isTestRunProcessingResponse = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = void 0;
-    exports2.getSessions = exports2.SESSIONS_ORDER_BY_FIELDS = void 0;
+    exports2.getStructuredSessionData = exports2.getTimelineEventDiff = exports2.getTimelineEvent = exports2.getReplayTimeline = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverageSummary = exports2.getTestRunJsCoverageSummary = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.promoteSessions = exports2.completeBaseRun = exports2.TEST_RUN_PROJECT_MISMATCH_REASON = exports2.assertTestRunInProject = exports2.getTestRunForPullRequest = exports2.getTestRunForCommit = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummaryCounts = exports2.replyToDiffComment = exports2.createDiffComment = exports2.reviewDiffs = exports2.ignoreDiff = exports2.approveDiff = exports2.rejectDiff = exports2.getDiffComments = exports2.getTestRunDiffsSummary = exports2.submitAgentFeedback = exports2.trackAgentFeatureUsage = exports2.TIMELINE_DISPLAY_KINDS = exports2.MAX_TIMELINE_LIMIT = exports2.TIMELINE_DIFF_CLIENT_VERSION = exports2.IMAGE_URLS_CLIENT_VERSION = exports2.getTestRunJsCoverageDiff = exports2.COVERAGE_ORDER_BY_FIELDS = exports2.shouldDefaultToExecutedRanges = exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = exports2.isTestRunProcessingResponse = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = void 0;
+    exports2.getSessions = exports2.SESSIONS_ORDER_BY_FIELDS = exports2.SELECTED_SINCE_UNKNOWN_REASONS = void 0;
     var errors_1 = require_errors2();
     var getTestRunCheckReport = async (client, testRunId, checkId, options = {}) => {
       const params = {};
@@ -29705,6 +29705,13 @@ var require_agent_api = __commonJS({
       return data;
     };
     exports2.ignoreDiff = ignoreDiff;
+    var reviewDiffs = async ({ client, verdict, diffs }) => {
+      const { data } = await client.post(`agent/replay-diffs/${verdict}`, { diffs }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.reviewDiffs = reviewDiffs;
     var createDiffComment = async ({ client, replayDiffId, screenshotName, text, x, y }) => {
       const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/comments`, { text, x, y }).catch((error2) => {
         throw (0, errors_1.maybeEnrichFetchError)(error2);
@@ -30137,9 +30144,9 @@ var require_agent_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js
 var require_agent_stats_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getTestRunEventStats = exports2.getProjectDailyStats = exports2.getTestRunStats = void 0;
@@ -30188,9 +30195,9 @@ var require_agent_stats_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js
 var require_agent_check_reviews_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getCheckComments = exports2.ignoreCheck = void 0;
@@ -30223,9 +30230,9 @@ var require_agent_check_reviews_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js
 var require_agent_swarm_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getAgentSwarmRunCase = exports2.getAgentSwarmRun = exports2.isAgentSwarmRunProcessingResponse = exports2.getAgentSwarmSetupBlockers = exports2.getAgentSwarmRuns = exports2.AGENT_SWARM_RUN_CLIENT_VERSION = void 0;
@@ -30287,9 +30294,9 @@ var require_agent_swarm_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js
 var require_agent_test_runs_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getTestRuns = void 0;
@@ -30340,9 +30347,9 @@ var require_agent_test_runs_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js
 var require_agent_screenshot_dom_types = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LIMIT = exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = void 0;
@@ -30354,9 +30361,9 @@ var require_agent_screenshot_dom_types = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js
 var require_agent_screenshot_dom_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getScreenshotDomDiffText = exports2.getScreenshotDom = void 0;
@@ -30401,9 +30408,9 @@ var require_agent_screenshot_dom_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js
 var require_agent_screenshot_dom_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.parseNthChildPath = void 0;
@@ -56965,9 +56972,9 @@ var require_dist = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
 var require_github_cloud_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.takeBaseWorkflowDispatchLease = exports2.getGitHubCloudReplayBaseTestRun = void 0;
@@ -56995,9 +57002,9 @@ var require_github_cloud_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js
 var require_agent_traces_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.completeAgentTraceUpload = exports2.requestAgentTraceUpload = void 0;
@@ -83969,25 +83976,27 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
 var require_get_proxy_agent = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getProxyAgent = void 0;
     var proxy_agent_1 = require_dist12();
+    var sharedAgent;
     var getProxyAgent = () => {
-      return new proxy_agent_1.ProxyAgent({
+      sharedAgent ??= new proxy_agent_1.ProxyAgent({
         keepAlive: true
       });
+      return sharedAgent;
     };
     exports2.getProxyAgent = getProxyAgent;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
 var require_retry_transient_upload_errors = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = void 0;
@@ -84059,9 +84068,9 @@ ${responseBody}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js
 var require_send_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.sendToSignedUrl = void 0;
@@ -84095,9 +84104,9 @@ var require_send_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js
 var require_put_buffer_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.putBufferToSignedUrl = void 0;
@@ -84117,9 +84126,9 @@ var require_put_buffer_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js
 var require_upload_agent_trace = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.uploadAgentTrace = void 0;
@@ -84162,9 +84171,9 @@ var require_upload_agent_trace = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
 var require_oauth_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = void 0;
@@ -84197,9 +84206,9 @@ var require_oauth_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
 var require_project_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = void 0;
@@ -84247,9 +84256,9 @@ var require_project_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js
 var require_crawler_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createCrawlerTestRun = void 0;
@@ -84274,9 +84283,9 @@ var require_crawler_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
 var require_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = void 0;
@@ -84329,9 +84338,9 @@ var require_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
 var require_session_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = void 0;
@@ -84381,9 +84390,9 @@ var require_session_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
 var require_replay_diff_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getReplayDiff = void 0;
@@ -84401,9 +84410,9 @@ var require_replay_diff_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
 var require_source_code_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getPrDescriptionForTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = void 0;
@@ -84425,19 +84434,19 @@ var require_source_code_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js
 var require_test_run_status_client_version = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TEST_RUN_STATUS_CLIENT_VERSION = void 0;
-    exports2.TEST_RUN_STATUS_CLIENT_VERSION = 1;
+    exports2.TEST_RUN_STATUS_CLIENT_VERSION = 2;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
 var require_test_run_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.emitTelemetry = exports2.getTestRunReplayDiffs = exports2.searchTestRuns = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = void 0;
@@ -84556,9 +84565,9 @@ var require_test_run_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
 var require_deployment_lock_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getIsLocked = void 0;
@@ -84575,9 +84584,9 @@ var require_deployment_lock_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js
 var require_commit_label_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = void 0;
@@ -84593,9 +84602,9 @@ var require_commit_label_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
 var require_test_run_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.IN_PROGRESS_TEST_RUN_STATUS = void 0;
@@ -84608,21 +84617,22 @@ var require_test_run_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js
 var require_agent_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.REPORT_FLAKE_DESCRIPTION = exports2.IGNORE_DIFF_CRITERIA = exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = void 0;
+    exports2.REPORT_FLAKE_DESCRIPTION = exports2.IGNORE_DIFF_CRITERIA = exports2.MAX_AGENT_DIFF_DECISION_BATCH_SIZE = exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = void 0;
     exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = 1e3;
+    exports2.MAX_AGENT_DIFF_DECISION_BATCH_SIZE = 100;
     exports2.IGNORE_DIFF_CRITERIA = "Only ignore a diff the change has no plausible way to cause: rendering noise (subpixel or anti-aliasing, usually with no DOM change), an animation, spinner or carousel at a different frame, fonts or images loading late, network responses arriving in a different order, or environment noise such as a server-rendered timestamp, a build version or third-party content. First check that the change cannot reach the affected area and that the timeline shows no divergence it explains: a replay that took a different path (a click landing elsewhere, a menu open on one side only) is unrelated only if the change cannot have caused it. Never ignore a diff you cannot explain, or one the change could have caused, even a harmless one or a recorded network response the new code no longer fits: reject a regression, and otherwise leave it undecided with a comment.";
     exports2.REPORT_FLAKE_DESCRIPTION = "Also report the diff to Meticulous to investigate as a likely replay-engine bug. Set it when the replay was nondeterministic where Meticulous should have made it deterministic (rendering, animations, timers, dates, randomness, network ordering, or a replay that took a different path), not for a genuine difference in what the app served, such as a server-rendered timestamp or a build version.";
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
 var require_oauth_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getWebappBaseUrl = exports2.getRevocationEndpoint = exports2.getDeviceAuthorizationEndpoint = exports2.getTokenEndpoint = exports2.OAUTH_SCOPES = exports2.CLI_CLIENT_ID = exports2.KEYCLOAK_ISSUER_URL = void 0;
@@ -84681,9 +84691,9 @@ var require_oauth_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
 var require_oauth_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.parseOAuthErrorBody = exports2.isJwtExpired = exports2.getJwtClaims = exports2.isOAuthJwt = void 0;
@@ -84740,9 +84750,9 @@ var require_oauth_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js
 var require_oauth_refresh_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.describeRequestError = exports2.parseTokenResponse = exports2.classifyErrorResponse = exports2.isUnexpired = exports2.isFresh = exports2.nowSeconds = void 0;
@@ -84806,9 +84816,9 @@ var require_oauth_refresh_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
 var require_oauth_token_store = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.clearOAuthTokens = exports2.storeOAuthTokens = exports2.getStoredOAuthTokens = void 0;
@@ -84856,9 +84866,9 @@ var require_oauth_token_store = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
 var require_oauth_refresh = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getValidAccessToken = void 0;
@@ -84957,9 +84967,9 @@ var require_oauth_refresh = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
 var require_api_token_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getAuthToken = exports2.getApiToken = exports2.readFileBasedToken = void 0;
@@ -85028,9 +85038,9 @@ var require_api_token_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
 var require_oauth_callback_server = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.startCallbackServer = void 0;
@@ -85130,9 +85140,9 @@ ${showAgentSetup ? AGENT_SETUP_SECTION : ""}
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
 var require_oauth_pkce = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.generateState = exports2.generateCodeChallenge = exports2.generateCodeVerifier = void 0;
@@ -85152,9 +85162,9 @@ var require_oauth_pkce = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
 var require_oauth_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.buildAuthorizationUrl = exports2.performOAuthLogin = exports2.CLI_LOGIN_INTENT_ONBOARD = void 0;
@@ -85255,9 +85265,9 @@ ${authUrl}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js
 var require_legacy_project_migration = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.migrateLegacySelectedProjectIfPresent = void 0;
@@ -85308,19 +85318,19 @@ var require_legacy_project_migration = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/version.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/version.js
 var require_version = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.VERSION = void 0;
-    exports2.VERSION = "3.4.1";
+    exports2.VERSION = "3.5.0";
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/client.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/client.js
 var require_client3 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createClientWithOAuth = exports2.resolveApiTokenWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.buildClient = exports2.makeRequest = exports2.declareClientAppInfo = exports2.buildUserAgent = exports2.describeRuntime = void 0;
@@ -85555,9 +85565,9 @@ var require_client3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js
 var require_oauth_device_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.performDeviceLogin = void 0;
@@ -85700,9 +85710,9 @@ var require_oauth_device_login = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js
 var require_oauth_revoke = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.revokeOAuthRefreshToken = void 0;
@@ -85758,9 +85768,9 @@ var require_oauth_revoke = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js
 var require_default_project = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.resolveDefaultProjectId = void 0;
@@ -85775,9 +85785,9 @@ var require_default_project = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js
 var require_opaque_id = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.assertOpaqueId = exports2.isOpaqueId = void 0;
@@ -85794,9 +85804,9 @@ var require_opaque_id = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
 var require_put_file_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.putFileToSignedUrl = void 0;
@@ -85816,9 +85826,9 @@ var require_put_file_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
 var require_project_deployments_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.triggerDeploymentSourceMapIngestion = exports2.getDeploymentSourceMapArtifactDownloadUrl = exports2.getDeploymentSourceMapMappingArtifact = exports2.requestDeploymentSourceMapArtifactUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.projectIdQuery = void 0;
@@ -85970,9 +85980,9 @@ var require_project_deployments_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js
 var require_agentic_session_generation_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.getAgenticRunCoverage = exports2.requestAgenticArtifactUploads = exports2.requestAgenticTestcasesUpload = exports2.cancelAgenticTotpSlotWait = exports2.reserveAgenticTotpSlot = exports2.isAgenticRunCancelled = exports2.getAgenticChangeAnalysis = exports2.getAgenticPreplanStatus = exports2.requestAgenticProgressUpload = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.createLocalAgentSwarmRun = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = void 0;
@@ -86122,9 +86132,9 @@ var require_agentic_session_generation_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js
 var require_catalog_maintenance_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.requestCatalogMaintenanceProposalUpload = exports2.getCatalogMaintenanceWorkflowStatus = exports2.launchCatalogMaintenance = void 0;
@@ -86152,9 +86162,9 @@ var require_catalog_maintenance_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
 var require_registry_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRegistryAuth = void 0;
@@ -86166,9 +86176,9 @@ var require_registry_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
 var require_local_changes_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRelevantSessions = void 0;
@@ -86191,9 +86201,9 @@ var require_local_changes_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/index.js
 var require_dist13 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -86216,10 +86226,10 @@ var require_dist13 = __commonJS({
           __createBinding2(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.trackAgentFeatureUsage = exports2.submitAgentFeedback = exports2.getSessions = exports2.MAX_TIMELINE_LIMIT = exports2.TIMELINE_DISPLAY_KINDS = exports2.TIMELINE_DIFF_CLIENT_VERSION = exports2.getTimelineEventDiff = exports2.getTimelineEvent = exports2.getReplayTimeline = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverageSummary = exports2.getTestRunJsCoverageSummary = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = exports2.promoteSessions = exports2.completeBaseRun = exports2.TEST_RUN_PROJECT_MISMATCH_REASON = exports2.assertTestRunInProject = exports2.getTestRunForPullRequest = exports2.getTestRunForCommit = exports2.getScreenshotDomDiff = exports2.ignoreDiff = exports2.approveDiff = exports2.rejectDiff = exports2.replyToDiffComment = exports2.createDiffComment = exports2.getDiffComments = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunDiffsSummaryCounts = exports2.getTestRunDiffsSummary = exports2.getStructuredSessionData = exports2.getTestRunJsCoverageDiff = exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = exports2.isTestRunProcessingResponse = exports2.SELECTED_SINCE_UNKNOWN_REASONS = exports2.SESSIONS_ORDER_BY_FIELDS = exports2.COVERAGE_ORDER_BY_FIELDS = exports2.shouldDefaultToExecutedRanges = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = void 0;
-    exports2.getTestRunReplayDiffs = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = exports2.getPrDescriptionForTestRun = exports2.getReplayDiff = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.createCrawlerTestRun = exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = exports2.uploadAgentTrace = exports2.requestAgentTraceUpload = exports2.completeAgentTraceUpload = exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LIMIT = exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = exports2.parseNthChildPath = exports2.getScreenshotDomDiffText = exports2.getScreenshotDom = exports2.getTestRuns = exports2.isAgentSwarmRunProcessingResponse = exports2.getAgentSwarmSetupBlockers = exports2.getAgentSwarmRuns = exports2.getAgentSwarmRun = exports2.getAgentSwarmRunCase = exports2.ignoreCheck = exports2.getCheckComments = exports2.getTestRunEventStats = exports2.getProjectDailyStats = exports2.getTestRunStats = void 0;
-    exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestDeploymentSourceMapArtifactUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putBufferToSignedUrl = exports2.putFileToSignedUrl = exports2.assertOpaqueId = exports2.isOpaqueId = exports2.getProxyAgent = exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.migrateLegacySelectedProjectIfPresent = exports2.getWebappBaseUrl = exports2.resolveDefaultProjectId = exports2.getStoredOAuthTokens = exports2.clearOAuthTokens = exports2.revokeOAuthRefreshToken = exports2.getValidAccessToken = exports2.performDeviceLogin = exports2.performOAuthLogin = exports2.CLI_LOGIN_INTENT_ONBOARD = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.declareClientAppInfo = exports2.createClientWithOAuth = exports2.createClient = exports2.readFileBasedToken = exports2.getAuthToken = exports2.getApiToken = exports2.TEST_RUN_STATUS_CLIENT_VERSION = exports2.REPORT_FLAKE_DESCRIPTION = exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = exports2.IGNORE_DIFF_CRITERIA = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = exports2.getIsLocked = exports2.emitTelemetry = exports2.searchTestRuns = exports2.getLatestTestRunResults = void 0;
-    exports2.getRelevantSessions = exports2.MISSING_AUTH_GUIDANCE = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isFetchError = exports2.isAuthFailureStatus = exports2.getRegistryAuth = exports2.requestCatalogMaintenanceProposalUpload = exports2.launchCatalogMaintenance = exports2.getCatalogMaintenanceWorkflowStatus = exports2.requestAgenticProgressUpload = exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.cancelAgenticTotpSlotWait = exports2.reserveAgenticTotpSlot = exports2.getAgenticChangeAnalysis = exports2.getAgenticPreplanStatus = exports2.isAgenticRunCancelled = exports2.getAgenticRunCoverage = exports2.requestAgenticTestcasesUpload = exports2.requestAgenticArtifactUploads = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.createLocalAgentSwarmRun = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = exports2.getDeploymentSourceMapArtifactDownloadUrl = exports2.getDeploymentSourceMapMappingArtifact = exports2.triggerDeploymentSourceMapIngestion = exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = void 0;
+    exports2.submitAgentFeedback = exports2.getSessions = exports2.MAX_TIMELINE_LIMIT = exports2.TIMELINE_DISPLAY_KINDS = exports2.TIMELINE_DIFF_CLIENT_VERSION = exports2.getTimelineEventDiff = exports2.getTimelineEvent = exports2.getReplayTimeline = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverageSummary = exports2.getTestRunJsCoverageSummary = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = exports2.promoteSessions = exports2.completeBaseRun = exports2.TEST_RUN_PROJECT_MISMATCH_REASON = exports2.assertTestRunInProject = exports2.getTestRunForPullRequest = exports2.getTestRunForCommit = exports2.getScreenshotDomDiff = exports2.reviewDiffs = exports2.ignoreDiff = exports2.approveDiff = exports2.rejectDiff = exports2.replyToDiffComment = exports2.createDiffComment = exports2.getDiffComments = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunDiffsSummaryCounts = exports2.getTestRunDiffsSummary = exports2.getStructuredSessionData = exports2.getTestRunJsCoverageDiff = exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = exports2.isTestRunProcessingResponse = exports2.SELECTED_SINCE_UNKNOWN_REASONS = exports2.SESSIONS_ORDER_BY_FIELDS = exports2.COVERAGE_ORDER_BY_FIELDS = exports2.shouldDefaultToExecutedRanges = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = void 0;
+    exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = exports2.getPrDescriptionForTestRun = exports2.getReplayDiff = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.createCrawlerTestRun = exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = exports2.uploadAgentTrace = exports2.requestAgentTraceUpload = exports2.completeAgentTraceUpload = exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LIMIT = exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = exports2.parseNthChildPath = exports2.getScreenshotDomDiffText = exports2.getScreenshotDom = exports2.getTestRuns = exports2.isAgentSwarmRunProcessingResponse = exports2.getAgentSwarmSetupBlockers = exports2.getAgentSwarmRuns = exports2.getAgentSwarmRun = exports2.getAgentSwarmRunCase = exports2.ignoreCheck = exports2.getCheckComments = exports2.getTestRunEventStats = exports2.getProjectDailyStats = exports2.getTestRunStats = exports2.trackAgentFeatureUsage = void 0;
+    exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestDeploymentSourceMapArtifactUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putBufferToSignedUrl = exports2.putFileToSignedUrl = exports2.assertOpaqueId = exports2.isOpaqueId = exports2.getProxyAgent = exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.migrateLegacySelectedProjectIfPresent = exports2.getWebappBaseUrl = exports2.resolveDefaultProjectId = exports2.getStoredOAuthTokens = exports2.clearOAuthTokens = exports2.revokeOAuthRefreshToken = exports2.getValidAccessToken = exports2.performDeviceLogin = exports2.performOAuthLogin = exports2.CLI_LOGIN_INTENT_ONBOARD = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.declareClientAppInfo = exports2.createClientWithOAuth = exports2.createClient = exports2.readFileBasedToken = exports2.getAuthToken = exports2.getApiToken = exports2.TEST_RUN_STATUS_CLIENT_VERSION = exports2.REPORT_FLAKE_DESCRIPTION = exports2.MAX_AGENT_DIFF_DECISION_BATCH_SIZE = exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = exports2.IGNORE_DIFF_CRITERIA = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = exports2.getIsLocked = exports2.emitTelemetry = exports2.searchTestRuns = exports2.getLatestTestRunResults = exports2.getTestRunReplayDiffs = void 0;
+    exports2.getRelevantSessions = exports2.MISSING_AUTH_GUIDANCE = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isFetchError = exports2.isAuthFailureStatus = exports2.getRegistryAuth = exports2.requestCatalogMaintenanceProposalUpload = exports2.launchCatalogMaintenance = exports2.getCatalogMaintenanceWorkflowStatus = exports2.requestAgenticProgressUpload = exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.cancelAgenticTotpSlotWait = exports2.reserveAgenticTotpSlot = exports2.getAgenticChangeAnalysis = exports2.getAgenticPreplanStatus = exports2.isAgenticRunCancelled = exports2.getAgenticRunCoverage = exports2.requestAgenticTestcasesUpload = exports2.requestAgenticArtifactUploads = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.createLocalAgentSwarmRun = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = exports2.getDeploymentSourceMapArtifactDownloadUrl = exports2.getDeploymentSourceMapMappingArtifact = exports2.triggerDeploymentSourceMapIngestion = exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = void 0;
     var agent_api_1 = require_agent_api();
     Object.defineProperty(exports2, "getAgentWhoami", { enumerable: true, get: function() {
       return agent_api_1.getAgentWhoami;
@@ -86292,6 +86302,9 @@ var require_dist13 = __commonJS({
     } });
     Object.defineProperty(exports2, "ignoreDiff", { enumerable: true, get: function() {
       return agent_api_1.ignoreDiff;
+    } });
+    Object.defineProperty(exports2, "reviewDiffs", { enumerable: true, get: function() {
+      return agent_api_1.reviewDiffs;
     } });
     Object.defineProperty(exports2, "getScreenshotDomDiff", { enumerable: true, get: function() {
       return agent_api_1.getScreenshotDomDiff;
@@ -86569,6 +86582,9 @@ var require_dist13 = __commonJS({
     } });
     Object.defineProperty(exports2, "MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH", { enumerable: true, get: function() {
       return agent_constants_1.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH;
+    } });
+    Object.defineProperty(exports2, "MAX_AGENT_DIFF_DECISION_BATCH_SIZE", { enumerable: true, get: function() {
+      return agent_constants_1.MAX_AGENT_DIFF_DECISION_BATCH_SIZE;
     } });
     Object.defineProperty(exports2, "REPORT_FLAKE_DESCRIPTION", { enumerable: true, get: function() {
       return agent_constants_1.REPORT_FLAKE_DESCRIPTION;
@@ -148343,9 +148359,9 @@ var require_cjs5 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/deployment-in-progress.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/deployment-in-progress.js
 var require_deployment_in_progress = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/deployment-in-progress.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/deployment-in-progress.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.WAIT_ON_THE_SLOW_SCHEDULE = exports2.DEPLOYMENT_IN_PROGRESS_RETRY = exports2.isDeploymentStillInProgress = void 0;
@@ -148362,9 +148378,9 @@ var require_deployment_in_progress = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/completed-upload.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/completed-upload.js
 var require_completed_upload = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/completed-upload.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/completed-upload.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.readCompletedUpload = exports2.carryCompletedUpload = exports2.withCompletedUpload = void 0;
@@ -148395,9 +148411,9 @@ var require_completed_upload = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js
 var require_poll_for_base_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/poll-for-base-test-run.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.pollWhileBaseNotFound = exports2.DEFAULT_MISSING_BASE_FALLBACK_LOG = void 0;
@@ -148484,129 +148500,6 @@ var require_poll_for_base_test_run = __commonJS({
       }
     };
     var runFallback = async (fallbackFn, logger) => (0, common_1.executeWithRetry)(fallbackFn, { ...deployment_in_progress_1.DEPLOYMENT_IN_PROGRESS_RETRY, logger });
-  }
-});
-
-// node_modules/.pnpm/fast-zlib@2.0.1/node_modules/fast-zlib/index.js
-var require_fast_zlib = __commonJS({
-  "node_modules/.pnpm/fast-zlib@2.0.1/node_modules/fast-zlib/index.js"(exports2) {
-    "use strict";
-    var zlib = require("zlib");
-    var Base = class {
-      constructor(type, options) {
-        if (type.startsWith("Brotli")) {
-          this._noFlushFlag = zlib.constants.BROTLI_OPERATION_PROCESS;
-          if (!Number.isInteger(options.flush)) {
-            options.flush = zlib.constants.BROTLI_OPERATION_FLUSH;
-          }
-        } else {
-          this._noFlushFlag = zlib.constants.Z_NO_FLUSH;
-          if (!Number.isInteger(options.flush)) {
-            options.flush = zlib.constants.Z_SYNC_FLUSH;
-          }
-        }
-        this.instance = new zlib[type](options);
-        this._buffer = [];
-        this._kError = Object.getOwnPropertySymbols(this.instance).find((x) => x.toString().includes("kError"));
-        this._backups = [this.instance.close, this.instance._handle, this.instance._handle.close];
-      }
-      process(_data, _flag) {
-        const z = this.instance;
-        const nff = this._noFlushFlag;
-        const kError = this._kError;
-        const [c, h, hc] = this._backups;
-        const flag = !Number.isInteger(_flag) ? z._defaultFlushFlag : _flag;
-        const data = !Buffer.isBuffer(_data) ? Buffer.from(_data) : _data;
-        const buffer = this._buffer;
-        let result;
-        let error2;
-        z.close = () => void 0;
-        z._handle.close = () => void 0;
-        try {
-          result = z._processChunk(data, flag);
-        } catch (e) {
-          error2 = e;
-        }
-        z.close = c;
-        z._handle = h;
-        z._handle.close = hc;
-        z.removeAllListeners("error");
-        if (error2) {
-          z.reset();
-          z[kError] = null;
-          throw error2;
-        }
-        result = Buffer.from(result);
-        if (flag === nff) {
-          if (result.length) {
-            buffer.push(result);
-            return Buffer.allocUnsafe(0);
-          }
-        } else if (buffer.length) {
-          buffer.push(result);
-          result = Buffer.concat(buffer);
-          this._buffer = [];
-        }
-        return result;
-      }
-      close() {
-        if (!this.instance) {
-          return;
-        }
-        this.instance._handle.close();
-        this.instance._handle = null;
-        this.instance.close();
-        this.instance = null;
-        this.process = () => void 0;
-      }
-    };
-    exports2.Inflate = class extends Base {
-      constructor(options = {}) {
-        super("Inflate", options);
-      }
-    };
-    exports2.Deflate = class extends Base {
-      constructor(options = {}) {
-        super("Deflate", options);
-      }
-    };
-    exports2.InflateRaw = class extends Base {
-      constructor(options = {}) {
-        super("InflateRaw", options);
-      }
-    };
-    exports2.DeflateRaw = class extends Base {
-      constructor(options = {}) {
-        super("DeflateRaw", options);
-      }
-    };
-    exports2.Gzip = class extends Base {
-      constructor(options = {}) {
-        super("Gzip", options);
-      }
-    };
-    exports2.Gunzip = class extends Base {
-      constructor(options = {}) {
-        super("Gunzip", options);
-      }
-    };
-    exports2.Unzip = class extends Base {
-      constructor(options = {}) {
-        super("Unzip", options);
-      }
-    };
-    exports2.BrotliCompress = class extends Base {
-      constructor(options = {}) {
-        super("BrotliCompress", options);
-      }
-    };
-    exports2.BrotliDecompress = class extends Base {
-      constructor(options = {}) {
-        super("BrotliDecompress", options);
-      }
-    };
-    exports2.constants = zlib.constants;
-    exports2.default = exports2;
   }
 });
 
@@ -152161,6 +152054,48 @@ var require_index_min = __commonJS({
   }
 });
 
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/compression-concurrency.js
+var require_compression_concurrency = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/compression-concurrency.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getCompressionConcurrency = void 0;
+    var fs_1 = require("fs");
+    var os_1 = require("os");
+    var COMPRESSION_CONCURRENCY_ENV_VAR = "METICULOUS_COMPRESSION_CONCURRENCY";
+    var MAX_COMPRESSION_THREADS = 16;
+    var getCompressionConcurrency = (env = process.env, readCgroupFile = readFileOrNull) => {
+      const fromEnv = Number.parseInt(env[COMPRESSION_CONCURRENCY_ENV_VAR] ?? "", 10);
+      if (Number.isFinite(fromEnv) && fromEnv >= 1) {
+        return Math.min(fromEnv, MAX_COMPRESSION_THREADS);
+      }
+      const cores = Math.min(typeof os_1.availableParallelism === "function" ? (0, os_1.availableParallelism)() : (0, os_1.cpus)().length, getCgroupCpuLimit(readCgroupFile) ?? Infinity);
+      return Math.min(MAX_COMPRESSION_THREADS, Math.max(2, cores - 1));
+    };
+    exports2.getCompressionConcurrency = getCompressionConcurrency;
+    var getCgroupCpuLimit = (readCgroupFile) => {
+      const v2 = readCgroupFile("/sys/fs/cgroup/cpu.max")?.trim().split(/\s+/);
+      if (v2 != null && v2[0] !== "max") {
+        return toCoreCount(Number(v2[0]), Number(v2[1]));
+      }
+      const v1Quota = readCgroupFile("/sys/fs/cgroup/cpu/cpu.cfs_quota_us");
+      const v1Period = readCgroupFile("/sys/fs/cgroup/cpu/cpu.cfs_period_us");
+      if (v1Quota != null && v1Period != null) {
+        return toCoreCount(Number(v1Quota), Number(v1Period));
+      }
+      return null;
+    };
+    var toCoreCount = (quota, period) => quota > 0 && period > 0 ? Math.max(1, Math.ceil(quota / period)) : null;
+    var readFileOrNull = (path) => {
+      try {
+        return (0, fs_1.readFileSync)(path, "utf8");
+      } catch {
+        return null;
+      }
+    };
+  }
+});
+
 // node_modules/.pnpm/yocto-queue@0.1.0/node_modules/yocto-queue/index.js
 var require_yocto_queue = __commonJS({
   "node_modules/.pnpm/yocto-queue@0.1.0/node_modules/yocto-queue/index.js"(exports2, module2) {
@@ -152278,9 +152213,9 @@ var require_p_limit = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js
 var require_multipart_buffer_manager = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-buffer-manager.js"(exports2) {
     "use strict";
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -152288,18 +152223,27 @@ var require_multipart_buffer_manager = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.MultipartBufferManager = void 0;
     var p_limit_1 = __importDefault2(require_p_limit());
+    var MAX_UNSETTLED_BYTES = 512 * 1024 * 1024;
     var MultipartBufferManager = class {
       currentBuffer = [];
       currentBufferSize = 0;
       currentPartNumber = 1;
       pendingUploads = [];
+      unsettledUploads = 0;
+      unsettledBytes = 0;
+      firstError = void 0;
+      capacityWaiters = [];
       uploadLimiter;
-      uploadChunkSize;
+      getPartSize;
+      maxParts;
+      maxUnsettledUploads;
       uploadPart;
       constructor(options) {
-        this.uploadChunkSize = options.uploadChunkSize;
+        this.getPartSize = options.getPartSize ?? (() => options.uploadChunkSize);
+        this.maxParts = options.maxParts ?? Number.POSITIVE_INFINITY;
         this.uploadPart = options.uploadPart;
         this.uploadLimiter = (0, p_limit_1.default)(options.maxConcurrentUploads);
+        this.maxUnsettledUploads = options.maxConcurrentUploads * 2;
       }
       /**
        * Adds a chunk of data to the buffer. If the buffer size exceeds the chunk size,
@@ -152309,6 +152253,10 @@ var require_multipart_buffer_manager = __commonJS({
         this.currentBuffer.push(chunk);
         this.currentBufferSize += chunk.length;
       }
+      /** Size the part currently being accumulated will be cut at. */
+      getNextPartSize() {
+        return this.getPartSize(this.currentPartNumber);
+      }
       /**
        * Returns the current size of the accumulated buffer.
        */
@@ -152316,8 +152264,9 @@ var require_multipart_buffer_manager = __commonJS({
         return this.currentBufferSize;
       }
       /**
-       * Flushes the current buffer to upload. Handles splitting the buffer if it exceeds
-       * the chunk size, and keeps any remainder for the next flush.
+       * Flushes the current buffer to upload. Every full chunk in the buffer is
+       * uploaded, and any remainder is kept for the next flush (unless this is the
+       * last part, in which case the remainder is uploaded as the final part).
        *
        * @param isLastPart - Whether this is the last part to be uploaded
        */
@@ -152326,28 +152275,44 @@ var require_multipart_buffer_manager = __commonJS({
           return Promise.resolve();
         }
         const combinedBuffer = Buffer.concat(this.currentBuffer);
-        if (!isLastPart && combinedBuffer.length < this.uploadChunkSize) {
+        if (!isLastPart && combinedBuffer.length < this.getNextPartSize()) {
           return Promise.resolve();
         }
-        let bufferToUpload;
-        let remainingBuffer = null;
-        if (!isLastPart && combinedBuffer.length > this.uploadChunkSize) {
-          bufferToUpload = combinedBuffer.subarray(0, this.uploadChunkSize);
-          remainingBuffer = combinedBuffer.subarray(this.uploadChunkSize);
-        } else {
-          bufferToUpload = combinedBuffer;
+        let offset2 = 0;
+        while (offset2 < combinedBuffer.length) {
+          const remaining = combinedBuffer.length - offset2;
+          const partSize = this.getNextPartSize();
+          if (!isLastPart && remaining < partSize) {
+            break;
+          }
+          const length = Math.min(remaining, partSize);
+          this.startUpload(combinedBuffer.subarray(offset2, offset2 + length), isLastPart && offset2 + length >= combinedBuffer.length);
+          offset2 += length;
         }
-        const partNumber = this.currentPartNumber++;
-        const uploadPromise = this.uploadLimiter(() => this.uploadPart(bufferToUpload, partNumber, isLastPart)).then((eTag) => ({ partNumber, eTag }));
-        this.pendingUploads.push(uploadPromise);
-        if (remainingBuffer) {
-          this.currentBuffer = [remainingBuffer];
-          this.currentBufferSize = remainingBuffer.length;
+        if (offset2 < combinedBuffer.length) {
+          this.currentBuffer = [combinedBuffer.subarray(offset2)];
+          this.currentBufferSize = combinedBuffer.length - offset2;
         } else {
           this.currentBuffer = [];
           this.currentBufferSize = 0;
         }
         return Promise.resolve();
+      }
+      /**
+       * Resolves once fewer than `2 * maxConcurrentUploads` parts are queued or
+       * in flight. Rejects as soon as any part upload has failed, so a producer
+       * can stop work early instead of discovering the failure at `finalize`.
+       */
+      waitForCapacity() {
+        if (this.firstError !== void 0) {
+          return Promise.reject(asError(this.firstError));
+        }
+        if (this.hasCapacity()) {
+          return Promise.resolve();
+        }
+        return new Promise((resolve, reject) => {
+          this.capacityWaiters.push({ resolve, reject });
+        });
       }
       /**
        * Waits for all pending uploads to complete and returns the ETags in order
@@ -152364,52 +152329,413 @@ var require_multipart_buffer_manager = __commonJS({
       getPendingUploadCount() {
         return this.pendingUploads.length;
       }
+      startUpload(buffer, isLastPart) {
+        const partNumber = this.currentPartNumber++;
+        if (partNumber > this.maxParts) {
+          throw new Error(`The compressed build is too large to upload: it needs more than ${this.maxParts} parts, which is the most a single upload supports.`);
+        }
+        this.unsettledUploads++;
+        this.unsettledBytes += buffer.length;
+        const uploadPromise = this.uploadLimiter(async () => {
+          if (this.firstError !== void 0) {
+            throw asError(this.firstError);
+          }
+          try {
+            return await this.uploadPart(buffer, partNumber, isLastPart);
+          } catch (error2) {
+            this.firstError ??= asError(error2);
+            throw error2;
+          }
+        }).then((eTag) => {
+          this.onUploadSettled(buffer.length, void 0);
+          return { partNumber, eTag };
+        }, (error2) => {
+          this.onUploadSettled(buffer.length, { error: error2 });
+          throw error2;
+        });
+        uploadPromise.catch(() => void 0);
+        this.pendingUploads.push(uploadPromise);
+      }
+      hasCapacity() {
+        return this.unsettledUploads < this.maxUnsettledUploads && this.unsettledBytes < MAX_UNSETTLED_BYTES;
+      }
+      onUploadSettled(bytes, failure) {
+        this.unsettledUploads--;
+        this.unsettledBytes -= bytes;
+        if (failure && this.firstError === void 0) {
+          this.firstError = failure.error;
+        }
+        const waiters = this.capacityWaiters;
+        if (this.firstError !== void 0) {
+          this.capacityWaiters = [];
+          waiters.forEach((w) => w.reject(asError(this.firstError)));
+        } else if (this.hasCapacity()) {
+          this.capacityWaiters = [];
+          waiters.forEach((w) => w.resolve());
+        }
+      }
     };
     exports2.MultipartBufferManager = MultipartBufferManager;
+    var asError = (error2) => error2 instanceof Error ? error2 : new Error(String(error2));
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/deflate-worker-pool.js
+var require_deflate_worker_pool = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/deflate-worker-pool.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.DeflateWorkerPool = void 0;
+    var worker_threads_1 = require("worker_threads");
+    var WORKER_SOURCE = `
+const { parentPort } = require("worker_threads");
+const zlib = require("zlib");
+
+const SAMPLE_SIZE = 4096;
+const INCOMPRESSIBLE_RATIO = 0.95;
+
+const looksIncompressible = (segment) => {
+  if (segment.length < 3 * SAMPLE_SIZE) {
+    return false;
+  }
+  const middle = Math.floor(segment.length / 2);
+  const sample = Buffer.concat([
+    segment.subarray(0, SAMPLE_SIZE),
+    segment.subarray(middle, middle + SAMPLE_SIZE),
+    segment.subarray(segment.length - SAMPLE_SIZE),
+  ]);
+  return (
+    zlib.deflateRawSync(sample, { level: 1 }).length >=
+    sample.length * INCOMPRESSIBLE_RATIO
+  );
+};
+
+parentPort.on("message", ({ segment, level, dictionary }) => {
+  try {
+    const input = Buffer.from(segment.buffer, segment.byteOffset, segment.byteLength);
+    const output = zlib.deflateRawSync(input, {
+      level: looksIncompressible(input) ? 0 : level,
+      finishFlush: zlib.constants.Z_SYNC_FLUSH,
+      ...(dictionary ? { dictionary } : {}),
+    });
+    parentPort.postMessage({ output });
+  } catch (error) {
+    parentPort.postMessage({
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+});
+`;
+    var DeflateWorkerPool = class {
+      workers = [];
+      idle = [];
+      busy = /* @__PURE__ */ new Map();
+      queue = [];
+      failure = void 0;
+      closed = false;
+      closing;
+      constructor(size) {
+        for (let i = 0; i < size; i++) {
+          const worker = new worker_threads_1.Worker(WORKER_SOURCE, { eval: true });
+          this.workers.push(worker);
+          worker.on("message", (reply) => this.onReply(worker, reply));
+          worker.on("error", (error2) => this.onWorkerError(error2));
+          worker.on("exit", (code) => {
+            if (!this.closed) {
+              this.onWorkerError(new Error(`Compression worker exited unexpectedly (code ${code})`));
+            }
+          });
+          worker.unref();
+          this.idle.push(worker);
+        }
+      }
+      compress(job) {
+        if (this.failure) {
+          return Promise.reject(this.failure);
+        }
+        if (this.closed) {
+          return Promise.reject(new Error("DeflateWorkerPool is closed"));
+        }
+        return new Promise((resolve, reject) => {
+          this.queue.push({ ...job, resolve, reject });
+          this.dispatch();
+        });
+      }
+      async close() {
+        if (this.closing) {
+          return this.closing;
+        }
+        this.closed = true;
+        this.idle.length = 0;
+        const error2 = new Error("DeflateWorkerPool is closed");
+        this.queue.splice(0).forEach((job) => job.reject(error2));
+        this.busy.forEach((job) => job.reject(error2));
+        this.busy.clear();
+        this.closing = Promise.all(this.workers.map((worker) => worker.terminate())).then(() => void 0);
+        await this.closing;
+      }
+      dispatch() {
+        if (this.failure || this.closed) {
+          return;
+        }
+        while (this.idle.length > 0 && this.queue.length > 0) {
+          const worker = this.idle.pop();
+          const job = this.queue.shift();
+          this.busy.set(worker, job);
+          worker.ref();
+          worker.postMessage({
+            segment: job.segment,
+            level: job.level,
+            dictionary: job.dictionary
+          });
+        }
+      }
+      onReply(worker, { output, error: error2 }) {
+        const job = this.busy.get(worker);
+        this.busy.delete(worker);
+        worker.unref();
+        if (!this.closed) {
+          this.idle.push(worker);
+        }
+        if (job && output) {
+          job.resolve(Buffer.from(output.buffer, output.byteOffset, output.byteLength));
+        } else if (job) {
+          job.reject(new Error(`Compression failed: ${error2 ?? "unknown error"}`));
+        }
+        this.dispatch();
+      }
+      onWorkerError(error2) {
+        this.failure ??= error2;
+        this.busy.forEach((job) => job.reject(error2));
+        this.busy.clear();
+        this.queue.splice(0).forEach((job) => job.reject(error2));
+      }
+    };
+    exports2.DeflateWorkerPool = DeflateWorkerPool;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/parallel-deflater.js
+var require_parallel_deflater = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/parallel-deflater.js"(exports2) {
+    "use strict";
+    var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.ParallelDeflater = void 0;
+    var p_limit_1 = __importDefault2(require_p_limit());
+    var deflate_worker_pool_1 = require_deflate_worker_pool();
+    var FINAL_EMPTY_BLOCK = Buffer.from([3, 0]);
+    var DEFAULT_SEGMENT_SIZE = 1024 * 1024;
+    var DEFLATE_WINDOW_SIZE = 32 * 1024;
+    var ParallelDeflater = class {
+      options;
+      pending = [];
+      pendingBytes = 0;
+      previousTail = void 0;
+      unemittedSegments = 0;
+      emitChain = Promise.resolve();
+      error = void 0;
+      capacityWaiters = [];
+      limiter;
+      pool;
+      segmentSize;
+      maxUnemittedSegments;
+      constructor(options) {
+        this.options = options;
+        this.limiter = (0, p_limit_1.default)(options.concurrency);
+        this.pool = new deflate_worker_pool_1.DeflateWorkerPool(options.concurrency);
+        this.segmentSize = options.segmentSize ?? DEFAULT_SEGMENT_SIZE;
+        this.maxUnemittedSegments = options.concurrency * 2;
+      }
+      /**
+       * Adds input. Returns a promise only when the caller should wait before
+       * writing more (all compression slots busy, or downstream backed up).
+       */
+      write(chunk) {
+        this.throwIfFailed();
+        let offset2 = 0;
+        while (offset2 < chunk.length) {
+          const length = Math.min(chunk.length - offset2, this.segmentSize - this.pendingBytes);
+          this.pending.push(chunk.subarray(offset2, offset2 + length));
+          this.pendingBytes += length;
+          offset2 += length;
+          if (this.pendingBytes === this.segmentSize) {
+            this.dispatchPending();
+            if (this.unemittedSegments >= this.maxUnemittedSegments) {
+              const remaining = chunk.subarray(offset2);
+              return this.waitForCapacity().then(() => this.write(remaining));
+            }
+          }
+        }
+        return void 0;
+      }
+      /** Compresses any remaining input and emits the final block. */
+      async end() {
+        try {
+          this.throwIfFailed();
+          if (this.pendingBytes > 0) {
+            this.dispatchPending();
+          }
+          await this.emitChain;
+          this.throwIfFailed();
+          await this.options.onOutput(FINAL_EMPTY_BLOCK);
+        } finally {
+          await this.pool.close();
+        }
+      }
+      /** Stops the worker threads without finishing the stream. */
+      async destroy() {
+        this.fail(new Error("ParallelDeflater is destroyed"));
+        this.wakeWaiters();
+        await this.pool.close();
+      }
+      dispatchPending() {
+        const segment = Buffer.concat(this.pending, this.pendingBytes);
+        this.pending = [];
+        this.pendingBytes = 0;
+        const dictionary = this.previousTail;
+        this.previousTail = Buffer.from(segment.subarray(Math.max(0, segment.length - DEFLATE_WINDOW_SIZE)));
+        this.unemittedSegments++;
+        const compressed = this.limiter(() => {
+          this.throwIfFailed();
+          return this.pool.compress({
+            segment,
+            level: this.options.level,
+            dictionary
+          });
+        });
+        const previous = this.emitChain;
+        this.emitChain = (async () => {
+          let output;
+          try {
+            output = await compressed;
+            await previous;
+            if (this.error === void 0) {
+              await this.options.onOutput(output);
+            }
+          } catch (error2) {
+            this.fail(error2);
+          } finally {
+            this.unemittedSegments--;
+            this.wakeWaiters();
+          }
+        })();
+      }
+      fail(error2) {
+        if (this.error === void 0) {
+          this.error = error2;
+        }
+      }
+      throwIfFailed() {
+        if (this.error !== void 0) {
+          throw this.error instanceof Error ? this.error : new Error(String(this.error));
+        }
+      }
+      waitForCapacity() {
+        return new Promise((resolve) => {
+          this.capacityWaiters.push(resolve);
+        }).then(() => this.throwIfFailed());
+      }
+      wakeWaiters() {
+        if (this.error === void 0 && this.unemittedSegments >= this.maxUnemittedSegments) {
+          return;
+        }
+        const waiters = this.capacityWaiters;
+        this.capacityWaiters = [];
+        waiters.forEach((resolve) => resolve());
+      }
+    };
+    exports2.ParallelDeflater = ParallelDeflater;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/part-size-schedule.js
+var require_part_size_schedule = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/part-size-schedule.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getMaxArchiveBytes = exports2.getPartSize = exports2.MAX_UPLOAD_PARTS = void 0;
+    var MiB = 1024 * 1024;
+    exports2.MAX_UPLOAD_PARTS = 100;
+    var RAMP = [
+      { partSize: 8 * MiB, parts: 8 },
+      { partSize: 16 * MiB, parts: 8 },
+      { partSize: 32 * MiB, parts: 8 }
+    ];
+    var getPartSize = (partNumber, serverPartSize) => {
+      let remaining = partNumber - 1;
+      for (const { partSize, parts } of RAMP) {
+        if (remaining < parts) {
+          return Math.min(partSize, serverPartSize);
+        }
+        remaining -= parts;
+      }
+      return serverPartSize;
+    };
+    exports2.getPartSize = getPartSize;
+    var getMaxArchiveBytes = (serverPartSize) => Array.from({ length: exports2.MAX_UPLOAD_PARTS }, (_, i) => (0, exports2.getPartSize)(i + 1, serverPartSize)).reduce((total, size) => total + size, 0);
+    exports2.getMaxArchiveBytes = getMaxArchiveBytes;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js
 var require_multipart_compressing_uploader = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-utils/multipart-compressing-uploader.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.MultipartCompressingUploader = exports2.UPLOAD_ARCHIVE_FILE_FORMAT = void 0;
-    var zlib_1 = require("zlib");
     var client_1 = require_dist13();
     var common_1 = require_dist();
-    var fast_zlib_1 = require_fast_zlib();
     var tar_1 = require_index_min();
+    var compression_concurrency_1 = require_compression_concurrency();
     var multipart_buffer_manager_1 = require_multipart_buffer_manager();
-    var MAX_CONCURRENT_UPLOADS = 4;
+    var parallel_deflater_1 = require_parallel_deflater();
+    var part_size_schedule_1 = require_part_size_schedule();
     exports2.UPLOAD_ARCHIVE_FILE_FORMAT = "tar.d";
+    var DEFAULT_MAX_CONCURRENT_UPLOADS = 16;
+    var MAX_CONCURRENT_UPLOADS_ENV_VAR = "METICULOUS_UPLOAD_CONCURRENCY";
     var COMPRESSION_LEVEL = 3;
     var MultipartCompressingUploader = class {
       args;
       totalUploadedBytes = 0;
-      preSignedUrlIndex = 0;
       logger = (0, common_1.initLogger)();
       bufferManager;
       constructor(args) {
         this.args = args;
         this.bufferManager = new multipart_buffer_manager_1.MultipartBufferManager({
           uploadChunkSize: args.uploadChunkSize,
+          getPartSize: (partNumber) => (0, part_size_schedule_1.getPartSize)(partNumber, args.uploadChunkSize),
+          maxParts: part_size_schedule_1.MAX_UPLOAD_PARTS,
           uploadPart: this.uploadPart.bind(this),
-          maxConcurrentUploads: MAX_CONCURRENT_UPLOADS
+          maxConcurrentUploads: args.maxConcurrentUploads ?? getMaxConcurrentUploads()
         });
       }
       async execute() {
-        const deflate = new fast_zlib_1.DeflateRaw({ level: COMPRESSION_LEVEL });
-        await this.streamTarCompressed(deflate);
-        const finalChunk = deflate.process(Buffer.alloc(0), zlib_1.constants.Z_FINISH);
-        if (finalChunk.length > 0) {
-          this.bufferManager.addChunk(finalChunk);
+        const deflater = new parallel_deflater_1.ParallelDeflater({
+          level: COMPRESSION_LEVEL,
+          concurrency: (0, compression_concurrency_1.getCompressionConcurrency)(),
+          onOutput: async (compressed) => {
+            this.bufferManager.addChunk(compressed);
+            if (this.bufferManager.getBufferSize() >= this.bufferManager.getNextPartSize()) {
+              await this.bufferManager.flush(false);
+            }
+            await this.bufferManager.waitForCapacity();
+          }
+        });
+        try {
+          await this.streamTar(deflater);
+        } catch (error2) {
+          await deflater.destroy();
+          throw error2;
         }
+        await deflater.end();
         await this.bufferManager.flush(true);
         const eTags = await this.bufferManager.finalize();
         return { awsUploadId: this.args.awsUploadId, eTags };
       }
-      streamTarCompressed(deflate) {
+      streamTar(deflater) {
         return new Promise((resolve, reject) => {
           const { folderPath, tarStream: providedTarStream } = this.args;
           const tarStream = providedTarStream ? providedTarStream : folderPath ? (0, tar_1.create)({
@@ -152421,17 +152747,48 @@ var require_multipart_compressing_uploader = __commonJS({
             reject(new Error("MultipartCompressingUploader requires either folderPath or tarStream"));
             return;
           }
-          tarStream.on("data", (chunk) => {
-            const compressed = deflate.process(chunk);
-            if (compressed.length > 0) {
-              this.bufferManager.addChunk(compressed);
-              if (this.bufferManager.getBufferSize() >= this.args.uploadChunkSize) {
-                this.bufferManager.flush(false).catch(reject);
+          let finished = false;
+          let ended = false;
+          let pendingWrite = Promise.resolve();
+          const abort = (error2) => {
+            if (finished) {
+              return;
+            }
+            finished = true;
+            tarStream.removeListener("data", onData);
+            tarStream.destroy?.();
+            reject(error2 instanceof Error ? error2 : new Error(String(error2)));
+          };
+          const onData = (chunk) => {
+            try {
+              const backpressure = deflater.write(chunk);
+              if (backpressure) {
+                pendingWrite = backpressure;
+                tarStream.pause();
+                backpressure.then(() => {
+                  if (!finished && !ended) {
+                    tarStream.resume();
+                  }
+                }, abort);
               }
+            } catch (error2) {
+              abort(error2);
+            }
+          };
+          tarStream.on("data", onData);
+          tarStream.on("end", () => {
+            ended = true;
+            pendingWrite.then(() => {
+              finished = true;
+              resolve();
+            }, abort);
+          });
+          tarStream.on("error", abort);
+          tarStream.on("close", () => {
+            if (!ended) {
+              abort(new Error("Tar stream closed before reaching its end"));
             }
           });
-          tarStream.on("end", resolve);
-          tarStream.on("error", reject);
         });
       }
       async uploadPart(buffer, partNumber, isLastPart) {
@@ -152442,10 +152799,9 @@ var require_multipart_compressing_uploader = __commonJS({
         return eTag;
       }
       async getUploadUrl(buffer, partNumber, isLastPart) {
-        const isFullSizeChunk = buffer.length === this.args.uploadChunkSize;
-        const canUsePreSignedUrl = isFullSizeChunk && !isLastPart && this.preSignedUrlIndex < this.args.uploadPartUrls.length;
-        if (canUsePreSignedUrl) {
-          return this.args.uploadPartUrls[this.preSignedUrlIndex++];
+        const preSignedUrl = this.args.uploadPartUrls[partNumber - 1];
+        if (preSignedUrl !== void 0 && !isLastPart && buffer.length === this.args.uploadChunkSize) {
+          return preSignedUrl;
         }
         const { uploadPartUrl } = await (0, client_1.requestUploadPart)({
           client: this.args.client,
@@ -152460,12 +152816,16 @@ var require_multipart_compressing_uploader = __commonJS({
       }
     };
     exports2.MultipartCompressingUploader = MultipartCompressingUploader;
+    var getMaxConcurrentUploads = () => {
+      const fromEnv = Number.parseInt(process.env[MAX_CONCURRENT_UPLOADS_ENV_VAR] ?? "", 10);
+      return Number.isFinite(fromEnv) && fromEnv >= 1 ? Math.min(fromEnv, 128) : DEFAULT_MAX_CONCURRENT_UPLOADS;
+    };
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js
 var require_asset_upload_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/asset-upload-utils.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -171146,9 +171506,9 @@ var require_lib4 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js
 var require_resource_tracker = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/resource-tracker.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -171252,9 +171612,9 @@ var require_resource_tracker = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js
 var require_url_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/url.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getPort = getPort;
@@ -171282,9 +171642,9 @@ var require_url_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js
 var require_execute_remote_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/execute-remote-test-run.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.executeRemoteTestRun = void 0;
@@ -171412,6 +171772,12 @@ var require_execute_remote_test_run = __commonJS({
           case "ExecutionError":
             logger.info(`Test run failed with execution error.`);
             break;
+          case "Deferred":
+            logger.info(`Test run was deferred and has not been executed: this pull request has already been tested on an earlier commit. Open ${completedTestRun2.url} to reuse those results for this commit, or to run the tests anyway.`);
+            break;
+          case "ResultsReused":
+            logger.info(`Test run was not executed: it reuses the results of an earlier commit's test run on this pull request. See ${completedTestRun2.url} for those results.`);
+            break;
           case "Partial":
             logger.info(`Test run partially completed. Some test cases may not have been executed.`);
             break;
@@ -171489,9 +171855,9 @@ var require_execute_remote_test_run = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/github-rate-limit-retry.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/github-rate-limit-retry.js
 var require_github_rate_limit_retry = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/github-rate-limit-retry.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/github-rate-limit-retry.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.describeGitHubRateLimitRetry = void 0;
@@ -171500,9 +171866,9 @@ var require_github_rate_limit_retry = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js
 var require_upload_assets_and_trigger_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-assets-and-trigger-test-run.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.uploadAssetsAndTriggerTestRun = void 0;
@@ -226191,9 +226557,9 @@ var require_docker2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/docker-utils.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/docker-utils.js
 var require_docker_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/docker-utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/docker-utils.js"(exports2) {
     "use strict";
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -226373,9 +226739,9 @@ var require_docker_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js
 var require_upload_container = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -226600,9 +226966,9 @@ var require_upload_container = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js
 var require_upload_container_and_trigger_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-container-and-trigger-test-run.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.uploadContainerAndTriggerTestRun = void 0;
@@ -226651,9 +227017,9 @@ var require_upload_container_and_trigger_test_run = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-build.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-build.js
 var require_upload_build = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-build.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-build.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.uploadBuild = void 0;
@@ -226748,9 +227114,9 @@ var require_upload_build = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/trigger-test-run.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/trigger-test-run.js
 var require_trigger_test_run = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/trigger-test-run.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/trigger-test-run.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.triggerTestRun = void 0;
@@ -226812,9 +227178,9 @@ var require_trigger_test_run = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/generate-sessions.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/generate-sessions.js
 var require_generate_sessions = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/generate-sessions.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/generate-sessions.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -226969,9 +227335,132 @@ var require_generate_sessions = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-asset-chunk.js
+// node_modules/.pnpm/fast-zlib@2.0.1/node_modules/fast-zlib/index.js
+var require_fast_zlib = __commonJS({
+  "node_modules/.pnpm/fast-zlib@2.0.1/node_modules/fast-zlib/index.js"(exports2) {
+    "use strict";
+    var zlib = require("zlib");
+    var Base = class {
+      constructor(type, options) {
+        if (type.startsWith("Brotli")) {
+          this._noFlushFlag = zlib.constants.BROTLI_OPERATION_PROCESS;
+          if (!Number.isInteger(options.flush)) {
+            options.flush = zlib.constants.BROTLI_OPERATION_FLUSH;
+          }
+        } else {
+          this._noFlushFlag = zlib.constants.Z_NO_FLUSH;
+          if (!Number.isInteger(options.flush)) {
+            options.flush = zlib.constants.Z_SYNC_FLUSH;
+          }
+        }
+        this.instance = new zlib[type](options);
+        this._buffer = [];
+        this._kError = Object.getOwnPropertySymbols(this.instance).find((x) => x.toString().includes("kError"));
+        this._backups = [this.instance.close, this.instance._handle, this.instance._handle.close];
+      }
+      process(_data, _flag) {
+        const z = this.instance;
+        const nff = this._noFlushFlag;
+        const kError = this._kError;
+        const [c, h, hc] = this._backups;
+        const flag = !Number.isInteger(_flag) ? z._defaultFlushFlag : _flag;
+        const data = !Buffer.isBuffer(_data) ? Buffer.from(_data) : _data;
+        const buffer = this._buffer;
+        let result;
+        let error2;
+        z.close = () => void 0;
+        z._handle.close = () => void 0;
+        try {
+          result = z._processChunk(data, flag);
+        } catch (e) {
+          error2 = e;
+        }
+        z.close = c;
+        z._handle = h;
+        z._handle.close = hc;
+        z.removeAllListeners("error");
+        if (error2) {
+          z.reset();
+          z[kError] = null;
+          throw error2;
+        }
+        result = Buffer.from(result);
+        if (flag === nff) {
+          if (result.length) {
+            buffer.push(result);
+            return Buffer.allocUnsafe(0);
+          }
+        } else if (buffer.length) {
+          buffer.push(result);
+          result = Buffer.concat(buffer);
+          this._buffer = [];
+        }
+        return result;
+      }
+      close() {
+        if (!this.instance) {
+          return;
+        }
+        this.instance._handle.close();
+        this.instance._handle = null;
+        this.instance.close();
+        this.instance = null;
+        this.process = () => void 0;
+      }
+    };
+    exports2.Inflate = class extends Base {
+      constructor(options = {}) {
+        super("Inflate", options);
+      }
+    };
+    exports2.Deflate = class extends Base {
+      constructor(options = {}) {
+        super("Deflate", options);
+      }
+    };
+    exports2.InflateRaw = class extends Base {
+      constructor(options = {}) {
+        super("InflateRaw", options);
+      }
+    };
+    exports2.DeflateRaw = class extends Base {
+      constructor(options = {}) {
+        super("DeflateRaw", options);
+      }
+    };
+    exports2.Gzip = class extends Base {
+      constructor(options = {}) {
+        super("Gzip", options);
+      }
+    };
+    exports2.Gunzip = class extends Base {
+      constructor(options = {}) {
+        super("Gunzip", options);
+      }
+    };
+    exports2.Unzip = class extends Base {
+      constructor(options = {}) {
+        super("Unzip", options);
+      }
+    };
+    exports2.BrotliCompress = class extends Base {
+      constructor(options = {}) {
+        super("BrotliCompress", options);
+      }
+    };
+    exports2.BrotliDecompress = class extends Base {
+      constructor(options = {}) {
+        super("BrotliDecompress", options);
+      }
+    };
+    exports2.constants = zlib.constants;
+    exports2.default = exports2;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-asset-chunk.js
 var require_upload_asset_chunk = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-asset-chunk.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/upload-asset-chunk.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.writeCompressedTar = exports2.uploadAssetChunk = void 0;
@@ -227120,9 +227609,9 @@ var require_upload_asset_chunk = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/run-with-uploaded-asset-chunks.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/run-with-uploaded-asset-chunks.js
 var require_run_with_uploaded_asset_chunks = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/run-with-uploaded-asset-chunks.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/run-with-uploaded-asset-chunks.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -227277,9 +227766,9 @@ var require_run_with_uploaded_asset_chunks = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js
 var require_dist15 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.4.1_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+remote-replay-launcher@3.5.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/remote-replay-launcher/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.withCompletedUpload = exports2.readCompletedUpload = exports2.carryCompletedUpload = exports2.describeGitHubRateLimitRetry = exports2.runWithUploadedAssetChunks = exports2.uploadAssetChunk = exports2.generateSessions = exports2.triggerTestRun = exports2.uploadBuild = exports2.uploadContainer = exports2.uploadContainerAndTriggerTestRun = exports2.uploadAssetsFromZip = exports2.uploadAssets = exports2.uploadAssetsAndTriggerTestRun = exports2.executeRemoteTestRun = void 0;

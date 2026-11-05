@@ -15,14 +15,14 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       '@alwaysmeticulous/client':
-        specifier: ^3.4.1
-        version: 3.4.1
+        specifier: ^3.5.0
+        version: 3.5.0
       '@alwaysmeticulous/common':
         specifier: ^3.4.0
         version: 3.4.0
       '@alwaysmeticulous/remote-replay-launcher':
-        specifier: ^3.4.1
-        version: 3.4.1(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))
+        specifier: ^3.5.0
+        version: 3.5.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))
       '@alwaysmeticulous/replay-orchestrator-launcher':
         specifier: ^2.331.1
         version: 2.331.1
@@ -140,16 +140,16 @@ packages:
     resolution: {integrity: sha512-EqbjYPLuZRAS+H4Tf9LP98lM9ugbHvzaMticrGyHrp4SNv6GXIuI2uPxSePtyJpxZksrmt5W9E3bsRd75VdgUA==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/api@3.4.1':
-    resolution: {integrity: sha512-kd3wsxhwAaE/tiJp7AIY4K3InlVRlprjvHohkHKBYWb5/qtP1DDzKTIU80xREXlLP6qcstBruZze1rXlsbfqzw==}
+  '@alwaysmeticulous/api@3.5.0':
+    resolution: {integrity: sha512-Z5F6xgMVpqKLMEM2SYty9iCFal2QpcwFZKnzZuS9vNqTYrm/wrleMVwtia0DiovDfVLytJ1Jglkvd7PDEFvJ7Q==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/client@2.331.1':
     resolution: {integrity: sha512-9ozCPlmk6sw2Dz3rB9LrCklMCjHw5yqrJ7kxGGeNMvrk0vORUkHbHacc5DAGDwuX19L6EvzzItgFIq9/d3VXBQ==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/client@3.4.1':
-    resolution: {integrity: sha512-diTBu/YvE6iIBukRb0lu+lCGeEXdAmFfn47kf3gcfwNgPx5+IHehjWogwpU3vIlr7GODIKhApWgnbQzkN1aEVg==}
+  '@alwaysmeticulous/client@3.5.0':
+    resolution: {integrity: sha512-zoI8PH6Ji5vl33/Mc0KR0wCytlhTFcj79OTmXSSMzlRwhdNtkBnOQb93qLIaCb+9YjlfQklk8++1/8QfXcvrlQ==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/common@2.326.0':
@@ -164,8 +164,8 @@ packages:
     resolution: {integrity: sha512-G5N4w9e3M4nMRbCufa/DAfuCEKAnKdArtwgs3Q4p9jUcA3d7jj4euWwveSuyb9BoI8gIHfJsuC99y02tebbzjQ==}
     engines: {node: '>= 18'}
 
-  '@alwaysmeticulous/remote-replay-launcher@3.4.1':
-    resolution: {integrity: sha512-4yW/+f0LstTgLsPlmtJDBYGGCdtpPWHy07yu5cUnA9PYn7yWj9MkSOnbY44EUA7Rwodnz28AUQCXCoJn/fsHzQ==}
+  '@alwaysmeticulous/remote-replay-launcher@3.5.0':
+    resolution: {integrity: sha512-VJMSVGUFvjyGdPo5PmZbTW1JZqZXoCvPiKQVTBZ/KuOwgTBYdx+JFtimwJtvIR2iD4zJeNXLSb6Cf4b2zElfDw==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/replay-orchestrator-launcher@2.331.1':
@@ -3498,7 +3498,7 @@ snapshots:
 
   '@alwaysmeticulous/api@2.327.0': {}
 
-  '@alwaysmeticulous/api@3.4.1': {}
+  '@alwaysmeticulous/api@3.5.0': {}
 
   '@alwaysmeticulous/client@2.331.1':
     dependencies:
@@ -3515,10 +3515,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/client@3.4.1':
+  '@alwaysmeticulous/client@3.5.0':
     dependencies:
       '@alwaysmeticulous/agent-traces': 3.2.0
-      '@alwaysmeticulous/api': 3.4.1
+      '@alwaysmeticulous/api': 3.5.0
       '@alwaysmeticulous/common': 3.4.0
       loglevel: 1.9.2
       proxy-agent: 6.5.0
@@ -3571,10 +3571,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@alwaysmeticulous/remote-replay-launcher@3.4.1(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))':
+  '@alwaysmeticulous/remote-replay-launcher@3.5.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))':
     dependencies:
-      '@alwaysmeticulous/api': 3.4.1
-      '@alwaysmeticulous/client': 3.4.1
+      '@alwaysmeticulous/api': 3.5.0
+      '@alwaysmeticulous/client': 3.5.0
       '@alwaysmeticulous/common': 3.4.0
       '@alwaysmeticulous/tunnels-client': 3.4.0
       '@sentry/node': 10.70.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.0))

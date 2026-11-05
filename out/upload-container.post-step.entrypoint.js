@@ -22152,9 +22152,9 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/errors.js
 var require_errors2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.WRONG_CREDENTIAL_TYPE_GUIDANCE = exports2.MISSING_AUTH_GUIDANCE = exports2.isAuthFailureStatus = exports2.isFetchError = void 0;
@@ -22249,13 +22249,13 @@ ${requestAndResponse}`;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
 var require_agent_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.SELECTED_SINCE_UNKNOWN_REASONS = exports2.getStructuredSessionData = exports2.getTimelineEventDiff = exports2.getTimelineEvent = exports2.getReplayTimeline = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverageSummary = exports2.getTestRunJsCoverageSummary = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.promoteSessions = exports2.completeBaseRun = exports2.TEST_RUN_PROJECT_MISMATCH_REASON = exports2.assertTestRunInProject = exports2.getTestRunForPullRequest = exports2.getTestRunForCommit = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummaryCounts = exports2.replyToDiffComment = exports2.createDiffComment = exports2.ignoreDiff = exports2.approveDiff = exports2.rejectDiff = exports2.getDiffComments = exports2.getTestRunDiffsSummary = exports2.submitAgentFeedback = exports2.trackAgentFeatureUsage = exports2.TIMELINE_DISPLAY_KINDS = exports2.MAX_TIMELINE_LIMIT = exports2.TIMELINE_DIFF_CLIENT_VERSION = exports2.IMAGE_URLS_CLIENT_VERSION = exports2.getTestRunJsCoverageDiff = exports2.COVERAGE_ORDER_BY_FIELDS = exports2.shouldDefaultToExecutedRanges = exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = exports2.isTestRunProcessingResponse = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = void 0;
-    exports2.getSessions = exports2.SESSIONS_ORDER_BY_FIELDS = void 0;
+    exports2.getStructuredSessionData = exports2.getTimelineEventDiff = exports2.getTimelineEvent = exports2.getReplayTimeline = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverageSummary = exports2.getTestRunJsCoverageSummary = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.promoteSessions = exports2.completeBaseRun = exports2.TEST_RUN_PROJECT_MISMATCH_REASON = exports2.assertTestRunInProject = exports2.getTestRunForPullRequest = exports2.getTestRunForCommit = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummaryCounts = exports2.replyToDiffComment = exports2.createDiffComment = exports2.reviewDiffs = exports2.ignoreDiff = exports2.approveDiff = exports2.rejectDiff = exports2.getDiffComments = exports2.getTestRunDiffsSummary = exports2.submitAgentFeedback = exports2.trackAgentFeatureUsage = exports2.TIMELINE_DISPLAY_KINDS = exports2.MAX_TIMELINE_LIMIT = exports2.TIMELINE_DIFF_CLIENT_VERSION = exports2.IMAGE_URLS_CLIENT_VERSION = exports2.getTestRunJsCoverageDiff = exports2.COVERAGE_ORDER_BY_FIELDS = exports2.shouldDefaultToExecutedRanges = exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = exports2.isTestRunProcessingResponse = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = void 0;
+    exports2.getSessions = exports2.SESSIONS_ORDER_BY_FIELDS = exports2.SELECTED_SINCE_UNKNOWN_REASONS = void 0;
     var errors_1 = require_errors2();
     var getTestRunCheckReport = async (client, testRunId, checkId, options = {}) => {
       const params = {};
@@ -22491,6 +22491,13 @@ var require_agent_api = __commonJS({
       return data;
     };
     exports2.ignoreDiff = ignoreDiff;
+    var reviewDiffs = async ({ client, verdict, diffs }) => {
+      const { data } = await client.post(`agent/replay-diffs/${verdict}`, { diffs }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.reviewDiffs = reviewDiffs;
     var createDiffComment = async ({ client, replayDiffId, screenshotName, text, x, y }) => {
       const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/comments`, { text, x, y }).catch((error2) => {
         throw (0, errors_1.maybeEnrichFetchError)(error2);
@@ -22923,9 +22930,9 @@ var require_agent_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js
 var require_agent_stats_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getTestRunEventStats = exports2.getProjectDailyStats = exports2.getTestRunStats = void 0;
@@ -22974,9 +22981,9 @@ var require_agent_stats_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js
 var require_agent_check_reviews_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getCheckComments = exports2.ignoreCheck = void 0;
@@ -23009,9 +23016,9 @@ var require_agent_check_reviews_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js
 var require_agent_swarm_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getAgentSwarmRunCase = exports2.getAgentSwarmRun = exports2.isAgentSwarmRunProcessingResponse = exports2.getAgentSwarmSetupBlockers = exports2.getAgentSwarmRuns = exports2.AGENT_SWARM_RUN_CLIENT_VERSION = void 0;
@@ -23073,9 +23080,9 @@ var require_agent_swarm_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js
 var require_agent_test_runs_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getTestRuns = void 0;
@@ -23126,9 +23133,9 @@ var require_agent_test_runs_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js
 var require_agent_screenshot_dom_types = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LIMIT = exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = void 0;
@@ -23140,9 +23147,9 @@ var require_agent_screenshot_dom_types = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js
 var require_agent_screenshot_dom_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getScreenshotDomDiffText = exports2.getScreenshotDom = void 0;
@@ -23187,9 +23194,9 @@ var require_agent_screenshot_dom_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js
 var require_agent_screenshot_dom_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.parseNthChildPath = void 0;
@@ -49751,9 +49758,9 @@ var require_dist = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
 var require_github_cloud_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.takeBaseWorkflowDispatchLease = exports2.getGitHubCloudReplayBaseTestRun = void 0;
@@ -49781,9 +49788,9 @@ var require_github_cloud_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js
 var require_agent_traces_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.completeAgentTraceUpload = exports2.requestAgentTraceUpload = void 0;
@@ -76755,25 +76762,27 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
 var require_get_proxy_agent = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getProxyAgent = void 0;
     var proxy_agent_1 = require_dist12();
+    var sharedAgent;
     var getProxyAgent = () => {
-      return new proxy_agent_1.ProxyAgent({
+      sharedAgent ??= new proxy_agent_1.ProxyAgent({
         keepAlive: true
       });
+      return sharedAgent;
     };
     exports2.getProxyAgent = getProxyAgent;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
 var require_retry_transient_upload_errors = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = void 0;
@@ -76845,9 +76854,9 @@ ${responseBody}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js
 var require_send_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.sendToSignedUrl = void 0;
@@ -76881,9 +76890,9 @@ var require_send_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js
 var require_put_buffer_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.putBufferToSignedUrl = void 0;
@@ -76903,9 +76912,9 @@ var require_put_buffer_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js
 var require_upload_agent_trace = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.uploadAgentTrace = void 0;
@@ -76948,9 +76957,9 @@ var require_upload_agent_trace = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
 var require_oauth_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = void 0;
@@ -76983,9 +76992,9 @@ var require_oauth_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
 var require_project_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = void 0;
@@ -77033,9 +77042,9 @@ var require_project_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js
 var require_crawler_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createCrawlerTestRun = void 0;
@@ -77060,9 +77069,9 @@ var require_crawler_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
 var require_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = void 0;
@@ -77115,9 +77124,9 @@ var require_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
 var require_session_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = void 0;
@@ -77167,9 +77176,9 @@ var require_session_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
 var require_replay_diff_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getReplayDiff = void 0;
@@ -77187,9 +77196,9 @@ var require_replay_diff_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
 var require_source_code_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getPrDescriptionForTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = void 0;
@@ -77211,19 +77220,19 @@ var require_source_code_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js
 var require_test_run_status_client_version = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TEST_RUN_STATUS_CLIENT_VERSION = void 0;
-    exports2.TEST_RUN_STATUS_CLIENT_VERSION = 1;
+    exports2.TEST_RUN_STATUS_CLIENT_VERSION = 2;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
 var require_test_run_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.emitTelemetry = exports2.getTestRunReplayDiffs = exports2.searchTestRuns = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = void 0;
@@ -77342,9 +77351,9 @@ var require_test_run_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
 var require_deployment_lock_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getIsLocked = void 0;
@@ -77361,9 +77370,9 @@ var require_deployment_lock_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js
 var require_commit_label_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = void 0;
@@ -77379,9 +77388,9 @@ var require_commit_label_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
 var require_test_run_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.IN_PROGRESS_TEST_RUN_STATUS = void 0;
@@ -77394,21 +77403,22 @@ var require_test_run_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js
 var require_agent_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.REPORT_FLAKE_DESCRIPTION = exports2.IGNORE_DIFF_CRITERIA = exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = void 0;
+    exports2.REPORT_FLAKE_DESCRIPTION = exports2.IGNORE_DIFF_CRITERIA = exports2.MAX_AGENT_DIFF_DECISION_BATCH_SIZE = exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = void 0;
     exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = 1e3;
+    exports2.MAX_AGENT_DIFF_DECISION_BATCH_SIZE = 100;
     exports2.IGNORE_DIFF_CRITERIA = "Only ignore a diff the change has no plausible way to cause: rendering noise (subpixel or anti-aliasing, usually with no DOM change), an animation, spinner or carousel at a different frame, fonts or images loading late, network responses arriving in a different order, or environment noise such as a server-rendered timestamp, a build version or third-party content. First check that the change cannot reach the affected area and that the timeline shows no divergence it explains: a replay that took a different path (a click landing elsewhere, a menu open on one side only) is unrelated only if the change cannot have caused it. Never ignore a diff you cannot explain, or one the change could have caused, even a harmless one or a recorded network response the new code no longer fits: reject a regression, and otherwise leave it undecided with a comment.";
     exports2.REPORT_FLAKE_DESCRIPTION = "Also report the diff to Meticulous to investigate as a likely replay-engine bug. Set it when the replay was nondeterministic where Meticulous should have made it deterministic (rendering, animations, timers, dates, randomness, network ordering, or a replay that took a different path), not for a genuine difference in what the app served, such as a server-rendered timestamp or a build version.";
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
 var require_oauth_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getWebappBaseUrl = exports2.getRevocationEndpoint = exports2.getDeviceAuthorizationEndpoint = exports2.getTokenEndpoint = exports2.OAUTH_SCOPES = exports2.CLI_CLIENT_ID = exports2.KEYCLOAK_ISSUER_URL = void 0;
@@ -77467,9 +77477,9 @@ var require_oauth_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
 var require_oauth_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.parseOAuthErrorBody = exports2.isJwtExpired = exports2.getJwtClaims = exports2.isOAuthJwt = void 0;
@@ -77526,9 +77536,9 @@ var require_oauth_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js
 var require_oauth_refresh_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.describeRequestError = exports2.parseTokenResponse = exports2.classifyErrorResponse = exports2.isUnexpired = exports2.isFresh = exports2.nowSeconds = void 0;
@@ -77592,9 +77602,9 @@ var require_oauth_refresh_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
 var require_oauth_token_store = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.clearOAuthTokens = exports2.storeOAuthTokens = exports2.getStoredOAuthTokens = void 0;
@@ -77642,9 +77652,9 @@ var require_oauth_token_store = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
 var require_oauth_refresh = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getValidAccessToken = void 0;
@@ -77743,9 +77753,9 @@ var require_oauth_refresh = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
 var require_api_token_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getAuthToken = exports2.getApiToken = exports2.readFileBasedToken = void 0;
@@ -77814,9 +77824,9 @@ var require_api_token_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
 var require_oauth_callback_server = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.startCallbackServer = void 0;
@@ -77916,9 +77926,9 @@ ${showAgentSetup ? AGENT_SETUP_SECTION : ""}
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
 var require_oauth_pkce = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.generateState = exports2.generateCodeChallenge = exports2.generateCodeVerifier = void 0;
@@ -77938,9 +77948,9 @@ var require_oauth_pkce = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
 var require_oauth_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.buildAuthorizationUrl = exports2.performOAuthLogin = exports2.CLI_LOGIN_INTENT_ONBOARD = void 0;
@@ -78041,9 +78051,9 @@ ${authUrl}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js
 var require_legacy_project_migration = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.migrateLegacySelectedProjectIfPresent = void 0;
@@ -78094,19 +78104,19 @@ var require_legacy_project_migration = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/version.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/version.js
 var require_version = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.VERSION = void 0;
-    exports2.VERSION = "3.4.1";
+    exports2.VERSION = "3.5.0";
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/client.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/client.js
 var require_client3 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createClientWithOAuth = exports2.resolveApiTokenWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.buildClient = exports2.makeRequest = exports2.declareClientAppInfo = exports2.buildUserAgent = exports2.describeRuntime = void 0;
@@ -78341,9 +78351,9 @@ var require_client3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js
 var require_oauth_device_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.performDeviceLogin = void 0;
@@ -78486,9 +78496,9 @@ var require_oauth_device_login = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js
 var require_oauth_revoke = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.revokeOAuthRefreshToken = void 0;
@@ -78544,9 +78554,9 @@ var require_oauth_revoke = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js
 var require_default_project = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.resolveDefaultProjectId = void 0;
@@ -78561,9 +78571,9 @@ var require_default_project = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js
 var require_opaque_id = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.assertOpaqueId = exports2.isOpaqueId = void 0;
@@ -78580,9 +78590,9 @@ var require_opaque_id = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
 var require_put_file_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.putFileToSignedUrl = void 0;
@@ -78602,9 +78612,9 @@ var require_put_file_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
 var require_project_deployments_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.triggerDeploymentSourceMapIngestion = exports2.getDeploymentSourceMapArtifactDownloadUrl = exports2.getDeploymentSourceMapMappingArtifact = exports2.requestDeploymentSourceMapArtifactUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.projectIdQuery = void 0;
@@ -78756,9 +78766,9 @@ var require_project_deployments_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js
 var require_agentic_session_generation_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.getAgenticRunCoverage = exports2.requestAgenticArtifactUploads = exports2.requestAgenticTestcasesUpload = exports2.cancelAgenticTotpSlotWait = exports2.reserveAgenticTotpSlot = exports2.isAgenticRunCancelled = exports2.getAgenticChangeAnalysis = exports2.getAgenticPreplanStatus = exports2.requestAgenticProgressUpload = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.createLocalAgentSwarmRun = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = void 0;
@@ -78908,9 +78918,9 @@ var require_agentic_session_generation_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js
 var require_catalog_maintenance_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.requestCatalogMaintenanceProposalUpload = exports2.getCatalogMaintenanceWorkflowStatus = exports2.launchCatalogMaintenance = void 0;
@@ -78938,9 +78948,9 @@ var require_catalog_maintenance_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
 var require_registry_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRegistryAuth = void 0;
@@ -78952,9 +78962,9 @@ var require_registry_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
 var require_local_changes_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRelevantSessions = void 0;
@@ -78977,9 +78987,9 @@ var require_local_changes_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/index.js
 var require_dist13 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.4.1/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -79002,10 +79012,10 @@ var require_dist13 = __commonJS({
           __createBinding2(exports3, m, p);
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.trackAgentFeatureUsage = exports2.submitAgentFeedback = exports2.getSessions = exports2.MAX_TIMELINE_LIMIT = exports2.TIMELINE_DISPLAY_KINDS = exports2.TIMELINE_DIFF_CLIENT_VERSION = exports2.getTimelineEventDiff = exports2.getTimelineEvent = exports2.getReplayTimeline = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverageSummary = exports2.getTestRunJsCoverageSummary = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = exports2.promoteSessions = exports2.completeBaseRun = exports2.TEST_RUN_PROJECT_MISMATCH_REASON = exports2.assertTestRunInProject = exports2.getTestRunForPullRequest = exports2.getTestRunForCommit = exports2.getScreenshotDomDiff = exports2.ignoreDiff = exports2.approveDiff = exports2.rejectDiff = exports2.replyToDiffComment = exports2.createDiffComment = exports2.getDiffComments = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunDiffsSummaryCounts = exports2.getTestRunDiffsSummary = exports2.getStructuredSessionData = exports2.getTestRunJsCoverageDiff = exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = exports2.isTestRunProcessingResponse = exports2.SELECTED_SINCE_UNKNOWN_REASONS = exports2.SESSIONS_ORDER_BY_FIELDS = exports2.COVERAGE_ORDER_BY_FIELDS = exports2.shouldDefaultToExecutedRanges = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = void 0;
-    exports2.getTestRunReplayDiffs = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = exports2.getPrDescriptionForTestRun = exports2.getReplayDiff = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.createCrawlerTestRun = exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = exports2.uploadAgentTrace = exports2.requestAgentTraceUpload = exports2.completeAgentTraceUpload = exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LIMIT = exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = exports2.parseNthChildPath = exports2.getScreenshotDomDiffText = exports2.getScreenshotDom = exports2.getTestRuns = exports2.isAgentSwarmRunProcessingResponse = exports2.getAgentSwarmSetupBlockers = exports2.getAgentSwarmRuns = exports2.getAgentSwarmRun = exports2.getAgentSwarmRunCase = exports2.ignoreCheck = exports2.getCheckComments = exports2.getTestRunEventStats = exports2.getProjectDailyStats = exports2.getTestRunStats = void 0;
-    exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestDeploymentSourceMapArtifactUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putBufferToSignedUrl = exports2.putFileToSignedUrl = exports2.assertOpaqueId = exports2.isOpaqueId = exports2.getProxyAgent = exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.migrateLegacySelectedProjectIfPresent = exports2.getWebappBaseUrl = exports2.resolveDefaultProjectId = exports2.getStoredOAuthTokens = exports2.clearOAuthTokens = exports2.revokeOAuthRefreshToken = exports2.getValidAccessToken = exports2.performDeviceLogin = exports2.performOAuthLogin = exports2.CLI_LOGIN_INTENT_ONBOARD = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.declareClientAppInfo = exports2.createClientWithOAuth = exports2.createClient = exports2.readFileBasedToken = exports2.getAuthToken = exports2.getApiToken = exports2.TEST_RUN_STATUS_CLIENT_VERSION = exports2.REPORT_FLAKE_DESCRIPTION = exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = exports2.IGNORE_DIFF_CRITERIA = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = exports2.getIsLocked = exports2.emitTelemetry = exports2.searchTestRuns = exports2.getLatestTestRunResults = void 0;
-    exports2.getRelevantSessions = exports2.MISSING_AUTH_GUIDANCE = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isFetchError = exports2.isAuthFailureStatus = exports2.getRegistryAuth = exports2.requestCatalogMaintenanceProposalUpload = exports2.launchCatalogMaintenance = exports2.getCatalogMaintenanceWorkflowStatus = exports2.requestAgenticProgressUpload = exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.cancelAgenticTotpSlotWait = exports2.reserveAgenticTotpSlot = exports2.getAgenticChangeAnalysis = exports2.getAgenticPreplanStatus = exports2.isAgenticRunCancelled = exports2.getAgenticRunCoverage = exports2.requestAgenticTestcasesUpload = exports2.requestAgenticArtifactUploads = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.createLocalAgentSwarmRun = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = exports2.getDeploymentSourceMapArtifactDownloadUrl = exports2.getDeploymentSourceMapMappingArtifact = exports2.triggerDeploymentSourceMapIngestion = exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = void 0;
+    exports2.submitAgentFeedback = exports2.getSessions = exports2.MAX_TIMELINE_LIMIT = exports2.TIMELINE_DISPLAY_KINDS = exports2.TIMELINE_DIFF_CLIENT_VERSION = exports2.getTimelineEventDiff = exports2.getTimelineEvent = exports2.getReplayTimeline = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverageSummary = exports2.getTestRunJsCoverageSummary = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = exports2.promoteSessions = exports2.completeBaseRun = exports2.TEST_RUN_PROJECT_MISMATCH_REASON = exports2.assertTestRunInProject = exports2.getTestRunForPullRequest = exports2.getTestRunForCommit = exports2.getScreenshotDomDiff = exports2.reviewDiffs = exports2.ignoreDiff = exports2.approveDiff = exports2.rejectDiff = exports2.replyToDiffComment = exports2.createDiffComment = exports2.getDiffComments = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunDiffsSummaryCounts = exports2.getTestRunDiffsSummary = exports2.getStructuredSessionData = exports2.getTestRunJsCoverageDiff = exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = exports2.isTestRunProcessingResponse = exports2.SELECTED_SINCE_UNKNOWN_REASONS = exports2.SESSIONS_ORDER_BY_FIELDS = exports2.COVERAGE_ORDER_BY_FIELDS = exports2.shouldDefaultToExecutedRanges = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = void 0;
+    exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = exports2.getPrDescriptionForTestRun = exports2.getReplayDiff = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.createCrawlerTestRun = exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = exports2.uploadAgentTrace = exports2.requestAgentTraceUpload = exports2.completeAgentTraceUpload = exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LIMIT = exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = exports2.parseNthChildPath = exports2.getScreenshotDomDiffText = exports2.getScreenshotDom = exports2.getTestRuns = exports2.isAgentSwarmRunProcessingResponse = exports2.getAgentSwarmSetupBlockers = exports2.getAgentSwarmRuns = exports2.getAgentSwarmRun = exports2.getAgentSwarmRunCase = exports2.ignoreCheck = exports2.getCheckComments = exports2.getTestRunEventStats = exports2.getProjectDailyStats = exports2.getTestRunStats = exports2.trackAgentFeatureUsage = void 0;
+    exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestDeploymentSourceMapArtifactUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putBufferToSignedUrl = exports2.putFileToSignedUrl = exports2.assertOpaqueId = exports2.isOpaqueId = exports2.getProxyAgent = exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.migrateLegacySelectedProjectIfPresent = exports2.getWebappBaseUrl = exports2.resolveDefaultProjectId = exports2.getStoredOAuthTokens = exports2.clearOAuthTokens = exports2.revokeOAuthRefreshToken = exports2.getValidAccessToken = exports2.performDeviceLogin = exports2.performOAuthLogin = exports2.CLI_LOGIN_INTENT_ONBOARD = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.declareClientAppInfo = exports2.createClientWithOAuth = exports2.createClient = exports2.readFileBasedToken = exports2.getAuthToken = exports2.getApiToken = exports2.TEST_RUN_STATUS_CLIENT_VERSION = exports2.REPORT_FLAKE_DESCRIPTION = exports2.MAX_AGENT_DIFF_DECISION_BATCH_SIZE = exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = exports2.IGNORE_DIFF_CRITERIA = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = exports2.getIsLocked = exports2.emitTelemetry = exports2.searchTestRuns = exports2.getLatestTestRunResults = exports2.getTestRunReplayDiffs = void 0;
+    exports2.getRelevantSessions = exports2.MISSING_AUTH_GUIDANCE = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isFetchError = exports2.isAuthFailureStatus = exports2.getRegistryAuth = exports2.requestCatalogMaintenanceProposalUpload = exports2.launchCatalogMaintenance = exports2.getCatalogMaintenanceWorkflowStatus = exports2.requestAgenticProgressUpload = exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.cancelAgenticTotpSlotWait = exports2.reserveAgenticTotpSlot = exports2.getAgenticChangeAnalysis = exports2.getAgenticPreplanStatus = exports2.isAgenticRunCancelled = exports2.getAgenticRunCoverage = exports2.requestAgenticTestcasesUpload = exports2.requestAgenticArtifactUploads = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.createLocalAgentSwarmRun = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = exports2.getDeploymentSourceMapArtifactDownloadUrl = exports2.getDeploymentSourceMapMappingArtifact = exports2.triggerDeploymentSourceMapIngestion = exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = void 0;
     var agent_api_1 = require_agent_api();
     Object.defineProperty(exports2, "getAgentWhoami", { enumerable: true, get: function() {
       return agent_api_1.getAgentWhoami;
@@ -79078,6 +79088,9 @@ var require_dist13 = __commonJS({
     } });
     Object.defineProperty(exports2, "ignoreDiff", { enumerable: true, get: function() {
       return agent_api_1.ignoreDiff;
+    } });
+    Object.defineProperty(exports2, "reviewDiffs", { enumerable: true, get: function() {
+      return agent_api_1.reviewDiffs;
     } });
     Object.defineProperty(exports2, "getScreenshotDomDiff", { enumerable: true, get: function() {
       return agent_api_1.getScreenshotDomDiff;
@@ -79355,6 +79368,9 @@ var require_dist13 = __commonJS({
     } });
     Object.defineProperty(exports2, "MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH", { enumerable: true, get: function() {
       return agent_constants_1.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH;
+    } });
+    Object.defineProperty(exports2, "MAX_AGENT_DIFF_DECISION_BATCH_SIZE", { enumerable: true, get: function() {
+      return agent_constants_1.MAX_AGENT_DIFF_DECISION_BATCH_SIZE;
     } });
     Object.defineProperty(exports2, "REPORT_FLAKE_DESCRIPTION", { enumerable: true, get: function() {
       return agent_constants_1.REPORT_FLAKE_DESCRIPTION;
