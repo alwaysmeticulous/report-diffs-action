@@ -36,7 +36,6 @@
     "@alwaysmeticulous/sentry": "^3.4.0",
     "@sentry/cli": "^2.58.4",
     "@sentry/node": "^9.47.1",
-    "joi": "^17.13.3",
     "lodash.debounce": "^4.0.8",
     "loglevel": "^1.9.2",
     "loglevel-plugin-prefix": "^0.8.4",
@@ -48,7 +47,6 @@
   "devDependencies": {
     "@alwaysmeticulous/api": "^2.327.0",
     "@alwaysmeticulous/sdk-bundles-api": "^2.331.0",
-    "@alwaysmeticulous/tunnels-client": "^2.326.0",
     "@types/lodash.debounce": "^4.0.9",
     "@types/luxon": "^3.7.1",
     "@types/node": "^20.19.33",

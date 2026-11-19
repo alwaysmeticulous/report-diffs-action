@@ -29,8 +29,10 @@ describe("setMeticulousClientUserAgentSuffix", () => {
 
   it("includes the sub-action and the pinned ref", () => {
     process.env["GITHUB_ACTION_REF"] = "v1";
-    setMeticulousClientUserAgentSuffix("cloud-compute");
-    expect(process.env[ENV_VAR]).toBe("report-diffs-action/cloud-compute@v1");
+    setMeticulousClientUserAgentSuffix("upload-container");
+    expect(process.env[ENV_VAR]).toBe(
+      "report-diffs-action/upload-container@v1"
+    );
   });
 
   it("uses the root action name when no sub-action is given", () => {
@@ -46,9 +48,9 @@ describe("setMeticulousClientUserAgentSuffix", () => {
 
   it("strips characters that would be invalid in a header value", () => {
     process.env["GITHUB_ACTION_REF"] = "v1\r\n evil";
-    setMeticulousClientUserAgentSuffix("cloud-compute");
+    setMeticulousClientUserAgentSuffix("upload-container");
     expect(process.env[ENV_VAR]).toBe(
-      "report-diffs-action/cloud-compute@v1evil"
+      "report-diffs-action/upload-container@v1evil"
     );
   });
 });
