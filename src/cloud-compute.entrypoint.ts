@@ -1,17 +1,8 @@
-import "source-map-support/register";
 import { setFailed } from "@actions/core";
-import * as Sentry from "@sentry/node";
-import { runMeticulousTestsCloudComputeAction } from "./actions/cloud-compute/cloud-compute";
-import { setMeticulousClientUserAgentSuffix } from "./common/user-agent";
 
-setMeticulousClientUserAgentSuffix("cloud-compute");
-
-runMeticulousTestsCloudComputeAction().catch(async (error) => {
-  Sentry.captureException(error);
-
-  const message = error instanceof Error ? error.message : `${error}`;
-  setFailed(message);
-
-  await Sentry.flush(5_000); // Wait for Sentry to flush before exiting
-  process.exit(1);
-});
+// The secure tunnel this action relied on has been shut down. The action is kept as a stub so
+// workflows pinned to `cloud-compute@v1` fail with a migration message rather than a missing action.
+setFailed(
+  "The tunnel is no longer supported. Please migrate to `upload-assets` or `upload-container`: " +
+    "https://app.meticulous.ai/docs/github-actions-v2"
+);
