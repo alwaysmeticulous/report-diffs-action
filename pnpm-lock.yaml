@@ -35,9 +35,6 @@ importers:
       '@sentry/node':
         specifier: ^9.47.1
         version: 9.47.1
-      joi:
-        specifier: ^17.13.3
-        version: 17.13.3
       lodash.debounce:
         specifier: ^4.0.8
         version: 4.0.8
@@ -66,9 +63,6 @@ importers:
       '@alwaysmeticulous/sdk-bundles-api':
         specifier: ^2.331.0
         version: 2.331.0
-      '@alwaysmeticulous/tunnels-client':
-        specifier: ^2.326.0
-        version: 2.326.0
       '@types/lodash.debounce':
         specifier: ^4.0.9
         version: 4.0.9
@@ -178,10 +172,6 @@ packages:
 
   '@alwaysmeticulous/sentry@3.4.0':
     resolution: {integrity: sha512-MKXUQ/l4giUNZ3UP7P8TjptfFot55tYBDI5gye6A/owJXEH6UUemc3MjFbtAu/wexuf6VPbUCrEsOE7Rr4NPiA==}
-    engines: {node: '>= 18'}
-
-  '@alwaysmeticulous/tunnels-client@2.326.0':
-    resolution: {integrity: sha512-egbgM3gox0N7P8D1Udx71ZrBDDOs25G1N1vtvRLo4UG+idZ3SnNbH9si1f0oqc9adIK2kS0gn2v5jV74bMq/Lw==}
     engines: {node: '>= 18'}
 
   '@alwaysmeticulous/tunnels-client@3.4.0':
@@ -544,12 +534,6 @@ packages:
     resolution: {integrity: sha512-wtF6h+DY6M3YaDBPAmvuuA6jV8Sif9MjtOI5euKFWRgCDl5PeDpPsHR9u2l6St5ceY8AZgoNDww5+HvEsXFsGg==}
     engines: {node: '>=6'}
     hasBin: true
-
-  '@hapi/hoek@9.3.0':
-    resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
-
-  '@hapi/topo@5.1.0':
-    resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -1186,15 +1170,6 @@ packages:
   '@sentry/server-utils@10.70.0':
     resolution: {integrity: sha512-rzegZjMFFgCp3o+N8+XU13rfSvz4B+f8rU0ijBGrQcHdMNyfsFDTu1UTm262JofmrV2u+s+D0u0vFTnqtOGkbA==}
     engines: {node: '>=18'}
-
-  '@sideway/address@4.1.5':
-    resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
-
-  '@sideway/formula@3.0.1':
-    resolution: {integrity: sha512-/poHZJJVjx3L+zVD6g9KgHfYnb443oi7wLu/XKojDviHy6HOEOA6z1Trk5aR1dGcmPenJEgb2sK2I80LeS3MIg==}
-
-  '@sideway/pinpoint@2.0.0':
-    resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -2463,9 +2438,6 @@ packages:
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
-  joi@17.13.3:
-    resolution: {integrity: sha512-otDA4ldcIx+ZXsKHWmp0YizCweVRZG96J10b0FevjfuncLO1oX59THoAmHkNubYJ+9gWsYsp5k8v4ib6oDv1fA==}
-
   js-yaml@4.1.1:
     resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
     hasBin: true
@@ -3617,21 +3589,6 @@ snapshots:
       - '@opentelemetry/exporter-trace-otlp-http'
       - supports-color
 
-  '@alwaysmeticulous/tunnels-client@2.326.0':
-    dependencies:
-      '@alwaysmeticulous/common': 2.326.0
-      agentkeepalive: 4.6.0
-      cacheable-lookup: 6.1.0
-      loglevel: 1.9.2
-      proxy-agent: 6.5.0
-    transitivePeerDependencies:
-      - bare-abort-controller
-      - bare-buffer
-      - bufferutil
-      - react-native-b4a
-      - supports-color
-      - utf-8-validate
-
   '@alwaysmeticulous/tunnels-client@3.4.0':
     dependencies:
       '@alwaysmeticulous/common': 3.4.0
@@ -3878,12 +3835,6 @@ snapshots:
       long: 5.3.2
       protobufjs: 7.6.5
       yargs: 17.7.3
-
-  '@hapi/hoek@9.3.0': {}
-
-  '@hapi/topo@5.1.0':
-    dependencies:
-      '@hapi/hoek': 9.3.0
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
@@ -4594,14 +4545,6 @@ snapshots:
       meriyah: 6.1.4
     transitivePeerDependencies:
       - supports-color
-
-  '@sideway/address@4.1.5':
-    dependencies:
-      '@hapi/hoek': 9.3.0
-
-  '@sideway/formula@3.0.1': {}
-
-  '@sideway/pinpoint@2.0.0': {}
 
   '@standard-schema/spec@1.1.0': {}
 
@@ -6054,14 +5997,6 @@ snapshots:
       '@isaacs/cliui': 8.0.2
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
-
-  joi@17.13.3:
-    dependencies:
-      '@hapi/hoek': 9.3.0
-      '@hapi/topo': 5.1.0
-      '@sideway/address': 4.1.5
-      '@sideway/formula': 3.0.1
-      '@sideway/pinpoint': 2.0.0
 
   js-yaml@4.1.1:
     dependencies:

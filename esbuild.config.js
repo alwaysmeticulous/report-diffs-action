@@ -30,12 +30,6 @@ const targets = [
   },
   {
     ...baseConfig,
-    entryPoints: ["src/cloud-compute.post-step.entrypoint.ts"],
-    outfile: "out/cloud-compute.post-step.entrypoint.js",
-    format: "cjs",
-  },
-  {
-    ...baseConfig,
     entryPoints: ["src/upload-assets.entrypoint.ts"],
     outfile: "out/upload-assets.entrypoint.js",
     format: "cjs",
@@ -62,14 +56,6 @@ const targets = [
     ...baseConfig,
     entryPoints: ["src/ensure-base.entrypoint.ts"],
     outfile: "out/ensure-base.entrypoint.js",
-    format: "cjs",
-  },
-  {
-    ...baseConfig,
-    entryPoints: [
-      "node_modules/@alwaysmeticulous/tunnels-client/dist/lib/tunnel-worker.entrypoint.js",
-    ],
-    outfile: "out/tunnel-worker.entrypoint.js",
     format: "cjs",
   },
 ];

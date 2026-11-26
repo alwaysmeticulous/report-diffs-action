@@ -40,7 +40,7 @@ The project contains three separate GitHub Actions:
    - Entry: `src/main.entrypoint.ts` → `dist/main.entrypoint.mjs` (ESModule)
    - Post-step: `src/main.post-step.entrypoint.ts` → `out/post-step.entrypoint.js` (CommonJS)
 
-2. **Cloud Compute Action** (`cloud-compute/action.yml`) - Runs tests in Meticulous cloud
+2. **Cloud Compute Action** (`cloud-compute/action.yml`) - Removed (it relied on the secure tunnel, which is no longer supported). Kept as a stub that always fails with a migration message, so workflows pinned to `@v1` get a clear error
 
    - Entry: `src/cloud-compute.entrypoint.ts` → `out/cloud-compute.entrypoint.js`
 
@@ -57,7 +57,7 @@ The project contains three separate GitHub Actions:
 
 ### Key Directories
 
-- `/src/actions/` - Implementation for each action (main, cloud-compute, upload-assets)
+- `/src/actions/` - Implementation for each action (main, upload-assets, upload-container, ensure-base)
 - `/src/common/` - Shared utilities and types
 - `/dist/` - Built ESModule output (main action)
 - `/out/` - Built CommonJS output (other actions)
