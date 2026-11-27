@@ -1,5 +1,9 @@
 import { getInput } from "@actions/core";
 import { ContainerEnvVariable } from "@alwaysmeticulous/client";
+import {
+  ActionAuthInputs,
+  getActionAuthInputs,
+} from "../../common/resolve-api-token";
 
 // Not exported from `@alwaysmeticulous/remote-replay-launcher`, so re-declared here to match
 // `CompanionAssetsOptions` structurally.
@@ -10,21 +14,20 @@ export interface CompanionAssetsOptions {
   regex: string;
 }
 
-export interface UploadContainerInputs {
-  apiToken: string;
+export interface UploadContainerInputs extends ActionAuthInputs {
   githubToken: string;
   imageTag: string;
   containerPort: number | undefined;
   containerEnv: ContainerEnvVariable[] | undefined;
   containerHealthCheckEndpoint: string | undefined;
-  commitSha?: string;
+  commitSha?: string | undefined;
   companionAssets: CompanionAssetsOptions | undefined;
-  baseWorkflowRunId?: string;
-  baseCommitSha?: string;
+  baseWorkflowRunId?: string | undefined;
+  baseCommitSha?: string | undefined;
 }
 
 export const getUploadContainerInputs = (): UploadContainerInputs => {
-  const apiToken = getInput("api-token", { required: true });
+  const authInputs = getActionAuthInputs();
   const githubToken = getInput("github-token", { required: true });
   const imageTag = getInput("image-tag", { required: true });
   const containerPortStr = getInput("container-port");
@@ -124,7 +127,7 @@ export const getUploadContainerInputs = (): UploadContainerInputs => {
       : undefined;
 
   return {
-    apiToken,
+    ...authInputs,
     githubToken,
     imageTag: imageTag.trim(),
     containerPort,

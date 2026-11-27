@@ -2,8 +2,25 @@ name: "Meticulous - Upload Container"
 description: "Upload a Docker container to Meticulous for testing."
 inputs:
   api-token:
-    description: "Meticulous API token."
-    required: true
+    description: |
+      Meticulous API token. Optional when authenticating via GitHub Actions OIDC
+      (requires 'permissions: id-token: write' and a CI trust policy in your Meticulous
+      project settings). When provided, takes precedence over OIDC.
+    required: false
+  project:
+    description: |
+      Meticulous project identifier ('organization/project') used when
+      authenticating via GitHub Actions OIDC. Optional when the repository maps to a
+      single project with CI OIDC enabled; required when multiple projects share a
+      repository or when using a custom trust policy.
+    required: false
+  oidc-audience:
+    description: |
+      Optional OIDC audience override when authenticating via GitHub Actions OIDC.
+      Defaults to 'https://app.meticulous.ai' (or the METICULOUS_OIDC_AUDIENCE
+      environment variable). Only needed if your CI trust policy configures a custom
+      audience.
+    required: false
   github-token:
     description: "GITHUB_TOKEN or a repo scoped PAT."
     required: true

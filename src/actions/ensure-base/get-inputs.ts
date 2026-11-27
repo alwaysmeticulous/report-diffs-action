@@ -1,14 +1,17 @@
 import { getInput } from "@actions/core";
+import {
+  ActionAuthInputs,
+  getActionAuthInputs,
+} from "../../common/resolve-api-token";
 
-export interface EnsureBaseInputs {
-  apiToken: string;
+export interface EnsureBaseInputs extends ActionAuthInputs {
   githubToken: string;
   ref?: string;
 }
 
 export const getEnsureBaseInputs = (): EnsureBaseInputs => {
-  const apiToken = getInput("api-token", { required: true });
+  const authInputs = getActionAuthInputs();
   const githubToken = getInput("github-token", { required: true });
   const ref = getInput("ref", { required: false }) || undefined;
-  return { apiToken, githubToken, ...(ref ? { ref } : {}) };
+  return { ...authInputs, githubToken, ...(ref ? { ref } : {}) };
 };
