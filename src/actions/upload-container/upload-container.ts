@@ -15,6 +15,10 @@ import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
+import {
+  createActionApiTokenResolver,
+  UPLOAD_MIN_REMAINING_VALIDITY_MS,
+} from "../../common/resolve-api-token";
 import { enrichSentryContextWithGitHubActionsContext } from "../../common/sentry.utils";
 import { getUploadContainerInputs } from "./get-inputs";
 
@@ -31,7 +35,9 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
     async (span) => {
       try {
         const {
-          apiToken,
+          apiToken: apiTokenInput,
+          project,
+          oidcAudience,
           githubToken,
           imageTag,
           containerPort,
@@ -54,6 +60,14 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           return;
         }
 
+        const tokenResolver = createActionApiTokenResolver({
+          apiToken: apiTokenInput,
+          project,
+          oidcAudience,
+          logger,
+        });
+        const initialApiToken = await tokenResolver.getApiToken();
+
         const { base, head } = await getBaseAndHeadCommitShas(
           event,
           {
@@ -64,7 +78,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
         );
         const { baseResolutionDetails } = await safeEnsureBaseTestsExists({
           event,
-          apiToken,
+          apiToken: initialApiToken,
           base,
           context,
           octokit,
@@ -77,7 +91,9 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           }),
           getBaseTestRun: async ({ baseSha }) =>
             await getLatestTestRunResults({
-              client: createClient({ apiToken }),
+              client: createClient({
+                apiToken: await tokenResolver.getApiToken(),
+              }),
               commitSha: baseSha,
               // We deliberately don't filter by environment version here because when containers are uploaded,
               // the backend can trigger a re-run. So we don't care whether we have a valid base now,
@@ -85,7 +101,7 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
             }),
           getBaseTestRunResolvedByBackend: async () =>
             await getBaseTestRunResolvedByBackend({
-              apiToken,
+              apiToken: await tokenResolver.getApiToken(),
               headCommitSha: head,
               logger,
             }),
@@ -103,8 +119,12 @@ export const runMeticulousUploadContainerAction = async (): Promise<void> => {
           );
         }
 
+        const uploadApiToken = await tokenResolver.getApiToken({
+          minRemainingValidityMs: UPLOAD_MIN_REMAINING_VALIDITY_MS,
+        });
+
         await uploadContainerAndTriggerTestRun({
-          apiToken,
+          apiToken: uploadApiToken,
           localImageTag: imageTag,
           commitSha,
           waitForBase: false,

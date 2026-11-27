@@ -13,6 +13,7 @@ import { getBaseAndHeadCommitShas } from "../../common/get-base-and-head-commit-
 import { getCodeChangeEvent } from "../../common/get-code-change-event";
 import { initLogger } from "../../common/logger.utils";
 import { getOctokitOrFail } from "../../common/octokit";
+import { createActionApiTokenResolver } from "../../common/resolve-api-token";
 import {
   getEnsureBaseCommitResolution,
   resolveCheckoutRefToSha,
@@ -32,7 +33,13 @@ export const runMeticulousEnsureBaseAction = async (): Promise<void> => {
     },
     async (span) => {
       try {
-        const { apiToken, githubToken, ref } = getEnsureBaseInputs();
+        const {
+          apiToken: apiTokenInput,
+          project,
+          oidcAudience,
+          githubToken,
+          ref,
+        } = getEnsureBaseInputs();
         const event = getCodeChangeEvent(context.eventName, context.payload);
         const octokit = getOctokitOrFail(githubToken);
 
@@ -52,6 +59,15 @@ export const runMeticulousEnsureBaseAction = async (): Promise<void> => {
           span.setStatus({ code: 1, message: "ok" });
           return 0;
         }
+
+        const tokenResolver = createActionApiTokenResolver({
+          apiToken: apiTokenInput,
+          project,
+          oidcAudience,
+          persistState: false,
+          logger,
+        });
+        const apiToken = await tokenResolver.getApiToken();
 
         // Resolved the way the upload step that waits on this build will resolve it, so the
         // build we dispatch is the one it asks for. `ref` is the caller's checkout; omitted

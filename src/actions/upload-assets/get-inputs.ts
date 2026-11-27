@@ -1,19 +1,22 @@
 import { getInput } from "@actions/core";
 import { AssetUploadMetadata } from "@alwaysmeticulous/api";
+import {
+  ActionAuthInputs,
+  getActionAuthInputs,
+} from "../../common/resolve-api-token";
 
-export interface UploadAssetsInputs {
-  apiToken: string;
+export interface UploadAssetsInputs extends ActionAuthInputs {
   githubToken: string;
   appDirectory: string;
   rewrites: AssetUploadMetadata["rewrites"];
-  baseApiUrl?: string;
-  commitSha?: string;
-  baseWorkflowRunId?: string;
-  baseCommitSha?: string;
+  baseApiUrl?: string | undefined;
+  commitSha?: string | undefined;
+  baseWorkflowRunId?: string | undefined;
+  baseCommitSha?: string | undefined;
 }
 
 export const getUploadAssetsInputs = (): UploadAssetsInputs => {
-  const apiToken = getInput("api-token", { required: true });
+  const authInputs = getActionAuthInputs();
   const githubToken = getInput("github-token", { required: true });
   const appDirectory = getInput("app-directory", { required: true });
   const rewrites = JSON.parse(getInput("rewrites") || "[]");
@@ -45,7 +48,7 @@ export const getUploadAssetsInputs = (): UploadAssetsInputs => {
   }
 
   return {
-    apiToken,
+    ...authInputs,
     githubToken,
     appDirectory,
     rewrites,

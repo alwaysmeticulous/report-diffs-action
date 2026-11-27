@@ -22004,10 +22004,10 @@ var require_core = __commonJS({
       (0, command_1.issueCommand)("set-env", { name }, convertedVal);
     }
     exports2.exportVariable = exportVariable2;
-    function setSecret(secret) {
+    function setSecret2(secret) {
       (0, command_1.issueCommand)("add-mask", {}, secret);
     }
-    exports2.setSecret = setSecret;
+    exports2.setSecret = setSecret2;
     function addPath(inputPath) {
       const filePath = process.env["GITHUB_PATH"] || "";
       if (filePath) {
@@ -22018,7 +22018,7 @@ var require_core = __commonJS({
       process.env["PATH"] = `${inputPath}${path.delimiter}${process.env["PATH"]}`;
     }
     exports2.addPath = addPath;
-    function getInput2(name, options) {
+    function getInput3(name, options) {
       const val = process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
       if (options && options.required && !val) {
         throw new Error(`Input required and not supplied: ${name}`);
@@ -22028,9 +22028,9 @@ var require_core = __commonJS({
       }
       return val.trim();
     }
-    exports2.getInput = getInput2;
+    exports2.getInput = getInput3;
     function getMultilineInput(name, options) {
-      const inputs = getInput2(name, options).split("\n").filter((x) => x !== "");
+      const inputs = getInput3(name, options).split("\n").filter((x) => x !== "");
       if (options && options.trimWhitespace === false) {
         return inputs;
       }
@@ -22040,7 +22040,7 @@ var require_core = __commonJS({
     function getBooleanInput(name, options) {
       const trueValue = ["true", "True", "TRUE"];
       const falseValue = ["false", "False", "FALSE"];
-      const val = getInput2(name, options);
+      const val = getInput3(name, options);
       if (trueValue.includes(val))
         return true;
       if (falseValue.includes(val))
@@ -22112,18 +22112,18 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       });
     }
     exports2.group = group;
-    function saveState(name, value) {
+    function saveState2(name, value) {
       const filePath = process.env["GITHUB_STATE"] || "";
       if (filePath) {
         return (0, file_command_1.issueFileCommand)("STATE", (0, file_command_1.prepareKeyValueMessage)(name, value));
       }
       (0, command_1.issueCommand)("save-state", { name }, (0, utils_1.toCommandValue)(value));
     }
-    exports2.saveState = saveState;
-    function getState(name) {
+    exports2.saveState = saveState2;
+    function getState2(name) {
       return process.env[`STATE_${name}`] || "";
     }
-    exports2.getState = getState;
+    exports2.getState = getState2;
     function getIDToken(aud) {
       return __awaiter2(this, void 0, void 0, function* () {
         return yield oidc_utils_1.OidcClient.getIDToken(aud);
@@ -29366,1074 +29366,23 @@ var require_github = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/errors.js
-var require_errors2 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-replay-diff-scope.js
+var require_agent_replay_diff_scope = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-replay-diff-scope.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.WRONG_CREDENTIAL_TYPE_GUIDANCE = exports2.MISSING_AUTH_GUIDANCE = exports2.isAuthFailureStatus = exports2.isFetchError = void 0;
-    var isFetchError = (error2) => {
-      return error2 && typeof error2 === "object" && error2.response;
-    };
-    exports2.isFetchError = isFetchError;
-    var isAuthFailureStatus = (status) => status === 401 || status === 403;
-    exports2.isAuthFailureStatus = isAuthFailureStatus;
-    exports2.MISSING_AUTH_GUIDANCE = "An API token is probably missing or invalid. Set METICULOUS_API_TOKEN, pass --apiToken, or run `meticulous auth login`.";
-    exports2.WRONG_CREDENTIAL_TYPE_GUIDANCE = "An API token is probably missing, invalid, or an injected credential was rejected as the wrong type for this endpoint. Set METICULOUS_API_TOKEN, pass --apiToken, or run `meticulous auth login`.";
-    var isMissingAuthGuidanceApplied = (message) => message.includes(exports2.MISSING_AUTH_GUIDANCE) || message.includes(exports2.WRONG_CREDENTIAL_TYPE_GUIDANCE);
-    var maybeEnrichFetchError = (error2) => {
-      if ((0, exports2.isFetchError)(error2)) {
-        if (isMissingAuthGuidanceApplied(error2.message)) {
-          return error2;
-        }
-        return enrichFetchError(error2);
-      }
-      return error2;
-    };
-    exports2.maybeEnrichFetchError = maybeEnrichFetchError;
-    var maybeEnrichMissingAuthFetchError = (error2, hadAuthorizationHeader) => {
-      if (hadAuthorizationHeader || !(0, exports2.isFetchError)(error2)) {
-        return error2;
-      }
-      const status = error2.response?.status;
-      if (!(0, exports2.isAuthFailureStatus)(status)) {
-        return error2;
-      }
-      const guidance = status === 403 ? exports2.WRONG_CREDENTIAL_TYPE_GUIDANCE : exports2.MISSING_AUTH_GUIDANCE;
-      const newError = new Error(`Authentication failed (HTTP ${status}). ${guidance}`);
-      newError.response = error2.response;
-      newError.config = error2.config;
-      return newError;
-    };
-    exports2.maybeEnrichMissingAuthFetchError = maybeEnrichMissingAuthFetchError;
-    var enrichFetchError = (error2) => {
-      const errorMessage = error2.response?.data?.message;
-      const requestAndResponse = requestAndResponseToString(error2.config ?? null, error2.response ?? null);
-      let message;
-      if (errorMessage && typeof errorMessage === "string") {
-        message = errorMessage;
-        if (requestAndResponse) {
-          message += `
-
-${requestAndResponse}`;
-        }
-      } else {
-        message = requestAndResponse;
-      }
-      if (!message) {
-        return error2;
-      }
-      const newError = new Error(message);
-      newError.response = error2.response;
-      newError.config = error2.config;
-      return newError;
-    };
-    var requestAndResponseToString = (request, response) => {
-      if (!request || !request.url) {
-        return "";
-      }
-      if (response == null) {
-        return `${requestToString(request)}`;
-      }
-      return `${requestToString(request)} returned ${responseToString(response)})`;
-    };
-    var requestToString = (request) => {
-      return `${request.method?.toUpperCase()}${request.method ? " " : ""}${request.url}`;
-    };
-    var responseToString = (response) => {
-      const dataAsString = dataToString(response.data);
-      return `${response.status} ${response.statusText}${dataAsString ? ` (${dataAsString})` : ""}`;
-    };
-    var dataToString = (data) => {
-      if (typeof data === "string") {
-        return truncate2(data, 50);
-      }
-      if (!data) {
-        return String(data);
-      }
-      try {
-        return truncate2(JSON.stringify(data), 50);
-      } catch (_e) {
-        return "";
-      }
-    };
-    var truncate2 = (str, maxLength) => {
-      return str.length > maxLength ? str.slice(0, maxLength) + "..." : str;
-    };
+    exports2.replayDiffScopeParams = void 0;
+    var replayDiffScopeParams = ({ project, testRunId }) => ({
+      ...project ? { project } : {},
+      ...testRunId ? { testRunId } : {}
+    });
+    exports2.replayDiffScopeParams = replayDiffScopeParams;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
-var require_agent_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getStructuredSessionData = exports2.getTimelineEventDiff = exports2.getTimelineEvent = exports2.getReplayTimeline = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverageSummary = exports2.getTestRunJsCoverageSummary = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.promoteSessions = exports2.completeBaseRun = exports2.TEST_RUN_PROJECT_MISMATCH_REASON = exports2.assertTestRunInProject = exports2.getTestRunForPullRequest = exports2.getTestRunForCommit = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummaryCounts = exports2.replyToDiffComment = exports2.createDiffComment = exports2.reviewDiffs = exports2.ignoreDiff = exports2.approveDiff = exports2.rejectDiff = exports2.getDiffComments = exports2.getTestRunDiffsSummary = exports2.submitAgentFeedback = exports2.trackAgentFeatureUsage = exports2.TIMELINE_DISPLAY_KINDS = exports2.MAX_TIMELINE_LIMIT = exports2.TIMELINE_DIFF_CLIENT_VERSION = exports2.IMAGE_URLS_CLIENT_VERSION = exports2.getTestRunJsCoverageDiff = exports2.COVERAGE_ORDER_BY_FIELDS = exports2.shouldDefaultToExecutedRanges = exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = exports2.isTestRunProcessingResponse = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = void 0;
-    exports2.getSessions = exports2.SESSIONS_ORDER_BY_FIELDS = exports2.SELECTED_SINCE_UNKNOWN_REASONS = void 0;
-    var errors_1 = require_errors2();
-    var getTestRunCheckReport = async (client, testRunId, checkId, options = {}) => {
-      const params = {};
-      if (options.checkType != null && options.checkType !== "builtin") {
-        params.checkType = options.checkType;
-      }
-      const { data } = await client.get(`agent/test-runs/${testRunId}/checks/${encodeURIComponent(checkId)}`, {
-        params
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTestRunCheckReport = getTestRunCheckReport;
-    var getTestRunCheckAvailableIds = async (client, testRunId) => {
-      const { data } = await client.get(`agent/test-runs/${testRunId}/checks`).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTestRunCheckAvailableIds = getTestRunCheckAvailableIds;
-    exports2.DIFFS_SUMMARY_CLIENT_VERSION = 4;
-    var isTestRunProcessingResponse = (value) => typeof value === "object" && value !== null && value.status === "processing";
-    exports2.isTestRunProcessingResponse = isTestRunProcessingResponse;
-    exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = 4;
-    exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = 2;
-    exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = 1;
-    exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = 3;
-    exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = 1;
-    var shouldDefaultToExecutedRanges = (columnFlags) => columnFlags.includeExecutedRanges || !(columnFlags.includeExecutableRanges || columnFlags.includeUncoveredRanges || columnFlags.includeLineCounts || columnFlags.includeCoveragePercentage);
-    exports2.shouldDefaultToExecutedRanges = shouldDefaultToExecutedRanges;
-    exports2.COVERAGE_ORDER_BY_FIELDS = [
-      "repoFilePath",
-      "executedLines",
-      "executableLines",
-      "uncoveredLines",
-      "coveragePercentage"
-    ];
-    var getTestRunJsCoverageDiff = async (client, testRunId, options) => {
-      const params = {
-        clientVersion: String(exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION)
-      };
-      const globs = (typeof options?.globFilter === "string" ? [options.globFilter] : options?.globFilter ?? []).filter((glob) => glob !== "");
-      if (globs.length > 0) {
-        params.globFilter = globs;
-      }
-      if (options?.summaryOnly) {
-        params.summaryOnly = "true";
-      }
-      if (options?.limit != null) {
-        params.limit = String(options.limit);
-      }
-      if (options?.offset != null) {
-        params.offset = String(options.offset);
-      }
-      const { data } = await client.get(`agent/test-runs/${testRunId}/js-coverage-diff`, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTestRunJsCoverageDiff = getTestRunJsCoverageDiff;
-    exports2.IMAGE_URLS_CLIENT_VERSION = 1;
-    exports2.TIMELINE_DIFF_CLIENT_VERSION = 2;
-    exports2.MAX_TIMELINE_LIMIT = 1e3;
-    exports2.TIMELINE_DISPLAY_KINDS = [
-      "user",
-      "network",
-      "asset",
-      "websocket",
-      "screenshot",
-      "url",
-      "subframe",
-      "console",
-      "log",
-      "error",
-      "timeout",
-      "warning",
-      "storage",
-      "limit",
-      "container",
-      "backend"
-    ];
-    var trackAgentFeatureUsage = async ({ client, feature, project }) => {
-      await client.post("agent/telemetry", { feature }, project ? { params: { project } } : void 0).catch(() => {
-      });
-    };
-    exports2.trackAgentFeatureUsage = trackAgentFeatureUsage;
-    var submitAgentFeedback = async ({ client, message, outcome, testRunId, skill, agentName, agentModel, project }) => {
-      const { data } = await client.post("agent/feedback", {
-        message,
-        ...outcome != null ? { outcome } : {},
-        ...testRunId != null ? { testRunId } : {},
-        ...skill != null ? { skill } : {},
-        ...agentName != null ? { agentName } : {},
-        ...agentModel != null ? { agentModel } : {}
-      }, project ? { params: { project } } : void 0).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.submitAgentFeedback = submitAgentFeedback;
-    var getTestRunDiffsSummary = async (client, testRunId, options) => {
-      const params = {
-        clientVersion: String(exports2.DIFFS_SUMMARY_CLIENT_VERSION)
-      };
-      if (options?.includeReplayIds) {
-        params.includeReplayIds = "true";
-      }
-      if (options?.includeMismatchFraction) {
-        params.includeMismatchFraction = "true";
-      }
-      if (options?.includeDomDiffIds) {
-        params.includeDomDiffIds = "true";
-      }
-      if (options?.includeSimilarGroupId || options?.similarGroupId) {
-        params.includeSimilarGroupId = "true";
-      }
-      if (options?.similarGroupId) {
-        params.similarGroupId = options.similarGroupId;
-      }
-      if (options?.includeAllDiffs) {
-        params.includeAllDiffs = "true";
-      }
-      if (options?.orderByReplayDiffs) {
-        params.orderByReplayDiffs = "true";
-      }
-      if (options?.includeReviews || options?.includeReviewDecisions) {
-        params.includeReviews = "true";
-      }
-      if (options?.onlyUnreviewed) {
-        params.onlyUnreviewed = "true";
-      }
-      if (options?.onlyRejected) {
-        params.onlyRejected = "true";
-      }
-      if (options?.onlyWithComments) {
-        params.onlyWithComments = "true";
-      }
-      const { data } = await client.get(`agent/test-runs/${testRunId}/diffs-summary`, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return normalizeDiffsSummaryResponse(data, options);
-    };
-    exports2.getTestRunDiffsSummary = getTestRunDiffsSummary;
-    var normalizeDiffsSummaryResponse = (response, options) => {
-      const { data, ...metadata } = response;
-      if (data == null) {
-        return response;
-      }
-      if (data.length === 0 || !("screenshots" in data[0])) {
-        return normalizeCurrentDiffsResponse(metadata, data, options);
-      }
-      const entries = data.flatMap((replayDiff) => replayDiff.screenshots.map((screenshot) => ({
-        index: screenshot.index,
-        diff: {
-          replayDiffId: replayDiff.replayDiffId,
-          screenshotName: screenshot.screenshotName,
-          ...options?.includeMismatchFraction && screenshot.mismatchFraction != null ? { mismatchFraction: screenshot.mismatchFraction } : {},
-          ...screenshot.domDiffIds != null ? { domDiffIds: screenshot.domDiffIds } : {},
-          ...screenshot.similarGroupId != null ? { similarGroupId: screenshot.similarGroupId } : {},
-          ...screenshot.isSelected != null ? { isSelected: screenshot.isSelected } : {},
-          ...screenshot.decision != null ? { decision: screenshot.decision } : {},
-          ...screenshot.openComments != null ? { openComments: screenshot.openComments } : {},
-          ...replayDiff.baseReplayId != null ? { baseReplayId: replayDiff.baseReplayId } : {},
-          ...replayDiff.headReplayId != null ? { headReplayId: replayDiff.headReplayId } : {}
-        }
-      }))).sort((a, b) => a.index - b.index);
-      return normalizeCurrentDiffsResponse(metadata, entries.map(({ diff: diff2 }) => diff2), options);
-    };
-    var LEGACY_REPRESENTATIVE_SELECTION_THRESHOLD = 5;
-    var normalizeCurrentDiffsResponse = (metadata, data, options) => {
-      const isOldBackend = metadata.selectionApplied == null;
-      const canCapToRepresentativeSubset = isOldBackend && options?.includeAllDiffs !== true && // onlyRejected/onlyWithComments always return every matching difference —
-      // never subject to the representative-subset cap (see the backend's
-      // agent.diffs-summary.utils.ts) — so an old backend's response to either
-      // is already complete and must not be re-capped here.
-      options?.onlyRejected !== true && options?.onlyWithComments !== true && data.length > LEGACY_REPRESENTATIVE_SELECTION_THRESHOLD && // Only cap when every row reports isSelected. A partially-present field
-      // would otherwise arm the filter below and then silently drop rows where
-      // it happens to be missing — requiring it on every row is the safe
-      // direction: worst case we skip capping, never wrongly drop a diff.
-      data.every((diff2) => diff2.isSelected != null);
-      let selectedData = data;
-      let cappingApplied = false;
-      if (canCapToRepresentativeSubset) {
-        const selected = data.filter((diff2) => diff2.isSelected === true);
-        if (selected.length > 0) {
-          selectedData = selected;
-          cappingApplied = selected.length < data.length;
-        }
-      }
-      const selectionApplied = metadata.selectionApplied ?? (cappingApplied || void 0);
-      const numMatchingDiffs = metadata.numMatchingDiffs ?? (cappingApplied ? data.length : void 0);
-      return {
-        ...metadata,
-        ...selectionApplied != null ? { selectionApplied } : {},
-        ...numMatchingDiffs != null ? { numMatchingDiffs } : {},
-        data: selectedData.map(({ isSelected: _isSelected, ...diff2 }) => diff2)
-      };
-    };
-    var getDiffComments = async (client, replayDiffId, screenshotName, options = {}) => {
-      const params = {};
-      if (options.includeResolved) {
-        params.includeResolved = "true";
-      }
-      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/comments`, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getDiffComments = getDiffComments;
-    var rejectDiff = async ({ client, replayDiffId, screenshotName, reason, x, y }) => {
-      const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/reject`, { reason, x, y }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.rejectDiff = rejectDiff;
-    var approveDiff = async ({ client, replayDiffId, screenshotName, reason, x, y }) => {
-      const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/approve`, {
-        ...reason != null ? { reason } : {},
-        ...x != null ? { x } : {},
-        ...y != null ? { y } : {}
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.approveDiff = approveDiff;
-    var ignoreDiff = async ({ client, replayDiffId, screenshotName, reason, x, y, reportFlake }) => {
-      const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/ignore`, { reason, x, y, ...reportFlake ? { reportFlake } : {} }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.ignoreDiff = ignoreDiff;
-    var reviewDiffs = async ({ client, verdict, diffs }) => {
-      const { data } = await client.post(`agent/replay-diffs/${verdict}`, { diffs }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.reviewDiffs = reviewDiffs;
-    var createDiffComment = async ({ client, replayDiffId, screenshotName, text, x, y }) => {
-      const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/comments`, { text, x, y }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.createDiffComment = createDiffComment;
-    var replyToDiffComment = async ({ client, commentId, text }) => {
-      const { data } = await client.post(`agent/diff-comments/${commentId}/replies`, {
-        text
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.replyToDiffComment = replyToDiffComment;
-    var getTestRunDiffsSummaryCounts = async (client, testRunId) => {
-      const { data } = await client.get(`agent/test-runs/${testRunId}/diffs-summary/counts`, {
-        params: { clientVersion: String(exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION) }
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTestRunDiffsSummaryCounts = getTestRunDiffsSummaryCounts;
-    var getScreenshotDomDiff = async (client, replayDiffId, screenshotName, context8) => {
-      const params = {};
-      if (context8 != null) {
-        params.context = context8;
-      }
-      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/dom-diff`, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getScreenshotDomDiff = getScreenshotDomDiff;
-    var getAgentWhoami = async (client) => {
-      const { data } = await client.get("agent/whoami").catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getAgentWhoami = getAgentWhoami;
-    var getAgentProjects = async (client) => {
-      const { data } = await client.get("agent/projects").catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getAgentProjects = getAgentProjects;
-    var getAgentCurrentProject = async (client) => {
-      const { data } = await client.get("agent/project").catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getAgentCurrentProject = getAgentCurrentProject;
-    var setAgentCurrentProject = async (client, project) => {
-      const { data } = await client.put("agent/project", {
-        project
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.setAgentCurrentProject = setAgentCurrentProject;
-    var getTestRunForCommit = async (client, commitSha, options) => {
-      const params = { commitSha };
-      if (options?.project != null) {
-        params.project = options.project;
-      }
-      const { data } = await client.get("agent/test-runs", { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTestRunForCommit = getTestRunForCommit;
-    var getTestRunForPullRequest = async (client, prNumber, options) => {
-      const params = { prNumber: String(prNumber) };
-      if (options?.project != null) {
-        params.project = options.project;
-      }
-      const { data } = await client.get("agent/test-runs", { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTestRunForPullRequest = getTestRunForPullRequest;
-    var assertTestRunInProject = async (client, testRunId, project) => {
-      const { data } = await client.get(`agent/test-runs/${testRunId}/project`, { params: { project } }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.assertTestRunInProject = assertTestRunInProject;
-    exports2.TEST_RUN_PROJECT_MISMATCH_REASON = "project-mismatch";
-    var completeBaseRun = async (client, testRunId) => {
-      const { data } = await client.post(`agent/test-runs/${testRunId}/complete-base-run`).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.completeBaseRun = completeBaseRun;
-    var promoteSessions = async (client, testRunId, sessionIds) => {
-      const { data } = await client.post(`agent/test-runs/${testRunId}/promote-sessions`, {
-        ...sessionIds != null ? { sessionIds } : {}
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.promoteSessions = promoteSessions;
-    var getTestRunJsCoverage = async (client, testRunId, options) => {
-      const params = {
-        clientVersion: String(exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION)
-      };
-      const includeExecutedRanges = (0, exports2.shouldDefaultToExecutedRanges)(options ?? {});
-      if (options?.includeAllFiles) {
-        params.includeAllFiles = "true";
-      }
-      appendCoverageColumnParams(params, options, includeExecutedRanges);
-      appendCoverageOrderingParams(params, options);
-      if (options?.prDiffOnly) {
-        params.prDiffOnly = "true";
-      }
-      if (options?.expandedEditedLines) {
-        params.expandedEditedLines = "true";
-      }
-      if (options?.unionTestRunIds != null && options.unionTestRunIds.length > 0) {
-        params.unionTestRunIds = options.unionTestRunIds.join(",");
-      }
-      const { data } = await client.get(`agent/test-runs/${testRunId}/js-coverage`, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTestRunJsCoverage = getTestRunJsCoverage;
-    var getProjectJsCoverage = async (client, options) => {
-      const params = {
-        clientVersion: String(exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION)
-      };
-      const includeExecutedRanges = (0, exports2.shouldDefaultToExecutedRanges)(options ?? {});
-      if (options?.project != null && options.project !== "") {
-        params.project = options.project;
-      }
-      if (options?.includeAllFiles) {
-        params.includeAllFiles = "true";
-      }
-      appendCoverageColumnParams(params, options, includeExecutedRanges);
-      appendCoverageOrderingParams(params, options);
-      const { data } = await client.get("agent/projects/js-coverage", { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getProjectJsCoverage = getProjectJsCoverage;
-    var appendCoverageColumnParams = (params, options, includeExecutedRanges) => {
-      const globs = (typeof options?.globFilter === "string" ? [options.globFilter] : options?.globFilter ?? []).filter((glob) => glob !== "");
-      if (globs.length > 0) {
-        params.globFilter = globs;
-      }
-      if (includeExecutedRanges) {
-        params.includeExecutedRanges = "true";
-      }
-      if (options?.includeExecutableRanges) {
-        params.includeExecutableRanges = "true";
-      }
-      if (options?.includeUncoveredRanges) {
-        params.includeUncoveredRanges = "true";
-      }
-      if (options?.includeLineCounts) {
-        params.includeLineCounts = "true";
-      }
-      if (options?.includeCoveragePercentage) {
-        params.includeCoveragePercentage = "true";
-      }
-    };
-    var appendCoverageOrderingParams = (params, options) => {
-      if (options?.orderBy != null) {
-        params.orderBy = options.orderBy;
-      }
-      if (options?.order != null) {
-        params.order = options.order;
-      }
-      if (options?.limit != null) {
-        params.limit = String(options.limit);
-      }
-      if (options?.offset != null) {
-        params.offset = String(options.offset);
-      }
-    };
-    var getTestRunJsCoverageSummary = async (client, testRunId, options) => {
-      const params = {
-        clientVersion: String(exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION)
-      };
-      if (options?.unionTestRunIds != null && options.unionTestRunIds.length > 0) {
-        params.unionTestRunIds = options.unionTestRunIds.join(",");
-      }
-      const { data } = await client.get(`agent/test-runs/${testRunId}/js-coverage-summary`, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTestRunJsCoverageSummary = getTestRunJsCoverageSummary;
-    var getProjectJsCoverageSummary = async (client, options) => {
-      const params = {};
-      if (options?.project != null && options.project !== "") {
-        params.project = options.project;
-      }
-      const { data } = await client.get("agent/projects/js-coverage-summary", { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getProjectJsCoverageSummary = getProjectJsCoverageSummary;
-    var getReplayJsCoverage = async (client, replayId, screenshotName, options) => {
-      const path = screenshotName != null ? `agent/replays/${replayId}/screenshots/${encodeURIComponent(screenshotName)}/js-coverage` : `agent/replays/${replayId}/js-coverage`;
-      const params = {
-        clientVersion: String(exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION)
-      };
-      if (options?.testRunId != null) {
-        params.testRunId = options.testRunId;
-      }
-      if (options?.includeAllFiles) {
-        params.includeAllFiles = "true";
-      }
-      const globs = (typeof options?.globFilter === "string" ? [options.globFilter] : options?.globFilter ?? []).filter((glob) => glob !== "");
-      if (globs.length > 0) {
-        params.globFilter = globs;
-      }
-      const { data } = await client.get(path, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getReplayJsCoverage = getReplayJsCoverage;
-    var getReplayDiffJsCoverage = async (client, replayDiffId, screenshotName, options) => {
-      const path = screenshotName != null ? `agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/js-coverage-diff` : `agent/replay-diffs/${replayDiffId}/js-coverage-diff`;
-      const params = {
-        clientVersion: String(exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION)
-      };
-      if (options?.includeAllFiles) {
-        params.includeAllFiles = "true";
-      }
-      if (options?.limit != null) {
-        params.limit = String(options.limit);
-      }
-      if (options?.offset != null) {
-        params.offset = String(options.offset);
-      }
-      const globs = (typeof options?.globFilter === "string" ? [options.globFilter] : options?.globFilter ?? []).filter((glob) => glob !== "");
-      if (globs.length > 0) {
-        params.globFilter = globs;
-      }
-      const { data } = await client.get(path, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getReplayDiffJsCoverage = getReplayDiffJsCoverage;
-    var getScreenshotUrls = async (client, replayDiffId, screenshotName) => {
-      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/image-urls`, { params: { clientVersion: String(exports2.IMAGE_URLS_CLIENT_VERSION) } }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getScreenshotUrls = getScreenshotUrls;
-    var getTimelineDiff = async (client, replayDiffId, options = {}) => {
-      const params = {
-        clientVersion: String(exports2.TIMELINE_DIFF_CLIENT_VERSION),
-        ...timelineQueryParams(options)
-      };
-      if (options.includeIdenticalEvents) {
-        params.includeIdenticalEvents = "true";
-      }
-      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/timeline-diff`, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTimelineDiff = getTimelineDiff;
-    var getReplayTimeline = async (client, replayId, options = {}) => {
-      const { data } = await client.get(`agent/replays/${replayId}/timeline`, {
-        params: timelineQueryParams(options)
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getReplayTimeline = getReplayTimeline;
-    var getTimelineEvent = async (client, replayId, eventId) => {
-      const { data } = await client.get(`agent/replays/${replayId}/timeline/events/${encodeURIComponent(eventId)}`).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTimelineEvent = getTimelineEvent;
-    var getTimelineEventDiff = async (client, replayDiffId, eventId, options = {}) => {
-      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/timeline-diff/events/${encodeURIComponent(eventId)}`, {
-        params: {
-          ...options.includeIdenticalFields ? { includeIdenticalFields: "true" } : {}
-        }
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTimelineEventDiff = getTimelineEventDiff;
-    var timelineQueryParams = (options) => {
-      const params = {};
-      if (options.kinds === "all") {
-        params.kinds = "all";
-      } else if (options.kinds != null && options.kinds.length > 0) {
-        params.kinds = options.kinds.join(",");
-      }
-      if (options.sinceMs != null) {
-        params.sinceMs = String(options.sinceMs);
-      }
-      if (options.untilMs != null) {
-        params.untilMs = String(options.untilMs);
-      }
-      if (options.screenshotName != null) {
-        params.screenshotName = options.screenshotName;
-      }
-      if (options.limit != null) {
-        params.limit = String(options.limit);
-      }
-      if (options.offset != null) {
-        params.offset = String(options.offset);
-      }
-      return params;
-    };
-    var getStructuredSessionData = async (client, sessionId) => {
-      const { data } = await client.get(`agent/sessions/${sessionId}/structured-data`).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getStructuredSessionData = getStructuredSessionData;
-    exports2.SELECTED_SINCE_UNKNOWN_REASONS = [
-      "added-after-last-cycle",
-      "before-selection-history",
-      "scan-budget-exhausted",
-      /** @deprecated superseded by `added-after-last-cycle`; never returned by the API. */
-      "not-added-by-a-cycle"
-    ];
-    exports2.SESSIONS_ORDER_BY_FIELDS = [
-      "createdAt",
-      "rank",
-      "selectedSince",
-      "additionalCoverage"
-    ];
-    var getSessions = async (client, options) => {
-      const params = {};
-      if (options?.project != null) {
-        params.project = options.project;
-      }
-      if (options?.createdSince != null) {
-        params.createdSince = options.createdSince;
-      }
-      if (options?.createdUntil != null) {
-        params.createdUntil = options.createdUntil;
-      }
-      if (options?.recordedSince != null) {
-        params.recordedSince = options.recordedSince;
-      }
-      if (options?.recordedUntil != null) {
-        params.recordedUntil = options.recordedUntil;
-      }
-      if (options?.recordedBy != null) {
-        params.recordedBy = options.recordedBy;
-      }
-      if (options?.excludeSyntheticSessions) {
-        params.excludeSyntheticSessions = "true";
-      }
-      if (options?.excludeAgentReviewSessions) {
-        params.excludeAgentReviewSessions = "true";
-      }
-      if (options?.requireInitialNavigationResponse) {
-        params.requireInitialNavigationResponse = "true";
-      }
-      if (options?.visitedUrlFilter != null) {
-        params.visitedUrlFilter = options.visitedUrlFilter;
-      }
-      if (options?.selectedSet != null) {
-        params.selectedSet = options.selectedSet === true ? "current" : options.selectedSet;
-      }
-      if (options?.includeDurationSeconds) {
-        params.includeDurationSeconds = "true";
-      }
-      if (options?.includeNumberUserEvents) {
-        params.includeNumberUserEvents = "true";
-      }
-      if (options?.includeNumberUrlsVisited) {
-        params.includeNumberUrlsVisited = "true";
-      }
-      if (options?.includeStartUrl) {
-        params.includeStartUrl = "true";
-      }
-      if (options?.includeAbandonedReason) {
-        params.includeAbandonedReason = "true";
-      }
-      if (options?.includeSource) {
-        params.includeSource = "true";
-      }
-      if (options?.includeSelectedSince) {
-        params.includeSelectedSince = "true";
-      }
-      if (options?.includeAdditionalCoverage) {
-        params.includeAdditionalCoverage = "true";
-      }
-      if (options?.orderBy != null) {
-        params.orderBy = options.orderBy;
-      }
-      if (options?.order != null) {
-        params.order = options.order;
-      }
-      if (options?.limit != null) {
-        params.limit = String(options.limit);
-      }
-      if (options?.offset != null) {
-        params.offset = String(options.offset);
-      }
-      const { data } = await client.get("agent/sessions", { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getSessions = getSessions;
-  }
-});
-
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js
-var require_agent_stats_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getTestRunEventStats = exports2.getProjectDailyStats = exports2.getTestRunStats = void 0;
-    var errors_1 = require_errors2();
-    var getTestRunStats = async (client, options = {}) => getStats(client, "test-runs", toParams(options, {
-      project: "project",
-      since: "since",
-      until: "until",
-      testRunIds: "testRunId",
-      prNumbers: "prNumber",
-      commitShas: "commitSha",
-      limit: "limit",
-      offset: "offset"
-    }));
-    exports2.getTestRunStats = getTestRunStats;
-    var getProjectDailyStats = async (client, options) => getStats(client, "project-daily", toParams(options, {
-      project: "project",
-      since: "since",
-      until: "until",
-      limit: "limit",
-      offset: "offset"
-    }));
-    exports2.getProjectDailyStats = getProjectDailyStats;
-    var getTestRunEventStats = async (client, options = {}) => getStats(client, "test-run-events", toParams(options, {
-      project: "project",
-      since: "since",
-      until: "until",
-      testRunIds: "testRunId",
-      prNumbers: "prNumber",
-      eventTypes: "eventType",
-      cursor: "cursor",
-      limit: "limit",
-      offset: "offset"
-    }));
-    exports2.getTestRunEventStats = getTestRunEventStats;
-    var getStats = async (client, endpoint, params) => {
-      const { data } = await client.get(`agent/stats/${endpoint}`, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    var toParams = (options, allowedParams) => Object.fromEntries(Object.entries(allowedParams).flatMap(([key, parameter]) => {
-      const value = options[key];
-      return value == null ? [] : [[parameter, String(value)]];
-    }));
-  }
-});
-
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js
-var require_agent_check_reviews_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getCheckComments = exports2.ignoreCheck = void 0;
-    var errors_1 = require_errors2();
-    var ignoreCheck = async ({ client, testRunId, checkId, checkType, reason }) => {
-      const { data } = await client.post(`${checkPath(testRunId, checkId)}/ignore`, {
-        reason,
-        ...checkType != null ? { checkType } : {}
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.ignoreCheck = ignoreCheck;
-    var getCheckComments = async ({ client, testRunId, checkId, checkType, includeResolved }) => {
-      const params = {};
-      if (checkType != null) {
-        params.checkType = checkType;
-      }
-      if (includeResolved) {
-        params.includeResolved = "true";
-      }
-      const { data } = await client.get(`${checkPath(testRunId, checkId)}/comments`, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getCheckComments = getCheckComments;
-    var checkPath = (testRunId, checkId) => `agent/test-runs/${testRunId}/checks/${encodeURIComponent(checkId)}`;
-  }
-});
-
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js
-var require_agent_swarm_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getAgentSwarmRunCase = exports2.getAgentSwarmRun = exports2.isAgentSwarmRunProcessingResponse = exports2.getAgentSwarmSetupBlockers = exports2.getAgentSwarmRuns = exports2.AGENT_SWARM_RUN_CLIENT_VERSION = void 0;
-    var errors_1 = require_errors2();
-    exports2.AGENT_SWARM_RUN_CLIENT_VERSION = 1;
-    var toParams = (values) => {
-      const params = {};
-      for (const [key, value] of Object.entries(values)) {
-        if (value != null && value !== "") {
-          params[key] = String(value);
-        }
-      }
-      return params;
-    };
-    var getAgentSwarmRuns = async (client, options = {}) => {
-      const { includeCounts, ...rest } = options;
-      const { data } = await client.get("agent/agent-swarm/runs", {
-        params: toParams({
-          ...rest,
-          includeCounts: includeCounts ? "true" : void 0
-        })
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getAgentSwarmRuns = getAgentSwarmRuns;
-    var getAgentSwarmSetupBlockers = async (client, options = {}) => {
-      const { data } = await client.get("agent/agent-swarm/setup-blockers", {
-        params: toParams({ ...options })
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getAgentSwarmSetupBlockers = getAgentSwarmSetupBlockers;
-    var isAgentSwarmRunProcessingResponse = (value) => typeof value === "object" && value !== null && value.status === "processing";
-    exports2.isAgentSwarmRunProcessingResponse = isAgentSwarmRunProcessingResponse;
-    var getAgentSwarmRun = async (client, target, options) => {
-      const { data } = await client.get("agent/agent-swarm/run", {
-        params: toParams({
-          ...target,
-          status: options?.status,
-          clientVersion: exports2.AGENT_SWARM_RUN_CLIENT_VERSION
-        })
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getAgentSwarmRun = getAgentSwarmRun;
-    var getAgentSwarmRunCase = async (client, target, caseIndex) => {
-      const { data } = await client.get(`agent/agent-swarm/run/cases/${caseIndex}`, { params: toParams({ ...target }) }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getAgentSwarmRunCase = getAgentSwarmRunCase;
-  }
-});
-
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js
-var require_agent_test_runs_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getTestRuns = void 0;
-    var errors_1 = require_errors2();
-    var getTestRuns = async (client, options = {}) => {
-      const params = {};
-      for (const key of STRING_PARAMS) {
-        const value = options[key];
-        if (value != null) {
-          params[key] = value;
-        }
-      }
-      for (const key of BOOLEAN_PARAMS) {
-        if (options[key]) {
-          params[key] = "true";
-        }
-      }
-      if (options.limit != null) {
-        params.limit = String(options.limit);
-      }
-      if (options.offset != null) {
-        params.offset = String(options.offset);
-      }
-      const { data } = await client.get("agent/projects/test-runs", { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getTestRuns = getTestRuns;
-    var STRING_PARAMS = [
-      "project",
-      "prNumber",
-      "status",
-      "checkIds",
-      "createdSince",
-      "createdUntil"
-    ];
-    var BOOLEAN_PARAMS = [
-      "baseTestRuns",
-      "latestPerPullRequest",
-      "withDiffsOnly",
-      "withCheckIssuesOnly",
-      "includeBaseTestRunId",
-      "includeDiffCount",
-      "includeDurationSeconds",
-      "includeCheckIssueCounts"
-    ];
-  }
-});
-
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js
-var require_agent_screenshot_dom_types = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LIMIT = exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = void 0;
-    exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = 100;
-    exports2.MAX_SCREENSHOT_DOM_LIMIT = 1e3;
-    exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = 2e3;
-    exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = 1e3;
-    exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = 2;
-  }
-});
-
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js
-var require_agent_screenshot_dom_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getScreenshotDomDiffText = exports2.getScreenshotDom = void 0;
-    var errors_1 = require_errors2();
-    var agent_screenshot_dom_types_1 = require_agent_screenshot_dom_types();
-    var getScreenshotDom = async (client, replayId, screenshotName, options = {}) => {
-      const params = pagedPathParams(options);
-      if (options.removeNoise) {
-        params.removeNoise = "true";
-      }
-      const { data } = await client.get(`agent/replays/${replayId}/screenshots/${encodeURIComponent(screenshotName)}/dom`, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getScreenshotDom = getScreenshotDom;
-    var getScreenshotDomDiffText = async (client, replayDiffId, screenshotName, options = {}) => {
-      const params = pagedPathParams(options);
-      params.clientVersion = String(agent_screenshot_dom_types_1.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION);
-      if (options.context != null) {
-        params.context = String(options.context);
-      }
-      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/dom-diff`, { params }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.getScreenshotDomDiffText = getScreenshotDomDiffText;
-    var pagedPathParams = (options) => {
-      const params = {};
-      if (options.path != null && options.path.length > 0) {
-        params.path = options.path.join(",");
-      }
-      if (options.limit != null) {
-        params.limit = String(options.limit);
-      }
-      if (options.offset != null) {
-        params.offset = String(options.offset);
-      }
-      return params;
-    };
-  }
-});
-
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js
-var require_agent_screenshot_dom_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.parseNthChildPath = void 0;
-    var parseNthChildPath = (raw) => {
-      if (raw == null) {
-        return void 0;
-      }
-      if (typeof raw !== "string") {
-        return [NaN];
-      }
-      const inner = raw.trim().replace(/^\[/, "").replace(/\]$/, "").trim();
-      if (inner === "") {
-        return [];
-      }
-      return inner.split(",").map((part) => part.trim()).map((part) => /^\d+$/.test(part) ? Number(part) : NaN);
-    };
-    exports2.parseNthChildPath = parseNthChildPath;
-  }
-});
-
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/defer.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/defer.js
 var require_defer = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/defer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.defer = defer;
@@ -30717,9 +29666,9 @@ var require_loglevel = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js
 var require_console_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/logger/console-logger.js"(exports2) {
     "use strict";
     var __importDefault2 = exports2 && exports2.__importDefault || function(mod) {
       return mod && mod.__esModule ? mod : { "default": mod };
@@ -30802,9 +29751,9 @@ var require_console_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js
 var require_local_data = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/local-data/local-data.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.runWithLocalDataDir = exports2.setMeticulousLocalDataDir = exports2.getMeticulousLocalDataDir = void 0;
@@ -37660,9 +36609,9 @@ var require_luxon = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js
 var require_logs = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/local-data/logs.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getLogFile = void 0;
@@ -37679,9 +36628,9 @@ var require_logs = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js
 var require_debug_logger = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/logger/debug-logger.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DebugLogger = void 0;
@@ -37774,9 +36723,9 @@ var require_debug_logger = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/constants.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/constants.js
 var require_constants6 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = void 0;
@@ -37809,9 +36758,9 @@ var require_constants6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js
 var require_version_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/version.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getMeticulousVersion = void 0;
@@ -37830,12 +36779,12 @@ var require_version_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js
 var require_commit_sha_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/commit-sha.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getCommitDate = exports2.getStashCreateSha = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitSha = void 0;
+    exports2.getCommitDate = exports2.getStashCreateSha = exports2.execGitDiff = exports2.RECOMMENDED_GIT_DIFF_COMMAND = exports2.getGitDiffArgs = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitSha = void 0;
     var child_process_1 = require("child_process");
     var console_logger_1 = require_console_logger();
     var execPromise = (command, cwd) => {
@@ -37967,11 +36916,39 @@ var require_commit_sha_utils = __commonJS({
       }
     };
     exports2.getUntrackedFiles = getUntrackedFiles;
-    var getGitDiff = async (baseSha, headSha, options) => {
-      const args = headSha ? ["diff", baseSha, headSha] : ["diff", baseSha];
-      return execFilePromise("git", args, options?.cwd);
-    };
+    var getGitDiff = async (baseSha, headSha, options) => (0, exports2.execGitDiff)((0, exports2.getGitDiffArgs)(headSha ? [baseSha, headSha] : [baseSha]), options?.cwd);
     exports2.getGitDiff = getGitDiff;
+    var getGitDiffArgs = (revisions, extraDiffArgs = []) => [
+      "-c",
+      "core.quotePath=false",
+      "-c",
+      "diff.renameLimit=0",
+      "-c",
+      "diff.relative=false",
+      "diff",
+      "--no-color",
+      "--no-ext-diff",
+      "--no-textconv",
+      "--submodule=short",
+      "--src-prefix=a/",
+      "--dst-prefix=b/",
+      "-M",
+      ...extraDiffArgs,
+      ...revisions
+    ];
+    exports2.getGitDiffArgs = getGitDiffArgs;
+    exports2.RECOMMENDED_GIT_DIFF_COMMAND = `git ${(0, exports2.getGitDiffArgs)(["<baseSha>", "<head>"]).join(" ")}`;
+    var GIT_DIFF_MAX_BUFFER_BYTES = 256 * 1024 * 1024;
+    var execGitDiff = (args, cwd) => new Promise((resolve, reject) => {
+      (0, child_process_1.execFile)("git", args, { encoding: "utf-8", cwd, maxBuffer: GIT_DIFF_MAX_BUFFER_BYTES }, (error2, output) => {
+        if (error2) {
+          reject(error2 instanceof Error ? error2 : new Error(String(error2)));
+          return;
+        }
+        resolve(output);
+      });
+    });
+    exports2.execGitDiff = execGitDiff;
     var getStashCreateSha = async (options) => {
       const output = (await execFilePromise("git", ["stash", "create"], options?.cwd)).trim();
       return output || void 0;
@@ -38021,9 +36998,26 @@ var require_commit_sha_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/git-commit-sha.utils.js
+var require_git_commit_sha_utils = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/git-commit-sha.utils.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.SENTINEL_COMMIT_SHAS = exports2.EXPERIMENT_TEST_RUN_COMMIT_SHA = exports2.SESSION_SELECTION_TEST_RUN_COMMIT_SHA = exports2.isGitCommitSha = void 0;
+    var isGitCommitSha = (sha) => sha != null && /^[0-9a-f]{7,64}$/i.test(sha);
+    exports2.isGitCommitSha = isGitCommitSha;
+    exports2.SESSION_SELECTION_TEST_RUN_COMMIT_SHA = "unknown";
+    exports2.EXPERIMENT_TEST_RUN_COMMIT_SHA = "experiment";
+    exports2.SENTINEL_COMMIT_SHAS = [
+      exports2.SESSION_SELECTION_TEST_RUN_COMMIT_SHA,
+      exports2.EXPERIMENT_TEST_RUN_COMMIT_SHA
+    ];
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js
 var require_error_code_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/error-code.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getErrorCode = getErrorCode;
@@ -38048,9 +37042,9 @@ var require_error_code_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js
 var require_http_retry_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/http-retry.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.executeWithRetry = exports2.computeRetryDelayMs = exports2.getRetryAfterMs = exports2.defaultShouldRetry = exports2.isLostConnectionError = void 0;
@@ -38064,6 +37058,10 @@ var require_http_retry_utils = __commonJS({
       "ETIMEDOUT",
       "ECONNREFUSED",
       "ENOTFOUND",
+      // The peer closed the socket mid-write. Usually a stale keep-alive connection
+      // the server closed while idle (e.g. after a long-running command sat idle),
+      // so retrying is reasonable.
+      "EPIPE",
       // undici-specific codes (surfaced via fetch's cause chain)
       "UND_ERR_CONNECT_TIMEOUT",
       "UND_ERR_HEADERS_TIMEOUT",
@@ -38126,14 +37124,14 @@ var require_http_retry_utils = __commonJS({
     };
     exports2.computeRetryDelayMs = computeRetryDelayMs;
     var executeWithRetry = async (operation, options = {}) => {
-      const { maxRetries = DEFAULT_MAX_RETRIES, retryDelay = DEFAULT_RETRY_DELAY_MS, maxRetryDelay = DEFAULT_MAX_RETRY_DELAY_MS, shouldRetry = exports2.defaultShouldRetry, logger, operationDescription } = options;
+      const { maxRetries = DEFAULT_MAX_RETRIES, retryDelay = DEFAULT_RETRY_DELAY_MS, maxRetryDelay = DEFAULT_MAX_RETRY_DELAY_MS, shouldRetry = exports2.defaultShouldRetry, logger, operationDescription, signal } = options;
       let lastError;
       for (let attempt = 0; attempt <= maxRetries; attempt++) {
         try {
           return await operation();
         } catch (error2) {
           lastError = error2;
-          if (attempt < maxRetries && shouldRetry(error2)) {
+          if (attempt < maxRetries && signal?.aborted !== true && shouldRetry(error2)) {
             const delay2 = (0, exports2.computeRetryDelayMs)(attempt, {
               retryDelay,
               maxRetryDelay,
@@ -38142,7 +37140,9 @@ var require_http_retry_utils = __commonJS({
             if (logger) {
               logger.warn(`Operation failed, retrying in ${Math.round(delay2)}ms (attempt ${attempt + 2} of ${maxRetries + 1}): ${operationDescription ? `${operationDescription}: ` : ""}${describeRetriedError(error2)}`);
             }
-            await new Promise((resolve) => setTimeout(resolve, delay2));
+            if (!await sleepUnlessAborted(delay2, signal)) {
+              break;
+            }
           } else {
             break;
           }
@@ -38151,13 +37151,28 @@ var require_http_retry_utils = __commonJS({
       throw lastError;
     };
     exports2.executeWithRetry = executeWithRetry;
+    var sleepUnlessAborted = (delayMs, signal) => new Promise((resolve) => {
+      if (signal?.aborted === true) {
+        resolve(false);
+        return;
+      }
+      const onAbort = () => {
+        clearTimeout(timer);
+        resolve(false);
+      };
+      const timer = setTimeout(() => {
+        signal?.removeEventListener("abort", onAbort);
+        resolve(true);
+      }, delayMs);
+      signal?.addEventListener("abort", onAbort, { once: true });
+    });
     var describeRetriedError = (error2) => error2 instanceof Error ? error2.message : String(error2);
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/symbols.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/symbols.js
 var require_symbols6 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/symbols.js"(exports2, module2) {
     module2.exports = {
       kClose: Symbol("close"),
       kDestroy: Symbol("destroy"),
@@ -38228,9 +37243,9 @@ var require_symbols6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/errors.js
-var require_errors3 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/errors.js"(exports2, module2) {
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/errors.js
+var require_errors2 = __commonJS({
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/errors.js"(exports2, module2) {
     "use strict";
     var kUndiciError = Symbol.for("undici.error.UND_ERR");
     var UndiciError = class extends Error {
@@ -38586,9 +37601,9 @@ var require_errors3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/constants.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/constants.js
 var require_constants7 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/constants.js"(exports2, module2) {
     "use strict";
     var headerNameLowerCasedRecord = {};
     var wellknownHeaderNames = [
@@ -38701,9 +37716,9 @@ var require_constants7 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/tree.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/tree.js
 var require_tree = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/tree.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/tree.js"(exports2, module2) {
     "use strict";
     var {
       wellknownHeaderNames,
@@ -38841,9 +37856,9 @@ var require_tree = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/util.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/util.js
 var require_util9 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/util.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { kDestroyed, kBodyUsed, kListeners, kBody } = require_symbols6();
@@ -38854,7 +37869,7 @@ var require_util9 = __commonJS({
     var nodeUtil = require("node:util");
     var { stringify } = require("node:querystring");
     var { EventEmitter: EE } = require("node:events");
-    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors2();
     var { headerNameLowerCasedRecord } = require_constants7();
     var { tree } = require_tree();
     var [nodeMajor, nodeMinor] = process.versions.node.split(".").map((v) => Number(v));
@@ -39350,9 +38365,9 @@ var require_util9 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/diagnostics.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/diagnostics.js
 var require_diagnostics = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/diagnostics.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/diagnostics.js"(exports2, module2) {
     "use strict";
     var diagnosticsChannel = require("node:diagnostics_channel");
     var util = require("node:util");
@@ -39535,14 +38550,14 @@ var require_diagnostics = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/request.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/request.js
 var require_request3 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/request.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/request.js"(exports2, module2) {
     "use strict";
     var {
       InvalidArgumentError: InvalidArgumentError2,
       NotSupportedError
-    } = require_errors3();
+    } = require_errors2();
     var assert = require("node:assert");
     var {
       isValidHTTPToken,
@@ -39746,10 +38761,66 @@ var require_request3 = __commonJS({
           return false;
         }
       }
-      onUpgrade(statusCode, headers, socket) {
+      /**
+       * @param {number|null} statusCode
+       * @param {Buffer[]|null} headers
+       * @param {import('node:stream').Duplex} socket
+       * @param {string} [statusText]
+       */
+      onUpgrade(statusCode, headers, socket, statusText = "") {
+        this.onFinally();
         assert(!this.aborted);
         assert(!this.completed);
-        return this[kHandler].onUpgrade(statusCode, headers, socket);
+        if (statusCode !== null) {
+          this.#publishUpgradeHeaders(statusCode, headers, statusText);
+        }
+        const result = this[kHandler].onUpgrade(statusCode, headers, socket);
+        if (!this.aborted) {
+          this.completed = true;
+          if (statusCode !== null) {
+            this.#publishUpgradeTrailers();
+          }
+        }
+        return result;
+      }
+      /**
+       * @param {number} statusCode
+       * @param {import('node:http2').IncomingHttpHeaders} headers
+       * @param {(headers: import('node:http2').IncomingHttpHeaders) => Buffer[]} parseHeaders
+       * @param {string} [statusText]
+       */
+      onUpgradeResponse(statusCode, headers, parseHeaders, statusText = "") {
+        assert(!this.aborted);
+        assert(this.completed);
+        if (channels.headers.hasSubscribers) {
+          this.#publishUpgradeHeaders(statusCode, parseHeaders(headers), statusText);
+        }
+        this.#publishUpgradeTrailers();
+      }
+      /**
+       * @param {Error} error
+       */
+      onUpgradeError(error2) {
+        assert(!this.aborted);
+        assert(this.completed);
+        if (channels.error.hasSubscribers) {
+          channels.error.publish({ request: this, error: error2 });
+        }
+      }
+      /**
+       * @param {number} statusCode
+       * @param {Buffer[]} headers
+       * @param {string} statusText
+       */
+      #publishUpgradeHeaders(statusCode, headers, statusText) {
+        if (channels.headers.hasSubscribers) {
+          channels.headers.publish({ request: this, response: { statusCode, headers, statusText } });
+        }
+      }
+      #publishUpgradeTrailers() {
+        if (channels.trailers.hasSubscribers) {
+          channels.trailers.publish({ request: this, trailers: [] });
+        }
       }
       onComplete(trailers) {
         this.onFinally();
@@ -39875,9 +38946,9 @@ var require_request3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/dispatcher.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/dispatcher.js
 var require_dispatcher2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/dispatcher.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/dispatcher.js"(exports2, module2) {
     "use strict";
     var EventEmitter = require("node:events");
     var Dispatcher = class extends EventEmitter {
@@ -39930,21 +39001,23 @@ var require_dispatcher2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/dispatcher-base.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/dispatcher-base.js
 var require_dispatcher_base2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/dispatcher-base.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/dispatcher-base.js"(exports2, module2) {
     "use strict";
+    var buffer = require("node:buffer");
     var Dispatcher = require_dispatcher2();
     var {
       ClientDestroyedError,
       ClientClosedError,
       InvalidArgumentError: InvalidArgumentError2
-    } = require_errors3();
+    } = require_errors2();
     var { kDestroy, kClose, kClosed, kDestroyed, kDispatch, kInterceptors } = require_symbols6();
     var kOnDestroyed = Symbol("onDestroyed");
     var kOnClosed = Symbol("onClosed");
     var kInterceptedDispatch = Symbol("Intercepted Dispatch");
     var kWebSocketOptions = Symbol("webSocketOptions");
+    var kEventSourceOptions = Symbol("eventSourceOptions");
     var DispatcherBase = class extends Dispatcher {
       constructor(opts) {
         super();
@@ -39953,11 +39026,17 @@ var require_dispatcher_base2 = __commonJS({
         this[kClosed] = false;
         this[kOnClosed] = [];
         this[kWebSocketOptions] = opts?.webSocket ?? {};
+        this[kEventSourceOptions] = opts?.eventSource ?? {};
       }
       get webSocketOptions() {
         return {
           maxFragments: this[kWebSocketOptions].maxFragments ?? 131072,
           maxPayloadSize: this[kWebSocketOptions].maxPayloadSize ?? 128 * 1024 * 1024
+        };
+      }
+      get eventSourceOptions() {
+        return {
+          maxEventSize: this[kEventSourceOptions].maxEventSize ?? buffer.kStringMaxLength
         };
       }
       get destroyed() {
@@ -40099,9 +39178,9 @@ var require_dispatcher_base2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/util/timers.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/util/timers.js
 var require_timers2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/util/timers.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/util/timers.js"(exports2, module2) {
     "use strict";
     var fastNow = 0;
     var RESOLUTION_MS = 1e3;
@@ -40330,14 +39409,14 @@ var require_timers2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/connect.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/connect.js
 var require_connect2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/core/connect.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/core/connect.js"(exports2, module2) {
     "use strict";
     var net = require("node:net");
     var assert = require("node:assert");
     var util = require_util9();
-    var { InvalidArgumentError: InvalidArgumentError2, ConnectTimeoutError } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2, ConnectTimeoutError } = require_errors2();
     var timers = require_timers2();
     function noop() {
     }
@@ -40510,9 +39589,9 @@ var require_connect2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/utils.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/llhttp/utils.js
 var require_utils6 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/utils.js"(exports2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/llhttp/utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.enumToMap = void 0;
@@ -40530,9 +39609,9 @@ var require_utils6 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/constants.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/llhttp/constants.js
 var require_constants8 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/constants.js"(exports2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/llhttp/constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.SPECIAL_HEADERS = exports2.HEADER_STATE = exports2.MINOR = exports2.MAJOR = exports2.CONNECTION_TOKEN_CHARS = exports2.HEADER_CHARS = exports2.TOKEN = exports2.STRICT_TOKEN = exports2.HEX = exports2.URL_CHAR = exports2.STRICT_URL_CHAR = exports2.USERINFO_CHARS = exports2.MARK = exports2.ALPHANUM = exports2.NUM = exports2.HEX_MAP = exports2.NUM_MAP = exports2.ALPHA = exports2.FINISH = exports2.H_METHOD_MAP = exports2.METHOD_MAP = exports2.METHODS_RTSP = exports2.METHODS_ICE = exports2.METHODS_HTTP = exports2.METHODS = exports2.LENIENT_FLAGS = exports2.FLAGS = exports2.TYPE = exports2.ERROR = void 0;
@@ -40851,27 +39930,27 @@ var require_constants8 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/llhttp-wasm.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/llhttp/llhttp-wasm.js
 var require_llhttp_wasm2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/llhttp-wasm.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/llhttp/llhttp-wasm.js"(exports2, module2) {
     "use strict";
     var { Buffer: Buffer2 } = require("node:buffer");
     module2.exports = Buffer2.from("AGFzbQEAAAABJwdgAX8Bf2ADf39/AX9gAX8AYAJ/fwBgBH9/f38Bf2AAAGADf39/AALLAQgDZW52GHdhc21fb25faGVhZGVyc19jb21wbGV0ZQAEA2VudhV3YXNtX29uX21lc3NhZ2VfYmVnaW4AAANlbnYLd2FzbV9vbl91cmwAAQNlbnYOd2FzbV9vbl9zdGF0dXMAAQNlbnYUd2FzbV9vbl9oZWFkZXJfZmllbGQAAQNlbnYUd2FzbV9vbl9oZWFkZXJfdmFsdWUAAQNlbnYMd2FzbV9vbl9ib2R5AAEDZW52GHdhc21fb25fbWVzc2FnZV9jb21wbGV0ZQAAAy0sBQYAAAIAAAAAAAACAQIAAgICAAADAAAAAAMDAwMBAQEBAQEBAQEAAAIAAAAEBQFwARISBQMBAAIGCAF/AUGA1AQLB9EFIgZtZW1vcnkCAAtfaW5pdGlhbGl6ZQAIGV9faW5kaXJlY3RfZnVuY3Rpb25fdGFibGUBAAtsbGh0dHBfaW5pdAAJGGxsaHR0cF9zaG91bGRfa2VlcF9hbGl2ZQAvDGxsaHR0cF9hbGxvYwALBm1hbGxvYwAxC2xsaHR0cF9mcmVlAAwEZnJlZQAMD2xsaHR0cF9nZXRfdHlwZQANFWxsaHR0cF9nZXRfaHR0cF9tYWpvcgAOFWxsaHR0cF9nZXRfaHR0cF9taW5vcgAPEWxsaHR0cF9nZXRfbWV0aG9kABAWbGxodHRwX2dldF9zdGF0dXNfY29kZQAREmxsaHR0cF9nZXRfdXBncmFkZQASDGxsaHR0cF9yZXNldAATDmxsaHR0cF9leGVjdXRlABQUbGxodHRwX3NldHRpbmdzX2luaXQAFQ1sbGh0dHBfZmluaXNoABYMbGxodHRwX3BhdXNlABcNbGxodHRwX3Jlc3VtZQAYG2xsaHR0cF9yZXN1bWVfYWZ0ZXJfdXBncmFkZQAZEGxsaHR0cF9nZXRfZXJybm8AGhdsbGh0dHBfZ2V0X2Vycm9yX3JlYXNvbgAbF2xsaHR0cF9zZXRfZXJyb3JfcmVhc29uABwUbGxodHRwX2dldF9lcnJvcl9wb3MAHRFsbGh0dHBfZXJybm9fbmFtZQAeEmxsaHR0cF9tZXRob2RfbmFtZQAfEmxsaHR0cF9zdGF0dXNfbmFtZQAgGmxsaHR0cF9zZXRfbGVu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PgtBhwEMPQtBiAEMPAtBiQEMOwtBigEMOgtBiwEMOQtBjAEMOAtBjQEMNwtBjgEMNgtBjwEMNQtBkAEMNAtBkQEMMwtBkgEMMgtBkwEMMQtBlAEMMAtBlQEMLwtBlgEMLgtBlwEMLQtBmAEMLAtBmQEMKwtBmgEMKgtBmwEMKQtBnAEMKAtBnQEMJwtBngEMJgtBnwEMJQtBoAEMJAtBoQEMIwtBogEMIgtBowEMIQtBpAEMIAtBpQEMHwtBpgEMHgtBpwEMHQtBqAEMHAtBqQEMGwtBqgEMGgtBqwEMGQtBrAEMGAtBrQEMFwtBrgEMFgtBAQwVC0GvAQwUC0GwAQwTC0GxAQwSC0GzAQwRC0GyAQwQC0G0AQwPC0G1AQwOC0G2AQwNC0G3AQwMC0G4AQwLC0G5AQwKC0G6AQwJC0G7AQwIC0HGAQwHC0G8AQwGC0G9AQwFC0G+AQwEC0G/AQwDC0HAAQwCC0HCAQwBC0HBAQshAwNAAkACQAJAAkACQAJAAkACQAJAIAICfwJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJ/AkACQAJAAkACQAJAAkACQAJAAkACQAJAAkAgAgJ/AkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACfwJAAkACfwJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkAC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iQEhAwykAgtBASABLQAAQd8ARw1nGiABQQFqIQEMXgtBigEhAyABIARGDaICIAIoAgAiACAEIAFraiEFIAEgAGtBAWohBgNAIAEtAAAgAEGMzwBqLQAARw1kIABBAUYN+gEgAEEBaiEAIAQgAUEBaiIBRw0ACyACIAU2AgAMogILQYsBIQMgASAERg2hAiACKAIAIgAgBCABa2ohBSABIABrQQJqIQYCQANAIAEtAAAgAEGOzwBqLQAARw1kIABBAkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyiAgsgAkEANgIAIAZBAWohAUECDGULQYwBIQMgASAERg2gAiACKAIAIgAgBCABa2ohBSABIABrQQFqIQYCQANAIAEtAAAgAEHwzwBqLQAARw1jIABBAUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyhAgsgAkEANgIAIAZBAWohAUEfDGQLQY0BIQMgASAERg2fAiACKAIAIgAgBCABa2ohBSABIABrQQFqIQYCQANAIAEtAAAgAEHyzwBqLQAARw1iIABBAUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAygAgsgAkEANgIAIAZBAWohAUEJDGMLIAEgBEYEQEGOASEDDJ8CCwJAAkAgAS0AAEHJAGsOBwBiYmJiYgFiCyABQQFqIQFB+AAhAwyGAgsgAUEBaiEBQfkAIQMMhQILQY8BIQMgASAERg2dAiACKAIAIgAgBCABa2ohBSABIABrQQVqIQYCQANAIAEtAAAgAEGRzwBqLQAARw1gIABBBUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyeAgsgAkEANgIAIAZBAWohAUEYDGELQZABIQMgASAERg2cAiACKAIAIgAgBCABa2ohBSABIABrQQJqIQYCQANAIAEtAAAgAEGXzwBqLQAARw1fIABBAkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAydAgsgAkEANgIAIAZBAWohAUEXDGALQZEBIQMgASAERg2bAiACKAIAIgAgBCABa2ohBSABIABrQQZqIQYCQANAIAEtAAAgAEGazwBqLQAARw1eIABBBkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAycAgsgAkEANgIAIAZBAWohAUEV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JSIARQ0RIAJB5QA2AhwgAiABNgIUIAIgADYCDEEAIQMMtAELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0gIAJB0wA2AhwgAiABNgIUIAIgADYCDEEAIQMMswELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0iIAJB0gA2AhwgAiABNgIUIAIgADYCDEEAIQMMsgELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0OIAJB5QA2AhwgAiABNgIUIAIgADYCDEEAIQMMsQELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0dIAJB0wA2AhwgAiABNgIUIAIgADYCDEEAIQMMsAELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0fIAJB0gA2AhwgAiABNgIUIAIgADYCDEEAIQMMrwELIABBP0cNASABQQFqCyEBQQUhAwyUAQtBACEDIAJBADYCHCACIAE2AhQgAkH9EjYCECACQQc2AgwMrAELIAJBADYCHCACIAE2AhQgAkHcCDYCECACQQc2AgxBACEDDKsBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNByACQeUANgIcIAIgATYCFCACIAA2AgxBACEDDKoBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNFiACQdMANgIcIAIgATYCFCACIAA2AgxBACEDDKkBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNGCACQdIANgIcIAIgATYCFCACIAA2AgxBACEDDKgBCyACQQA2AhwgAiABNgIUIAJBxgo2AhAgAkEHNgIMQQAhAwynAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDQMgAkHlADYCHCACIAE2AhQgAiAANgIMQQAhAwymAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDRIgAkHTADYCHCACIAE2AhQgAiAANgIMQQAhAwylAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDRQgAkHSADYCHCACIAE2AhQgAiAANgIMQQAhAwykAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDQAgAkHlADYCHCACIAE2AhQgAiAANgIMQQAhAwyjAQtB1QAhAwyJAQsgAEEVRwRAIAJBADYCHCACIAE2AhQgAkG5DTYCECACQRo2AgxB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AkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAIABB5ABrDvQDY2IAAWFhYWFhYQIDBAVhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhBgcICQoLDA0OD2FhYWFhEGFhYWFhYWFhYWFhEWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYRITFBUWFxgZGhthYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2YTc4OTphYWFhYWFhYTthYWE8YWFhYT0+P2FhYWFhYWFhQGFhQWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYUJDREVGR0hJSktMTU5PUFFSU2FhYWFhYWFhVFVWV1hZWlthXF1hYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFeYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhX2BhC0HhJw8LQaQhDwtByywPC0H+MQ8LQcAkDwtBqyQPC0GNKA8LQeImDwtBgDAPC0G5Lw8LQdckDwtB7x8PC0HhHw8LQfofDwtB8iAPC0GoLw8LQa4yDwtBiDAPC0HsJw8LQYIiDwtBjh0PC0HQLg8LQcojDwtBxTIPC0HfHA8LQdIcDwtBxCAPC0HXIA8LQaIfDwtB7S4PC0GrMA8LQdQlDwtBzC4PC0H6Lg8LQfwrDwtB0jAPC0HxHQ8LQbsgDwtB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CABB3AgLii1JbnZhbGlkIGNoYXIgaW4gdXJsIHF1ZXJ5AFNwYW4gY2FsbGJhY2sgZXJyb3IgaW4gb25fYm9keQBDb250ZW50LUxlbmd0aCBvdmVyZmxvdwBDaHVuayBzaXplIG92ZXJmbG93AFJlc3BvbnNlIG92ZXJmbG93AEludmFsaWQgbWV0aG9kIGZvciBIVFRQL3gueCByZXF1ZXN0AEludmFsaWQgbWV0aG9kIGZvciBSVFNQL3gueCByZXF1ZXN0AEV4cGVjdGVkIFNPVVJDRSBtZXRob2QgZm9yIElDRS94LnggcmVxdWVzdABJbnZhbGlkIGNoYXIgaW4gdXJsIGZyYWdtZW50IHN0YXJ0AEV4cGVjdGVkIGRvdABTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX3N0YXR1cwBJbnZhbGlkIHJlc3BvbnNlIHN0YXR1cwBJbnZhbGlkIGNoYXJhY3RlciBpbiBjaHVuayBleHRlbnNpb25zAFVzZXIgY2FsbGJhY2sgZXJyb3IAYG9uX3Jlc2V0YCBjYWxsYmFjayBlcnJvcgBgb25fY2h1bmtfaGVhZGVyYCBjYWxsYmFjayBlcnJvcgBgb25fbWVzc2FnZV9iZWdpbmAgY2FsbGJhY2sgZXJyb3IAYG9uX2NodW5rX2V4dGVuc2lvbl92YWx1ZWAgY2FsbGJhY2sgZXJyb3IAYG9uX3N0YXR1c19jb21wbGV0ZWAgY2FsbGJhY2sgZXJyb3IAYG9uX3ZlcnNpb25fY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl91cmxfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9jaHVua19jb21wbGV0ZWAgY2FsbGJhY2sgZXJyb3IAYG9uX2hlYWRlcl92YWx1ZV9jb21wbGV0ZWAgY2FsbGJhY2sgZXJyb3IAYG9uX21lc3NhZ2VfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9tZXRob2RfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9oZWFkZXJfZmllbGRfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9jaHVua19leHRlbnNpb25fbmFtZWAgY2FsbGJhY2sgZXJyb3IAVW5leHBlY3RlZCBjaGFyIGluIHVybCBzZXJ2ZXIASW52YWxpZCBoZWFkZXIgdmFsdWUgY2hhcgBJbnZhbGlkIGhlYWRlciBmaWVsZCBjaGFyAFNwYW4gY2FsbGJhY2sgZXJyb3IgaW4gb25fdmVyc2lvbgBJbnZhbGlkIG1pbm9yIHZlcnNpb24ASW52YWxpZCBtYWpvciB2ZXJzaW9uAEV4cGVjdGVkIHNwYWNlIGFmdGVyIHZlcnNpb24ARXhwZWN0ZWQgQ1JMRiBhZnRlciB2ZXJzaW9uAEludmFsaWQgSFRUUCB2ZXJzaW9uAEludmFsaWQgaGVhZGVyIHRva2VuAFNwYW4gY2FsbGJhY2sgZXJyb3IgaW4gb25fdXJsAEludmFsaWQgY2hhcmFjdGVycyBpbiB1cmwAVW5leHBlY3RlZCBzdGFydCBjaGFyIGluIHVybABEb3VibGUgQCBpbiB1cmwARW1wdHkgQ29udGVudC1MZW5ndGgASW52YWxpZCBjaGFyYWN0ZXIgaW4gQ29udGVudC1MZW5ndGgARHVwbGljYXRlIENvbnRlbnQtTGVuZ3RoAEludmFsaWQgY2hhciBpbiB1cmwgcGF0aABDb250ZW50LUxlbmd0aCBjYW4ndCBiZSBwcmVzZW50IHdpdGggVHJhbnNmZXItRW5jb2RpbmcASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgc2l6ZQBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX2hlYWRlcl92YWx1ZQBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX2NodW5rX2V4dGVuc2lvbl92YWx1ZQBJbnZhbGlkIGNoYXJhY3RlciBpbiBjaHVuayBleHRlbnNpb25zIHZhbHVlAE1pc3NpbmcgZXhwZWN0ZWQgTEYgYWZ0ZXIgaGVhZGVyIHZhbHVlAEludmFsaWQgYFRyYW5zZmVyLUVuY29kaW5nYCBoZWFkZXIgdmFsdWUASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgZXh0ZW5zaW9ucyBxdW90ZSB2YWx1ZQBJbnZhbGlkIGNoYXJhY3RlciBpbiBjaHVuayBleHRlbnNpb25zIHF1b3RlZCB2YWx1ZQBQYXVzZWQgYnkgb25faGVhZGVyc19jb21wbGV0ZQBJbnZhbGlkIEVPRiBzdGF0ZQBvbl9yZXNldCBwYXVzZQBvbl9jaHVua19oZWFkZXIgcGF1c2UAb25fbWVzc2FnZV9iZWdpbiBwYXVzZQBvbl9jaHVua19leHRlbnNpb25fdmFsdWUgcGF1c2UAb25fc3RhdHVzX2NvbXBsZXRlIHBhdXNlAG9uX3ZlcnNpb25fY29tcGxldGUgcGF1c2UAb25fdXJsX2NvbXBsZXRlIHBhdXNlAG9uX2NodW5rX2NvbXBsZXRlIHBhdXNlAG9uX2hlYWRlcl92YWx1ZV9jb21wbGV0ZSBwYXVzZQBvbl9tZXNzYWdlX2NvbXBsZXRlIHBhdXNlAG9uX21ldGhvZF9jb21wbGV0ZSBwYXVzZQBvbl9oZWFkZXJfZmllbGRfY29tcGxldGUgcGF1c2UAb25fY2h1bmtfZXh0ZW5zaW9uX25hbWUgcGF1c2UAVW5leHBlY3RlZCBzcGFjZSBhZnRlciBzdGFydCBsaW5lAFNwYW4gY2FsbGJhY2sgZXJyb3IgaW4gb25fY2h1bmtfZXh0ZW5zaW9uX25hbWUASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgZXh0ZW5zaW9ucyBuYW1lAFBhdXNlIG9uIENPTk5FQ1QvVXBncmFkZQBQYXVzZSBvbiBQUkkvVXBncmFkZQBFeHBlY3RlZCBIVFRQLzIgQ29ubmVjdGlvbiBQcmVmYWNlAFNwYW4gY2FsbGJhY2sgZXJyb3IgaW4gb25fbWV0aG9kAEV4cGVjdGVkIHNwYWNlIGFmdGVyIG1ldGhvZABTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX2hlYWRlcl9maWVsZABQYXVzZWQASW52YWxpZCB3b3JkIGVuY291bnRlcmVkAEludmFsaWQgbWV0aG9kIGVuY291bnRlcmVkAFVuZXhwZWN0ZWQgY2hhciBpbiB1cmwgc2NoZW1hAFJlcXVlc3QgaGFzIGludmFsaWQgYFRyYW5zZmVyLUVuY29kaW5nYABTV0lUQ0hfUFJPWFkAVVNFX1BST1hZAE1LQUNUSVZJVFkAVU5QUk9DRVNTQUJMRV9FTlRJVFkAQ09QWQBNT1ZFRF9QRVJNQU5FTlRMWQBUT09fRUFSTFkATk9USUZZAEZBSUxFRF9ERVBFTkRFTkNZAEJBRF9HQVRFV0FZAFBMQVkAUFVUAENIRUNLT1VUAEdBVEVXQVlfVElNRU9VVABSRVFVRVNUX1RJTUVPVVQATkVUV09SS19DT05ORUNUX1RJTUVPVVQAQ09OTkVDVElPTl9USU1FT1VUAExPR0lOX1RJTUVPVVQATkVUV09SS19SRUFEX1RJTUVPVVQAUE9TVABNSVNESVJFQ1RFRF9SRVFVRVNUAENMSUVOVF9DTE9TRURfUkVRVUVTVABDTElFTlRfQ0xPU0VEX0xPQURfQkFMQU5DRURfUkVRVUVTVABCQURfUkVRVUVTVABIVFRQX1JFUVVFU1RfU0VOVF9UT19IVFRQU19QT1JUAFJFUE9SVABJTV9BX1RFQVBPVABSRVNFVF9DT05URU5UAE5PX0NPTlRFTlQAUEFSVElBTF9DT05URU5UAEhQRV9JTlZBTElEX0NPTlNUQU5UAEhQRV9DQl9SRVNFVABHRVQASFBFX1NUUklDVABDT05GTElDVABURU1QT1JBUllfUkVESVJFQ1QAUEVSTUFORU5UX1JFRElSRUNUAENPTk5FQ1QATVVMVElfU1RBVFVTAEhQRV9JTlZBTElEX1NUQVRVUwBUT09fTUFOWV9SRVFVRVNUUwBFQVJMWV9ISU5UUwBVTkFWQUlMQUJMRV9GT1JfTEVHQUxfUkVBU09OUwBPUFRJT05TAFNXSVRDSElOR19QUk9UT0NPTFMAVkFSSUFOVF9BTFNPX05FR09USUFURVMATVVMVElQTEVfQ0hPSUNFUwBJTlRFUk5BTF9TRVJWRVJfRVJST1IAV0VCX1NFUlZFUl9VTktOT1dOX0VSUk9SAFJBSUxHVU5fRVJST1IASURFTlRJVFlfUFJPVklERVJfQVVUSEVOVElDQVRJT05fRVJST1IAU1NMX0NFUlRJRklDQVRFX0VSUk9SAElOVkFMSURfWF9GT1JXQVJERURfRk9SAFNFVF9QQVJBTUVURVIAR0VUX1BBUkFNRVRFUgBIUEVfVVNFUgBTRUVfT1RIRVIASFBFX0NCX0NIVU5LX0hFQURFUgBNS0NBTEVOREFSAFNFVFVQAFdFQl9TRVJWRVJfSVNfRE9XTgBURUFSRE9XTgBIUEVfQ0xPU0VEX0NPTk5FQ1RJT04ASEVVUklTVElDX0VYUElSQVRJT04ARElTQ09OTkVDVEVEX09QRVJBVElPTgBOT05fQVVUSE9SSVRBVElWRV9JTkZPUk1BVElPTgBIUEVfSU5WQUxJRF9WRVJTSU9OAEhQRV9DQl9NRVNTQUdFX0JFR0lOAFNJVEVfSVNfRlJPWkVOAEhQRV9JTlZBTElEX0hFQURFUl9UT0tFTgBJTlZBTElEX1RPS0VOAEZPUkJJRERFTgBFTkhBTkNFX1lPVVJfQ0FMTQBIUEVfSU5WQUxJRF9VUkwAQkxPQ0tFRF9CWV9QQVJFTlRBTF9DT05UUk9MAE1LQ09MAEFDTABIUEVfSU5URVJOQUwAUkVRVUVTVF9IRUFERVJfRklFTERTX1RPT19MQVJHRV9VTk9GRklDSUFMAEhQRV9PSwBVTkxJTksAVU5MT0NLAFBSSQBSRVRSWV9XSVRIAEhQRV9JTlZBTElEX0NPTlRFTlRfTEVOR1RIAEhQRV9VTkVYUEVDVEVEX0NPTlRFTlRfTEVOR1RIAEZMVVNIAFBST1BQQVRDSABNLVNFQVJDSABVUklfVE9PX0xPTkcAUFJPQ0VTU0lORwBNSVNDRUxMQU5FT1VTX1BFUlNJU1RFTlRfV0FSTklORwBNSVNDRUxMQU5FT1VTX1dBUk5JTkcASFBFX0lOVkFMSURfVFJBTlNGRVJfRU5DT0RJTkcARXhwZWN0ZWQgQ1JMRgBIUEVfSU5WQUxJRF9DSFVOS19TSVpFAE1PVkUAQ09OVElOVUUASFBFX0NCX1NUQVRVU19DT01QTEVURQBIUEVfQ0JfSEVBREVSU19DT01QTEVURQBIUEVfQ0JfVkVSU0lPTl9DT01QTEVURQBIUEVfQ0JfVVJMX0NPTVBMRVRFAEhQRV9DQl9DSFVOS19DT01QTEVURQBIUEVfQ0JfSEVBREVSX1ZBTFVFX0NPTVBMRVRFAEhQRV9DQl9DSFVOS19FWFRFTlNJT05fVkFMVUVfQ09NUExFVEUASFBFX0NCX0NIVU5LX0VYVEVOU0lPTl9OQU1FX0NPTVBMRVRFAEhQRV9DQl9NRVNTQUdFX0NPTVBMRVRFAEhQRV9DQl9NRVRIT0RfQ09NUExFVEUASFBFX0NCX0hFQURFUl9GSUVMRF9DT01QTEVURQBERUxFVEUASFBFX0lOVkFMSURfRU9GX1NUQVRFAElOVkFMSURfU1NMX0NFUlRJRklDQVRFAFBBVVNFAE5PX1JFU1BPTlNFAFVOU1VQUE9SVEVEX01FRElBX1RZUEUAR09ORQBOT1RfQUNDRVBUQUJMRQBTRVJWSUNFX1VOQVZBSUxBQkxFAFJBTkdFX05PVF9TQVRJU0ZJQUJMRQBPUklHSU5fSVNfVU5SRUFDSEFCTEUAUkVTUE9OU0VfSVNfU1RBTEUAUFVSR0UATUVSR0UAUkVRVUVTVF9IRUFERVJfRklFTERTX1RPT19MQVJHRQBSRVFVRVNUX0hFQURFUl9UT09fTEFSR0UAUEFZTE9BRF9UT09fTEFSR0UASU5TVUZGSUNJRU5UX1NUT1JBR0UASFBFX1BBVVNFRF9VUEdSQURFAEhQRV9QQVVTRURfSDJfVVBHUkFERQBTT1VSQ0UAQU5OT1VOQ0UAVFJBQ0UASFBFX1VORVhQRUNURURfU1BBQ0UAREVTQ1JJQkUAVU5TVUJTQ1JJQkUAUkVDT1JEAEhQRV9JTlZBTElEX01FVEhPRABOT1RfRk9VTkQAUFJPUEZJTkQAVU5CSU5EAFJFQklORABVTkFVVEhPUklaRUQATUVUSE9EX05PVF9BTExPV0VEAEhUVFBfVkVSU0lPTl9OT1RfU1VQUE9SVEVEAEFMUkVBRFlfUkVQT1JURUQAQUNDRVBURUQATk9UX0lNUExFTUVOVEVEAExPT1BfREVURUNURUQASFBFX0NSX0VYUEVDVEVEAEhQRV9MRl9FWFBFQ1RFRABDUkVBVEVEAElNX1VTRUQASFBFX1BBVVNFRABUSU1FT1VUX09DQ1VSRUQAUEFZTUVOVF9SRVFVSVJFRABQUkVDT05ESVRJT05fUkVRVUlSRUQAUFJPWFlfQVVUSEVOVElDQVRJT05fUkVRVUlSRUQATkVUV09SS19BVVRIRU5USUNBVElPTl9SRVFVSVJFRABMRU5HVEhfUkVRVUlSRUQAU1NMX0NFUlRJRklDQVRFX1JFUVVJUkVEAFVQR1JBREVfUkVRVUlSRUQAUEFHRV9FWFBJUkVEAFBSRUNPTkRJVElPTl9GQUlMRUQARVhQRUNUQVRJT05fRkFJTEVEAFJFVkFMSURBVElPTl9GQUlMRUQAU1NMX0hBTkRTSEFLRV9GQUlMRUQATE9DS0VEAFRSQU5TRk9STUFUSU9OX0FQUExJRUQATk9UX01PRElGSUVEAE5PVF9FWFRFTkRFRABCQU5EV0lEVEhfTElNSVRfRVhDRUVERUQAU0lURV9JU19PVkVSTE9BREVEAEhFQUQARXhwZWN0ZWQgSFRUUC8AAF4TAAAmEwAAMBAAAPAXAACdEwAAFRIAADkXAADwEgAAChAAAHUSAACtEgAAghMAAE8UAAB/EAAAoBUAACMUAACJEgAAixQAAE0VAADUEQAAzxQAABAYAADJFgAA3BYAAMERAADgFwAAuxQAAHQUAAB8FQAA5RQAAAgXAAAfEAAAZRUAAKMUAAAoFQAAAhUAAJkVAAAsEAAAixkAAE8PAADUDgAAahAAAM4QAAACFwAAiQ4AAG4TAAAcEwAAZhQAAFYXAADBEwAAzRMAAGwTAABoFwAAZhcAAF8XAAAiEwAAzg8AAGkOAADYDgAAYxYAAMsTAACqDgAAKBcAACYXAADFEwAAXRYAAOgRAABnEwAAZRMAAPIWAABzEwAAHRcAAPkWAADzEQAAzw4AAM4VAAAMEgAAsxEAAKURAABhEAAAMhcAALsTAEH5NQsBAQBBkDYL4AEBAQIBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQBB/TcLAQEAQZE4C14CAwICAgICAAACAgACAgACAgICAgICAgICAAQAAAAAAAICAgICAgICAgICAgICAgICAgICAgICAgICAAAAAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAAgACAEH9OQsBAQBBkToLXgIAAgICAgIAAAICAAICAAICAgICAgICAgIAAwAEAAAAAgICAgICAgICAgICAgICAgICAgICAgICAgIAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgACAAIAQfA7Cw1sb3NlZWVwLWFsaXZlAEGJPAsBAQBBoDwL4AEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQBBiT4LAQEAQaA+C+cBAQEBAQEBAQEBAQEBAgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQFjaHVua2VkAEGwwAALXwEBAAEBAQEBAAABAQABAQABAQEBAQEBAQEBAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQABAEGQwgALIWVjdGlvbmVudC1sZW5ndGhvbnJveHktY29ubmVjdGlvbgBBwMIACy1yYW5zZmVyLWVuY29kaW5ncGdyYWRlDQoNCg0KU00NCg0KVFRQL0NFL1RTUC8AQfnCAAsFAQIAAQMAQZDDAAvgAQQBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAEH5xAALBQECAAEDAEGQxQAL4AEEAQEFAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQBB+cYACwQBAAABAEGRxwAL3wEBAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAEH6yAALBAEAAAIAQZDJAAtfAwQAAAQEBAQEBAQEBAQEBQQEBAQEBAQEBAQEBAAEAAYHBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQABAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAQAQfrKAAsEAQAAAQBBkMsACwEBAEGqywALQQIAAAAAAAADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwAAAAAAAAMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAEH6zAALBAEAAAEAQZDNAAsBAQBBms0ACwYCAAAAAAIAQbHNAAs6AwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAAAAAAAADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwBB8M4AC5YBTk9VTkNFRUNLT1VUTkVDVEVURUNSSUJFTFVTSEVURUFEU0VBUkNIUkdFQ1RJVklUWUxFTkRBUlZFT1RJRllQVElPTlNDSFNFQVlTVEFUQ0hHRU9SRElSRUNUT1JUUkNIUEFSQU1FVEVSVVJDRUJTQ1JJQkVBUkRPV05BQ0VJTkROS0NLVUJTQ1JJQkVIVFRQL0FEVFAv", "base64");
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/llhttp_simd-wasm.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/llhttp/llhttp_simd-wasm.js
 var require_llhttp_simd_wasm2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/llhttp/llhttp_simd-wasm.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/llhttp/llhttp_simd-wasm.js"(exports2, module2) {
     "use strict";
     var { Buffer: Buffer2 } = require("node:buffer");
     module2.exports = Buffer2.from("AGFzbQEAAAABJwdgAX8Bf2ADf39/AX9gAX8AYAJ/fwBgBH9/f38Bf2AAAGADf39/AALLAQgDZW52GHdhc21fb25faGVhZGVyc19jb21wbGV0ZQAEA2VudhV3YXNtX29uX21lc3NhZ2VfYmVnaW4AAANlbnYLd2FzbV9vbl91cmwAAQNlbnYOd2FzbV9vbl9zdGF0dXMAAQNlbnYUd2FzbV9vbl9oZWFkZXJfZmllbGQAAQNlbnYUd2FzbV9vbl9oZWFkZXJfdmFsdWUAAQNlbnYMd2FzbV9vbl9ib2R5AAEDZW52GHdhc21fb25fbWVzc2FnZV9jb21wbGV0ZQAAAy0sBQYAAAIAAAAAAAACAQIAAgICAAADAAAAAAMDAwMBAQEBAQEBAQEAAAIAAAAEBQFwARISBQMBAAIGCAF/AUGA1AQLB9EFIgZtZW1vcnkCAAtfaW5pdGlhbGl6ZQAIGV9faW5kaXJlY3RfZnVuY3Rpb25fdGFibGUBAAtsbGh0dHBfaW5pdAAJGGxsaHR0cF9zaG91bGRfa2VlcF9hbGl2ZQAvDGxsaHR0cF9hbGxvYwALBm1hbGxvYwAxC2xsaHR0cF9mcmVlAAwEZnJlZQAMD2xsaHR0cF9nZXRfdHlwZQANFWxsaHR0cF9nZXRfaHR0cF9tYWpvcgAOFWxsaHR0cF9nZXRfaHR0cF9taW5vcgAPEWxsaHR0cF9nZXRfbWV0aG9kABAWbGxodHRwX2dldF9zdGF0dXNfY29kZQAREmxsaHR0cF9nZXRfdXBncmFkZQASDGxsaHR0cF9yZXNldAATDmxsaHR0cF9leGVjdXRlABQUbGxodHRwX3NldHRpbmdzX2luaXQAFQ1sbGh0dHBfZmluaXNoABYMbGxodHRwX3BhdXNlABcNbGxodHRwX3Jlc3VtZQAYG2xsaHR0cF9yZXN1bWVfYWZ0ZXJfdXBncmFkZQAZEGxsaHR0cF9nZXRfZXJybm8AGhdsbGh0dHBfZ2V0X2Vycm9yX3JlYXNvbgAbF2xsaHR0cF9zZXRfZXJyb3JfcmVhc29uABwUbGxodHRwX2dldF9lcnJvcl9wb3MAHRFsbGh0dHBfZXJybm9fbmFtZQAeEmxsaHR0cF9tZXRob2RfbmFtZQAfEmxsaHR0cF9zdGF0dXNfbmFtZQAgGmxsaHR0cF9zZXRfbGVu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PgtBhwEMPQtBiAEMPAtBiQEMOwtBigEMOgtBiwEMOQtBjAEMOAtBjQEMNwtBjgEMNgtBjwEMNQtBkAEMNAtBkQEMMwtBkgEMMgtBkwEMMQtBlAEMMAtBlQEMLwtBlgEMLgtBlwEMLQtBmAEMLAtBmQEMKwtBmgEMKgtBmwEMKQtBnAEMKAtBnQEMJwtBngEMJgtBnwEMJQtBoAEMJAtBoQEMIwtBogEMIgtBowEMIQtBpAEMIAtBpQEMHwtBpgEMHgtBpwEMHQtBqAEMHAtBqQEMGwtBqgEMGgtBqwEMGQtBrAEMGAtBrQEMFwtBrgEMFgtBAQwVC0GvAQwUC0GwAQwTC0GxAQwSC0GzAQwRC0GyAQwQC0G0AQwPC0G1AQwOC0G2AQwNC0G3AQwMC0G4AQwLC0G5AQwKC0G6AQwJC0G7AQwIC0HGAQwHC0G8AQwGC0G9AQwFC0G+AQwEC0G/AQwDC0HAAQwCC0HCAQwBC0HBAQshAwNAAkACQAJAAkACQAJAAkACQAJAIAICfwJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJ/AkACQAJAAkACQAJAAkACQAJAAkACQAJAAkAgAgJ/AkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACfwJAAkACfwJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkAC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iQEhAwykAgtBASABLQAAQd8ARw1nGiABQQFqIQEMXgtBigEhAyABIARGDaICIAIoAgAiACAEIAFraiEFIAEgAGtBAWohBgNAIAEtAAAgAEGMzwBqLQAARw1kIABBAUYN+gEgAEEBaiEAIAQgAUEBaiIBRw0ACyACIAU2AgAMogILQYsBIQMgASAERg2hAiACKAIAIgAgBCABa2ohBSABIABrQQJqIQYCQANAIAEtAAAgAEGOzwBqLQAARw1kIABBAkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyiAgsgAkEANgIAIAZBAWohAUECDGULQYwBIQMgASAERg2gAiACKAIAIgAgBCABa2ohBSABIABrQQFqIQYCQANAIAEtAAAgAEHwzwBqLQAARw1jIABBAUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyhAgsgAkEANgIAIAZBAWohAUEfDGQLQY0BIQMgASAERg2fAiACKAIAIgAgBCABa2ohBSABIABrQQFqIQYCQANAIAEtAAAgAEHyzwBqLQAARw1iIABBAUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAygAgsgAkEANgIAIAZBAWohAUEJDGMLIAEgBEYEQEGOASEDDJ8CCwJAAkAgAS0AAEHJAGsOBwBiYmJiYgFiCyABQQFqIQFB+AAhAwyGAgsgAUEBaiEBQfkAIQMMhQILQY8BIQMgASAERg2dAiACKAIAIgAgBCABa2ohBSABIABrQQVqIQYCQANAIAEtAAAgAEGRzwBqLQAARw1gIABBBUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAyeAgsgAkEANgIAIAZBAWohAUEYDGELQZABIQMgASAERg2cAiACKAIAIgAgBCABa2ohBSABIABrQQJqIQYCQANAIAEtAAAgAEGXzwBqLQAARw1fIABBAkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAydAgsgAkEANgIAIAZBAWohAUEXDGALQZEBIQMgASAERg2bAiACKAIAIgAgBCABa2ohBSABIABrQQZqIQYCQANAIAEtAAAgAEGazwBqLQAARw1eIABBBkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAycAgsgAkEANgIAIAZBAWohAUEV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JSIARQ0RIAJB5QA2AhwgAiABNgIUIAIgADYCDEEAIQMMtAELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0gIAJB0wA2AhwgAiABNgIUIAIgADYCDEEAIQMMswELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0iIAJB0gA2AhwgAiABNgIUIAIgADYCDEEAIQMMsgELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0OIAJB5QA2AhwgAiABNgIUIAIgADYCDEEAIQMMsQELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0dIAJB0wA2AhwgAiABNgIUIAIgADYCDEEAIQMMsAELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0fIAJB0gA2AhwgAiABNgIUIAIgADYCDEEAIQMMrwELIABBP0cNASABQQFqCyEBQQUhAwyUAQtBACEDIAJBADYCHCACIAE2AhQgAkH9EjYCECACQQc2AgwMrAELIAJBADYCHCACIAE2AhQgAkHcCDYCECACQQc2AgxBACEDDKsBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNByACQeUANgIcIAIgATYCFCACIAA2AgxBACEDDKoBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNFiACQdMANgIcIAIgATYCFCACIAA2AgxBACEDDKkBCyACKAIEIQAgAkEANgIEIAIgACABECUiAEUNGCACQdIANgIcIAIgATYCFCACIAA2AgxBACEDDKgBCyACQQA2AhwgAiABNgIUIAJBxgo2AhAgAkEHNgIMQQAhAwynAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDQMgAkHlADYCHCACIAE2AhQgAiAANgIMQQAhAwymAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDRIgAkHTADYCHCACIAE2AhQgAiAANgIMQQAhAwylAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDRQgAkHSADYCHCACIAE2AhQgAiAANgIMQQAhAwykAQsgAigCBCEAIAJBADYCBCACIAAgARAlIgBFDQAgAkHlADYCHCACIAE2AhQgAiAANgIMQQAhAwyjAQtB1QAhAwyJAQsgAEEVRwRAIAJBADYCHCACIAE2AhQgAkG5DTYCECACQRo2AgxBACEDDKIBCyACQeQANgIcIAIgATYCFCACQeMXNgIQIAJBFTYCDEEAIQMMoQELIAJBADYCACAGQQFqIQEgAi0AKSIAQSNrQQtJDQQCQCAAQQZLDQBBASAAdEHKAHFFDQAMBQtBACEDIAJBADYCHCACIAE2AhQgAkH3CTYCECACQQg2AgwMoAELIAJBADYCACAGQQFqIQEgAi0AKUEhRg0DIAJBADYCHCACIAE2AhQgAkGbCjYCECACQQg2AgxBACEDDJ8BCyACQQA2AgALQQAhAyACQQA2AhwgAiABNgIUIAJBkDM2AhAgAkEINgIMDJ0BCyACQQA2AgAgBkEBaiEBIAItAClBI0kNACACQQA2AhwgAiABNgIUIAJB0wk2AhAgAkEINgIMQQAhAwycAQtB0QAhAwyCAQsgAS0AAEEwayIAQf8BcUEKSQRAIAIgADoAKiABQQFqIQFBzwAhAwyCAQsgAigCBCEAIAJBADYCBCACIAAgARAoIgBFDYYBIAJB3gA2AhwgAiABNgIUIAIgADYCDEEAIQMMmgELIAIoAgQhACACQQA2AgQgAiAAIAEQKCIARQ2GASACQdwANgIcIAIgATYCFCACIAA2AgxBACEDDJkBCyACKAIEIQAgAkEANgIEIAIgACAFECgiAEUEQCAFIQEMhwELIAJB2gA2AhwgAiAFNgIUIAIgADYCDAyYAQtBACEBQQEhAwsgAiADOgArIAVBAWohAwJAAkACQCACLQAtQRBxDQACQAJAAkAgAi0AKg4DAQACBAsgBkUNAwwCCyAADQEMAgsgAUUNAQsgAigCBCEAIAJBADYCBCACIAAgAxAoIgBFBEAgAyEBDAILIAJB2AA2AhwgAiADNgIUIAIgADYCDEEAIQMMmAELIAIoAgQhACACQQA2AgQgAiAAIAMQKCIARQRAIAMhAQyHAQsgAkHZADYCHCACIAM2AhQgAiAANgIMQQAhAwyXAQtBzAAhAwx9CyAAQRVHBEAgAkEANgIcIAIgATYCFCACQZQNNgIQIAJBITYCDEEAIQMMlgELIAJB1wA2AhwgAiABNgIUIAJByRc2AhAgAkEVNgIMQQAhAwyVAQtBACEDIAJBADYCHCACIAE2AhQgAkGAETYCECACQQk2AgwMlAELIAIoAgQhACACQQA2AgQgAiAAIAEQJSIARQ0AIAJB0wA2AhwgAiABNgIUIAIgADYCDEEAIQMMkwELQckAIQMMeQsgAkEANgIcIAIgATYCFCACQcEoNgIQIAJBBzYCDCACQQA2AgBBACEDDJEBCyACKAIEIQBBACEDIAJBADYCBCACIAAgARAlIgBFDQAgAkHSADYCHCACIAE2AhQgAiAANgIMDJABC0HIACEDDHYLIAJBADYCACAFIQELIAJBgBI7ASogAUEBaiEBQQAhAAJAIAIoAjgiA0UNACADKAIwIgNFDQAgAiADEQAAIQALIAANAQtBxwAhAwxzCyAAQRVGBEAgAkHRADYCHCACIAE2AhQgAkHjFzYCECACQRU2AgxBACEDDIwBC0EAIQMgAkEANgIcIAIgATYCFCACQbkNNgIQIAJBGjYCDAyLAQtBACEDIAJBADYCHCACIAE2AhQgAkGgGTYCECACQR42AgwMigELIAEtAABBOkYEQCACKAIEIQBBACEDIAJBADYCBCACIAAgARApIgBFDQEgAkHDADYCHCACIAA2AgwgAiABQQFqNgIUDIoBC0EAIQMgAkEANgIcIAIgATYCFCACQbERNgIQIAJBCjYCDAyJAQsgAUEBaiEBQTshAwxvCyACQcMANgIcIAIgADYCDCACIAFBAWo2AhQMhwELQQAhAyACQQA2AhwgAiABNgIUIAJB8A42AhAgAkEcNgIMDIYBCyACIAIvATBBEHI7ATAMZgsCQCACLwEwIgBBCHFFDQAgAi0AKEEBRw0AIAItAC1BCHFFDQMLIAIgAEH3+wNxQYAEcjsBMAwECyABIARHBEACQANAIAEtAABBMGsiAEH/AXFBCk8EQEE1IQMMbgsgAikDICIKQpmz5syZs+bMGVYNASACIApCCn4iCjcDICAKIACtQv8BgyILQn+FVg0BIAIgCiALfDcDICAEIAFBAWoiAUcNAAtBOSEDDIUBCyACKAIEIQBBACEDIAJBADYCBCACIAAgAUEBaiIBECoiAA0MDHcLQTkhAwyDAQsgAi0AMEEgcQ0GQcUBIQMMaQtBACEDIAJBADYCBCACIAEgARAqIgBFDQQgAkE6NgIcIAIgADYCDCACIAFBAWo2AhQMgQELIAItAChBAUcNACACLQAtQQhxRQ0BC0E3IQMMZgsgAigCBCEAQQAhAyACQQA2AgQgAiAAIAEQKiIABEAgAkE7NgIcIAIgADYCDCACIAFBAWo2AhQMfwsgAUEBaiEBDG4LIAJBCDoALAwECyABQQFqIQEMbQtBACEDIAJBADYCHCACIAE2AhQgAkHkEjYCECACQQQ2AgwMewsgAigCBCEAQQAhAyACQQA2AgQgAiAAIAEQKiIARQ1sIAJBNzYCHCACIAE2AhQgAiAANgIMDHoLIAIgAi8BMEEgcjsBMAtBMCEDDF8LIAJBNjYCHCACIAE2AhQgAiAANgIMDHcLIABBLEcNASABQQFqIQBBASEBAkACQAJAAkACQCACLQAsQQVrDgQDAQIEAAsgACEBDAQLQQIhAQwBC0EEIQELIAJBAToALCACIAIvATAgAXI7ATAgACEBDAELIAIgAi8BMEEIcjsBMCAAIQELQTkhAwxcCyACQQA6ACwLQTQhAwxaCyABIARGBEBBLSEDDHMLAkACQANAAkAgAS0AAEEKaw4EAgAAAwALIAQgAUEBaiIBRw0AC0EtIQMMdAsgAigCBCEAQQAhAyACQQA2AgQgAiAAIAEQKiIARQ0CIAJBLDYCHCACIAE2AhQgAiAANgIMDHMLIAIoAgQhAEEAIQMgAkEANgIEIAIgACABECoiAEUEQCABQQFqIQEMAgsgAkEsNgIcIAIgADYCDCACIAFBAWo2AhQMcgsgAS0AAEENRgRAIAIoAgQhAEEAIQMgAkEANgIEIAIgACABECoiAEUEQCABQQFqIQEMAgsgAkEsNgIcIAIgADYCDCACIAFBAWo2AhQMcgsgAi0ALUEBcQRAQcQBIQMMWQsgAigCBCEAQQAhAyACQQA2AgQgAiAAIAEQKiIADQEMZQtBLyEDDFcLIAJBLjYCHCACIAE2AhQgAiAANgIMDG8LQQAhAyACQQA2AhwgAiABNgIUIAJB8BQ2AhAgAkEDNgIMDG4LQQEhAwJAAkACQAJAIAItACxBBWsOBAMBAgAECyACIAIvATBBCHI7ATAMAwtBAiEDDAELQQQhAwsgAkEBOgAsIAIgAi8BMCADcjsBMAtBKiEDDFMLQQAhAyACQQA2AhwgAiABNgIUIAJB4Q82AhAgAkEKNgIMDGsLQQEhAwJAAkACQAJAAkACQCACLQAsQQJrDgcFBAQDAQIABAsgAiACLwEwQQhyOwEwDAMLQQIhAwwBC0EEIQMLIAJBAToALCACIAIvATAgA3I7ATALQSshAwxSC0EAIQMgAkEANgIcIAIgATYCFCACQasSNgIQIAJBCzYCDAxqC0EAIQMgAkEANgIcIAIgATYCFCACQf0NNgIQIAJBHTYCDAxpCyABIARHBEADQCABLQAAQSBHDUggBCABQQFqIgFHDQALQSUhAwxpC0ElIQMMaAsgAi0ALUEBcQRAQcMBIQMMTwsgAigCBCEAQQAhAyACQQA2AgQgAiAAIAEQKSIABEAgAkEmNgIcIAIgADYCDCACIAFBAWo2AhQMaAsgAUEBaiEBDFwLIAFBAWohASACLwEwIgBBgAFxBEBBACEAAkAgAigCOCIDRQ0AIAMoAlQiA0UNACACIAMRAAAhAAsgAEUNBiAAQRVHDR8gAkEFNgIcIAIgATYCFCACQfkXNgIQIAJBFTYCDEEAIQMMZwsCQCAAQaAEcUGgBEcNACACLQAtQQJxDQBBACEDIAJBADYCHCACIAE2AhQgAkGWEzYCECACQQQ2AgwMZwsgAgJ/IAIvATBBFHFBFEYEQEEBIAItAChBAUYNARogAi8BMkHlAEYMAQsgAi0AKUEFRgs6AC5BACEAAkAgAigCOCIDRQ0AIAMoAiQiA0UNACACIAMRAAAhAAsCQAJAAkACQAJAIAAOFgIBAAQEBAQEBAQEBAQEBAQEBAQEBAMECyACQQE6AC4LIAIgAi8BMEHAAHI7ATALQSchAwxPCyACQSM2AhwgAiABNgIUIAJBpRY2AhAgAkEVNgIMQQAhAwxnC0EAIQMgAkEANgIcIAIgATYCFCACQdULNgIQIAJBETYCDAxmC0EAIQACQCACKAI4IgNFDQAgAygCLCIDRQ0AIAIgAxEAACEACyAADQELQQ4hAwxLCyAAQRVGBEAgAkECNgIcIAIgATYCFCACQbAYNgIQIAJBFTYCDEEAIQMMZAtBACEDIAJBADYCHCACIAE2AhQgAkGnDjYCECACQRI2AgwMYwtBACEDIAJBADYCHCACIAE2AhQgAkGqHDYCECACQQ82AgwMYgsgAigCBCEAQQAhAyACQQA2AgQgAiAAIAEgCqdqIgEQKyIARQ0AIAJBBTYCHCACIAE2AhQgAiAANgIMDGELQQ8hAwxHC0EAIQMgAkEANgIcIAIgATYCFCACQc0TNgIQIAJBDDYCDAxfC0IBIQoLIAFBAWohAQJAIAIpAyAiC0L//////////w9YBEAgAiALQgSGIAqENwMgDAELQQAhAyACQQA2AhwgAiABNgIUIAJBrQk2AhAgAkEMNgIMDF4LQSQhAwxEC0EAIQMgAkEANgIcIAIgATYCFCACQc0TNgIQIAJBDDYCDAxcCyACKAIEIQBBACEDIAJBADYCBCACIAAgARAsIgBFBEAgAUEBaiEBDFILIAJBFzYCHCACIAA2AgwgAiABQQFqNgIUDFsLIAIoAgQhAEEAIQMgAkEANgIEAkAgAiAAIAEQLCIARQRAIAFBAWohAQwBCyACQRY2AhwgAiAANgIMIAIgAUEBajYCFAxbC0EfIQMMQQtBACEDIAJBADYCHCACIAE2AhQgAkGaDzYCECACQSI2AgwMWQsgAigCBCEAQQAhAyACQQA2AgQgAiAAIAEQLSIARQRAIAFBAWohAQxQCyACQRQ2AhwgAiAANgIMIAIgAUEBajYCFAxYCyACKAIEIQBBACEDIAJBADYCBAJAIAIgACABEC0iAEUEQCABQQFqIQEMAQsgAkETNgIcIAIgADYCDCACIAFBAWo2AhQMWAtBHiEDDD4LQQAhAyACQQA2AhwgAiABNgIUIAJBxgw2AhAgAkEjNgIMDFYLIAIoAgQhAEEAIQMgAkEANgIEIAIgACABEC0iAEUEQCABQQFqIQEMTgsgAkERNgIcIAIgADYCDCACIAFBAWo2AhQMVQsgAkEQNgIcIAIgATYCFCACIAA2AgwMVAtBACEDIAJBADYCHCACIAE2AhQgAkHGDDYCECACQSM2AgwMUwtBACEDIAJBADYCHCACIAE2AhQgAkHAFTYCECACQQI2AgwMUgsgAigCBCEAQQAhAyACQQA2AgQCQCACIAAgARAtIgBFBEAgAUEBaiEBDAELIAJBDjYCHCACIAA2AgwgAiABQQFqNgIUDFILQRshAww4C0EAIQMgAkEANgIcIAIgATYCFCACQcYMNgIQIAJBIzYCDAxQCyACKAIEIQBBACEDIAJBADYCBAJAIAIgACABECwiAEUEQCABQQFqIQEMAQsgAkENNgIcIAIgADYCDCACIAFBAWo2AhQMUAtBGiEDDDYLQQAhAyACQQA2AhwgAiABNgIUIAJBmg82AhAgAkEiNgIMDE4LIAIoAgQhAEEAIQMgAkEANgIEAkAgAiAAIAEQLCIARQRAIAFBAWohAQwBCyACQQw2AhwgAiAANgIMIAIgAUEBajYCFAxOC0EZIQMMNAtBACEDIAJBADYCHCACIAE2AhQgAkGaDzYCECACQSI2AgwMTAsgAEEVRwRAQQAhAyACQQA2AhwgAiABNgIUIAJBgww2AhAgAkETNgIMDEwLIAJBCjYCHCACIAE2AhQgAkHkFjYCECACQRU2AgxBACEDDEsLIAIoAgQhAEEAIQMgAkEANgIEIAIgACABIAqnaiIBECsiAARAIAJBBzYCHCACIAE2AhQgAiAANgIMDEsLQRMhAwwxCyAAQRVHBEBBACEDIAJBADYCHCACIAE2AhQgAkHaDTYCECACQRQ2AgwMSgsgAkEeNgIcIAIgATYCFCACQfkXNgIQIAJBFTYCDEEAIQMMSQtBACEAAkAgAigCOCIDRQ0AIAMoAiwiA0UNACACIAMRAAAhAAsgAEUNQSAAQRVGBEAgAkEDNgIcIAIgATYCFCACQbAYNgIQIAJBFTYCDEEAIQMMSQtBACEDIAJBADYCHCACIAE2AhQgAkGnDjYCECACQRI2AgwMSAtBACEDIAJBADYCHCACIAE2AhQgAkHaDTYCECACQRQ2AgwMRwtBACEDIAJBADYCHCACIAE2AhQgAkGnDjYCECACQRI2AgwMRgsgAkEAOgAvIAItAC1BBHFFDT8LIAJBADoALyACQQE6ADRBACEDDCsLQQAhAyACQQA2AhwgAkHkETYCECACQQc2AgwgAiABQQFqNgIUDEMLAkADQAJAIAEtAABBCmsOBAACAgACCyAEIAFBAWoiAUcNAAtB3QEhAwxDCwJAAkAgAi0ANEEBRw0AQQAhAAJAIAIoAjgiA0UNACADKAJYIgNFDQAgAiADEQAAIQALIABFDQAgAEEVRw0BIAJB3AE2AhwgAiABNgIUIAJB1RY2AhAgAkEVNgIMQQAhAwxEC0HBASEDDCoLIAJBADYCHCACIAE2AhQgAkHpCzYCECACQR82AgxBACEDDEILAkACQCACLQAoQQFrDgIEAQALQcABIQMMKQtBuQEhAwwoCyACQQI6AC9BACEAAkAgAigCOCIDRQ0AIAMoAgAiA0UNACACIAMRAAAhAAsgAEUEQEHCASEDDCgLIABBFUcEQCACQQA2AhwgAiABNgIUIAJBpAw2AhAgAkEQNgIMQQAhAwxBCyACQdsBNgIcIAIgATYCFCACQfoWNgIQIAJBFTYCDEEAIQMMQAsgASAERgRAQdoBIQMMQAsgAS0AAEHIAEYNASACQQE6ACgLQawBIQMMJQtBvwEhAwwkCyABIARHBEAgAkEQNgIIIAIgATYCBEG+ASEDDCQLQdkBIQMMPAsgASAERgRAQdgBIQMMPAsgAS0AAEHIAEcNBCABQQFqIQFBvQEhAwwiCyABIARGBEBB1wEhAww7CwJAAkAgAS0AAEHFAGsOEAAFBQUFBQUFBQUFBQUFBQEFCyABQQFqIQFBuwEhAwwiCyABQQFqIQFBvAEhAwwhC0HWASEDIAEgBEYNOSACKAIAIgAgBCABa2ohBSABIABrQQJqIQYCQANAIAEtAAAgAEGD0ABqLQAARw0DIABBAkYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAw6CyACKAIEIQAgAkIANwMAIAIgACAGQQFqIgEQJyIARQRAQcYBIQMMIQsgAkHVATYCHCACIAE2AhQgAiAANgIMQQAhAww5C0HUASEDIAEgBEYNOCACKAIAIgAgBCABa2ohBSABIABrQQFqIQYCQANAIAEtAAAgAEGB0ABqLQAARw0CIABBAUYNASAAQQFqIQAgBCABQQFqIgFHDQALIAIgBTYCAAw5CyACQYEEOwEoIAIoAgQhACACQgA3AwAgAiAAIAZBAWoiARAnIgANAwwCCyACQQA2AgALQQAhAyACQQA2AhwgAiABNgIUIAJB2Bs2AhAgAkEINgIMDDYLQboBIQMMHAsgAkHTATYCHCACIAE2AhQgAiAANgIMQQAhAww0C0EAIQACQCACKAI4IgNFDQAgAygCOCIDRQ0AIAIgAxEAACEACyAARQ0AIABBFUYNASACQQA2AhwgAiABNgIUIAJBzA42AhAgAkEgNgIMQQAhAwwzC0HkACEDDBkLIAJB+AA2AhwgAiABNgIUIAJByhg2AhAgAkEVNgIMQQAhAwwxC0HSASEDIAQgASIARg0wIAQgAWsgAigCACIBaiEFIAAgAWtBBGohBgJAA0AgAC0AACABQfzPAGotAABHDQEgAUEERg0DIAFBAWohASAEIABBAWoiAEcNAAsgAiAFNgIADDELIAJBADYCHCACIAA2AhQgAkGQMzYCECACQQg2AgwgAkEANgIAQQAhAwwwCyABIARHBEAgAkEONgIIIAIgATYCBEG3ASEDDBcLQdEBIQMMLwsgAkEANgIAIAZBAWohAQtBuAEhAwwUCyABIARGBEBB0AEhAwwtCyABLQAAQTBrIgBB/wFxQQpJBEAgAiAAOgAqIAFBAWohAUG2ASEDDBQLIAIoAgQhACACQQA2AgQgAiAAIAEQKCIARQ0UIAJBzwE2AhwgAiABNgIUIAIgADYCDEEAIQMMLAsgASAERgRAQc4BIQMMLAsCQCABLQAAQS5GBEAgAUEBaiEBDAELIAIoAgQhACACQQA2AgQgAiAAIAEQKCIARQ0VIAJBzQE2AhwgAiABNgIUIAIgADYCDEEAIQMMLAtBtQEhAwwSCyAEIAEiBUYEQEHMASEDDCsLQQAhAEEBIQFBASEGQQAhAwJAAkACQAJAAkACfwJAAkACQAJAAkACQAJAIAUtAABBMGsOCgoJAAECAwQFBggLC0ECDAYLQQMMBQtBBAwEC0EFDAMLQQYMAgtBBwwBC0EICyEDQQAhAUEAIQYMAgtBCSEDQQEhAEEAIQFBACEGDAELQQAhAUEBIQMLIAIgAzoAKyAFQQFqIQMCQAJAIAItAC1BEHENAAJAAkACQCACLQAqDgMBAAIECyAGRQ0DDAILIAANAQwCCyABRQ0BCyACKAIEIQAgAkEANgIEIAIgACADECgiAEUEQCADIQEMAwsgAkHJATYCHCACIAM2AhQgAiAANgIMQQAhAwwtCyACKAIEIQAgAkEANgIEIAIgACADECgiAEUEQCADIQEMGAsgAkHKATYCHCACIAM2AhQgAiAANgIMQQAhAwwsCyACKAIEIQAgAkEANgIEIAIgACAFECgiAEUEQCAFIQEMFgsgAkHLATYCHCACIAU2AhQgAiAANgIMDCsLQbQBIQMMEQtBACEAAkAgAigCOCIDRQ0AIAMoAjwiA0UNACACIAMRAAAhAAsCQCAABEAgAEEVRg0BIAJBADYCHCACIAE2AhQgAkGUDTYCECACQSE2AgxBACEDDCsLQbIBIQMMEQsgAkHIATYCHCACIAE2AhQgAkHJFzYCECACQRU2AgxBACEDDCkLIAJBADYCACAGQQFqIQFB9QAhAwwPCyACLQApQQVGBEBB4wAhAwwPC0HiACEDDA4LIAAhASACQQA2AgALIAJBADoALEEJIQMMDAsgAkEANgIAIAdBAWohAUHAACEDDAsLQQELOgAsIAJBADYCACAGQQFqIQELQSkhAwwIC0E4IQMMBwsCQCABIARHBEADQCABLQAAQYA+ai0AACIAQQFHBEAgAEECRw0DIAFBAWohAQwFCyAEIAFBAWoiAUcNAAtBPiEDDCELQT4hAwwgCwsgAkEAOgAsDAELQQshAwwEC0E6IQMMAwsgAUEBaiEBQS0hAwwCCyACIAE6ACwgAkEANgIAIAZBAWohAUEMIQMMAQsgAkEANgIAIAZBAWohAUEKIQMMAAsAC0EAIQMgAkEANgIcIAIgATYCFCACQc0QNgIQIAJBCTYCDAwXC0EAIQMgAkEANgIcIAIgATYCFCACQekKNgIQIAJBCTYCDAwWC0EAIQMgAkEANgIcIAIgATYCFCACQbcQNgIQIAJBCTYCDAwVC0EAIQMgAkEANgIcIAIgATYCFCACQZwRNgIQIAJBCTYCDAwUC0EAIQMgAkEANgIcIAIgATYCFCACQc0QNgIQIAJBCTYCDAwTC0EAIQMgAkEANgIcIAIgATYCFCACQekKNgIQIAJBCTYCDAwSC0EAIQMgAkEANgIcIAIgATYCFCACQbcQNgIQIAJBCTYCDAwRC0EAIQMgAkEANgIcIAIgATYCFCACQZwRNgIQIAJBCTYCDAwQC0EAIQMgAkEANgIcIAIgATYCFCACQZcVNgIQIAJBDzYCDAwPC0EAIQMgAkEANgIcIAIgATYCFCACQZcVNgIQIAJBDzYCDAwOC0EAIQMgAkEANgIcIAIgATYCFCACQcASNgIQIAJBCzYCDAwNC0EAIQMgAkEANgIcIAIgATYCFCACQZUJNgIQIAJBCzYCDAwMC0EAIQMgAkEANgIcIAIgATYCFCACQeEPNgIQIAJBCjYCDAwLC0EAIQMgAkEANgIcIAIgATYCFCACQfsPNgIQIAJBCjYCDAwKC0EAIQMgAkEANgIcIAIgATYCFCACQfEZNgIQIAJBAjYCDAwJC0EAIQMgAkEANgIcIAIgATYCFCACQcQUNgIQIAJBAjYCDAwIC0EAIQMgAkEANgIcIAIgATYCFCACQfIVNgIQIAJBAjYCDAwHCyACQQI2AhwgAiABNgIUIAJBnBo2AhAgAkEWNgIMQQAhAwwGC0EBIQMMBQtB1AAhAyABIARGDQQgCEEIaiEJIAIoAgAhBQJAAkAgASAERwRAIAVB2MIAaiEHIAQgBWogAWshACAFQX9zQQpqIgUgAWohBgNAIAEtAAAgBy0AAEcEQEECIQcMAwsgBUUEQEEAIQcgBiEBDAMLIAVBAWshBSAHQQFqIQcgBCABQQFqIgFHDQALIAAhBSAEIQELIAlBATYCACACIAU2AgAMAQsgAkEANgIAIAkgBzYCAAsgCSABNgIEIAgoAgwhACAIKAIIDgMBBAIACwALIAJBADYCHCACQbUaNgIQIAJBFzYCDCACIABBAWo2AhRBACEDDAILIAJBADYCHCACIAA2AhQgAkHKGjYCECACQQk2AgxBACEDDAELIAEgBEYEQEEiIQMMAQsgAkEJNgIIIAIgATYCBEEhIQMLIAhBEGokACADRQRAIAIoAgwhAAwBCyACIAM2AhxBACEAIAIoAgQiAUUNACACIAEgBCACKAIIEQEAIgFFDQAgAiAENgIUIAIgATYCDCABIQALIAALvgIBAn8gAEEAOgAAIABB3ABqIgFBAWtBADoAACAAQQA6AAIgAEEAOgABIAFBA2tBADoAACABQQJrQQA6AAAgAEEAOgADIAFBBGtBADoAAEEAIABrQQNxIgEgAGoiAEEANgIAQdwAIAFrQXxxIgIgAGoiAUEEa0EANgIAAkAgAkEJSQ0AIABBADYCCCAAQQA2AgQgAUEIa0EANgIAIAFBDGtBADYCACACQRlJDQAgAEEANgIYIABBADYCFCAAQQA2AhAgAEEANgIMIAFBEGtBADYCACABQRRrQQA2AgAgAUEYa0EANgIAIAFBHGtBADYCACACIABBBHFBGHIiAmsiAUEgSQ0AIAAgAmohAANAIABCADcDGCAAQgA3AxAgAEIANwMIIABCADcDACAAQSBqIQAgAUEgayIBQR9LDQALCwtWAQF/AkAgACgCDA0AAkACQAJAAkAgAC0ALw4DAQADAgsgACgCOCIBRQ0AIAEoAiwiAUUNACAAIAERAAAiAQ0DC0EADwsACyAAQcMWNgIQQQ4hAQsgAQsaACAAKAIMRQRAIABB0Rs2AhAgAEEVNgIMCwsUACAAKAIMQRVGBEAgAEEANgIMCwsUACAAKAIMQRZGBEAgAEEANgIMCwsHACAAKAIMCwcAIAAoAhALCQAgACABNgIQCwcAIAAoAhQLFwAgAEEkTwRAAAsgAEECdEGgM2ooAgALFwAgAEEuTwRAAAsgAEECdEGwNGooAgALvwkBAX9B6yghAQJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAAkACQAJAIABB5ABrDvQDY2IAAWFhYWFhYQIDBAVhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhBgcICQoLDA0OD2FhYWFhEGFhYWFhYWFhYWFhEWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYRITFBUWFxgZGhthYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2YTc4OTphYWFhYWFhYTthYWE8YWFhYT0+P2FhYWFhYWFhQGFhQWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYUJDREVGR0hJSktMTU5PUFFSU2FhYWFhYWFhVFVWV1hZWlthXF1hYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFeYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhX2BhC0HhJw8LQaQhDwtByywPC0H+MQ8LQcAkDwtBqyQPC0GNKA8LQeImDwtBgDAPC0G5Lw8LQdckDwtB7x8PC0HhHw8LQfofDwtB8iAPC0GoLw8LQa4yDwtBiDAPC0HsJw8LQYIiDwtBjh0PC0HQLg8LQcojDwtBxTIPC0HfHA8LQdIcDwtBxCAPC0HXIA8LQaIfDwtB7S4PC0GrMA8LQdQlDwtBzC4PC0H6Lg8LQfwrDwtB0jAPC0HxHQ8LQbsgDwtB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AAADAEGUCAsFBAAAAAUAQaQICwkGAAAABwAAAAgAQdwIC4otSW52YWxpZCBjaGFyIGluIHVybCBxdWVyeQBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX2JvZHkAQ29udGVudC1MZW5ndGggb3ZlcmZsb3cAQ2h1bmsgc2l6ZSBvdmVyZmxvdwBSZXNwb25zZSBvdmVyZmxvdwBJbnZhbGlkIG1ldGhvZCBmb3IgSFRUUC94LnggcmVxdWVzdABJbnZhbGlkIG1ldGhvZCBmb3IgUlRTUC94LnggcmVxdWVzdABFeHBlY3RlZCBTT1VSQ0UgbWV0aG9kIGZvciBJQ0UveC54IHJlcXVlc3QASW52YWxpZCBjaGFyIGluIHVybCBmcmFnbWVudCBzdGFydABFeHBlY3RlZCBkb3QAU3BhbiBjYWxsYmFjayBlcnJvciBpbiBvbl9zdGF0dXMASW52YWxpZCByZXNwb25zZSBzdGF0dXMASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgZXh0ZW5zaW9ucwBVc2VyIGNhbGxiYWNrIGVycm9yAGBvbl9yZXNldGAgY2FsbGJhY2sgZXJyb3IAYG9uX2NodW5rX2hlYWRlcmAgY2FsbGJhY2sgZXJyb3IAYG9uX21lc3NhZ2VfYmVnaW5gIGNhbGxiYWNrIGVycm9yAGBvbl9jaHVua19leHRlbnNpb25fdmFsdWVgIGNhbGxiYWNrIGVycm9yAGBvbl9zdGF0dXNfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl92ZXJzaW9uX2NvbXBsZXRlYCBjYWxsYmFjayBlcnJvcgBgb25fdXJsX2NvbXBsZXRlYCBjYWxsYmFjayBlcnJvcgBgb25fY2h1bmtfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9oZWFkZXJfdmFsdWVfY29tcGxldGVgIGNhbGxiYWNrIGVycm9yAGBvbl9tZXNzYWdlX2NvbXBsZXRlYCBjYWxsYmFjayBlcnJvcgBgb25fbWV0aG9kX2NvbXBsZXRlYCBjYWxsYmFjayBlcnJvcgBgb25faGVhZGVyX2ZpZWxkX2NvbXBsZXRlYCBjYWxsYmFjayBlcnJvcgBgb25fY2h1bmtfZXh0ZW5zaW9uX25hbWVgIGNhbGxiYWNrIGVycm9yAFVuZXhwZWN0ZWQgY2hhciBpbiB1cmwgc2VydmVyAEludmFsaWQgaGVhZGVyIHZhbHVlIGNoYXIASW52YWxpZCBoZWFkZXIgZmllbGQgY2hhcgBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX3ZlcnNpb24ASW52YWxpZCBtaW5vciB2ZXJzaW9uAEludmFsaWQgbWFqb3IgdmVyc2lvbgBFeHBlY3RlZCBzcGFjZSBhZnRlciB2ZXJzaW9uAEV4cGVjdGVkIENSTEYgYWZ0ZXIgdmVyc2lvbgBJbnZhbGlkIEhUVFAgdmVyc2lvbgBJbnZhbGlkIGhlYWRlciB0b2tlbgBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX3VybABJbnZhbGlkIGNoYXJhY3RlcnMgaW4gdXJsAFVuZXhwZWN0ZWQgc3RhcnQgY2hhciBpbiB1cmwARG91YmxlIEAgaW4gdXJsAEVtcHR5IENvbnRlbnQtTGVuZ3RoAEludmFsaWQgY2hhcmFjdGVyIGluIENvbnRlbnQtTGVuZ3RoAER1cGxpY2F0ZSBDb250ZW50LUxlbmd0aABJbnZhbGlkIGNoYXIgaW4gdXJsIHBhdGgAQ29udGVudC1MZW5ndGggY2FuJ3QgYmUgcHJlc2VudCB3aXRoIFRyYW5zZmVyLUVuY29kaW5nAEludmFsaWQgY2hhcmFjdGVyIGluIGNodW5rIHNpemUAU3BhbiBjYWxsYmFjayBlcnJvciBpbiBvbl9oZWFkZXJfdmFsdWUAU3BhbiBjYWxsYmFjayBlcnJvciBpbiBvbl9jaHVua19leHRlbnNpb25fdmFsdWUASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgZXh0ZW5zaW9ucyB2YWx1ZQBNaXNzaW5nIGV4cGVjdGVkIExGIGFmdGVyIGhlYWRlciB2YWx1ZQBJbnZhbGlkIGBUcmFuc2Zlci1FbmNvZGluZ2AgaGVhZGVyIHZhbHVlAEludmFsaWQgY2hhcmFjdGVyIGluIGNodW5rIGV4dGVuc2lvbnMgcXVvdGUgdmFsdWUASW52YWxpZCBjaGFyYWN0ZXIgaW4gY2h1bmsgZXh0ZW5zaW9ucyBxdW90ZWQgdmFsdWUAUGF1c2VkIGJ5IG9uX2hlYWRlcnNfY29tcGxldGUASW52YWxpZCBFT0Ygc3RhdGUAb25fcmVzZXQgcGF1c2UAb25fY2h1bmtfaGVhZGVyIHBhdXNlAG9uX21lc3NhZ2VfYmVnaW4gcGF1c2UAb25fY2h1bmtfZXh0ZW5zaW9uX3ZhbHVlIHBhdXNlAG9uX3N0YXR1c19jb21wbGV0ZSBwYXVzZQBvbl92ZXJzaW9uX2NvbXBsZXRlIHBhdXNlAG9uX3VybF9jb21wbGV0ZSBwYXVzZQBvbl9jaHVua19jb21wbGV0ZSBwYXVzZQBvbl9oZWFkZXJfdmFsdWVfY29tcGxldGUgcGF1c2UAb25fbWVzc2FnZV9jb21wbGV0ZSBwYXVzZQBvbl9tZXRob2RfY29tcGxldGUgcGF1c2UAb25faGVhZGVyX2ZpZWxkX2NvbXBsZXRlIHBhdXNlAG9uX2NodW5rX2V4dGVuc2lvbl9uYW1lIHBhdXNlAFVuZXhwZWN0ZWQgc3BhY2UgYWZ0ZXIgc3RhcnQgbGluZQBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX2NodW5rX2V4dGVuc2lvbl9uYW1lAEludmFsaWQgY2hhcmFjdGVyIGluIGNodW5rIGV4dGVuc2lvbnMgbmFtZQBQYXVzZSBvbiBDT05ORUNUL1VwZ3JhZGUAUGF1c2Ugb24gUFJJL1VwZ3JhZGUARXhwZWN0ZWQgSFRUUC8yIENvbm5lY3Rpb24gUHJlZmFjZQBTcGFuIGNhbGxiYWNrIGVycm9yIGluIG9uX21ldGhvZABFeHBlY3RlZCBzcGFjZSBhZnRlciBtZXRob2QAU3BhbiBjYWxsYmFjayBlcnJvciBpbiBvbl9oZWFkZXJfZmllbGQAUGF1c2VkAEludmFsaWQgd29yZCBlbmNvdW50ZXJlZABJbnZhbGlkIG1ldGhvZCBlbmNvdW50ZXJlZABVbmV4cGVjdGVkIGNoYXIgaW4gdXJsIHNjaGVtYQBSZXF1ZXN0IGhhcyBpbnZhbGlkIGBUcmFuc2Zlci1FbmNvZGluZ2AAU1dJVENIX1BST1hZAFVTRV9QUk9YWQBNS0FDVElWSVRZAFVOUFJPQ0VTU0FCTEVfRU5USVRZAENPUFkATU9WRURfUEVSTUFORU5UTFkAVE9PX0VBUkxZAE5PVElGWQBGQUlMRURfREVQRU5ERU5DWQBCQURfR0FURVdBWQBQTEFZAFBVVABDSEVDS09VVABHQVRFV0FZX1RJTUVPVVQAUkVRVUVTVF9USU1FT1VUAE5FVFdPUktfQ09OTkVDVF9USU1FT1VUAENPTk5FQ1RJT05fVElNRU9VVABMT0dJTl9USU1FT1VUAE5FVFdPUktfUkVBRF9USU1FT1VUAFBPU1QATUlTRElSRUNURURfUkVRVUVTVABDTElFTlRfQ0xPU0VEX1JFUVVFU1QAQ0xJRU5UX0NMT1NFRF9MT0FEX0JBTEFOQ0VEX1JFUVVFU1QAQkFEX1JFUVVFU1QASFRUUF9SRVFVRVNUX1NFTlRfVE9fSFRUUFNfUE9SVABSRVBPUlQASU1fQV9URUFQT1QAUkVTRVRfQ09OVEVOVABOT19DT05URU5UAFBBUlRJQUxfQ09OVEVOVABIUEVfSU5WQUxJRF9DT05TVEFOVABIUEVfQ0JfUkVTRVQAR0VUAEhQRV9TVFJJQ1QAQ09ORkxJQ1QAVEVNUE9SQVJZX1JFRElSRUNUAFBFUk1BTkVOVF9SRURJUkVDVABDT05ORUNUAE1VTFRJX1NUQVRVUwBIUEVfSU5WQUxJRF9TVEFUVVMAVE9PX01BTllfUkVRVUVTVFMARUFSTFlfSElOVFMAVU5BVkFJTEFCTEVfRk9SX0xFR0FMX1JFQVNPTlMAT1BUSU9OUwBTV0lUQ0hJTkdfUFJPVE9DT0xTAFZBUklBTlRfQUxTT19ORUdPVElBVEVTAE1VTFRJUExFX0NIT0lDRVMASU5URVJOQUxfU0VSVkVSX0VSUk9SAFdFQl9TRVJWRVJfVU5LTk9XTl9FUlJPUgBSQUlMR1VOX0VSUk9SAElERU5USVRZX1BST1ZJREVSX0FVVEhFTlRJQ0FUSU9OX0VSUk9SAFNTTF9DRVJUSUZJQ0FURV9FUlJPUgBJTlZBTElEX1hfRk9SV0FSREVEX0ZPUgBTRVRfUEFSQU1FVEVSAEdFVF9QQVJBTUVURVIASFBFX1VTRVIAU0VFX09USEVSAEhQRV9DQl9DSFVOS19IRUFERVIATUtDQUxFTkRBUgBTRVRVUABXRUJfU0VSVkVSX0lTX0RPV04AVEVBUkRPV04ASFBFX0NMT1NFRF9DT05ORUNUSU9OAEhFVVJJU1RJQ19FWFBJUkFUSU9OAERJU0NPTk5FQ1RFRF9PUEVSQVRJT04ATk9OX0FVVEhPUklUQVRJVkVfSU5GT1JNQVRJT04ASFBFX0lOVkFMSURfVkVSU0lPTgBIUEVfQ0JfTUVTU0FHRV9CRUdJTgBTSVRFX0lTX0ZST1pFTgBIUEVfSU5WQUxJRF9IRUFERVJfVE9LRU4ASU5WQUxJRF9UT0tFTgBGT1JCSURERU4ARU5IQU5DRV9ZT1VSX0NBTE0ASFBFX0lOVkFMSURfVVJMAEJMT0NLRURfQllfUEFSRU5UQUxfQ09OVFJPTABNS0NPTABBQ0wASFBFX0lOVEVSTkFMAFJFUVVFU1RfSEVBREVSX0ZJRUxEU19UT09fTEFSR0VfVU5PRkZJQ0lBTABIUEVfT0sAVU5MSU5LAFVOTE9DSwBQUkkAUkVUUllfV0lUSABIUEVfSU5WQUxJRF9DT05URU5UX0xFTkdUSABIUEVfVU5FWFBFQ1RFRF9DT05URU5UX0xFTkdUSABGTFVTSABQUk9QUEFUQ0gATS1TRUFSQ0gAVVJJX1RPT19MT05HAFBST0NFU1NJTkcATUlTQ0VMTEFORU9VU19QRVJTSVNURU5UX1dBUk5JTkcATUlTQ0VMTEFORU9VU19XQVJOSU5HAEhQRV9JTlZBTElEX1RSQU5TRkVSX0VOQ09ESU5HAEV4cGVjdGVkIENSTEYASFBFX0lOVkFMSURfQ0hVTktfU0laRQBNT1ZFAENPTlRJTlVFAEhQRV9DQl9TVEFUVVNfQ09NUExFVEUASFBFX0NCX0hFQURFUlNfQ09NUExFVEUASFBFX0NCX1ZFUlNJT05fQ09NUExFVEUASFBFX0NCX1VSTF9DT01QTEVURQBIUEVfQ0JfQ0hVTktfQ09NUExFVEUASFBFX0NCX0hFQURFUl9WQUxVRV9DT01QTEVURQBIUEVfQ0JfQ0hVTktfRVhURU5TSU9OX1ZBTFVFX0NPTVBMRVRFAEhQRV9DQl9DSFVOS19FWFRFTlNJT05fTkFNRV9DT01QTEVURQBIUEVfQ0JfTUVTU0FHRV9DT01QTEVURQBIUEVfQ0JfTUVUSE9EX0NPTVBMRVRFAEhQRV9DQl9IRUFERVJfRklFTERfQ09NUExFVEUAREVMRVRFAEhQRV9JTlZBTElEX0VPRl9TVEFURQBJTlZBTElEX1NTTF9DRVJUSUZJQ0FURQBQQVVTRQBOT19SRVNQT05TRQBVTlNVUFBPUlRFRF9NRURJQV9UWVBFAEdPTkUATk9UX0FDQ0VQVEFCTEUAU0VSVklDRV9VTkFWQUlMQUJMRQBSQU5HRV9OT1RfU0FUSVNGSUFCTEUAT1JJR0lOX0lTX1VOUkVBQ0hBQkxFAFJFU1BPTlNFX0lTX1NUQUxFAFBVUkdFAE1FUkdFAFJFUVVFU1RfSEVBREVSX0ZJRUxEU19UT09fTEFSR0UAUkVRVUVTVF9IRUFERVJfVE9PX0xBUkdFAFBBWUxPQURfVE9PX0xBUkdFAElOU1VGRklDSUVOVF9TVE9SQUdFAEhQRV9QQVVTRURfVVBHUkFERQBIUEVfUEFVU0VEX0gyX1VQR1JBREUAU09VUkNFAEFOTk9VTkNFAFRSQUNFAEhQRV9VTkVYUEVDVEVEX1NQQUNFAERFU0NSSUJFAFVOU1VCU0NSSUJFAFJFQ09SRABIUEVfSU5WQUxJRF9NRVRIT0QATk9UX0ZPVU5EAFBST1BGSU5EAFVOQklORABSRUJJTkQAVU5BVVRIT1JJWkVEAE1FVEhPRF9OT1RfQUxMT1dFRABIVFRQX1ZFUlNJT05fTk9UX1NVUFBPUlRFRABBTFJFQURZX1JFUE9SVEVEAEFDQ0VQVEVEAE5PVF9JTVBMRU1FTlRFRABMT09QX0RFVEVDVEVEAEhQRV9DUl9FWFBFQ1RFRABIUEVfTEZfRVhQRUNURUQAQ1JFQVRFRABJTV9VU0VEAEhQRV9QQVVTRUQAVElNRU9VVF9PQ0NVUkVEAFBBWU1FTlRfUkVRVUlSRUQAUFJFQ09ORElUSU9OX1JFUVVJUkVEAFBST1hZX0FVVEhFTlRJQ0FUSU9OX1JFUVVJUkVEAE5FVFdPUktfQVVUSEVOVElDQVRJT05fUkVRVUlSRUQATEVOR1RIX1JFUVVJUkVEAFNTTF9DRVJUSUZJQ0FURV9SRVFVSVJFRABVUEdSQURFX1JFUVVJUkVEAFBBR0VfRVhQSVJFRABQUkVDT05ESVRJT05fRkFJTEVEAEVYUEVDVEFUSU9OX0ZBSUxFRABSRVZBTElEQVRJT05fRkFJTEVEAFNTTF9IQU5EU0hBS0VfRkFJTEVEAExPQ0tFRABUUkFOU0ZPUk1BVElPTl9BUFBMSUVEAE5PVF9NT0RJRklFRABOT1RfRVhURU5ERUQAQkFORFdJRFRIX0xJTUlUX0VYQ0VFREVEAFNJVEVfSVNfT1ZFUkxPQURFRABIRUFEAEV4cGVjdGVkIEhUVFAvAABeEwAAJhMAADAQAADwFwAAnRMAABUSAAA5FwAA8BIAAAoQAAB1EgAArRIAAIITAABPFAAAfxAAAKAVAAAjFAAAiRIAAIsUAABNFQAA1BEAAM8UAAAQGAAAyRYAANwWAADBEQAA4BcAALsUAAB0FAAAfBUAAOUUAAAIFwAAHxAAAGUVAACjFAAAKBUAAAIVAACZFQAALBAAAIsZAABPDwAA1A4AAGoQAADOEAAAAhcAAIkOAABuEwAAHBMAAGYUAABWFwAAwRMAAM0TAABsEwAAaBcAAGYXAABfFwAAIhMAAM4PAABpDgAA2A4AAGMWAADLEwAAqg4AACgXAAAmFwAAxRMAAF0WAADoEQAAZxMAAGUTAADyFgAAcxMAAB0XAAD5FgAA8xEAAM8OAADOFQAADBIAALMRAAClEQAAYRAAADIXAAC7EwBB+TULAQEAQZA2C+ABAQECAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAQf03CwEBAEGROAteAgMCAgICAgAAAgIAAgIAAgICAgICAgICAgAEAAAAAAACAgICAgICAgICAgICAgICAgICAgICAgICAgAAAAICAgICAgICAgICAgICAgICAgICAgICAgICAgICAAIAAgBB/TkLAQEAQZE6C14CAAICAgICAAACAgACAgACAgICAgICAgICAAMABAAAAAICAgICAgICAgICAgICAgICAgICAgICAgICAAAAAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAAgACAEHwOwsNbG9zZWVlcC1hbGl2ZQBBiTwLAQEAQaA8C+ABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAQYk+CwEBAEGgPgvnAQEBAQEBAQEBAQEBAQIBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBY2h1bmtlZABBsMAAC18BAQABAQEBAQAAAQEAAQEAAQEBAQEBAQEBAQAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEAAQBBkMIACyFlY3Rpb25lbnQtbGVuZ3Rob25yb3h5LWNvbm5lY3Rpb24AQcDCAAstcmFuc2Zlci1lbmNvZGluZ3BncmFkZQ0KDQoNClNNDQoNClRUUC9DRS9UU1AvAEH5wgALBQECAAEDAEGQwwAL4AEEAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQBB+cQACwUBAgABAwBBkMUAC+ABBAEBBQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAQfnGAAsEAQAAAQBBkccAC98BAQEAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQBB+sgACwQBAAACAEGQyQALXwMEAAAEBAQEBAQEBAQEBAUEBAQEBAQEBAQEBAQABAAGBwQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAAEAAQABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAEAEH6ygALBAEAAAEAQZDLAAsBAQBBqssAC0ECAAAAAAAAAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAAAAAAAADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwBB+swACwQBAAABAEGQzQALAQEAQZrNAAsGAgAAAAACAEGxzQALOgMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAAAAAAAAAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAQfDOAAuWAU5PVU5DRUVDS09VVE5FQ1RFVEVDUklCRUxVU0hFVEVBRFNFQVJDSFJHRUNUSVZJVFlMRU5EQVJWRU9USUZZUFRJT05TQ0hTRUFZU1RBVENIR0VPUkRJUkVDVE9SVFJDSFBBUkFNRVRFUlVSQ0VCU0NSSUJFQVJET1dOQUNFSU5ETktDS1VCU0NSSUJFSFRUUC9BRFRQLw==", "base64");
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/constants.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/constants.js
 var require_constants9 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/constants.js"(exports2, module2) {
     "use strict";
     var corsSafeListedMethods = (
       /** @type {const} */
@@ -41087,9 +40166,9 @@ var require_constants9 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/global.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/global.js
 var require_global3 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/global.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/global.js"(exports2, module2) {
     "use strict";
     var globalOrigin = Symbol.for("undici.globalOrigin.1");
     function getGlobalOrigin() {
@@ -41123,9 +40202,9 @@ var require_global3 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/data-url.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/data-url.js
 var require_data_url = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/data-url.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/data-url.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var encoder = new TextEncoder();
@@ -41477,9 +40556,9 @@ var require_data_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/webidl.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/webidl.js
 var require_webidl2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/webidl.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/webidl.js"(exports2, module2) {
     "use strict";
     var { types, inspect } = require("node:util");
     var { markAsUncloneable } = require("node:worker_threads");
@@ -41896,9 +40975,9 @@ var require_webidl2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/util.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/util.js
 var require_util10 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/util.js"(exports2, module2) {
     "use strict";
     var { Transform } = require("node:stream");
     var zlib = require("node:zlib");
@@ -42755,9 +41834,9 @@ var require_util10 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/symbols.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/symbols.js
 var require_symbols7 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
       kUrl: Symbol("url"),
@@ -42769,9 +41848,9 @@ var require_symbols7 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/file.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/file.js
 var require_file2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/file.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/file.js"(exports2, module2) {
     "use strict";
     var { Blob: Blob2, File } = require("node:buffer");
     var { kState } = require_symbols7();
@@ -42832,9 +41911,9 @@ var require_file2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/formdata.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/formdata.js
 var require_formdata2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/formdata.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/formdata.js"(exports2, module2) {
     "use strict";
     var { isBlobLike, iteratorMixin } = require_util10();
     var { kState } = require_symbols7();
@@ -42979,9 +42058,9 @@ var require_formdata2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/formdata-parser.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/formdata-parser.js
 var require_formdata_parser = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/formdata-parser.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/formdata-parser.js"(exports2, module2) {
     "use strict";
     var { isUSVString, bufferToLowerCasedHeaderName } = require_util9();
     var { utf8DecodeBytes } = require_util10();
@@ -43232,9 +42311,9 @@ var require_formdata_parser = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/body.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/body.js
 var require_body2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/body.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/body.js"(exports2, module2) {
     "use strict";
     var util = require_util9();
     var {
@@ -43546,9 +42625,9 @@ Content-Type: ${value.type || "application/octet-stream"}\r
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client-h1.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/client-h1.js
 var require_client_h1 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client-h1.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/client-h1.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var util = require_util9();
@@ -43566,7 +42645,7 @@ var require_client_h1 = __commonJS({
       BodyTimeoutError,
       HTTPParserError,
       ResponseExceededMaxSizeError
-    } = require_errors3();
+    } = require_errors2();
     var {
       kUrl,
       kReset,
@@ -43885,7 +42964,7 @@ var require_client_h1 = __commonJS({
         }
       }
       onUpgrade(head) {
-        const { upgrade, client, socket, headers, statusCode } = this;
+        const { upgrade, client, socket, headers, statusCode, statusText } = this;
         assert(upgrade);
         assert(client[kSocket] === socket);
         assert(!socket.destroyed);
@@ -43910,9 +42989,10 @@ var require_client_h1 = __commonJS({
         client[kQueue][client[kRunningIdx]++] = null;
         client.emit("disconnect", client[kUrl], [client], new InformationalError("upgrade"));
         try {
-          request.onUpgrade(statusCode, headers, socket);
-        } catch (err) {
-          util.destroy(socket, err);
+          request.onUpgrade(statusCode, headers, socket, statusText);
+        } catch (error2) {
+          util.errorRequest(client, request, error2);
+          util.destroy(socket, error2);
         }
         client[kResume]();
       }
@@ -44099,7 +43179,6 @@ var require_client_h1 = __commonJS({
       socket[kSocketUsed] = false;
       socket[kParser] = new Parser(client, socket, llhttpInstance);
       addListener(socket, "error", function(err) {
-        assert(err.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
         const parser = this[kParser];
         if (err.code === "ECONNRESET" && parser.statusCode && !parser.shouldKeepAlive) {
           const parserErr = parser.finish();
@@ -44204,21 +43283,20 @@ var require_client_h1 = __commonJS({
     }
     function clearIdleSocketValidation(socket) {
       if (socket[kIdleSocketValidationTimeout]) {
-        clearTimeout(socket[kIdleSocketValidationTimeout]);
+        clearImmediate(socket[kIdleSocketValidationTimeout]);
         socket[kIdleSocketValidationTimeout] = null;
       }
       socket[kIdleSocketValidation] = 0;
     }
     function scheduleIdleSocketValidation(client, socket) {
       socket[kIdleSocketValidation] = 1;
-      socket[kIdleSocketValidationTimeout] = setTimeout(() => {
+      socket[kIdleSocketValidationTimeout] = setImmediate(() => {
         socket[kIdleSocketValidationTimeout] = null;
         socket[kIdleSocketValidation] = 2;
         if (client[kSocket] === socket && !socket.destroyed) {
           client[kResume]();
         }
-      }, 0);
-      socket[kIdleSocketValidationTimeout].unref?.();
+      });
     }
     function resumeH1(client) {
       const socket = client[kSocket];
@@ -44316,11 +43394,17 @@ var require_client_h1 = __commonJS({
       }
       const socket = client[kSocket];
       clearIdleSocketValidation(socket);
-      const abort = (err) => {
-        if (request.aborted || request.completed) {
+      const abort = (error2) => {
+        if (request.aborted) {
           return;
         }
-        util.errorRequest(client, request, err || new RequestAbortedError());
+        if (request.completed) {
+          if (request.upgrade || request.method === "CONNECT") {
+            util.destroy(socket, new InformationalError("aborted"));
+          }
+          return;
+        }
+        util.errorRequest(client, request, error2 || new RequestAbortedError());
         util.destroy(body);
         util.destroy(socket, new InformationalError("aborted"));
       };
@@ -44671,11 +43755,12 @@ ${len.toString(16)}\r
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client-h2.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/client-h2.js
 var require_client_h2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client-h2.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/client-h2.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
+    var { errorMonitor } = require("node:events");
     var { pipeline } = require("node:stream");
     var util = require_util9();
     var {
@@ -44683,7 +43768,7 @@ var require_client_h2 = __commonJS({
       RequestAbortedError,
       SocketError,
       InformationalError
-    } = require_errors3();
+    } = require_errors2();
     var {
       kUrl,
       kReset,
@@ -44736,6 +43821,10 @@ var require_client_h2 = __commonJS({
       }
       return result;
     }
+    function parseH2ResponseHeaders(headers) {
+      const { [HTTP2_HEADER_STATUS]: _statusCode, ...realHeaders } = headers;
+      return parseH2Headers(realHeaders);
+    }
     async function connectH2(client, socket) {
       client[kSocket] = socket;
       if (!h2ExperimentalWarned) {
@@ -44773,7 +43862,6 @@ var require_client_h2 = __commonJS({
       client[kHTTP2Session] = session;
       socket[kHTTP2Session] = session;
       util.addListener(socket, "error", function(err) {
-        assert(err.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
         this[kError] = err;
         this[kClient][kOnError](err);
       });
@@ -44832,7 +43920,6 @@ var require_client_h2 = __commonJS({
       }
     }
     function onHttp2SessionError(err) {
-      assert(err.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
       this[kSocket][kError] = err;
       this[kClient][kOnError](err);
     }
@@ -44899,16 +43986,22 @@ var require_client_h2 = __commonJS({
       const { hostname, port } = client[kUrl];
       headers[HTTP2_HEADER_AUTHORITY] = host || `${hostname}${port ? `:${port}` : ""}`;
       headers[HTTP2_HEADER_METHOD] = method;
-      const abort = (err) => {
-        if (request.aborted || request.completed) {
+      const abort = (error2) => {
+        if (request.aborted) {
           return;
         }
-        err = err || new RequestAbortedError();
-        util.errorRequest(client, request, err);
-        if (stream != null) {
-          util.destroy(stream, err);
+        if (request.completed) {
+          if (method === "CONNECT" && stream != null) {
+            util.destroy(stream, error2 || new RequestAbortedError());
+          }
+          return;
         }
-        util.destroy(body, err);
+        error2 = error2 || new RequestAbortedError();
+        util.errorRequest(client, request, error2);
+        if (stream != null) {
+          util.destroy(stream, error2);
+        }
+        util.destroy(body, error2);
         client[kQueue][client[kRunningIdx]++] = null;
         client[kResume]();
       };
@@ -44923,18 +44016,42 @@ var require_client_h2 = __commonJS({
       if (method === "CONNECT") {
         session.ref();
         stream = session.request(headers, { endStream: false, signal });
-        if (stream.id && !stream.pending) {
-          request.onUpgrade(null, null, stream);
-          ++session[kOpenStreams];
-          client[kQueue][client[kRunningIdx]++] = null;
-        } else {
-          stream.once("ready", () => {
+        let upgradeResponseFinished = false;
+        const onResponse = (headers2) => {
+          upgradeResponseFinished = true;
+          stream.off(errorMonitor, onUpgradeError);
+          request.onUpgradeResponse(Number(headers2[HTTP2_HEADER_STATUS]), headers2, parseH2ResponseHeaders);
+        };
+        const onUpgradeError = (error2) => {
+          upgradeResponseFinished = true;
+          stream.off("response", onResponse);
+          request.onUpgradeError(error2);
+        };
+        const onReady = () => {
+          try {
             request.onUpgrade(null, null, stream);
-            ++session[kOpenStreams];
-            client[kQueue][client[kRunningIdx]++] = null;
-          });
-        }
+          } catch (error2) {
+            stream.off("response", onResponse);
+            abort(error2);
+            return;
+          }
+          if (request.aborted) {
+            return;
+          }
+          stream.off("error", abort);
+          stream.once(errorMonitor, onUpgradeError);
+          client[kQueue][client[kRunningIdx]++] = null;
+        };
+        stream.once("response", onResponse);
+        stream.once("error", abort);
+        ++session[kOpenStreams];
+        onReady();
         stream.once("close", () => {
+          if (!upgradeResponseFinished && request.completed) {
+            stream.off("response", onResponse);
+            stream.off(errorMonitor, onUpgradeError);
+            request.onUpgradeError(new InformationalError(`HTTP/2: "stream error" received - code ${stream.rstCode}`));
+          }
           session[kOpenStreams] -= 1;
           if (session[kOpenStreams] === 0)
             session.unref();
@@ -45213,14 +44330,14 @@ var require_client_h2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/redirect-handler.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/handler/redirect-handler.js
 var require_redirect_handler = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/redirect-handler.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/handler/redirect-handler.js"(exports2, module2) {
     "use strict";
     var util = require_util9();
     var { kBodyUsed } = require_symbols6();
     var assert = require("node:assert");
-    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors2();
     var EE = require("node:events");
     var redirectableStatusCodes = [300, 301, 302, 303, 307, 308];
     var kBody = Symbol("body");
@@ -45372,9 +44489,9 @@ var require_redirect_handler = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/redirect-interceptor.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/interceptor/redirect-interceptor.js
 var require_redirect_interceptor = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/redirect-interceptor.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/interceptor/redirect-interceptor.js"(exports2, module2) {
     "use strict";
     var RedirectHandler = require_redirect_handler();
     function createRedirectInterceptor({ maxRedirections: defaultMaxRedirections }) {
@@ -45394,9 +44511,9 @@ var require_redirect_interceptor = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/client.js
 var require_client2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/client.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/client.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var net = require("node:net");
@@ -45409,7 +44526,7 @@ var require_client2 = __commonJS({
       InvalidArgumentError: InvalidArgumentError2,
       InformationalError,
       ClientDestroyedError
-    } = require_errors3();
+    } = require_errors2();
     var buildConnector = require_connect2();
     var {
       kUrl,
@@ -45497,9 +44614,10 @@ var require_client2 = __commonJS({
         // h2
         maxConcurrentStreams,
         allowH2,
-        webSocket
+        webSocket,
+        eventSource
       } = {}) {
-        super({ webSocket });
+        super({ webSocket, eventSource });
         if (keepAlive !== void 0) {
           throw new InvalidArgumentError2("unsupported keepAlive, use pipelining=0 instead");
         }
@@ -45895,9 +45013,9 @@ var require_client2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/fixed-queue.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/fixed-queue.js
 var require_fixed_queue2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/fixed-queue.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/fixed-queue.js"(exports2, module2) {
     "use strict";
     var kSize = 2048;
     var kMask = kSize - 1;
@@ -45952,9 +45070,9 @@ var require_fixed_queue2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool-stats.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/pool-stats.js
 var require_pool_stats2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool-stats.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/pool-stats.js"(exports2, module2) {
     var { kFree, kConnected, kPending, kQueued, kRunning, kSize } = require_symbols6();
     var kPool = Symbol("pool");
     var PoolStats = class {
@@ -45984,9 +45102,9 @@ var require_pool_stats2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool-base.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/pool-base.js
 var require_pool_base2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool-base.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/pool-base.js"(exports2, module2) {
     "use strict";
     var DispatcherBase = require_dispatcher_base2();
     var FixedQueue = require_fixed_queue2();
@@ -46139,9 +45257,9 @@ var require_pool_base2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/pool.js
 var require_pool2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/pool.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/pool.js"(exports2, module2) {
     "use strict";
     var {
       PoolBase,
@@ -46153,7 +45271,7 @@ var require_pool2 = __commonJS({
     var Client = require_client2();
     var {
       InvalidArgumentError: InvalidArgumentError2
-    } = require_errors3();
+    } = require_errors2();
     var util = require_util9();
     var { kUrl, kInterceptors } = require_symbols6();
     var buildConnector = require_connect2();
@@ -46230,14 +45348,14 @@ var require_pool2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/balanced-pool.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/balanced-pool.js
 var require_balanced_pool2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/balanced-pool.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/balanced-pool.js"(exports2, module2) {
     "use strict";
     var {
       BalancedPoolMissingUpstreamError,
       InvalidArgumentError: InvalidArgumentError2
-    } = require_errors3();
+    } = require_errors2();
     var {
       PoolBase,
       kClients,
@@ -46375,11 +45493,11 @@ var require_balanced_pool2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/agent.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/agent.js
 var require_agent2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/agent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/agent.js"(exports2, module2) {
     "use strict";
-    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors2();
     var { kClients, kRunning, kClose, kDestroy, kDispatch, kInterceptors } = require_symbols6();
     var DispatcherBase = require_dispatcher_base2();
     var Pool = require_pool2();
@@ -46397,7 +45515,7 @@ var require_agent2 = __commonJS({
       return opts && opts.connections === 1 ? new Client(origin, opts) : new Pool(origin, opts);
     }
     var Agent = class extends DispatcherBase {
-      constructor({ factory = defaultFactory, maxRedirections = 0, connect, ...options } = {}) {
+      constructor({ factory = defaultFactory, maxRedirections = 0, connect, tls, ...options } = {}) {
         if (typeof factory !== "function") {
           throw new InvalidArgumentError2("factory must be a function.");
         }
@@ -46411,8 +45529,11 @@ var require_agent2 = __commonJS({
         if (connect && typeof connect !== "function") {
           connect = { ...connect };
         }
+        if (tls && typeof tls !== "function") {
+          tls = { ...tls };
+        }
         this[kInterceptors] = options.interceptors?.Agent && Array.isArray(options.interceptors.Agent) ? options.interceptors.Agent : [createRedirectInterceptor({ maxRedirections })];
-        this[kOptions] = { ...util.deepClone(options), connect };
+        this[kOptions] = { ...util.deepClone(options), connect, tls };
         this[kOptions].interceptors = options.interceptors ? { ...options.interceptors } : void 0;
         this[kMaxRedirections] = maxRedirections;
         this[kFactory] = factory;
@@ -46472,16 +45593,16 @@ var require_agent2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/proxy-agent.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/proxy-agent.js
 var require_proxy_agent2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/proxy-agent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/proxy-agent.js"(exports2, module2) {
     "use strict";
     var { kProxy, kClose, kDestroy, kDispatch, kInterceptors } = require_symbols6();
     var { URL: URL2 } = require("node:url");
     var Agent = require_agent2();
     var Pool = require_pool2();
     var DispatcherBase = require_dispatcher_base2();
-    var { InvalidArgumentError: InvalidArgumentError2, RequestAbortedError, SecureProxyConnectionError } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2, RequestAbortedError, SecureProxyConnectionError } = require_errors2();
     var buildConnector = require_connect2();
     var Client = require_client2();
     var kAgent = Symbol("proxy agent");
@@ -46696,9 +45817,9 @@ var require_proxy_agent2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/env-http-proxy-agent.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/env-http-proxy-agent.js
 var require_env_http_proxy_agent = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/env-http-proxy-agent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/env-http-proxy-agent.js"(exports2, module2) {
     "use strict";
     var DispatcherBase = require_dispatcher_base2();
     var { kClose, kDestroy, kClosed, kDestroyed, kDispatch, kNoProxyAgent, kHttpProxyAgent, kHttpsProxyAgent } = require_symbols6();
@@ -46832,13 +45953,13 @@ var require_env_http_proxy_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/retry-handler.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/handler/retry-handler.js
 var require_retry_handler = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/retry-handler.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/handler/retry-handler.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { kRetryHandlerDefaultRetry } = require_symbols6();
-    var { RequestRetryError } = require_errors3();
+    var { RequestRetryError } = require_errors2();
     var {
       isDisturbed,
       parseHeaders,
@@ -46920,6 +46041,7 @@ var require_retry_handler = __commonJS({
         this.end = null;
         this.etag = null;
         this.resume = null;
+        this.headersSent = false;
         this.handler.onConnect((reason) => {
           this.aborted = true;
           if (this.abort) {
@@ -46928,6 +46050,17 @@ var require_retry_handler = __commonJS({
             this.reason = reason;
           }
         });
+      }
+      checkpointResponseEnd(headers, resume) {
+        if (this.end == null && this.opts.method !== "HEAD") {
+          const contentLength = headers["content-length"];
+          this.end = contentLength != null ? Number(contentLength) - 1 : null;
+          assert(
+            this.end == null || Number.isFinite(this.end),
+            "invalid content-length"
+          );
+        }
+        this.resume = this.end != null ? resume : null;
       }
       onRequestSent() {
         if (this.handler.onRequestSent) {
@@ -46991,7 +46124,9 @@ var require_retry_handler = __commonJS({
         const headers = parseHeaders(rawHeaders);
         this.retryCount += 1;
         if (statusCode >= 300) {
-          if (this.retryOpts.statusCodes.includes(statusCode) === false) {
+          if (!this.headersSent && this.retryOpts.statusCodes.includes(statusCode) === false) {
+            this.headersSent = true;
+            this.checkpointResponseEnd(headers, resume);
             return this.handler.onHeaders(
               statusCode,
               rawHeaders,
@@ -47046,8 +46181,15 @@ var require_retry_handler = __commonJS({
             return false;
           }
           const { start, size, end = size - 1 } = contentRange;
-          assert(this.start === start, "content-range mismatch");
-          assert(this.end == null || this.end === end, "content-range mismatch");
+          if (this.start !== start || this.end != null && this.end !== end) {
+            this.abort(
+              new RequestRetryError("Content-Range mismatch", statusCode, {
+                headers,
+                data: { count: this.retryCount }
+              })
+            );
+            return false;
+          }
           this.resume = resume;
           return true;
         }
@@ -47055,6 +46197,7 @@ var require_retry_handler = __commonJS({
           if (statusCode === 206) {
             const range = parseRangeHeader(headers["content-range"]);
             if (range == null) {
+              this.headersSent = true;
               return this.handler.onHeaders(
                 statusCode,
                 rawHeaders,
@@ -47086,6 +46229,7 @@ var require_retry_handler = __commonJS({
             "invalid content-length"
           );
           this.resume = resume;
+          this.headersSent = true;
           this.etag = headers.etag != null ? headers.etag : null;
           if (this.etag != null && this.etag.startsWith("W/")) {
             this.etag = null;
@@ -47113,7 +46257,7 @@ var require_retry_handler = __commonJS({
         return this.handler.onComplete(rawTrailers);
       }
       onError(err) {
-        if (this.aborted || isDisturbed(this.opts.body)) {
+        if (this.aborted || isDisturbed(this.opts.body) || this.headersSent && this.resume == null) {
           return this.handler.onError(err);
         }
         if (this.retryCount - this.retryCountCheckpoint > 0) {
@@ -47159,9 +46303,9 @@ var require_retry_handler = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/retry-agent.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/retry-agent.js
 var require_retry_agent = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/dispatcher/retry-agent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/dispatcher/retry-agent.js"(exports2, module2) {
     "use strict";
     var Dispatcher = require_dispatcher2();
     var RetryHandler = require_retry_handler();
@@ -47194,13 +46338,13 @@ var require_retry_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/readable.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/readable.js
 var require_readable2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/readable.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/readable.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { Readable } = require("node:stream");
-    var { RequestAbortedError, NotSupportedError, InvalidArgumentError: InvalidArgumentError2, AbortError } = require_errors3();
+    var { RequestAbortedError, NotSupportedError, InvalidArgumentError: InvalidArgumentError2, AbortError } = require_errors2();
     var util = require_util9();
     var { ReadableStreamFrom } = require_util9();
     var kConsume = Symbol("kConsume");
@@ -47487,13 +46631,13 @@ var require_readable2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/util.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/util.js
 var require_util11 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/util.js"(exports2, module2) {
     var assert = require("node:assert");
     var {
       ResponseStatusCodeError
-    } = require_errors3();
+    } = require_errors2();
     var { chunksDecode } = require_readable2();
     var CHUNK_LIMIT = 128 * 1024;
     async function getResolveErrorBodyCallback({ callback, body, contentType, statusCode, statusMessage, headers }) {
@@ -47548,13 +46692,13 @@ var require_util11 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-request.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/api-request.js
 var require_api_request2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-request.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/api-request.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { Readable } = require_readable2();
-    var { InvalidArgumentError: InvalidArgumentError2, RequestAbortedError } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2, RequestAbortedError } = require_errors2();
     var util = require_util9();
     var { getResolveErrorBodyCallback } = require_util11();
     var { AsyncResource } = require("node:async_hooks");
@@ -47734,11 +46878,11 @@ var require_api_request2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/abort-signal.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/abort-signal.js
 var require_abort_signal2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/abort-signal.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/abort-signal.js"(exports2, module2) {
     var { addAbortListener } = require_util9();
-    var { RequestAbortedError } = require_errors3();
+    var { RequestAbortedError } = require_errors2();
     var kListener = Symbol("kListener");
     var kSignal = Symbol("kSignal");
     function abort(self2) {
@@ -47785,13 +46929,13 @@ var require_abort_signal2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-stream.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/api-stream.js
 var require_api_stream2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-stream.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/api-stream.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { finished, PassThrough } = require("node:stream");
-    var { InvalidArgumentError: InvalidArgumentError2, InvalidReturnValueError } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2, InvalidReturnValueError } = require_errors2();
     var util = require_util9();
     var { getResolveErrorBodyCallback } = require_util11();
     var { AsyncResource } = require("node:async_hooks");
@@ -47958,9 +47102,9 @@ var require_api_stream2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-pipeline.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/api-pipeline.js
 var require_api_pipeline2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-pipeline.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/api-pipeline.js"(exports2, module2) {
     "use strict";
     var {
       Readable,
@@ -47971,7 +47115,7 @@ var require_api_pipeline2 = __commonJS({
       InvalidArgumentError: InvalidArgumentError2,
       InvalidReturnValueError,
       RequestAbortedError
-    } = require_errors3();
+    } = require_errors2();
     var util = require_util9();
     var { AsyncResource } = require("node:async_hooks");
     var { addSignal, removeSignal } = require_abort_signal2();
@@ -48158,11 +47302,11 @@ var require_api_pipeline2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-upgrade.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/api-upgrade.js
 var require_api_upgrade2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-upgrade.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/api-upgrade.js"(exports2, module2) {
     "use strict";
-    var { InvalidArgumentError: InvalidArgumentError2, SocketError } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2, SocketError } = require_errors2();
     var { AsyncResource } = require("node:async_hooks");
     var util = require_util9();
     var { addSignal, removeSignal } = require_abort_signal2();
@@ -48250,13 +47394,13 @@ var require_api_upgrade2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-connect.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/api-connect.js
 var require_api_connect2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/api-connect.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/api-connect.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { AsyncResource } = require("node:async_hooks");
-    var { InvalidArgumentError: InvalidArgumentError2, SocketError } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2, SocketError } = require_errors2();
     var util = require_util9();
     var { addSignal, removeSignal } = require_abort_signal2();
     var ConnectHandler = class extends AsyncResource {
@@ -48340,9 +47484,9 @@ var require_api_connect2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/index.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/index.js
 var require_api2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/api/index.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/api/index.js"(exports2, module2) {
     "use strict";
     module2.exports.request = require_api_request2();
     module2.exports.stream = require_api_stream2();
@@ -48352,11 +47496,11 @@ var require_api2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-errors.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-errors.js
 var require_mock_errors2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-errors.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-errors.js"(exports2, module2) {
     "use strict";
-    var { UndiciError } = require_errors3();
+    var { UndiciError } = require_errors2();
     var kMockNotMatchedError = Symbol.for("undici.error.UND_MOCK_ERR_MOCK_NOT_MATCHED");
     var MockNotMatchedError = class _MockNotMatchedError extends UndiciError {
       constructor(message) {
@@ -48377,9 +47521,9 @@ var require_mock_errors2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-symbols.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-symbols.js
 var require_mock_symbols2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
       kAgent: Symbol("agent"),
@@ -48405,9 +47549,9 @@ var require_mock_symbols2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-utils.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-utils.js
 var require_mock_utils2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-utils.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-utils.js"(exports2, module2) {
     "use strict";
     var { MockNotMatchedError } = require_mock_errors2();
     var {
@@ -48701,9 +47845,9 @@ var require_mock_utils2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-interceptor.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-interceptor.js
 var require_mock_interceptor2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-interceptor.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-interceptor.js"(exports2, module2) {
     "use strict";
     var { getResponseData, buildKey, addMockDispatch } = require_mock_utils2();
     var {
@@ -48714,7 +47858,7 @@ var require_mock_interceptor2 = __commonJS({
       kContentLength,
       kMockDispatch
     } = require_mock_symbols2();
-    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors2();
     var { buildURL } = require_util9();
     var MockScope = class {
       constructor(mockDispatch) {
@@ -48863,9 +48007,9 @@ var require_mock_interceptor2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-client.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-client.js
 var require_mock_client2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-client.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-client.js"(exports2, module2) {
     "use strict";
     var { promisify } = require("node:util");
     var Client = require_client2();
@@ -48881,7 +48025,7 @@ var require_mock_client2 = __commonJS({
     } = require_mock_symbols2();
     var { MockInterceptor } = require_mock_interceptor2();
     var Symbols = require_symbols6();
-    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors2();
     var MockClient = class extends Client {
       constructor(origin, opts) {
         super(origin, opts);
@@ -48916,9 +48060,9 @@ var require_mock_client2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-pool.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-pool.js
 var require_mock_pool2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-pool.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-pool.js"(exports2, module2) {
     "use strict";
     var { promisify } = require("node:util");
     var Pool = require_pool2();
@@ -48934,7 +48078,7 @@ var require_mock_pool2 = __commonJS({
     } = require_mock_symbols2();
     var { MockInterceptor } = require_mock_interceptor2();
     var Symbols = require_symbols6();
-    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors2();
     var MockPool = class extends Pool {
       constructor(origin, opts) {
         super(origin, opts);
@@ -48969,9 +48113,9 @@ var require_mock_pool2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/pluralizer.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/pluralizer.js
 var require_pluralizer2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/pluralizer.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/pluralizer.js"(exports2, module2) {
     "use strict";
     var singulars = {
       pronoun: "it",
@@ -49000,9 +48144,9 @@ var require_pluralizer2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/pending-interceptors-formatter.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/pending-interceptors-formatter.js
 var require_pending_interceptors_formatter2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/pending-interceptors-formatter.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/pending-interceptors-formatter.js"(exports2, module2) {
     "use strict";
     var { Transform } = require("node:stream");
     var { Console } = require("node:console");
@@ -49041,9 +48185,9 @@ var require_pending_interceptors_formatter2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-agent.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-agent.js
 var require_mock_agent2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/mock/mock-agent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/mock/mock-agent.js"(exports2, module2) {
     "use strict";
     var { kClients } = require_symbols6();
     var Agent = require_agent2();
@@ -49061,7 +48205,7 @@ var require_mock_agent2 = __commonJS({
     var MockClient = require_mock_client2();
     var MockPool = require_mock_pool2();
     var { matchValue, buildMockOptions } = require_mock_utils2();
-    var { InvalidArgumentError: InvalidArgumentError2, UndiciError } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2, UndiciError } = require_errors2();
     var Dispatcher = require_dispatcher2();
     var Pluralizer = require_pluralizer2();
     var PendingInterceptorsFormatter = require_pending_interceptors_formatter2();
@@ -49171,12 +48315,12 @@ ${pendingInterceptorsFormatter.format(pending)}
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/global.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/global.js
 var require_global4 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/global.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/global.js"(exports2, module2) {
     "use strict";
     var globalDispatcher = Symbol.for("undici.globalDispatcher.1");
-    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2 } = require_errors2();
     var Agent = require_agent2();
     if (getGlobalDispatcher() === void 0) {
       setGlobalDispatcher(new Agent());
@@ -49202,9 +48346,9 @@ var require_global4 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/decorator-handler.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/handler/decorator-handler.js
 var require_decorator_handler = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/handler/decorator-handler.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/handler/decorator-handler.js"(exports2, module2) {
     "use strict";
     module2.exports = class DecoratorHandler {
       #handler;
@@ -49242,9 +48386,9 @@ var require_decorator_handler = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/redirect.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/interceptor/redirect.js
 var require_redirect = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/redirect.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/interceptor/redirect.js"(exports2, module2) {
     "use strict";
     var RedirectHandler = require_redirect_handler();
     module2.exports = (opts) => {
@@ -49268,9 +48412,9 @@ var require_redirect = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/retry.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/interceptor/retry.js
 var require_retry = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/retry.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/interceptor/retry.js"(exports2, module2) {
     "use strict";
     var RetryHandler = require_retry_handler();
     module2.exports = (globalOpts) => {
@@ -49292,12 +48436,12 @@ var require_retry = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/dump.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/interceptor/dump.js
 var require_dump = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/dump.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/interceptor/dump.js"(exports2, module2) {
     "use strict";
     var util = require_util9();
-    var { InvalidArgumentError: InvalidArgumentError2, RequestAbortedError } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2, RequestAbortedError } = require_errors2();
     var DecoratorHandler = require_decorator_handler();
     var DumpHandler = class extends DecoratorHandler {
       #maxSize = 1024 * 1024;
@@ -49390,14 +48534,14 @@ var require_dump = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/dns.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/interceptor/dns.js
 var require_dns = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/interceptor/dns.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/interceptor/dns.js"(exports2, module2) {
     "use strict";
     var { isIP } = require("node:net");
     var { lookup } = require("node:dns");
     var DecoratorHandler = require_decorator_handler();
-    var { InvalidArgumentError: InvalidArgumentError2, InformationalError } = require_errors3();
+    var { InvalidArgumentError: InvalidArgumentError2, InformationalError } = require_errors2();
     var maxInt = Math.pow(2, 31) - 1;
     var DNSInstance = class {
       #maxTTL = 0;
@@ -49678,9 +48822,9 @@ var require_dns = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/headers.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/headers.js
 var require_headers2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/headers.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/headers.js"(exports2, module2) {
     "use strict";
     var { kConstruct } = require_symbols6();
     var { kEnumerableProperty } = require_util9();
@@ -50125,9 +49269,9 @@ var require_headers2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/response.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/response.js
 var require_response2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/response.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/response.js"(exports2, module2) {
     "use strict";
     var { Headers: Headers2, HeadersList, fill, getHeadersGuard, setHeadersGuard, setHeadersList } = require_headers2();
     var { extractBody, cloneBody, mixinBody, hasFinalizationRegistry, streamRegistry, bodyUnusable } = require_body2();
@@ -50524,9 +49668,9 @@ var require_response2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/dispatcher-weakref.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/dispatcher-weakref.js
 var require_dispatcher_weakref2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/dispatcher-weakref.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/dispatcher-weakref.js"(exports2, module2) {
     "use strict";
     var { kConnected, kSize } = require_symbols6();
     var CompatWeakRef = class {
@@ -50566,9 +49710,9 @@ var require_dispatcher_weakref2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/request.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/request.js
 var require_request4 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/request.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/request.js"(exports2, module2) {
     "use strict";
     var { extractBody, mixinBody, cloneBody, bodyUnusable } = require_body2();
     var { Headers: Headers2, fill: fillHeaders, HeadersList, setHeadersGuard, getHeadersGuard, setHeadersList, getHeadersList } = require_headers2();
@@ -51261,9 +50405,9 @@ var require_request4 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/index.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/index.js
 var require_fetch2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fetch/index.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fetch/index.js"(exports2, module2) {
     "use strict";
     var {
       makeNetworkError,
@@ -52121,8 +51265,9 @@ var require_fetch2 = __commonJS({
         }
       );
       response.body = { stream, source: null, length: null };
-      fetchParams.controller.onAborted = onAborted;
-      fetchParams.controller.on("terminated", onAborted);
+      if (!fetchParams.controller.resume) {
+        fetchParams.controller.on("terminated", onAborted);
+      }
       fetchParams.controller.resume = async () => {
         while (true) {
           let bytes;
@@ -52222,7 +51367,6 @@ var require_fetch2 = __commonJS({
                 headersList.append(bufferToLowerCasedHeaderName(rawHeaders[i]), rawHeaders[i + 1].toString("latin1"), true);
               }
               location = headersList.get("location", true);
-              this.body = new Readable({ read: resume });
               const decoders = [];
               const willFollow = location && request.redirect === "follow" && redirectStatusSet.has(status);
               if (request.method !== "HEAD" && request.method !== "CONNECT" && !nullBodyStatus.includes(status) && !willFollow) {
@@ -52230,7 +51374,7 @@ var require_fetch2 = __commonJS({
                 const codings = contentEncoding ? contentEncoding.toLowerCase().split(",") : [];
                 const maxContentEncodings = 5;
                 if (codings.length > maxContentEncodings) {
-                  reject(new Error(`too many content-encodings in response: ${codings.length}, maximum allowed is ${maxContentEncodings}`));
+                  this.abort(new Error(`too many content-encodings in response: ${codings.length}, maximum allowed is ${maxContentEncodings}`));
                   return true;
                 }
                 for (let i = codings.length - 1; i >= 0; --i) {
@@ -52260,6 +51404,7 @@ var require_fetch2 = __commonJS({
                   }
                 }
               }
+              this.body = new Readable({ read: resume });
               const onError = this.onError.bind(this);
               resolve({
                 status,
@@ -52284,9 +51429,6 @@ var require_fetch2 = __commonJS({
             onComplete() {
               if (this.abort) {
                 fetchParams.controller.off("terminated", this.abort);
-              }
-              if (fetchParams.controller.onAborted) {
-                fetchParams.controller.off("terminated", fetchParams.controller.onAborted);
               }
               fetchParams.controller.ended = true;
               this.body.push(null);
@@ -52328,9 +51470,9 @@ var require_fetch2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/symbols.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fileapi/symbols.js
 var require_symbols8 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fileapi/symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
       kState: Symbol("FileReader state"),
@@ -52343,9 +51485,9 @@ var require_symbols8 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/progressevent.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fileapi/progressevent.js
 var require_progressevent2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/progressevent.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fileapi/progressevent.js"(exports2, module2) {
     "use strict";
     var { webidl } = require_webidl2();
     var kState = Symbol("ProgressEvent state");
@@ -52411,9 +51553,9 @@ var require_progressevent2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/encoding.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fileapi/encoding.js
 var require_encoding2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/encoding.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fileapi/encoding.js"(exports2, module2) {
     "use strict";
     function getEncoding(label) {
       if (!label) {
@@ -52697,9 +51839,9 @@ var require_encoding2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/util.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fileapi/util.js
 var require_util12 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fileapi/util.js"(exports2, module2) {
     "use strict";
     var {
       kState,
@@ -52882,9 +52024,9 @@ var require_util12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/filereader.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fileapi/filereader.js
 var require_filereader2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/fileapi/filereader.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/fileapi/filereader.js"(exports2, module2) {
     "use strict";
     var {
       staticPropertyDescriptors,
@@ -53141,9 +52283,9 @@ var require_filereader2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/symbols.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cache/symbols.js
 var require_symbols9 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cache/symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
       kConstruct: require_symbols6().kConstruct
@@ -53151,9 +52293,9 @@ var require_symbols9 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/util.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cache/util.js
 var require_util13 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cache/util.js"(exports2, module2) {
     "use strict";
     var assert = require("node:assert");
     var { URLSerializer } = require_data_url();
@@ -53181,9 +52323,9 @@ var require_util13 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/cache.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cache/cache.js
 var require_cache2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/cache.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cache/cache.js"(exports2, module2) {
     "use strict";
     var { kConstruct } = require_symbols9();
     var { urlEquals, getFieldValues } = require_util13();
@@ -53728,9 +52870,9 @@ var require_cache2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/cachestorage.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cache/cachestorage.js
 var require_cachestorage2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cache/cachestorage.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cache/cachestorage.js"(exports2, module2) {
     "use strict";
     var { kConstruct } = require_symbols9();
     var { Cache } = require_cache2();
@@ -53838,9 +52980,9 @@ var require_cachestorage2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/constants.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cookies/constants.js
 var require_constants10 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cookies/constants.js"(exports2, module2) {
     "use strict";
     var maxAttributeValueSize = 1024;
     var maxNameValuePairSize = 4096;
@@ -53851,9 +52993,9 @@ var require_constants10 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/util.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cookies/util.js
 var require_util14 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cookies/util.js"(exports2, module2) {
     "use strict";
     function isCTLExcludingHtab(value) {
       for (let i = 0; i < value.length; ++i) {
@@ -54059,9 +53201,9 @@ var require_util14 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/parse.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cookies/parse.js
 var require_parse2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/parse.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cookies/parse.js"(exports2, module2) {
     "use strict";
     var { maxNameValuePairSize, maxAttributeValueSize } = require_constants10();
     var { isCTLExcludingHtab } = require_util14();
@@ -54195,9 +53337,9 @@ var require_parse2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/index.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cookies/index.js
 var require_cookies2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/cookies/index.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/cookies/index.js"(exports2, module2) {
     "use strict";
     var { parseSetCookie } = require_parse2();
     var { stringify } = require_util14();
@@ -54324,9 +53466,9 @@ var require_cookies2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/events.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/events.js
 var require_events2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/events.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/events.js"(exports2, module2) {
     "use strict";
     var { webidl } = require_webidl2();
     var { kEnumerableProperty } = require_util9();
@@ -54590,9 +53732,9 @@ var require_events2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/constants.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/constants.js
 var require_constants11 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/constants.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/constants.js"(exports2, module2) {
     "use strict";
     var uid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
     var staticPropertyDescriptors = {
@@ -54647,9 +53789,9 @@ var require_constants11 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/symbols.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/symbols.js
 var require_symbols10 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/symbols.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
       kWebSocketURL: Symbol("url"),
@@ -54664,9 +53806,9 @@ var require_symbols10 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/util.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/util.js
 var require_util15 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/util.js"(exports2, module2) {
     "use strict";
     var { kReadyState, kController, kResponse, kBinaryType, kWebSocketURL } = require_symbols10();
     var { states, opcodes } = require_constants11();
@@ -54837,9 +53979,9 @@ var require_util15 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/frame.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/frame.js
 var require_frame2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/frame.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/frame.js"(exports2, module2) {
     "use strict";
     var { maxUnsigned16Bit } = require_constants11();
     var BUFFER_SIZE = 16386;
@@ -54914,9 +54056,9 @@ var require_frame2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/connection.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/connection.js
 var require_connection2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/connection.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/connection.js"(exports2, module2) {
     "use strict";
     var { uid, states, sentCloseFrameState, emptyBuffer, opcodes } = require_constants11();
     var {
@@ -55003,7 +54145,7 @@ var require_connection2 = __commonJS({
           const secProtocol = response.headersList.get("Sec-WebSocket-Protocol");
           if (secProtocol !== null) {
             const requestProtocols = getDecodeSplit("sec-websocket-protocol", request.headersList);
-            if (!requestProtocols.includes(secProtocol)) {
+            if (requestProtocols === null || !requestProtocols.includes(secProtocol)) {
               failWebsocketConnection(ws, "Protocol was not set in the opening handshake.");
               return;
             }
@@ -55099,13 +54241,13 @@ var require_connection2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/permessage-deflate.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/permessage-deflate.js
 var require_permessage_deflate = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/permessage-deflate.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/permessage-deflate.js"(exports2, module2) {
     "use strict";
     var { createInflateRaw, Z_DEFAULT_WINDOWBITS } = require("node:zlib");
     var { isValidClientWindowBits } = require_util15();
-    var { MessageSizeExceededError } = require_errors3();
+    var { MessageSizeExceededError } = require_errors2();
     var tail = Buffer.from([0, 0, 255, 255]);
     var kBuffer = Symbol("kBuffer");
     var kLength = Symbol("kLength");
@@ -55151,6 +54293,7 @@ var require_permessage_deflate = __commonJS({
             if (this.#maxPayloadSize > 0 && this.#inflate[kLength] > this.#maxPayloadSize) {
               callback(new MessageSizeExceededError());
               this.#inflate.removeAllListeners();
+              this.#inflate.destroy();
               this.#inflate = null;
               return;
             }
@@ -55180,9 +54323,9 @@ var require_permessage_deflate = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/receiver.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/receiver.js
 var require_receiver2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/receiver.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/receiver.js"(exports2, module2) {
     "use strict";
     var { Writable } = require("node:stream");
     var assert = require("node:assert");
@@ -55202,7 +54345,7 @@ var require_receiver2 = __commonJS({
     var { WebsocketFrameSend } = require_frame2();
     var { closeWebSocketConnection } = require_connection2();
     var { PerMessageDeflate } = require_permessage_deflate();
-    var { MessageSizeExceededError } = require_errors3();
+    var { MessageSizeExceededError } = require_errors2();
     function failWebsocketConnectionWithCode(ws, code, reason) {
       closeWebSocketConnection(ws, code, reason, Buffer.byteLength(reason));
       failWebsocketConnection(ws, reason);
@@ -55362,6 +54505,17 @@ var require_receiver2 = __commonJS({
             if (isControlFrame(this.#info.opcode)) {
               this.#loop = this.parseControlFrame(body);
               this.#state = parserStates.INFO;
+              const socket = this.ws[kResponse].socket;
+              if (this.#loop && socket.writableNeedDrain) {
+                this.#loop = false;
+                socket.once("drain", () => {
+                  if (this.destroyed)
+                    return;
+                  this.#loop = true;
+                  this.run(callback);
+                });
+                return;
+              }
             } else {
               if (!this.#info.compressed) {
                 if (!this.writeFragments(body)) {
@@ -55552,9 +54706,9 @@ var require_receiver2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/sender.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/sender.js
 var require_sender = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/sender.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/sender.js"(exports2, module2) {
     "use strict";
     var { WebsocketFrameSend } = require_frame2();
     var { opcodes, sendHints } = require_constants11();
@@ -55634,9 +54788,9 @@ var require_sender = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/websocket.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/websocket.js
 var require_websocket2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/websocket/websocket.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/websocket/websocket.js"(exports2, module2) {
     "use strict";
     var { webidl } = require_webidl2();
     var { URLSerializer } = require_data_url();
@@ -56024,9 +55178,9 @@ var require_websocket2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/util.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/eventsource/util.js
 var require_util16 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/util.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/eventsource/util.js"(exports2, module2) {
     "use strict";
     function isValidLastEventId(value) {
       return value.indexOf("\0") === -1;
@@ -56053,10 +55207,11 @@ var require_util16 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/eventsource-stream.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/eventsource/eventsource-stream.js
 var require_eventsource_stream = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/eventsource-stream.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/eventsource/eventsource-stream.js"(exports2, module2) {
     "use strict";
+    var buffer = require("node:buffer");
     var { Transform } = require("node:stream");
     var { isASCIINumber, isValidLastEventId } = require_util16();
     var BOM = [239, 187, 191];
@@ -56064,6 +55219,49 @@ var require_eventsource_stream = __commonJS({
     var CR = 13;
     var COLON = 58;
     var SPACE = 32;
+    var defaultMaxEventSize = buffer.kStringMaxLength;
+    var DATA = Buffer.from("data");
+    var EVENT = Buffer.from("event");
+    var ID = Buffer.from("id");
+    var RETRY = Buffer.from("retry");
+    var minParserItems = 1024;
+    var maxParserItems = 131072;
+    var bytesPerParserItem = 128;
+    function isASCIINumberBytes(buffer2, start) {
+      if (start >= buffer2.length) {
+        return false;
+      }
+      for (let i = start; i < buffer2.length; i++) {
+        if (buffer2[i] < 48 || buffer2[i] > 57) {
+          return false;
+        }
+      }
+      return true;
+    }
+    function isValidLastEventIdBytes(buffer2, start) {
+      for (let i = start; i < buffer2.length; i++) {
+        if (buffer2[i] === 0) {
+          return false;
+        }
+      }
+      return true;
+    }
+    function isFieldName(line, length, field) {
+      if (length !== field.length) {
+        return false;
+      }
+      for (let i = 0; i < length; i++) {
+        if (line[i] !== field[i]) {
+          return false;
+        }
+      }
+      return true;
+    }
+    function createMaxEventSizeExceededError() {
+      const error2 = new Error("EventSource message size exceeded");
+      error2.aborted = false;
+      return error2;
+    }
     var EventSourceStream = class extends Transform {
       /**
        * @type {eventSourceSettings}
@@ -56083,10 +55281,20 @@ var require_eventsource_stream = __commonJS({
        */
       eventEndCheck = false;
       /**
-       * @type {Buffer}
+       * @type {Buffer[]}
        */
-      buffer = null;
+      chunks = [];
+      chunkIndex = 0;
       pos = 0;
+      lineChunkIndex = 0;
+      linePos = 0;
+      lineLength = 0;
+      eventSize = 0;
+      eventFieldSizes = { data: 0, event: 0, id: 0, retry: 0 };
+      dataLineCount = 0;
+      maxEventSize;
+      maxDataLines;
+      maxBufferedChunks;
       event = {
         data: void 0,
         event: void 0,
@@ -56095,6 +55303,7 @@ var require_eventsource_stream = __commonJS({
       };
       /**
        * @param {object} options
+       * @param {number} [options.maxEventSize]
        * @param {eventSourceSettings} options.eventSourceSettings
        * @param {Function} [options.push]
        */
@@ -56102,6 +55311,10 @@ var require_eventsource_stream = __commonJS({
         options.readableObjectMode = true;
         super(options);
         this.state = options.eventSourceSettings || {};
+        this.maxEventSize = options.maxEventSize ?? defaultMaxEventSize;
+        const parserItemLimit = this.maxEventSize > 0 ? Math.min(maxParserItems, Math.max(minParserItems, Math.floor(this.maxEventSize / bytesPerParserItem))) : 0;
+        this.maxDataLines = parserItemLimit;
+        this.maxBufferedChunks = parserItemLimit;
         if (options.push) {
           this.push = options.push;
         }
@@ -56117,63 +55330,34 @@ var require_eventsource_stream = __commonJS({
           callback();
           return;
         }
-        if (this.buffer) {
-          this.buffer = Buffer.concat([this.buffer, chunk]);
-        } else {
-          this.buffer = chunk;
+        if (this.maxEventSize > 0 && this.chunks.length >= this.maxBufferedChunks && chunk[0] !== LF && chunk[0] !== CR) {
+          callback(createMaxEventSizeExceededError());
+          return;
         }
+        this.chunks.push(chunk);
         if (this.checkBOM) {
-          switch (this.buffer.length) {
-            case 1:
-              if (this.buffer[0] === BOM[0]) {
-                callback();
-                return;
-              }
-              this.checkBOM = false;
-              callback();
-              return;
-            case 2:
-              if (this.buffer[0] === BOM[0] && this.buffer[1] === BOM[1]) {
-                callback();
-                return;
-              }
-              this.checkBOM = false;
-              break;
-            case 3:
-              if (this.buffer[0] === BOM[0] && this.buffer[1] === BOM[1] && this.buffer[2] === BOM[2]) {
-                this.buffer = Buffer.alloc(0);
-                this.checkBOM = false;
-                callback();
-                return;
-              }
-              this.checkBOM = false;
-              break;
-            default:
-              if (this.buffer[0] === BOM[0] && this.buffer[1] === BOM[1] && this.buffer[2] === BOM[2]) {
-                this.buffer = this.buffer.subarray(3);
-              }
-              this.checkBOM = false;
-              break;
+          if (this.handleBOM()) {
+            callback();
+            return;
           }
         }
-        while (this.pos < this.buffer.length) {
+        while (this.hasCurrentByte()) {
+          const byte = this.currentByte();
           if (this.eventEndCheck) {
             if (this.crlfCheck) {
-              if (this.buffer[this.pos] === LF) {
-                this.buffer = this.buffer.subarray(this.pos + 1);
-                this.pos = 0;
+              if (byte === LF) {
                 this.crlfCheck = false;
+                this.consumeCurrentByte();
                 continue;
               }
               this.crlfCheck = false;
             }
-            if (this.buffer[this.pos] === LF || this.buffer[this.pos] === CR) {
-              if (this.buffer[this.pos] === CR) {
+            if (byte === LF || byte === CR) {
+              if (byte === CR) {
                 this.crlfCheck = true;
               }
-              this.buffer = this.buffer.subarray(this.pos + 1);
-              this.pos = 0;
-              if (this.event.data !== void 0 || this.event.event || this.event.id || this.event.retry) {
+              this.consumeCurrentByte();
+              if (this.hasPendingEvent()) {
                 this.processEvent(this.event);
               }
               this.clearEvent();
@@ -56182,23 +55366,36 @@ var require_eventsource_stream = __commonJS({
             this.eventEndCheck = false;
             continue;
           }
-          if (this.buffer[this.pos] === LF || this.buffer[this.pos] === CR) {
-            if (this.buffer[this.pos] === CR) {
+          if (byte === LF || byte === CR) {
+            if (byte === CR) {
               this.crlfCheck = true;
             }
-            this.parseLine(this.buffer.subarray(0, this.pos), this.event);
-            this.buffer = this.buffer.subarray(this.pos + 1);
-            this.pos = 0;
+            try {
+              this.parseLine(this.readLine(), this.event);
+            } catch (error2) {
+              callback(error2);
+              return;
+            }
+            this.consumeCurrentByte();
             this.eventEndCheck = true;
             continue;
           }
-          this.pos++;
+          if (this.maxEventSize > 0 && ++this.lineLength > this.maxEventSize + 7) {
+            callback(createMaxEventSizeExceededError());
+            return;
+          }
+          this.advanceCursor();
         }
         callback();
       }
+      _destroy(error2, callback) {
+        this.chunks.length = 0;
+        this.clearEvent();
+        super._destroy(error2, callback);
+      }
       /**
        * @param {Buffer} line
-       * @param {EventStreamEvent} event
+       * @param {EventSourceStreamEvent} event
        */
       parseLine(line, event) {
         if (line.length === 0) {
@@ -56208,44 +55405,60 @@ var require_eventsource_stream = __commonJS({
         if (colonPosition === 0) {
           return;
         }
-        let field = "";
-        let value = "";
+        let fieldLength = line.length;
+        let valueStart = line.length;
         if (colonPosition !== -1) {
-          field = line.subarray(0, colonPosition).toString("utf8");
-          let valueStart = colonPosition + 1;
+          fieldLength = colonPosition;
+          valueStart = colonPosition + 1;
           if (line[valueStart] === SPACE) {
             ++valueStart;
           }
-          value = line.subarray(valueStart).toString("utf8");
-        } else {
-          field = line.toString("utf8");
-          value = "";
         }
-        switch (field) {
-          case "data":
-            if (event[field] === void 0) {
-              event[field] = value;
-            } else {
-              event[field] += `
+        if (isFieldName(line, fieldLength, DATA)) {
+          if (this.maxEventSize > 0 && this.dataLineCount >= this.maxDataLines) {
+            throw createMaxEventSizeExceededError();
+          }
+          const valueBytes = line.length - valueStart;
+          const dataSize = this.eventFieldSizes.data + (event.data === void 0 ? 0 : 1) + valueBytes;
+          this.setEventFieldSize("data", dataSize);
+          const value = line.toString("utf8", valueStart);
+          if (event.data === void 0) {
+            event.data = value;
+          } else {
+            event.data += `
 ${value}`;
-            }
-            break;
-          case "retry":
-            if (isASCIINumber(value)) {
-              event[field] = value;
-            }
-            break;
-          case "id":
-            if (isValidLastEventId(value)) {
-              event[field] = value;
-            }
-            break;
-          case "event":
-            if (value.length > 0) {
-              event[field] = value;
-            }
-            break;
+          }
+          this.dataLineCount++;
+          return;
         }
+        if (isFieldName(line, fieldLength, RETRY)) {
+          if (isASCIINumberBytes(line, valueStart)) {
+            this.setEventFieldSize("retry", line.length - valueStart);
+            event.retry = line.toString("utf8", valueStart);
+          }
+          return;
+        }
+        if (isFieldName(line, fieldLength, ID)) {
+          if (isValidLastEventIdBytes(line, valueStart)) {
+            this.setEventFieldSize("id", line.length - valueStart);
+            event.id = line.toString("utf8", valueStart);
+          }
+          return;
+        }
+        if (isFieldName(line, fieldLength, EVENT)) {
+          if (valueStart < line.length) {
+            this.setEventFieldSize("event", line.length - valueStart);
+            event.event = line.toString("utf8", valueStart);
+          }
+        }
+      }
+      setEventFieldSize(field, size) {
+        const eventSize = this.eventSize - this.eventFieldSizes[field] + size;
+        if (this.maxEventSize > 0 && eventSize > this.maxEventSize) {
+          throw createMaxEventSizeExceededError();
+        }
+        this.eventSize = eventSize;
+        this.eventFieldSizes[field] = size;
       }
       /**
        * @param {EventSourceStreamEvent} event
@@ -56269,12 +55482,128 @@ ${value}`;
         }
       }
       clearEvent() {
-        this.event = {
-          data: void 0,
-          event: void 0,
-          id: void 0,
-          retry: void 0
-        };
+        this.event.data = void 0;
+        this.event.event = void 0;
+        this.event.id = void 0;
+        this.event.retry = void 0;
+        this.eventSize = 0;
+        this.dataLineCount = 0;
+        this.eventFieldSizes.data = 0;
+        this.eventFieldSizes.event = 0;
+        this.eventFieldSizes.id = 0;
+        this.eventFieldSizes.retry = 0;
+      }
+      hasPendingEvent() {
+        return this.event.data !== void 0 || this.event.event !== void 0 || this.event.id !== void 0 || this.event.retry !== void 0;
+      }
+      hasCurrentByte() {
+        return this.chunkIndex < this.chunks.length && this.pos < this.chunks[this.chunkIndex].length;
+      }
+      currentByte() {
+        return this.chunks[this.chunkIndex][this.pos];
+      }
+      consumeCurrentByte() {
+        this.advanceCursor();
+        this.syncLineStartToCursor();
+      }
+      advanceCursor() {
+        this.pos++;
+        while (this.chunkIndex < this.chunks.length && this.pos >= this.chunks[this.chunkIndex].length) {
+          this.chunkIndex++;
+          this.pos = 0;
+        }
+      }
+      syncLineStartToCursor() {
+        this.lineChunkIndex = this.chunkIndex;
+        this.linePos = this.pos;
+        this.lineLength = 0;
+        this.dropConsumedChunks();
+      }
+      dropConsumedChunks() {
+        if (this.lineChunkIndex > 0) {
+          const consumed = this.lineChunkIndex;
+          this.chunks.splice(0, consumed);
+          this.lineChunkIndex = 0;
+          this.chunkIndex -= consumed;
+        }
+        if (this.chunkIndex === this.chunks.length) {
+          this.chunks.length = 0;
+          this.chunkIndex = 0;
+          this.pos = 0;
+          this.lineChunkIndex = 0;
+          this.linePos = 0;
+        }
+      }
+      readLine() {
+        if (this.lineChunkIndex === this.chunkIndex) {
+          return this.chunks[this.chunkIndex].subarray(this.linePos, this.pos);
+        }
+        const chunks = [];
+        let length = 0;
+        for (let i = this.lineChunkIndex; i <= this.chunkIndex; i++) {
+          const chunk = this.chunks[i];
+          const start = i === this.lineChunkIndex ? this.linePos : 0;
+          const end = i === this.chunkIndex ? this.pos : chunk.length;
+          const slice = chunk.subarray(start, end);
+          length += slice.length;
+          chunks.push(slice);
+        }
+        return Buffer.concat(chunks, length);
+      }
+      peekBufferedByte(offset2) {
+        let chunkIndex = this.lineChunkIndex;
+        let pos = this.linePos;
+        while (chunkIndex < this.chunks.length) {
+          const chunk = this.chunks[chunkIndex];
+          const remaining = chunk.length - pos;
+          if (offset2 < remaining) {
+            return chunk[pos + offset2];
+          }
+          offset2 -= remaining;
+          chunkIndex++;
+          pos = 0;
+        }
+      }
+      discardLeadingBytes(count) {
+        while (count > 0 && this.lineChunkIndex < this.chunks.length) {
+          const chunk = this.chunks[this.lineChunkIndex];
+          const remaining = chunk.length - this.linePos;
+          if (count < remaining) {
+            this.linePos += count;
+            count = 0;
+          } else {
+            count -= remaining;
+            this.lineChunkIndex++;
+            this.linePos = 0;
+          }
+        }
+        this.chunkIndex = this.lineChunkIndex;
+        this.pos = this.linePos;
+        this.dropConsumedChunks();
+      }
+      handleBOM() {
+        const first = this.peekBufferedByte(0);
+        const second = this.peekBufferedByte(1);
+        const third = this.peekBufferedByte(2);
+        if (second === void 0) {
+          if (first === BOM[0]) {
+            return true;
+          }
+          this.checkBOM = false;
+          return true;
+        }
+        if (third === void 0) {
+          if (first === BOM[0] && second === BOM[1]) {
+            return true;
+          }
+          this.checkBOM = false;
+          return false;
+        }
+        if (first === BOM[0] && second === BOM[1] && third === BOM[2]) {
+          this.discardLeadingBytes(3);
+        }
+        this.checkBOM = false;
+        return !this.hasCurrentByte();
       }
     };
     module2.exports = {
@@ -56283,9 +55612,9 @@ ${value}`;
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/eventsource.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/eventsource/eventsource.js
 var require_eventsource = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/lib/web/eventsource/eventsource.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/lib/web/eventsource/eventsource.js"(exports2, module2) {
     "use strict";
     var { pipeline } = require("node:stream");
     var { fetching } = require_fetch2();
@@ -56298,6 +55627,7 @@ var require_eventsource = __commonJS({
     var { delay: delay2 } = require_util16();
     var { kEnumerableProperty } = require_util9();
     var { environmentSettingsObject } = require_util10();
+    var { getGlobalDispatcher } = require_global4();
     var experimentalWarned = false;
     var defaultReconnectionTime = 3e3;
     var CONNECTING = 0;
@@ -56439,6 +55769,7 @@ var require_eventsource = __commonJS({
           this.#state.origin = response.urlList[response.urlList.length - 1].origin;
           const eventSourceStream = new EventSourceStream({
             eventSourceSettings: this.#state,
+            maxEventSize: this.#dispatcher.eventSourceOptions?.maxEventSize,
             push: (event) => {
               this.dispatchEvent(createFastMessageEvent(
                 event.type,
@@ -56574,7 +55905,8 @@ var require_eventsource = __commonJS({
       {
         key: "dispatcher",
         // undici only
-        converter: webidl.converters.any
+        converter: webidl.converters.any,
+        defaultValue: () => getGlobalDispatcher()
       }
     ]);
     module2.exports = {
@@ -56584,9 +55916,9 @@ var require_eventsource = __commonJS({
   }
 });
 
-// node_modules/.pnpm/undici@6.28.0/node_modules/undici/index.js
+// node_modules/.pnpm/undici@6.29.1/node_modules/undici/index.js
 var require_undici2 = __commonJS({
-  "node_modules/.pnpm/undici@6.28.0/node_modules/undici/index.js"(exports2, module2) {
+  "node_modules/.pnpm/undici@6.29.1/node_modules/undici/index.js"(exports2, module2) {
     "use strict";
     var Client = require_client2();
     var Dispatcher = require_dispatcher2();
@@ -56596,7 +55928,7 @@ var require_undici2 = __commonJS({
     var ProxyAgent = require_proxy_agent2();
     var EnvHttpProxyAgent = require_env_http_proxy_agent();
     var RetryAgent = require_retry_agent();
-    var errors = require_errors3();
+    var errors = require_errors2();
     var util = require_util9();
     var { InvalidArgumentError: InvalidArgumentError2 } = errors;
     var api = require_api2();
@@ -56726,9 +56058,9 @@ var require_undici2 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js
 var require_fetch_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/fetch.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.meticulousFetch = void 0;
@@ -56841,9 +56173,9 @@ var require_fetch_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/virtual-time-order.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/virtual-time-order.utils.js
 var require_virtual_time_order_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/virtual-time-order.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/virtual-time-order.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getVirtualTimeOrder = void 0;
@@ -56859,12 +56191,12 @@ var require_virtual_time_order_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/index.js
 var require_dist = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+common@3.4.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+common@3.12.0/node_modules/@alwaysmeticulous/common/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getVirtualTimeOrder = exports2.meticulousFetch = exports2.getErrorCode = exports2.computeRetryDelayMs = exports2.getRetryAfterMs = exports2.isLostConnectionError = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.getStashCreateSha = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.routeLogsToStderr = exports2.logProgress = exports2.logNotice = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
+    exports2.getVirtualTimeOrder = exports2.meticulousFetch = exports2.getErrorCode = exports2.computeRetryDelayMs = exports2.getRetryAfterMs = exports2.isLostConnectionError = exports2.defaultShouldRetry = exports2.executeWithRetry = exports2.SENTINEL_COMMIT_SHAS = exports2.EXPERIMENT_TEST_RUN_COMMIT_SHA = exports2.SESSION_SELECTION_TEST_RUN_COMMIT_SHA = exports2.isGitCommitSha = exports2.getStashCreateSha = exports2.RECOMMENDED_GIT_DIFF_COMMAND = exports2.execGitDiff = exports2.getGitDiffArgs = exports2.getGitDiff = exports2.getUntrackedFiles = exports2.hasUncommittedChanges = exports2.getLocalBaseSha = exports2.getCommitDate = exports2.getCommitSha = exports2.getMeticulousVersion = exports2.IS_METICULOUS_SUPER_USER = exports2.BASE_SNIPPETS_URL = exports2.DEFAULT_SCREENSHOTTING_OPTIONS = exports2.DEFAULT_EXECUTION_OPTIONS = exports2.DebugLogger = exports2.setLogLevel = exports2.routeLogsToStderr = exports2.logProgress = exports2.logNotice = exports2.initLogger = exports2.METICULOUS_LOGGER_NAME = exports2.setMeticulousLocalDataDir = exports2.runWithLocalDataDir = exports2.getMeticulousLocalDataDir = exports2.defer = void 0;
     var defer_1 = require_defer();
     Object.defineProperty(exports2, "defer", { enumerable: true, get: function() {
       return defer_1.defer;
@@ -56938,8 +56270,30 @@ var require_dist = __commonJS({
     Object.defineProperty(exports2, "getGitDiff", { enumerable: true, get: function() {
       return commit_sha_utils_1.getGitDiff;
     } });
+    Object.defineProperty(exports2, "getGitDiffArgs", { enumerable: true, get: function() {
+      return commit_sha_utils_1.getGitDiffArgs;
+    } });
+    Object.defineProperty(exports2, "execGitDiff", { enumerable: true, get: function() {
+      return commit_sha_utils_1.execGitDiff;
+    } });
+    Object.defineProperty(exports2, "RECOMMENDED_GIT_DIFF_COMMAND", { enumerable: true, get: function() {
+      return commit_sha_utils_1.RECOMMENDED_GIT_DIFF_COMMAND;
+    } });
     Object.defineProperty(exports2, "getStashCreateSha", { enumerable: true, get: function() {
       return commit_sha_utils_1.getStashCreateSha;
+    } });
+    var git_commit_sha_utils_1 = require_git_commit_sha_utils();
+    Object.defineProperty(exports2, "isGitCommitSha", { enumerable: true, get: function() {
+      return git_commit_sha_utils_1.isGitCommitSha;
+    } });
+    Object.defineProperty(exports2, "SESSION_SELECTION_TEST_RUN_COMMIT_SHA", { enumerable: true, get: function() {
+      return git_commit_sha_utils_1.SESSION_SELECTION_TEST_RUN_COMMIT_SHA;
+    } });
+    Object.defineProperty(exports2, "EXPERIMENT_TEST_RUN_COMMIT_SHA", { enumerable: true, get: function() {
+      return git_commit_sha_utils_1.EXPERIMENT_TEST_RUN_COMMIT_SHA;
+    } });
+    Object.defineProperty(exports2, "SENTINEL_COMMIT_SHAS", { enumerable: true, get: function() {
+      return git_commit_sha_utils_1.SENTINEL_COMMIT_SHAS;
     } });
     var http_retry_utils_1 = require_http_retry_utils();
     Object.defineProperty(exports2, "executeWithRetry", { enumerable: true, get: function() {
@@ -56972,14 +56326,1395 @@ var require_dist = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
+var require_oauth_token_store = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.clearOAuthTokens = exports2.storeOAuthTokens = exports2.getStoredOAuthTokens = void 0;
+    var crypto_1 = require("crypto");
+    var fs_1 = require("fs");
+    var path_1 = require("path");
+    var common_1 = require_dist();
+    var getMeticulousDir = () => (0, common_1.getMeticulousLocalDataDir)();
+    var getTokenFilePath = () => (0, path_1.join)(getMeticulousDir(), "oauth-tokens.json");
+    var getStoredOAuthTokens = () => {
+      try {
+        if (!(0, fs_1.existsSync)(getTokenFilePath())) {
+          return null;
+        }
+        const data = (0, fs_1.readFileSync)(getTokenFilePath(), "utf-8");
+        return JSON.parse(data);
+      } catch {
+        return null;
+      }
+    };
+    exports2.getStoredOAuthTokens = getStoredOAuthTokens;
+    var storeOAuthTokens = (tokens) => {
+      if (!(0, fs_1.existsSync)(getMeticulousDir())) {
+        (0, fs_1.mkdirSync)(getMeticulousDir(), { recursive: true });
+      }
+      const tempPath = `${getTokenFilePath()}.${process.pid}.${(0, crypto_1.randomBytes)(4).toString("hex")}.tmp`;
+      try {
+        (0, fs_1.writeFileSync)(tempPath, JSON.stringify(tokens, null, 2), { mode: 384 });
+        (0, fs_1.renameSync)(tempPath, getTokenFilePath());
+      } catch (error2) {
+        (0, fs_1.rmSync)(tempPath, { force: true });
+        throw error2;
+      }
+    };
+    exports2.storeOAuthTokens = storeOAuthTokens;
+    var clearOAuthTokens = () => {
+      try {
+        if ((0, fs_1.existsSync)(getTokenFilePath())) {
+          (0, fs_1.unlinkSync)(getTokenFilePath());
+        }
+      } catch {
+      }
+    };
+    exports2.clearOAuthTokens = clearOAuthTokens;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
+var require_oauth_utils = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.parseOAuthErrorBody = exports2.isJwtExpired = exports2.getJwtClaims = exports2.isOAuthJwt = void 0;
+    var PROJECT_API_TOKEN_PREFIX = "prat-";
+    var WORKFLOW_API_TOKEN_PREFIX = "wfat-";
+    var isOAuthJwt = (token) => {
+      if (!token || token.startsWith(PROJECT_API_TOKEN_PREFIX) || token.startsWith(WORKFLOW_API_TOKEN_PREFIX)) {
+        return false;
+      }
+      const parts = token.split(".");
+      return parts.length === 3 && parts.every((part) => part.length > 0);
+    };
+    exports2.isOAuthJwt = isOAuthJwt;
+    var getJwtClaims = (token) => {
+      try {
+        const parts = token.split(".");
+        if (parts.length !== 3) {
+          return null;
+        }
+        const payload = Buffer.from(parts[1], "base64url").toString("utf-8");
+        return JSON.parse(payload);
+      } catch {
+        return null;
+      }
+    };
+    exports2.getJwtClaims = getJwtClaims;
+    var isJwtExpired = (token) => {
+      const claims = (0, exports2.getJwtClaims)(token);
+      const exp = claims?.["exp"];
+      if (typeof exp !== "number") {
+        return false;
+      }
+      return exp * 1e3 < Date.now();
+    };
+    exports2.isJwtExpired = isJwtExpired;
+    var parseOAuthErrorBody = (body) => {
+      let parsed;
+      try {
+        parsed = JSON.parse(body);
+      } catch {
+        return null;
+      }
+      if (typeof parsed !== "object" || parsed == null) {
+        return null;
+      }
+      const error2 = "error" in parsed ? parsed.error : void 0;
+      const description = "error_description" in parsed ? parsed.error_description : void 0;
+      return {
+        ...typeof error2 === "string" ? { error: error2 } : {},
+        ...typeof description === "string" ? { errorDescription: description } : {}
+      };
+    };
+    exports2.parseOAuthErrorBody = parseOAuthErrorBody;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/explain-missing-api-token.js
+var require_explain_missing_api_token = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/explain-missing-api-token.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.explainMissingApiToken = void 0;
+    var oauth_token_store_1 = require_oauth_token_store();
+    var oauth_utils_1 = require_oauth_utils();
+    var explainMissingApiToken = () => {
+      try {
+        const stored = (0, oauth_token_store_1.getStoredOAuthTokens)();
+        const accessToken = stored?.accessToken;
+        if (typeof accessToken !== "string" || !accessToken) {
+          return { kind: "not-logged-in" };
+        }
+        return (0, oauth_utils_1.isJwtExpired)(accessToken) ? { kind: "login-not-renewed" } : { kind: "login-not-used" };
+      } catch {
+        return { kind: "not-logged-in" };
+      }
+    };
+    exports2.explainMissingApiToken = explainMissingApiToken;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/fetch-error-message.js
+var require_fetch_error_message = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/fetch-error-message.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.describeFetchError = void 0;
+    var describeFetchError = (error2) => {
+      const errorMessage = error2.response?.data?.message;
+      const requestAndResponse = requestAndResponseToString(error2.config ?? null, error2.response ?? null);
+      if (errorMessage && typeof errorMessage === "string") {
+        return requestAndResponse ? `${errorMessage}
+
+${requestAndResponse}` : errorMessage;
+      }
+      return requestAndResponse;
+    };
+    exports2.describeFetchError = describeFetchError;
+    var requestAndResponseToString = (request, response) => {
+      if (!request || !request.url) {
+        return "";
+      }
+      if (response == null) {
+        return `${requestToString(request)}`;
+      }
+      return `${requestToString(request)} returned ${responseToString(response)})`;
+    };
+    var requestToString = (request) => {
+      return `${request.method?.toUpperCase()}${request.method ? " " : ""}${request.url}`;
+    };
+    var responseToString = (response) => {
+      const dataAsString = dataToString(response.data);
+      return `${response.status} ${response.statusText}${dataAsString ? ` (${dataAsString})` : ""}`;
+    };
+    var dataToString = (data) => {
+      if (typeof data === "string") {
+        return truncate2(data, 50);
+      }
+      if (!data) {
+        return String(data);
+      }
+      try {
+        return truncate2(JSON.stringify(data), 50);
+      } catch (_e) {
+        return "";
+      }
+    };
+    var truncate2 = (str, maxLength) => {
+      return str.length > maxLength ? str.slice(0, maxLength) + "..." : str;
+    };
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/missing-credentials.js
+var require_missing_credentials = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/missing-credentials.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.buildMissingCredentialsMessage = exports2.isMissingCredentialsError = exports2.MissingCredentialsError = exports2.MISSING_AUTH_GUIDANCE = void 0;
+    exports2.MISSING_AUTH_GUIDANCE = "Run `meticulous auth login` to log in (add `--non-interactive` in a terminal without a browser). For CI or other unattended use, set METICULOUS_API_TOKEN or pass --apiToken instead.";
+    var MissingCredentialsError = class extends Error {
+      missingReason;
+      response;
+      config;
+      constructor(error2, missingReason) {
+        super((0, exports2.buildMissingCredentialsMessage)(error2.response?.status ?? 401, missingReason));
+        this.name = "MissingCredentialsError";
+        this.missingReason = missingReason;
+        this.response = error2.response;
+        this.config = error2.config;
+      }
+    };
+    exports2.MissingCredentialsError = MissingCredentialsError;
+    var isMissingCredentialsError = (error2) => {
+      if (error2 instanceof MissingCredentialsError) {
+        return true;
+      }
+      if (!(error2 instanceof Error) || error2.name !== "MissingCredentialsError") {
+        return false;
+      }
+      const missingReason = Reflect.get(error2, "missingReason");
+      return typeof missingReason === "object" && missingReason !== null && typeof Reflect.get(missingReason, "kind") === "string";
+    };
+    exports2.isMissingCredentialsError = isMissingCredentialsError;
+    var buildMissingCredentialsMessage = (status, reason) => [
+      `Authentication failed (HTTP ${status}): the request was sent without credentials. ${describeMissingCredentialReason(reason)}`,
+      adviseOnMissingCredential(reason)
+    ].join("\n");
+    exports2.buildMissingCredentialsMessage = buildMissingCredentialsMessage;
+    var RETRY_ADVICE = "Re-run the command to retry; if this keeps happening, run `meticulous auth login` to log in again.";
+    var API_TOKEN_ONLY_ADVICE = "Pass --apiToken or set METICULOUS_API_TOKEN.";
+    var API_TOKEN_ONLY_COMMAND_ADVICE = "If this command authenticates with an API token only, pass --apiToken or set METICULOUS_API_TOKEN instead.";
+    var adviseOnMissingCredential = (reason) => {
+      switch (reason.kind) {
+        case "refresh-failed":
+          return RETRY_ADVICE;
+        case "login-not-renewed":
+          return `${RETRY_ADVICE} ${API_TOKEN_ONLY_COMMAND_ADVICE}`;
+        case "login-not-used":
+          return API_TOKEN_ONLY_ADVICE;
+        case "ci-oidc-failed":
+          return "Check your project's CI trust policy in Project Settings (and set METICULOUS_PROJECT if multiple projects share this repository), or set METICULOUS_API_TOKEN / pass --apiToken instead.";
+        case "not-logged-in":
+        case "login-expired":
+        case "login-rejected":
+        case "login-cleared":
+          return exports2.MISSING_AUTH_GUIDANCE;
+        default: {
+          const unreachable = reason;
+          return unreachable;
+        }
+      }
+    };
+    var describeMissingCredentialReason = (reason) => {
+      switch (reason.kind) {
+        case "not-logged-in":
+          return "You are not logged in, and no API token is set.";
+        case "login-expired":
+          return "Your Meticulous login expired and could not be renewed (it has no refresh token), so it was removed.";
+        case "login-rejected":
+          return `Your Meticulous login is no longer valid (${reason.detail}) \u2014 it may have been revoked or logged out elsewhere \u2014 so it was removed.`;
+        case "login-cleared":
+          return "Your Meticulous login was removed while this command was running, by `meticulous auth logout` or by another Meticulous process whose login refresh was rejected.";
+        case "refresh-failed":
+          return `Your Meticulous login has expired and refreshing it failed (${reason.detail}). Your login has been kept.`;
+        case "login-not-renewed":
+          return "Your Meticulous login has expired and could not be renewed, and no API token is set. Your login has been kept.";
+        case "login-not-used":
+          return "This command authenticates with an API token only, so it does not use your Meticulous login, and no API token was passed or found in METICULOUS_API_TOKEN or the Meticulous config file.";
+        case "ci-oidc-failed":
+          return `CI OIDC authentication failed (${reason.detail}), and no API token is set.`;
+        default: {
+          const unreachable = reason;
+          return unreachable;
+        }
+      }
+    };
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/rejected-credentials.js
+var require_rejected_credentials = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/rejected-credentials.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.credentialKindOf = exports2.isRejectedCredentialsError = exports2.RejectedCredentialsError = void 0;
+    var fetch_error_message_1 = require_fetch_error_message();
+    var oauth_utils_1 = require_oauth_utils();
+    var RejectedCredentialsError = class extends Error {
+      credentialKind;
+      response;
+      config;
+      constructor(error2, credentialKind) {
+        super((0, fetch_error_message_1.describeFetchError)(error2) || error2.message);
+        this.name = "RejectedCredentialsError";
+        this.credentialKind = credentialKind;
+        this.response = error2.response;
+        this.config = error2.config;
+      }
+    };
+    exports2.RejectedCredentialsError = RejectedCredentialsError;
+    var isRejectedCredentialsError = (error2) => {
+      if (error2 instanceof RejectedCredentialsError) {
+        return true;
+      }
+      if (!(error2 instanceof Error) || error2.name !== "RejectedCredentialsError") {
+        return false;
+      }
+      return typeof Reflect.get(error2, "credentialKind") === "string";
+    };
+    exports2.isRejectedCredentialsError = isRejectedCredentialsError;
+    var credentialKindOf = (token) => (0, oauth_utils_1.isOAuthJwt)(token) ? "oauth-login" : "api-token";
+    exports2.credentialKindOf = credentialKindOf;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/errors.js
+var require_errors3 = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/errors.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.maybeTagRejectedCredentialsError = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isAuthFailureStatus = exports2.isFetchError = void 0;
+    var explain_missing_api_token_1 = require_explain_missing_api_token();
+    var fetch_error_message_1 = require_fetch_error_message();
+    var missing_credentials_1 = require_missing_credentials();
+    var rejected_credentials_1 = require_rejected_credentials();
+    var isFetchError = (error2) => {
+      return error2 && typeof error2 === "object" && error2.response;
+    };
+    exports2.isFetchError = isFetchError;
+    var isAuthFailureStatus = (status) => status === 401 || status === 403;
+    exports2.isAuthFailureStatus = isAuthFailureStatus;
+    var maybeEnrichFetchError = (error2) => {
+      if ((0, exports2.isFetchError)(error2)) {
+        if ((0, missing_credentials_1.isMissingCredentialsError)(error2) || (0, rejected_credentials_1.isRejectedCredentialsError)(error2)) {
+          return error2;
+        }
+        return enrichFetchError(error2);
+      }
+      return error2;
+    };
+    exports2.maybeEnrichFetchError = maybeEnrichFetchError;
+    var maybeEnrichMissingAuthFetchError = (error2, credential) => {
+      if (!(0, exports2.isFetchError)(error2) || !(0, exports2.isAuthFailureStatus)(error2.response?.status)) {
+        return error2;
+      }
+      const missingReason = getMissingCredentialReason(credential);
+      if (missingReason === null) {
+        return error2;
+      }
+      return new missing_credentials_1.MissingCredentialsError(error2, missingReason);
+    };
+    exports2.maybeEnrichMissingAuthFetchError = maybeEnrichMissingAuthFetchError;
+    var maybeTagRejectedCredentialsError = (error2, sentToken) => {
+      if (!(0, exports2.isFetchError)(error2) || !(0, exports2.isAuthFailureStatus)(error2.response?.status)) {
+        return error2;
+      }
+      return new rejected_credentials_1.RejectedCredentialsError(error2, (0, rejected_credentials_1.credentialKindOf)(sentToken));
+    };
+    exports2.maybeTagRejectedCredentialsError = maybeTagRejectedCredentialsError;
+    var getMissingCredentialReason = (credential) => {
+      if (typeof credential === "boolean") {
+        return credential ? null : (0, explain_missing_api_token_1.explainMissingApiToken)();
+      }
+      if (credential.token === null) {
+        return credential.missingReason;
+      }
+      return credential.token ? null : (0, explain_missing_api_token_1.explainMissingApiToken)();
+    };
+    var enrichFetchError = (error2) => {
+      const message = (0, fetch_error_message_1.describeFetchError)(error2);
+      if (!message) {
+        return error2;
+      }
+      const newError = new Error(message);
+      newError.response = error2.response;
+      newError.config = error2.config;
+      return newError;
+    };
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js
+var require_agent_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getStructuredSessionData = exports2.getTimelineEventDiff = exports2.getTimelineEvent = exports2.getReplayTimeline = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverageSummary = exports2.getTestRunJsCoverageSummary = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.promoteSessions = exports2.completeBaseRun = exports2.TEST_RUN_PROJECT_MISMATCH_REASON = exports2.assertTestRunInProject = exports2.getTestRunForPullRequest = exports2.getTestRunForCommit = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = exports2.getScreenshotDomDiff = exports2.getTestRunDiffsSummaryCounts = exports2.replyToDiffComment = exports2.createDiffComment = exports2.reviewDiffs = exports2.ignoreDiff = exports2.approveDiff = exports2.rejectDiff = exports2.getDiffComments = exports2.getTestRunDiffsSummary = exports2.submitAgentFeedback = exports2.trackAgentFeatureUsage = exports2.TIMELINE_DISPLAY_KINDS = exports2.MAX_TIMELINE_LIMIT = exports2.TIMELINE_DIFF_CLIENT_VERSION = exports2.IMAGE_URLS_CLIENT_VERSION = exports2.getTestRunJsCoverageDiff = exports2.COVERAGE_ORDER_BY_FIELDS = exports2.shouldDefaultToExecutedRanges = exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = exports2.isTestRunProcessingResponse = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = void 0;
+    exports2.getSessions = exports2.SESSIONS_ORDER_BY_FIELDS = exports2.SELECTED_SINCE_UNKNOWN_REASONS = void 0;
+    var agent_replay_diff_scope_1 = require_agent_replay_diff_scope();
+    var errors_1 = require_errors3();
+    var getTestRunCheckReport = async (client, testRunId, checkId, options = {}) => {
+      const params = {};
+      if (options.checkType != null && options.checkType !== "builtin") {
+        params.checkType = options.checkType;
+      }
+      const { data } = await client.get(`agent/test-runs/${testRunId}/checks/${encodeURIComponent(checkId)}`, {
+        params
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunCheckReport = getTestRunCheckReport;
+    var getTestRunCheckAvailableIds = async (client, testRunId) => {
+      const { data } = await client.get(`agent/test-runs/${testRunId}/checks`).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunCheckAvailableIds = getTestRunCheckAvailableIds;
+    exports2.DIFFS_SUMMARY_CLIENT_VERSION = 4;
+    var isTestRunProcessingResponse = (value) => typeof value === "object" && value !== null && value.status === "processing";
+    exports2.isTestRunProcessingResponse = isTestRunProcessingResponse;
+    exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION = 4;
+    exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = 2;
+    exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = 1;
+    exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = 3;
+    exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = 1;
+    var shouldDefaultToExecutedRanges = (columnFlags) => columnFlags.includeExecutedRanges || !(columnFlags.includeExecutableRanges || columnFlags.includeUncoveredRanges || columnFlags.includeLineCounts || columnFlags.includeCoveragePercentage);
+    exports2.shouldDefaultToExecutedRanges = shouldDefaultToExecutedRanges;
+    exports2.COVERAGE_ORDER_BY_FIELDS = [
+      "repoFilePath",
+      "executedLines",
+      "executableLines",
+      "uncoveredLines",
+      "coveragePercentage"
+    ];
+    var getTestRunJsCoverageDiff = async (client, testRunId, options) => {
+      const params = {
+        clientVersion: String(exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION)
+      };
+      const globs = (typeof options?.globFilter === "string" ? [options.globFilter] : options?.globFilter ?? []).filter((glob) => glob !== "");
+      if (globs.length > 0) {
+        params.globFilter = globs;
+      }
+      if (options?.summaryOnly) {
+        params.summaryOnly = "true";
+      }
+      if (options?.limit != null) {
+        params.limit = String(options.limit);
+      }
+      if (options?.offset != null) {
+        params.offset = String(options.offset);
+      }
+      const { data } = await client.get(`agent/test-runs/${testRunId}/js-coverage-diff`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunJsCoverageDiff = getTestRunJsCoverageDiff;
+    exports2.IMAGE_URLS_CLIENT_VERSION = 1;
+    exports2.TIMELINE_DIFF_CLIENT_VERSION = 2;
+    exports2.MAX_TIMELINE_LIMIT = 1e3;
+    exports2.TIMELINE_DISPLAY_KINDS = [
+      "user",
+      "network",
+      "asset",
+      "websocket",
+      "screenshot",
+      "url",
+      "subframe",
+      "console",
+      "log",
+      "error",
+      "timeout",
+      "warning",
+      "storage",
+      "limit",
+      "container",
+      "backend"
+    ];
+    var trackAgentFeatureUsage = async ({ client, feature, project }) => {
+      await client.post("agent/telemetry", { feature }, project ? { params: { project } } : void 0).catch(() => {
+      });
+    };
+    exports2.trackAgentFeatureUsage = trackAgentFeatureUsage;
+    var submitAgentFeedback = async ({ client, message, outcome, testRunId, skill, agentName, agentModel, project }) => {
+      const { data } = await client.post("agent/feedback", {
+        message,
+        ...outcome != null ? { outcome } : {},
+        ...testRunId != null ? { testRunId } : {},
+        ...skill != null ? { skill } : {},
+        ...agentName != null ? { agentName } : {},
+        ...agentModel != null ? { agentModel } : {}
+      }, project ? { params: { project } } : void 0).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.submitAgentFeedback = submitAgentFeedback;
+    var getTestRunDiffsSummary = async (client, testRunId, options) => {
+      const params = {
+        clientVersion: String(exports2.DIFFS_SUMMARY_CLIENT_VERSION)
+      };
+      if (options?.includeReplayIds) {
+        params.includeReplayIds = "true";
+      }
+      if (options?.includeMismatchFraction) {
+        params.includeMismatchFraction = "true";
+      }
+      if (options?.includeDomDiffIds) {
+        params.includeDomDiffIds = "true";
+      }
+      if (options?.includeSimilarGroupId || options?.similarGroupId) {
+        params.includeSimilarGroupId = "true";
+      }
+      if (options?.similarGroupId) {
+        params.similarGroupId = options.similarGroupId;
+      }
+      if (options?.includeAllDiffs) {
+        params.includeAllDiffs = "true";
+      }
+      if (options?.orderByReplayDiffs) {
+        params.orderByReplayDiffs = "true";
+      }
+      if (options?.includeReviews || options?.includeReviewDecisions) {
+        params.includeReviews = "true";
+      }
+      if (options?.onlyUnreviewed) {
+        params.onlyUnreviewed = "true";
+      }
+      if (options?.onlyRejected) {
+        params.onlyRejected = "true";
+      }
+      if (options?.onlyWithComments) {
+        params.onlyWithComments = "true";
+      }
+      const { data } = await client.get(`agent/test-runs/${testRunId}/diffs-summary`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return normalizeDiffsSummaryResponse(data, options);
+    };
+    exports2.getTestRunDiffsSummary = getTestRunDiffsSummary;
+    var normalizeDiffsSummaryResponse = (response, options) => {
+      const { data, ...metadata } = response;
+      if (data == null) {
+        return response;
+      }
+      if (data.length === 0 || !("screenshots" in data[0])) {
+        return normalizeCurrentDiffsResponse(metadata, data, options);
+      }
+      const entries = data.flatMap((replayDiff) => replayDiff.screenshots.map((screenshot) => ({
+        index: screenshot.index,
+        diff: {
+          replayDiffId: replayDiff.replayDiffId,
+          screenshotName: screenshot.screenshotName,
+          ...options?.includeMismatchFraction && screenshot.mismatchFraction != null ? { mismatchFraction: screenshot.mismatchFraction } : {},
+          ...screenshot.domDiffIds != null ? { domDiffIds: screenshot.domDiffIds } : {},
+          ...screenshot.similarGroupId != null ? { similarGroupId: screenshot.similarGroupId } : {},
+          ...screenshot.isSelected != null ? { isSelected: screenshot.isSelected } : {},
+          ...screenshot.decision != null ? { decision: screenshot.decision } : {},
+          ...screenshot.openComments != null ? { openComments: screenshot.openComments } : {},
+          ...replayDiff.baseReplayId != null ? { baseReplayId: replayDiff.baseReplayId } : {},
+          ...replayDiff.headReplayId != null ? { headReplayId: replayDiff.headReplayId } : {}
+        }
+      }))).sort((a, b) => a.index - b.index);
+      return normalizeCurrentDiffsResponse(metadata, entries.map(({ diff: diff2 }) => diff2), options);
+    };
+    var LEGACY_REPRESENTATIVE_SELECTION_THRESHOLD = 5;
+    var normalizeCurrentDiffsResponse = (metadata, data, options) => {
+      const isOldBackend = metadata.selectionApplied == null;
+      const canCapToRepresentativeSubset = isOldBackend && options?.includeAllDiffs !== true && // onlyRejected/onlyWithComments always return every matching difference —
+      // never subject to the representative-subset cap (see the backend's
+      // agent.diffs-summary.utils.ts) — so an old backend's response to either
+      // is already complete and must not be re-capped here.
+      options?.onlyRejected !== true && options?.onlyWithComments !== true && data.length > LEGACY_REPRESENTATIVE_SELECTION_THRESHOLD && // Only cap when every row reports isSelected. A partially-present field
+      // would otherwise arm the filter below and then silently drop rows where
+      // it happens to be missing — requiring it on every row is the safe
+      // direction: worst case we skip capping, never wrongly drop a diff.
+      data.every((diff2) => diff2.isSelected != null);
+      let selectedData = data;
+      let cappingApplied = false;
+      if (canCapToRepresentativeSubset) {
+        const selected = data.filter((diff2) => diff2.isSelected === true);
+        if (selected.length > 0) {
+          selectedData = selected;
+          cappingApplied = selected.length < data.length;
+        }
+      }
+      const selectionApplied = metadata.selectionApplied ?? (cappingApplied || void 0);
+      const numMatchingDiffs = metadata.numMatchingDiffs ?? (cappingApplied ? data.length : void 0);
+      return {
+        ...metadata,
+        ...selectionApplied != null ? { selectionApplied } : {},
+        ...numMatchingDiffs != null ? { numMatchingDiffs } : {},
+        data: selectedData.map(({ isSelected: _isSelected, ...diff2 }) => diff2)
+      };
+    };
+    var getDiffComments = async (client, replayDiffId, screenshotName, options = {}) => {
+      const params = (0, agent_replay_diff_scope_1.replayDiffScopeParams)(options);
+      if (options.includeResolved) {
+        params.includeResolved = "true";
+      }
+      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/comments`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getDiffComments = getDiffComments;
+    var rejectDiff = async ({ client, replayDiffId, screenshotName, reason, x, y }) => {
+      const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/reject`, { reason, x, y }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.rejectDiff = rejectDiff;
+    var approveDiff = async ({ client, replayDiffId, screenshotName, reason, x, y }) => {
+      const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/approve`, {
+        ...reason != null ? { reason } : {},
+        ...x != null ? { x } : {},
+        ...y != null ? { y } : {}
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.approveDiff = approveDiff;
+    var ignoreDiff = async ({ client, replayDiffId, screenshotName, reason, x, y, reportFlake }) => {
+      const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/ignore`, { reason, x, y, ...reportFlake ? { reportFlake } : {} }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.ignoreDiff = ignoreDiff;
+    var reviewDiffs = async ({ client, verdict, diffs }) => {
+      const { data } = await client.post(`agent/replay-diffs/${verdict}`, { diffs }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.reviewDiffs = reviewDiffs;
+    var createDiffComment = async ({ client, replayDiffId, screenshotName, text, x, y }) => {
+      const { data } = await client.post(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/comments`, { text, x, y }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.createDiffComment = createDiffComment;
+    var replyToDiffComment = async ({ client, commentId, text }) => {
+      const { data } = await client.post(`agent/diff-comments/${commentId}/replies`, {
+        text
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.replyToDiffComment = replyToDiffComment;
+    var getTestRunDiffsSummaryCounts = async (client, testRunId) => {
+      const { data } = await client.get(`agent/test-runs/${testRunId}/diffs-summary/counts`, {
+        params: { clientVersion: String(exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION) }
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunDiffsSummaryCounts = getTestRunDiffsSummaryCounts;
+    var getScreenshotDomDiff = async (client, replayDiffId, screenshotName, context8) => {
+      const params = {};
+      if (context8 != null) {
+        params.context = context8;
+      }
+      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/dom-diff`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getScreenshotDomDiff = getScreenshotDomDiff;
+    var getAgentWhoami = async (client) => {
+      const { data } = await client.get("agent/whoami").catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getAgentWhoami = getAgentWhoami;
+    var getAgentProjects = async (client) => {
+      const { data } = await client.get("agent/projects").catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getAgentProjects = getAgentProjects;
+    var getAgentCurrentProject = async (client) => {
+      const { data } = await client.get("agent/project").catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getAgentCurrentProject = getAgentCurrentProject;
+    var setAgentCurrentProject = async (client, project) => {
+      const { data } = await client.put("agent/project", {
+        project
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.setAgentCurrentProject = setAgentCurrentProject;
+    var getTestRunForCommit = async (client, commitSha, options) => {
+      const params = { commitSha };
+      if (options?.project != null) {
+        params.project = options.project;
+      }
+      const { data } = await client.get("agent/test-runs", { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunForCommit = getTestRunForCommit;
+    var getTestRunForPullRequest = async (client, prNumber, options) => {
+      const params = { prNumber: String(prNumber) };
+      if (options?.project != null) {
+        params.project = options.project;
+      }
+      const { data } = await client.get("agent/test-runs", { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunForPullRequest = getTestRunForPullRequest;
+    var assertTestRunInProject = async (client, testRunId, project) => {
+      const { data } = await client.get(`agent/test-runs/${testRunId}/project`, { params: { project } }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.assertTestRunInProject = assertTestRunInProject;
+    exports2.TEST_RUN_PROJECT_MISMATCH_REASON = "project-mismatch";
+    var completeBaseRun = async (client, testRunId) => {
+      const { data } = await client.post(`agent/test-runs/${testRunId}/complete-base-run`).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.completeBaseRun = completeBaseRun;
+    var promoteSessions = async (client, testRunId, sessionIds) => {
+      const { data } = await client.post(`agent/test-runs/${testRunId}/promote-sessions`, {
+        ...sessionIds != null ? { sessionIds } : {}
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.promoteSessions = promoteSessions;
+    var getTestRunJsCoverage = async (client, testRunId, options) => {
+      const params = {
+        clientVersion: String(exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION)
+      };
+      const includeExecutedRanges = (0, exports2.shouldDefaultToExecutedRanges)(options ?? {});
+      if (options?.includeAllFiles) {
+        params.includeAllFiles = "true";
+      }
+      appendCoverageColumnParams(params, options, includeExecutedRanges);
+      appendCoverageOrderingParams(params, options);
+      if (options?.prDiffOnly) {
+        params.prDiffOnly = "true";
+      }
+      if (options?.expandedEditedLines) {
+        params.expandedEditedLines = "true";
+      }
+      if (options?.unionTestRunIds != null && options.unionTestRunIds.length > 0) {
+        params.unionTestRunIds = options.unionTestRunIds.join(",");
+      }
+      const { data } = await client.get(`agent/test-runs/${testRunId}/js-coverage`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunJsCoverage = getTestRunJsCoverage;
+    var getProjectJsCoverage = async (client, options) => {
+      const params = {
+        clientVersion: String(exports2.TESTRUN_JS_COVERAGE_CLIENT_VERSION)
+      };
+      const includeExecutedRanges = (0, exports2.shouldDefaultToExecutedRanges)(options ?? {});
+      if (options?.project != null && options.project !== "") {
+        params.project = options.project;
+      }
+      if (options?.includeAllFiles) {
+        params.includeAllFiles = "true";
+      }
+      appendCoverageColumnParams(params, options, includeExecutedRanges);
+      appendCoverageOrderingParams(params, options);
+      const { data } = await client.get("agent/projects/js-coverage", { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getProjectJsCoverage = getProjectJsCoverage;
+    var appendCoverageColumnParams = (params, options, includeExecutedRanges) => {
+      const globs = (typeof options?.globFilter === "string" ? [options.globFilter] : options?.globFilter ?? []).filter((glob) => glob !== "");
+      if (globs.length > 0) {
+        params.globFilter = globs;
+      }
+      if (includeExecutedRanges) {
+        params.includeExecutedRanges = "true";
+      }
+      if (options?.includeExecutableRanges) {
+        params.includeExecutableRanges = "true";
+      }
+      if (options?.includeUncoveredRanges) {
+        params.includeUncoveredRanges = "true";
+      }
+      if (options?.includeLineCounts) {
+        params.includeLineCounts = "true";
+      }
+      if (options?.includeCoveragePercentage) {
+        params.includeCoveragePercentage = "true";
+      }
+    };
+    var appendCoverageOrderingParams = (params, options) => {
+      if (options?.orderBy != null) {
+        params.orderBy = options.orderBy;
+      }
+      if (options?.order != null) {
+        params.order = options.order;
+      }
+      if (options?.limit != null) {
+        params.limit = String(options.limit);
+      }
+      if (options?.offset != null) {
+        params.offset = String(options.offset);
+      }
+    };
+    var getTestRunJsCoverageSummary = async (client, testRunId, options) => {
+      const params = {
+        clientVersion: String(exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION)
+      };
+      if (options?.unionTestRunIds != null && options.unionTestRunIds.length > 0) {
+        params.unionTestRunIds = options.unionTestRunIds.join(",");
+      }
+      const { data } = await client.get(`agent/test-runs/${testRunId}/js-coverage-summary`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunJsCoverageSummary = getTestRunJsCoverageSummary;
+    var getProjectJsCoverageSummary = async (client, options) => {
+      const params = {};
+      if (options?.project != null && options.project !== "") {
+        params.project = options.project;
+      }
+      const { data } = await client.get("agent/projects/js-coverage-summary", { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getProjectJsCoverageSummary = getProjectJsCoverageSummary;
+    var getReplayJsCoverage = async (client, replayId, screenshotName, options) => {
+      const path = screenshotName != null ? `agent/replays/${replayId}/screenshots/${encodeURIComponent(screenshotName)}/js-coverage` : `agent/replays/${replayId}/js-coverage`;
+      const params = {
+        clientVersion: String(exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION)
+      };
+      if (options?.testRunId != null) {
+        params.testRunId = options.testRunId;
+      }
+      if (options?.includeAllFiles) {
+        params.includeAllFiles = "true";
+      }
+      const globs = (typeof options?.globFilter === "string" ? [options.globFilter] : options?.globFilter ?? []).filter((glob) => glob !== "");
+      if (globs.length > 0) {
+        params.globFilter = globs;
+      }
+      const { data } = await client.get(path, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getReplayJsCoverage = getReplayJsCoverage;
+    var getReplayDiffJsCoverage = async (client, replayDiffId, screenshotName, options) => {
+      const path = screenshotName != null ? `agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/js-coverage-diff` : `agent/replay-diffs/${replayDiffId}/js-coverage-diff`;
+      const params = {
+        clientVersion: String(exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION)
+      };
+      if (options?.includeAllFiles) {
+        params.includeAllFiles = "true";
+      }
+      if (options?.limit != null) {
+        params.limit = String(options.limit);
+      }
+      if (options?.offset != null) {
+        params.offset = String(options.offset);
+      }
+      const globs = (typeof options?.globFilter === "string" ? [options.globFilter] : options?.globFilter ?? []).filter((glob) => glob !== "");
+      if (globs.length > 0) {
+        params.globFilter = globs;
+      }
+      const { data } = await client.get(path, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getReplayDiffJsCoverage = getReplayDiffJsCoverage;
+    var getScreenshotUrls = async (client, replayDiffId, screenshotName, scope = {}) => {
+      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/image-urls`, {
+        params: {
+          clientVersion: String(exports2.IMAGE_URLS_CLIENT_VERSION),
+          ...(0, agent_replay_diff_scope_1.replayDiffScopeParams)(scope)
+        }
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getScreenshotUrls = getScreenshotUrls;
+    var getTimelineDiff = async (client, replayDiffId, options = {}) => {
+      const params = {
+        clientVersion: String(exports2.TIMELINE_DIFF_CLIENT_VERSION),
+        ...timelineQueryParams(options),
+        ...(0, agent_replay_diff_scope_1.replayDiffScopeParams)(options)
+      };
+      if (options.includeIdenticalEvents) {
+        params.includeIdenticalEvents = "true";
+      }
+      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/timeline-diff`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTimelineDiff = getTimelineDiff;
+    var getReplayTimeline = async (client, replayId, options = {}) => {
+      const { data } = await client.get(`agent/replays/${replayId}/timeline`, {
+        params: timelineQueryParams(options)
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getReplayTimeline = getReplayTimeline;
+    var getTimelineEvent = async (client, replayId, eventId) => {
+      const { data } = await client.get(`agent/replays/${replayId}/timeline/events/${encodeURIComponent(eventId)}`).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTimelineEvent = getTimelineEvent;
+    var getTimelineEventDiff = async (client, replayDiffId, eventId, options = {}) => {
+      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/timeline-diff/events/${encodeURIComponent(eventId)}`, {
+        params: {
+          ...options.includeIdenticalFields ? { includeIdenticalFields: "true" } : {},
+          ...(0, agent_replay_diff_scope_1.replayDiffScopeParams)(options)
+        }
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTimelineEventDiff = getTimelineEventDiff;
+    var timelineQueryParams = (options) => {
+      const params = {};
+      if (options.kinds === "all") {
+        params.kinds = "all";
+      } else if (options.kinds != null && options.kinds.length > 0) {
+        params.kinds = options.kinds.join(",");
+      }
+      if (options.sinceMs != null) {
+        params.sinceMs = String(options.sinceMs);
+      }
+      if (options.untilMs != null) {
+        params.untilMs = String(options.untilMs);
+      }
+      if (options.screenshotName != null) {
+        params.screenshotName = options.screenshotName;
+      }
+      if (options.limit != null) {
+        params.limit = String(options.limit);
+      }
+      if (options.offset != null) {
+        params.offset = String(options.offset);
+      }
+      return params;
+    };
+    var getStructuredSessionData = async (client, sessionId) => {
+      const { data } = await client.get(`agent/sessions/${sessionId}/structured-data`).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getStructuredSessionData = getStructuredSessionData;
+    exports2.SELECTED_SINCE_UNKNOWN_REASONS = [
+      "added-after-last-cycle",
+      "before-selection-history",
+      "scan-budget-exhausted",
+      /** @deprecated superseded by `added-after-last-cycle`; never returned by the API. */
+      "not-added-by-a-cycle"
+    ];
+    exports2.SESSIONS_ORDER_BY_FIELDS = [
+      "createdAt",
+      "rank",
+      "selectedSince",
+      "additionalCoverage"
+    ];
+    var getSessions = async (client, options) => {
+      const params = {};
+      if (options?.project != null) {
+        params.project = options.project;
+      }
+      if (options?.createdSince != null) {
+        params.createdSince = options.createdSince;
+      }
+      if (options?.createdUntil != null) {
+        params.createdUntil = options.createdUntil;
+      }
+      if (options?.recordedSince != null) {
+        params.recordedSince = options.recordedSince;
+      }
+      if (options?.recordedUntil != null) {
+        params.recordedUntil = options.recordedUntil;
+      }
+      if (options?.recordedBy != null) {
+        params.recordedBy = options.recordedBy;
+      }
+      if (options?.excludeSyntheticSessions) {
+        params.excludeSyntheticSessions = "true";
+      }
+      if (options?.excludeAgentReviewSessions) {
+        params.excludeAgentReviewSessions = "true";
+      }
+      if (options?.requireInitialNavigationResponse) {
+        params.requireInitialNavigationResponse = "true";
+      }
+      if (options?.visitedUrlFilter != null) {
+        params.visitedUrlFilter = options.visitedUrlFilter;
+      }
+      if (options?.selectedSet != null) {
+        params.selectedSet = options.selectedSet === true ? "current" : options.selectedSet;
+      }
+      if (options?.includeDurationSeconds) {
+        params.includeDurationSeconds = "true";
+      }
+      if (options?.includeNumberUserEvents) {
+        params.includeNumberUserEvents = "true";
+      }
+      if (options?.includeNumberUrlsVisited) {
+        params.includeNumberUrlsVisited = "true";
+      }
+      if (options?.includeStartUrl) {
+        params.includeStartUrl = "true";
+      }
+      if (options?.includeAbandonedReason) {
+        params.includeAbandonedReason = "true";
+      }
+      if (options?.includeSource) {
+        params.includeSource = "true";
+      }
+      if (options?.includeSelectedSince) {
+        params.includeSelectedSince = "true";
+      }
+      if (options?.includeAdditionalCoverage) {
+        params.includeAdditionalCoverage = "true";
+      }
+      if (options?.orderBy != null) {
+        params.orderBy = options.orderBy;
+      }
+      if (options?.order != null) {
+        params.order = options.order;
+      }
+      if (options?.limit != null) {
+        params.limit = String(options.limit);
+      }
+      if (options?.offset != null) {
+        params.offset = String(options.offset);
+      }
+      const { data } = await client.get("agent/sessions", { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getSessions = getSessions;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js
+var require_agent_stats_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-stats.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getTestRunEventStats = exports2.getProjectDailyStats = exports2.getTestRunStats = void 0;
+    var errors_1 = require_errors3();
+    var getTestRunStats = async (client, options = {}) => getStats(client, "test-runs", toParams(options, {
+      project: "project",
+      since: "since",
+      until: "until",
+      testRunIds: "testRunId",
+      prNumbers: "prNumber",
+      commitShas: "commitSha",
+      limit: "limit",
+      offset: "offset"
+    }));
+    exports2.getTestRunStats = getTestRunStats;
+    var getProjectDailyStats = async (client, options) => getStats(client, "project-daily", toParams(options, {
+      project: "project",
+      since: "since",
+      until: "until",
+      limit: "limit",
+      offset: "offset"
+    }));
+    exports2.getProjectDailyStats = getProjectDailyStats;
+    var getTestRunEventStats = async (client, options = {}) => getStats(client, "test-run-events", toParams(options, {
+      project: "project",
+      since: "since",
+      until: "until",
+      testRunIds: "testRunId",
+      prNumbers: "prNumber",
+      eventTypes: "eventType",
+      cursor: "cursor",
+      limit: "limit",
+      offset: "offset"
+    }));
+    exports2.getTestRunEventStats = getTestRunEventStats;
+    var getStats = async (client, endpoint, params) => {
+      const { data } = await client.get(`agent/stats/${endpoint}`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    var toParams = (options, allowedParams) => Object.fromEntries(Object.entries(allowedParams).flatMap(([key, parameter]) => {
+      const value = options[key];
+      return value == null ? [] : [[parameter, String(value)]];
+    }));
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js
+var require_agent_check_reviews_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-check-reviews.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getCheckComments = exports2.ignoreCheck = void 0;
+    var errors_1 = require_errors3();
+    var ignoreCheck = async ({ client, testRunId, checkId, checkType, reason }) => {
+      const { data } = await client.post(`${checkPath(testRunId, checkId)}/ignore`, {
+        reason,
+        ...checkType != null ? { checkType } : {}
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.ignoreCheck = ignoreCheck;
+    var getCheckComments = async ({ client, testRunId, checkId, checkType, includeResolved }) => {
+      const params = {};
+      if (checkType != null) {
+        params.checkType = checkType;
+      }
+      if (includeResolved) {
+        params.includeResolved = "true";
+      }
+      const { data } = await client.get(`${checkPath(testRunId, checkId)}/comments`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getCheckComments = getCheckComments;
+    var checkPath = (testRunId, checkId) => `agent/test-runs/${testRunId}/checks/${encodeURIComponent(checkId)}`;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js
+var require_agent_swarm_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getAgentSwarmRunCase = exports2.getAgentSwarmRun = exports2.isAgentSwarmRunProcessingResponse = exports2.getAgentSwarmSetupBlockers = exports2.getAgentSwarmRuns = exports2.AGENT_SWARM_RUN_CLIENT_VERSION = void 0;
+    var errors_1 = require_errors3();
+    exports2.AGENT_SWARM_RUN_CLIENT_VERSION = 1;
+    var toParams = (values) => {
+      const params = {};
+      for (const [key, value] of Object.entries(values)) {
+        if (value != null && value !== "") {
+          params[key] = String(value);
+        }
+      }
+      return params;
+    };
+    var getAgentSwarmRuns = async (client, options = {}) => {
+      const { includeCounts, ...rest } = options;
+      const { data } = await client.get("agent/agent-swarm/runs", {
+        params: toParams({
+          ...rest,
+          includeCounts: includeCounts ? "true" : void 0
+        })
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getAgentSwarmRuns = getAgentSwarmRuns;
+    var getAgentSwarmSetupBlockers = async (client, options = {}) => {
+      const { data } = await client.get("agent/agent-swarm/setup-blockers", {
+        params: toParams({ ...options })
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getAgentSwarmSetupBlockers = getAgentSwarmSetupBlockers;
+    var isAgentSwarmRunProcessingResponse = (value) => typeof value === "object" && value !== null && value.status === "processing";
+    exports2.isAgentSwarmRunProcessingResponse = isAgentSwarmRunProcessingResponse;
+    var getAgentSwarmRun = async (client, target, options) => {
+      const { data } = await client.get("agent/agent-swarm/run", {
+        params: toParams({
+          ...target,
+          status: options?.status,
+          clientVersion: exports2.AGENT_SWARM_RUN_CLIENT_VERSION
+        })
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getAgentSwarmRun = getAgentSwarmRun;
+    var getAgentSwarmRunCase = async (client, target, caseIndex) => {
+      const { data } = await client.get(`agent/agent-swarm/run/cases/${caseIndex}`, { params: toParams({ ...target }) }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getAgentSwarmRunCase = getAgentSwarmRunCase;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js
+var require_agent_test_runs_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-test-runs.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getTestRuns = void 0;
+    var errors_1 = require_errors3();
+    var getTestRuns = async (client, options = {}) => {
+      const params = {};
+      for (const key of STRING_PARAMS) {
+        const value = options[key];
+        if (value != null) {
+          params[key] = value;
+        }
+      }
+      for (const key of BOOLEAN_PARAMS) {
+        if (options[key]) {
+          params[key] = "true";
+        }
+      }
+      if (options.limit != null) {
+        params.limit = String(options.limit);
+      }
+      if (options.offset != null) {
+        params.offset = String(options.offset);
+      }
+      const { data } = await client.get("agent/projects/test-runs", { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRuns = getTestRuns;
+    var STRING_PARAMS = [
+      "project",
+      "testRunIds",
+      "prNumber",
+      "status",
+      "checkIds",
+      "createdSince",
+      "createdUntil"
+    ];
+    var BOOLEAN_PARAMS = [
+      "baseTestRuns",
+      "latestPerPullRequest",
+      "withDiffsOnly",
+      "withCheckIssuesOnly",
+      "includeBaseTestRunId",
+      "includeDiffCount",
+      "includeDurationSeconds",
+      "includeCheckIssueCounts"
+    ];
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-test-run-replays.api.js
+var require_agent_test_run_replays_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-test-run-replays.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getTestRunReplays = exports2.MAX_TEST_RUN_REPLAYS_LIMIT = exports2.DEFAULT_TEST_RUN_REPLAYS_LIMIT = void 0;
+    var errors_1 = require_errors3();
+    exports2.DEFAULT_TEST_RUN_REPLAYS_LIMIT = 100;
+    exports2.MAX_TEST_RUN_REPLAYS_LIMIT = 1e3;
+    var getTestRunReplays = async (client, testRunId, options = {}) => {
+      const params = {};
+      if (options.limit != null) {
+        params.limit = String(options.limit);
+      }
+      if (options.offset != null) {
+        params.offset = String(options.offset);
+      }
+      const { data } = await client.get(`agent/test-runs/${testRunId}/replays`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunReplays = getTestRunReplays;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js
+var require_agent_screenshot_dom_types = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.types.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LIMIT = exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = void 0;
+    exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = 100;
+    exports2.MAX_SCREENSHOT_DOM_LIMIT = 1e3;
+    exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = 2e3;
+    exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = 1e3;
+    exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = 2;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js
+var require_agent_screenshot_dom_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getScreenshotDomDiffText = exports2.getScreenshotDom = void 0;
+    var agent_replay_diff_scope_1 = require_agent_replay_diff_scope();
+    var errors_1 = require_errors3();
+    var agent_screenshot_dom_types_1 = require_agent_screenshot_dom_types();
+    var getScreenshotDom = async (client, replayId, screenshotName, options = {}) => {
+      const params = pagedPathParams(options);
+      if (options.removeNoise) {
+        params.removeNoise = "true";
+      }
+      const { data } = await client.get(`agent/replays/${replayId}/screenshots/${encodeURIComponent(screenshotName)}/dom`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getScreenshotDom = getScreenshotDom;
+    var getScreenshotDomDiffText = async (client, replayDiffId, screenshotName, options = {}) => {
+      const params = {
+        ...pagedPathParams(options),
+        ...(0, agent_replay_diff_scope_1.replayDiffScopeParams)(options)
+      };
+      params.clientVersion = String(agent_screenshot_dom_types_1.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION);
+      if (options.context != null) {
+        params.context = String(options.context);
+      }
+      const { data } = await client.get(`agent/replay-diffs/${replayDiffId}/screenshots/${encodeURIComponent(screenshotName)}/dom-diff`, { params }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getScreenshotDomDiffText = getScreenshotDomDiffText;
+    var pagedPathParams = (options) => {
+      const params = {};
+      if (options.path != null && options.path.length > 0) {
+        params.path = options.path.join(",");
+      }
+      if (options.limit != null) {
+        params.limit = String(options.limit);
+      }
+      if (options.offset != null) {
+        params.offset = String(options.offset);
+      }
+      return params;
+    };
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js
+var require_agent_screenshot_dom_utils = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-screenshot-dom.utils.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.parseNthChildPath = void 0;
+    var parseNthChildPath = (raw) => {
+      if (raw == null) {
+        return void 0;
+      }
+      if (typeof raw !== "string") {
+        return [NaN];
+      }
+      const inner = raw.trim().replace(/^\[/, "").replace(/\]$/, "").trim();
+      if (inner === "") {
+        return [];
+      }
+      return inner.split(",").map((part) => part.trim()).map((part) => /^\d+$/.test(part) ? Number(part) : NaN);
+    };
+    exports2.parseNthChildPath = parseNthChildPath;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js
 var require_github_cloud_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/github-cloud-replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.takeBaseWorkflowDispatchLease = exports2.getGitHubCloudReplayBaseTestRun = void 0;
     var common_1 = require_dist();
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     var getGitHubCloudReplayBaseTestRun2 = async ({ client, headCommitSha }) => {
       const { data } = await client.get("github-cloud-replay/base-test-run", {
         params: { headCommitSha }
@@ -57002,13 +57737,13 @@ var require_github_cloud_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js
 var require_agent_traces_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-traces.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.completeAgentTraceUpload = exports2.requestAgentTraceUpload = void 0;
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     var requestAgentTraceUpload = async ({ client, project, request }) => {
       const { data } = await client.post("agent-traces/request-upload", request, project ? { params: { project } } : void 0).catch((error2) => {
         throw (0, errors_1.maybeEnrichFetchError)(error2);
@@ -83976,9 +84711,9 @@ var require_dist12 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js
 var require_get_proxy_agent = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/get-proxy-agent.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getProxyAgent = void 0;
@@ -83994,9 +84729,9 @@ var require_get_proxy_agent = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js
 var require_retry_transient_upload_errors = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/retry-transient-upload-errors.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = void 0;
@@ -84068,9 +84803,9 @@ ${responseBody}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js
 var require_send_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/send-to-signed-url.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.sendToSignedUrl = void 0;
@@ -84104,9 +84839,9 @@ var require_send_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js
 var require_put_buffer_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/put-buffer-to-signed-url.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.putBufferToSignedUrl = void 0;
@@ -84126,9 +84861,9 @@ var require_put_buffer_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js
 var require_upload_agent_trace = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/upload-agent-trace.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.uploadAgentTrace = void 0;
@@ -84171,9 +84906,9 @@ var require_upload_agent_trace = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js
 var require_oauth_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/oauth.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = void 0;
@@ -84206,13 +84941,98 @@ var require_oauth_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/self-onboard.api.js
+var require_self_onboard_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/self-onboard.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.toSelfOnboardError = exports2.selfOnboard = exports2.SelfOnboardError = void 0;
+    var common_1 = require_dist();
+    var errors_1 = require_errors3();
+    var SelfOnboardError = class extends Error {
+      kind;
+      status;
+      constructor(kind, message, status) {
+        super(message);
+        this.name = "SelfOnboardError";
+        this.kind = kind;
+        this.status = status;
+      }
+    };
+    exports2.SelfOnboardError = SelfOnboardError;
+    var selfOnboard = async (client, request) => {
+      const { data } = await client.post(
+        "oauth/self-onboard",
+        request,
+        // A 429 here is a per-user creation quota, not transient load shedding,
+        // so backing off and retrying would only delay the error.
+        {
+          retry: {
+            shouldRetry: (error2) => (0, common_1.defaultShouldRetry)(error2) && !((0, errors_1.isFetchError)(error2) && error2.response?.status === 429)
+          }
+        }
+      ).catch((error2) => {
+        throw (0, exports2.toSelfOnboardError)(error2);
+      });
+      return data;
+    };
+    exports2.selfOnboard = selfOnboard;
+    var toSelfOnboardError = (error2) => {
+      if (!(0, errors_1.isFetchError)(error2)) {
+        return error2;
+      }
+      const status = error2.response?.status;
+      const serverMessage = extractServerMessage(error2.response?.data);
+      const reason = extractServerReason(error2.response?.data);
+      if (reason === "project-limit-reached") {
+        return new SelfOnboardError("project-limit-reached", serverMessage ?? "Your account has reached the maximum number of trial projects.", status);
+      }
+      switch (status) {
+        case 429:
+          return new SelfOnboardError("rate-limited", serverMessage ?? "Too many projects were created from this account recently. Wait a while and try again.", status);
+        case 401:
+          return new SelfOnboardError("not-logged-in", serverMessage ?? "Meticulous rejected your login for self-onboarding. Run `meticulous auth logout` and try again.", status);
+        case 403:
+          return new SelfOnboardError("forbidden", serverMessage ?? "Meticulous refused to create a trial project for this account.", status);
+        case 404:
+          return new SelfOnboardError("unsupported", "This Meticulous backend does not support self-onboarding yet.", status);
+        default: {
+          const enriched = (0, errors_1.maybeEnrichFetchError)(error2);
+          return new SelfOnboardError("unknown", enriched instanceof Error ? enriched.message : String(enriched), status);
+        }
+      }
+    };
+    exports2.toSelfOnboardError = toSelfOnboardError;
+    var extractServerMessage = (data) => {
+      if (!data || typeof data !== "object") {
+        return null;
+      }
+      const message = data.message;
+      if (typeof message === "string" && message.trim()) {
+        return message.trim();
+      }
+      if (Array.isArray(message) && typeof message[0] === "string") {
+        return message.join("; ");
+      }
+      return null;
+    };
+    var extractServerReason = (data) => {
+      if (!data || typeof data !== "object") {
+        return null;
+      }
+      const reason = data.reason;
+      return typeof reason === "string" ? reason : null;
+    };
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js
 var require_project_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/project.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = void 0;
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     var getProject = async (client, projectId) => {
       const { data } = await client.get("projects/token-info", projectId ? { params: { projectId } } : void 0).catch((error2) => {
         if ((0, errors_1.isFetchError)(error2) && error2.response?.status === 404) {
@@ -84256,13 +85076,13 @@ var require_project_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js
 var require_crawler_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/crawler.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createCrawlerTestRun = void 0;
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     var createCrawlerTestRun = async ({ client, sessionIds, appUrl, projectId }) => {
       const { data } = await client.post("crawler/test-runs", {
         sessionIds,
@@ -84283,13 +85103,13 @@ var require_crawler_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js
 var require_replay_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/replay.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = void 0;
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     var getReplay = async (client, replayId) => {
       const { data } = await client.get(`replays/${replayId}`).catch((error2) => {
         if ((0, errors_1.isFetchError)(error2) && error2.response?.status === 404) {
@@ -84338,13 +85158,13 @@ var require_replay_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js
 var require_session_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/session.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = void 0;
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     var getRecordedSession = async (client, sessionId) => {
       const { data } = await client.get(`sessions/${sessionId}`).catch((error2) => {
         if ((0, errors_1.isFetchError)(error2) && error2.response?.status === 404) {
@@ -84390,13 +85210,13 @@ var require_session_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js
 var require_replay_diff_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/replay-diff.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getReplayDiff = void 0;
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     var getReplayDiff = async (client, replayDiffId) => {
       const { data } = await client.get(`replay-diffs/${replayDiffId}`).catch((error2) => {
         if ((0, errors_1.isFetchError)(error2) && error2.response?.status === 404) {
@@ -84410,9 +85230,9 @@ var require_replay_diff_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js
 var require_source_code_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/source-code.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getPrDescriptionForTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = void 0;
@@ -84434,9 +85254,9 @@ var require_source_code_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js
 var require_test_run_status_client_version = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/test-run-status-client-version.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.TEST_RUN_STATUS_CLIENT_VERSION = void 0;
@@ -84444,32 +85264,14 @@ var require_test_run_status_client_version = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js
 var require_test_run_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.emitTelemetry = exports2.getTestRunReplayDiffs = exports2.searchTestRuns = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = void 0;
-    var errors_1 = require_errors2();
+    exports2.emitTelemetry = exports2.getTestRunCoverageLcov = exports2.getTestRunReplayDiffs = exports2.searchTestRuns = exports2.getLatestTestRunResults = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = void 0;
+    var errors_1 = require_errors3();
     var test_run_status_client_version_1 = require_test_run_status_client_version();
-    var executeSecureTunnelTestRun = async ({ client, headSha, tunnelUrl, basicAuthUser, basicAuthPassword, environment, isLockable, companionAssetsInfo, pullRequestHostingProviderId, postComment, debugContext }) => {
-      const { data } = await client.post("test-runs/trigger-secure-tunnel-test-run-v2", {
-        headSha,
-        tunnelUrl,
-        basicAuthUser,
-        basicAuthPassword,
-        environment,
-        isLockable,
-        ...postComment ? { postComment } : {},
-        ...companionAssetsInfo ? { companionAssetsInfo } : {},
-        ...pullRequestHostingProviderId ? { pullRequestHostingProviderId } : {},
-        ...debugContext ? { debugContext } : {}
-      }).catch((error2) => {
-        throw (0, errors_1.maybeEnrichFetchError)(error2);
-      });
-      return data;
-    };
-    exports2.executeSecureTunnelTestRun = executeSecureTunnelTestRun;
     var getTestRun = async ({ client, testRunId }) => {
       const { data } = await client.get(`test-runs/${testRunId}`, {
         params: { clientVersion: String(test_run_status_client_version_1.TEST_RUN_STATUS_CLIENT_VERSION) }
@@ -84558,6 +85360,15 @@ var require_test_run_api = __commonJS({
       return replayDiffs;
     };
     exports2.getTestRunReplayDiffs = getTestRunReplayDiffs;
+    var getTestRunCoverageLcov = async ({ client, testRunId, scope }) => {
+      const { data } = await client.get(`test-runs/${testRunId}/coverage-lcov`, {
+        params: { scope }
+      }).catch((error2) => {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getTestRunCoverageLcov = getTestRunCoverageLcov;
     var emitTelemetry = async ({ client, values, commitSha }) => {
       await client.post(`test-runs/telemetry`, { values, commitSha });
     };
@@ -84565,13 +85376,13 @@ var require_test_run_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js
 var require_deployment_lock_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/deployment-lock.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getIsLocked = void 0;
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     var getIsLocked = async ({ client, deploymentId }) => {
       const { data } = await client.get("deployment-locks/is-locked", {
         params: { deploymentId }
@@ -84584,13 +85395,13 @@ var require_deployment_lock_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js
 var require_commit_label_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/commit-label.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = void 0;
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     exports2.COMMIT_LABEL_TYPES = ["not-relevant"];
     var labelCommit = async ({ client, commitSha, labels }) => {
       const { data } = await client.post("commit-labels", { commitSha, labels }).catch((error2) => {
@@ -84602,9 +85413,9 @@ var require_commit_label_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js
 var require_test_run_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/test-run.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.IN_PROGRESS_TEST_RUN_STATUS = void 0;
@@ -84617,9 +85428,9 @@ var require_test_run_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js
 var require_agent_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent.constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.REPORT_FLAKE_DESCRIPTION = exports2.IGNORE_DIFF_CRITERIA = exports2.MAX_AGENT_DIFF_DECISION_BATCH_SIZE = exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = void 0;
@@ -84630,9 +85441,406 @@ var require_agent_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/version.js
+var require_version = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.VERSION = void 0;
+    exports2.VERSION = "3.13.0";
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/http-request.js
+var require_http_request = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/http-request.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.makeRequest = exports2.getApiUrl = exports2.declareClientAppInfo = exports2.buildUserAgent = exports2.describeRuntime = void 0;
+    var common_1 = require_dist();
+    var version_1 = require_version();
+    var DEFAULT_TIMEOUT = 6e4;
+    var BASE_API_URL = "https://app.meticulous.ai/api/";
+    var describeRuntime = ({ bun, deno, node }) => {
+      if (bun) {
+        return `bun/${bun}`;
+      }
+      if (deno) {
+        return `deno/${deno}`;
+      }
+      return `node/${node}`;
+    };
+    exports2.describeRuntime = describeRuntime;
+    var USER_AGENT = `@alwaysmeticulous/client/${version_1.VERSION} ${(0, exports2.describeRuntime)(process.versions)}`;
+    var USER_AGENT_SUFFIX_ENV_VAR = "METICULOUS_CLIENT_USER_AGENT_SUFFIX";
+    var buildUserAgent = (appInfo) => {
+      const suffix = appInfo?.trim() || process.env[USER_AGENT_SUFFIX_ENV_VAR]?.trim();
+      return suffix ? `${USER_AGENT} ${suffix}` : USER_AGENT;
+    };
+    exports2.buildUserAgent = buildUserAgent;
+    var declareClientAppInfo = (appInfo) => {
+      if (!process.env[USER_AGENT_SUFFIX_ENV_VAR]?.trim()) {
+        process.env[USER_AGENT_SUFFIX_ENV_VAR] = appInfo;
+      }
+    };
+    exports2.declareClientAppInfo = declareClientAppInfo;
+    var makeSingleRequest = async (url, options, timeout) => {
+      const controller = new AbortController();
+      const callerSignal = options.signal;
+      const forwardAbort = () => controller.abort();
+      if (callerSignal != null) {
+        if (callerSignal.aborted) {
+          controller.abort();
+        } else {
+          callerSignal.addEventListener("abort", forwardAbort, { once: true });
+        }
+      }
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+      }, timeout ?? DEFAULT_TIMEOUT);
+      let response;
+      try {
+        response = await (0, common_1.meticulousFetch)(url, {
+          ...options,
+          signal: controller.signal
+        });
+      } finally {
+        clearTimeout(timeoutId);
+        callerSignal?.removeEventListener("abort", forwardAbort);
+      }
+      const responseHeaders = {};
+      response.headers.forEach((value, key) => {
+        responseHeaders[key] = value;
+      });
+      let data;
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        data = await response.text();
+      }
+      if (!response.ok) {
+        const error2 = new Error(`HTTP ${response.status}: ${response.statusText}`);
+        error2.response = {
+          status: response.status,
+          statusText: response.statusText,
+          data,
+          headers: responseHeaders
+        };
+        error2.config = { url, ...options };
+        throw error2;
+      }
+      return {
+        data,
+        status: response.status,
+        statusText: response.statusText,
+        headers: responseHeaders
+      };
+    };
+    var combineUrls = (baseUrl, path) => {
+      const base = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+      const relativePath = path.startsWith("/") ? path.slice(1) : path;
+      return `${base}/${relativePath}`;
+    };
+    var getApiUrl = () => {
+      if (process.env["METICULOUS_API_URL"]) {
+        return process.env["METICULOUS_API_URL"];
+      }
+      return BASE_API_URL;
+    };
+    exports2.getApiUrl = getApiUrl;
+    var makeRequest = async (requestOptions) => {
+      const { url, headers, options, config = {}, logger } = requestOptions;
+      let finalUrl = combineUrls((0, exports2.getApiUrl)(), url);
+      const finalHeaders = {
+        "Content-Type": "application/json",
+        "user-agent": (0, exports2.buildUserAgent)(),
+        ...headers,
+        ...config.headers,
+        ...options.headers
+      };
+      if (config.params) {
+        const urlWithParams = new URL(finalUrl);
+        Object.entries(config.params).forEach(([key, value]) => {
+          if (value === void 0 || value === null) {
+            return;
+          }
+          if (Array.isArray(value)) {
+            value.forEach((item) => {
+              if (item !== void 0 && item !== null) {
+                urlWithParams.searchParams.append(key, String(item));
+              }
+            });
+            return;
+          }
+          urlWithParams.searchParams.append(key, String(value));
+        });
+        finalUrl = urlWithParams.toString();
+      }
+      const requestInit = {
+        ...options,
+        ...config.signal != null ? { signal: config.signal } : {},
+        headers: finalHeaders
+      };
+      const attempt = () => makeSingleRequest(finalUrl, requestInit, config.timeout);
+      if (config.retry === false) {
+        return await attempt();
+      }
+      return await (0, common_1.executeWithRetry)(attempt, {
+        // A caller-aborted request is never re-attempted, even mid-backoff: the
+        // deadline or cancellation that aborted it stands even if the network
+        // error looks transient.
+        signal: config.signal,
+        logger,
+        operationDescription: `${requestInit.method ?? "GET"} ${new URL(finalUrl).pathname}`,
+        ...config.retry
+      });
+    };
+    exports2.makeRequest = makeRequest;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/ci-oidc.api.js
+var require_ci_oidc_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/ci-oidc.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.exchangeCiOidcToken = exports2.CI_OIDC_DEFAULT_AUDIENCE = void 0;
+    var common_1 = require_dist();
+    var errors_1 = require_errors3();
+    var http_request_1 = require_http_request();
+    exports2.CI_OIDC_DEFAULT_AUDIENCE = "https://app.meticulous.ai";
+    var exchangeCiOidcToken = async (options) => {
+      const oidcToken = options.oidcToken.trim();
+      if (!oidcToken) {
+        throw new Error("Cannot exchange an empty CI OIDC token.");
+      }
+      const project = options.project?.trim() || void 0;
+      const body = JSON.stringify(project ? { project } : {});
+      const requestOptions = {
+        method: "POST",
+        body,
+        ...options.dispatcher != null ? { dispatcher: options.dispatcher } : {}
+      };
+      let data;
+      try {
+        const response = await (0, http_request_1.makeRequest)({
+          url: "ci-auth/oidc/exchange",
+          headers: {
+            authorization: `Bearer ${oidcToken}`,
+            "user-agent": (0, http_request_1.buildUserAgent)(options.appInfo)
+          },
+          options: requestOptions,
+          config: {
+            // Single-use `jti` replay protection means retrying the same JWT after
+            // a lost response or 5xx can turn a transient failure into a 401
+            // "already been used" error. Callers with a refreshable source (GitHub
+            // Actions) retry by requesting a fresh OIDC JWT per attempt.
+            retry: false,
+            ...options.signal != null ? { signal: options.signal } : {}
+          },
+          logger: (0, common_1.initLogger)()
+        });
+        data = response.data;
+      } catch (error2) {
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      }
+      if (!data || typeof data !== "object" || typeof data.accessToken !== "string" || data.accessToken.length === 0 || typeof data.expiresAt !== "string") {
+        throw new Error("Meticulous CI OIDC exchange returned an unexpected response.");
+      }
+      const parsed = data;
+      return {
+        accessToken: parsed.accessToken,
+        expiresAt: parsed.expiresAt
+      };
+    };
+    exports2.exchangeCiOidcToken = exchangeCiOidcToken;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/ci-oidc/ci-oidc-auth.js
+var require_ci_oidc_auth = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/ci-oidc/ci-oidc-auth.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.hasGitHubActionsOidcEnv = exports2.hasCiOidcEnv = exports2.requestGitHubActionsOidcToken = exports2.resolveCiOidcAccessToken = exports2.clearCiOidcTokenCache = exports2.resolveCachedCiOidcTokenForAuth = void 0;
+    var common_1 = require_dist();
+    var ci_oidc_api_1 = require_ci_oidc_api();
+    var http_request_1 = require_http_request();
+    var GITHUB_ACTIONS_REQUEST_URL_ENV = "ACTIONS_ID_TOKEN_REQUEST_URL";
+    var GITHUB_ACTIONS_REQUEST_TOKEN_ENV = "ACTIONS_ID_TOKEN_REQUEST_TOKEN";
+    var METICULOUS_OIDC_TOKEN_ENV = "METICULOUS_OIDC_TOKEN";
+    var METICULOUS_PROJECT_ENV = "METICULOUS_PROJECT";
+    var METICULOUS_OIDC_AUDIENCE_ENV = "METICULOUS_OIDC_AUDIENCE";
+    var GITHUB_OIDC_TIMEOUT_MS = 3e4;
+    var REFRESH_MARGIN_MS = 6e4;
+    var cachedToken = null;
+    var inFlightExchange = null;
+    var resolveCachedCiOidcTokenForAuth = async (env = process.env) => {
+      const cacheKey = computeCacheKey(env);
+      const now2 = Date.now();
+      const stillValidCached = cachedToken != null && cachedToken.cacheKey === cacheKey && cachedToken.expiresAtMs > now2 ? cachedToken : null;
+      if (stillValidCached != null && stillValidCached.expiresAtMs - now2 > (stillValidCached.refreshable ? REFRESH_MARGIN_MS : 0)) {
+        return stillValidCached.accessToken;
+      }
+      let pending;
+      if (inFlightExchange != null && inFlightExchange.cacheKey === cacheKey) {
+        pending = inFlightExchange.promise;
+      } else {
+        const refreshable = !env[METICULOUS_OIDC_TOKEN_ENV]?.trim() && (0, exports2.hasGitHubActionsOidcEnv)(env);
+        const exchangePromise = (0, exports2.resolveCiOidcAccessToken)({ env }).then((result) => {
+          const parsedExpiry = Date.parse(result.expiresAt);
+          const entry = {
+            cacheKey,
+            accessToken: result.accessToken,
+            // Fall back to a conservative lifetime if the server ever returns an
+            // unparseable timestamp so single-use env tokens are still reused.
+            expiresAtMs: Number.isFinite(parsedExpiry) ? parsedExpiry : Date.now() + 30 * 6e4,
+            refreshable
+          };
+          cachedToken = entry;
+          return entry;
+        });
+        inFlightExchange = { cacheKey, promise: exchangePromise };
+        pending = exchangePromise;
+      }
+      try {
+        const resolved = await pending;
+        return resolved.accessToken;
+      } catch (error2) {
+        if (stillValidCached != null && stillValidCached.expiresAtMs > Date.now()) {
+          (0, common_1.initLogger)().warn(`CI OIDC token refresh failed (${error2 instanceof Error ? error2.message : String(error2)}); continuing with cached token until expiry`);
+          return stillValidCached.accessToken;
+        }
+        throw error2;
+      } finally {
+        if (inFlightExchange?.promise === pending) {
+          inFlightExchange = null;
+        }
+      }
+    };
+    exports2.resolveCachedCiOidcTokenForAuth = resolveCachedCiOidcTokenForAuth;
+    var clearCiOidcTokenCache = () => {
+      cachedToken = null;
+      inFlightExchange = null;
+    };
+    exports2.clearCiOidcTokenCache = clearCiOidcTokenCache;
+    var resolveCiOidcAccessToken2 = async (options = {}) => {
+      const env = options.env ?? process.env;
+      const explicitToken = options.oidcToken?.trim();
+      const envToken = env[METICULOUS_OIDC_TOKEN_ENV]?.trim();
+      const project = options.project?.trim() || env[METICULOUS_PROJECT_ENV]?.trim() || void 0;
+      if (explicitToken || envToken) {
+        return (0, ci_oidc_api_1.exchangeCiOidcToken)({
+          oidcToken: explicitToken || envToken,
+          project,
+          appInfo: options.appInfo,
+          dispatcher: options.dispatcher,
+          signal: options.signal
+        });
+      }
+      if ((0, exports2.hasGitHubActionsOidcEnv)(env)) {
+        return (0, common_1.executeWithRetry)(async () => {
+          const oidcToken = await fetchGitHubActionsOidcTokenOnce({
+            audience: options.audience,
+            dispatcher: options.dispatcher,
+            signal: options.signal,
+            env
+          });
+          return (0, ci_oidc_api_1.exchangeCiOidcToken)({
+            oidcToken,
+            project,
+            appInfo: options.appInfo,
+            dispatcher: options.dispatcher,
+            signal: options.signal
+          });
+        }, {
+          signal: options.signal,
+          logger: (0, common_1.initLogger)(),
+          operationDescription: "CI OIDC token exchange (GitHub Actions)"
+        });
+      }
+      throw new Error("No CI OIDC token source found. On GitHub Actions, grant 'permissions: id-token: write'. On other CI providers, pass --oidcToken or set METICULOUS_OIDC_TOKEN.");
+    };
+    exports2.resolveCiOidcAccessToken = resolveCiOidcAccessToken2;
+    var requestGitHubActionsOidcToken = async (options = {}) => {
+      return (0, common_1.executeWithRetry)(() => fetchGitHubActionsOidcTokenOnce(options), {
+        signal: options.signal,
+        logger: (0, common_1.initLogger)(),
+        operationDescription: "GET GitHub Actions OIDC token"
+      });
+    };
+    exports2.requestGitHubActionsOidcToken = requestGitHubActionsOidcToken;
+    var fetchGitHubActionsOidcTokenOnce = async (options = {}) => {
+      const env = options.env ?? process.env;
+      const requestUrl = env[GITHUB_ACTIONS_REQUEST_URL_ENV]?.trim();
+      const requestToken = env[GITHUB_ACTIONS_REQUEST_TOKEN_ENV]?.trim();
+      if (!requestUrl || !requestToken) {
+        throw new Error("GitHub Actions OIDC is not available (ACTIONS_ID_TOKEN_REQUEST_URL and ACTIONS_ID_TOKEN_REQUEST_TOKEN are not set). Add 'permissions: id-token: write' to your workflow job.");
+      }
+      const audience = options.audience?.trim() || env[METICULOUS_OIDC_AUDIENCE_ENV]?.trim() || ci_oidc_api_1.CI_OIDC_DEFAULT_AUDIENCE;
+      const url = new URL(requestUrl);
+      url.searchParams.set("audience", audience);
+      const controller = new AbortController();
+      const callerSignal = options.signal;
+      const forwardAbort = () => controller.abort();
+      if (callerSignal != null) {
+        if (callerSignal.aborted) {
+          controller.abort();
+        } else {
+          callerSignal.addEventListener("abort", forwardAbort, { once: true });
+        }
+      }
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+      }, GITHUB_OIDC_TIMEOUT_MS);
+      let response;
+      try {
+        const requestInit = {
+          method: "GET",
+          headers: {
+            authorization: `Bearer ${requestToken}`,
+            accept: "application/json; api-version=2.0"
+          },
+          signal: controller.signal,
+          ...options.dispatcher != null ? { dispatcher: options.dispatcher } : {}
+        };
+        response = await (0, common_1.meticulousFetch)(url.toString(), requestInit);
+      } finally {
+        clearTimeout(timeoutId);
+        callerSignal?.removeEventListener("abort", forwardAbort);
+      }
+      if (!response.ok) {
+        const error2 = new Error(`Failed to request GitHub Actions OIDC token (HTTP ${response.status}: ${response.statusText}).`);
+        error2.response = {
+          status: response.status,
+          statusText: response.statusText
+        };
+        throw error2;
+      }
+      const payload = await response.json();
+      if (typeof payload?.value !== "string" || payload.value.trim() === "") {
+        throw new Error("GitHub Actions OIDC endpoint returned an unexpected response.");
+      }
+      return payload.value;
+    };
+    var hasCiOidcEnv2 = (env = process.env) => Boolean(env[METICULOUS_OIDC_TOKEN_ENV]?.trim()) || (0, exports2.hasGitHubActionsOidcEnv)(env);
+    exports2.hasCiOidcEnv = hasCiOidcEnv2;
+    var hasGitHubActionsOidcEnv2 = (env = process.env) => Boolean(env[GITHUB_ACTIONS_REQUEST_URL_ENV]?.trim() && env[GITHUB_ACTIONS_REQUEST_TOKEN_ENV]?.trim());
+    exports2.hasGitHubActionsOidcEnv = hasGitHubActionsOidcEnv2;
+    var computeCacheKey = (env) => JSON.stringify([
+      (0, http_request_1.getApiUrl)(),
+      env[METICULOUS_PROJECT_ENV]?.trim() ?? "",
+      env[METICULOUS_OIDC_AUDIENCE_ENV]?.trim() ?? "",
+      env[METICULOUS_OIDC_TOKEN_ENV]?.trim() ?? "",
+      env[GITHUB_ACTIONS_REQUEST_URL_ENV]?.trim() ?? ""
+    ]);
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js
 var require_oauth_constants = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-constants.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getWebappBaseUrl = exports2.getRevocationEndpoint = exports2.getDeviceAuthorizationEndpoint = exports2.getTokenEndpoint = exports2.OAUTH_SCOPES = exports2.CLI_CLIENT_ID = exports2.KEYCLOAK_ISSUER_URL = void 0;
@@ -84691,68 +85899,9 @@ var require_oauth_constants = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js
-var require_oauth_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-utils.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.parseOAuthErrorBody = exports2.isJwtExpired = exports2.getJwtClaims = exports2.isOAuthJwt = void 0;
-    var PROJECT_API_TOKEN_PREFIX = "prat-";
-    var WORKFLOW_API_TOKEN_PREFIX = "wfat-";
-    var isOAuthJwt = (token) => {
-      if (!token || token.startsWith(PROJECT_API_TOKEN_PREFIX) || token.startsWith(WORKFLOW_API_TOKEN_PREFIX)) {
-        return false;
-      }
-      const parts = token.split(".");
-      return parts.length === 3 && parts.every((part) => part.length > 0);
-    };
-    exports2.isOAuthJwt = isOAuthJwt;
-    var getJwtClaims = (token) => {
-      try {
-        const parts = token.split(".");
-        if (parts.length !== 3) {
-          return null;
-        }
-        const payload = Buffer.from(parts[1], "base64url").toString("utf-8");
-        return JSON.parse(payload);
-      } catch {
-        return null;
-      }
-    };
-    exports2.getJwtClaims = getJwtClaims;
-    var isJwtExpired = (token) => {
-      const claims = (0, exports2.getJwtClaims)(token);
-      const exp = claims?.["exp"];
-      if (typeof exp !== "number") {
-        return false;
-      }
-      return exp * 1e3 < Date.now();
-    };
-    exports2.isJwtExpired = isJwtExpired;
-    var parseOAuthErrorBody = (body) => {
-      let parsed;
-      try {
-        parsed = JSON.parse(body);
-      } catch {
-        return null;
-      }
-      if (typeof parsed !== "object" || parsed == null) {
-        return null;
-      }
-      const error2 = "error" in parsed ? parsed.error : void 0;
-      const description = "error_description" in parsed ? parsed.error_description : void 0;
-      return {
-        ...typeof error2 === "string" ? { error: error2 } : {},
-        ...typeof description === "string" ? { errorDescription: description } : {}
-      };
-    };
-    exports2.parseOAuthErrorBody = parseOAuthErrorBody;
-  }
-});
-
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js
 var require_oauth_refresh_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.describeRequestError = exports2.parseTokenResponse = exports2.classifyErrorResponse = exports2.isUnexpired = exports2.isFresh = exports2.nowSeconds = void 0;
@@ -84816,147 +85965,122 @@ var require_oauth_refresh_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js
-var require_oauth_token_store = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-token-store.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.clearOAuthTokens = exports2.storeOAuthTokens = exports2.getStoredOAuthTokens = void 0;
-    var crypto_1 = require("crypto");
-    var fs_1 = require("fs");
-    var path_1 = require("path");
-    var common_1 = require_dist();
-    var getMeticulousDir = () => (0, common_1.getMeticulousLocalDataDir)();
-    var getTokenFilePath = () => (0, path_1.join)(getMeticulousDir(), "oauth-tokens.json");
-    var getStoredOAuthTokens = () => {
-      try {
-        if (!(0, fs_1.existsSync)(getTokenFilePath())) {
-          return null;
-        }
-        const data = (0, fs_1.readFileSync)(getTokenFilePath(), "utf-8");
-        return JSON.parse(data);
-      } catch {
-        return null;
-      }
-    };
-    exports2.getStoredOAuthTokens = getStoredOAuthTokens;
-    var storeOAuthTokens = (tokens) => {
-      if (!(0, fs_1.existsSync)(getMeticulousDir())) {
-        (0, fs_1.mkdirSync)(getMeticulousDir(), { recursive: true });
-      }
-      const tempPath = `${getTokenFilePath()}.${process.pid}.${(0, crypto_1.randomBytes)(4).toString("hex")}.tmp`;
-      try {
-        (0, fs_1.writeFileSync)(tempPath, JSON.stringify(tokens, null, 2), { mode: 384 });
-        (0, fs_1.renameSync)(tempPath, getTokenFilePath());
-      } catch (error2) {
-        (0, fs_1.rmSync)(tempPath, { force: true });
-        throw error2;
-      }
-    };
-    exports2.storeOAuthTokens = storeOAuthTokens;
-    var clearOAuthTokens = () => {
-      try {
-        if ((0, fs_1.existsSync)(getTokenFilePath())) {
-          (0, fs_1.unlinkSync)(getTokenFilePath());
-        }
-      } catch {
-      }
-    };
-    exports2.clearOAuthTokens = clearOAuthTokens;
-  }
-});
-
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js
 var require_oauth_refresh = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-refresh.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getValidAccessToken = void 0;
+    exports2.resolveOAuthAccessToken = exports2.getValidAccessToken = void 0;
     var common_1 = require_dist();
     var oauth_constants_1 = require_oauth_constants();
     var oauth_refresh_utils_1 = require_oauth_refresh_utils();
     var oauth_token_store_1 = require_oauth_token_store();
     var REFRESH_TIMEOUT_MS = 3e4;
+    var MAX_REFRESH_RETRIES = 2;
+    var REFRESH_RETRY_DELAY_MS = 200;
+    var UNSENT_REQUEST_ERROR_CODES = /* @__PURE__ */ new Set([
+      "EPIPE",
+      "ECONNREFUSED",
+      "ENOTFOUND",
+      "EAI_AGAIN",
+      "UND_ERR_CONNECT_TIMEOUT"
+    ]);
     var hasWarnedAboutFailedRefresh = false;
-    var inFlightAccessToken = null;
-    var getValidAccessToken = () => {
-      inFlightAccessToken ??= resolveAccessToken().finally(() => {
-        inFlightAccessToken = null;
-      });
-      return inFlightAccessToken;
-    };
+    var inFlightResolution = null;
+    var getValidAccessToken = async () => (await (0, exports2.resolveOAuthAccessToken)()).accessToken;
     exports2.getValidAccessToken = getValidAccessToken;
+    var resolveOAuthAccessToken = () => {
+      inFlightResolution ??= resolveAccessToken().finally(() => {
+        inFlightResolution = null;
+      });
+      return inFlightResolution;
+    };
+    exports2.resolveOAuthAccessToken = resolveOAuthAccessToken;
     var resolveAccessToken = async () => {
       const tokens = (0, oauth_token_store_1.getStoredOAuthTokens)();
       if (!tokens) {
-        return null;
+        return unavailable({ kind: "not-logged-in" });
       }
       if ((0, oauth_refresh_utils_1.isFresh)(tokens)) {
-        return tokens.accessToken;
+        return { accessToken: tokens.accessToken };
       }
       if (!tokens.refreshToken) {
         (0, oauth_token_store_1.clearOAuthTokens)();
-        return null;
+        return unavailable({ kind: "login-expired" });
       }
       const outcome = await refreshTokens(tokens);
       if (outcome.status === "refreshed") {
-        return outcome.accessToken;
+        return { accessToken: outcome.accessToken };
       }
       if (outcome.status === "rejected") {
         return clearRejectedTokens(tokens.refreshToken, outcome.reason);
       }
       if ((0, oauth_refresh_utils_1.isUnexpired)(tokens)) {
-        return tokens.accessToken;
+        return { accessToken: tokens.accessToken };
       }
       warnRefreshFailedOnce(outcome.reason);
-      return null;
+      return unavailable({ kind: "refresh-failed", detail: outcome.reason });
     };
     var refreshTokens = async (tokens) => {
       try {
         const signal = AbortSignal.timeout(REFRESH_TIMEOUT_MS);
-        const tokenEndpoint = await (0, oauth_constants_1.getTokenEndpoint)(signal);
-        const response = await fetch(tokenEndpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({
-            grant_type: "refresh_token",
-            client_id: oauth_constants_1.CLI_CLIENT_ID,
-            refresh_token: tokens.refreshToken
-          }).toString(),
-          signal
+        return await (0, common_1.executeWithRetry)(() => requestRefresh(tokens, signal), {
+          maxRetries: MAX_REFRESH_RETRIES,
+          retryDelay: REFRESH_RETRY_DELAY_MS,
+          shouldRetry: (error2) => {
+            const code = (0, common_1.getErrorCode)(error2);
+            return code != null && UNSENT_REQUEST_ERROR_CODES.has(code);
+          }
         });
-        if (!response.ok) {
-          return await (0, oauth_refresh_utils_1.classifyErrorResponse)(response);
-        }
-        const data = (0, oauth_refresh_utils_1.parseTokenResponse)(await response.json());
-        if (!data) {
-          return {
-            status: "failed",
-            reason: "token response is missing access_token or expires_in"
-          };
-        }
-        const updatedTokens = {
-          ...tokens,
-          accessToken: data.access_token,
-          refreshToken: data.refresh_token ?? tokens.refreshToken,
-          expiresAt: (0, oauth_refresh_utils_1.nowSeconds)() + data.expires_in,
-          ...data.id_token !== void 0 ? { idToken: data.id_token } : {}
-        };
-        (0, oauth_token_store_1.storeOAuthTokens)(updatedTokens);
-        return { status: "refreshed", accessToken: updatedTokens.accessToken };
       } catch (error2) {
         return { status: "failed", reason: (0, oauth_refresh_utils_1.describeRequestError)(error2) };
       }
     };
+    var requestRefresh = async (tokens, signal) => {
+      const tokenEndpoint = await (0, oauth_constants_1.getTokenEndpoint)(signal);
+      const response = await fetch(tokenEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          grant_type: "refresh_token",
+          client_id: oauth_constants_1.CLI_CLIENT_ID,
+          refresh_token: tokens.refreshToken
+        }).toString(),
+        signal
+      });
+      if (!response.ok) {
+        return await (0, oauth_refresh_utils_1.classifyErrorResponse)(response);
+      }
+      const data = (0, oauth_refresh_utils_1.parseTokenResponse)(await response.json());
+      if (!data) {
+        return {
+          status: "failed",
+          reason: "token response is missing access_token or expires_in"
+        };
+      }
+      const updatedTokens = {
+        ...tokens,
+        accessToken: data.access_token,
+        refreshToken: data.refresh_token ?? tokens.refreshToken,
+        expiresAt: (0, oauth_refresh_utils_1.nowSeconds)() + data.expires_in,
+        ...data.id_token !== void 0 ? { idToken: data.id_token } : {}
+      };
+      (0, oauth_token_store_1.storeOAuthTokens)(updatedTokens);
+      return { status: "refreshed", accessToken: updatedTokens.accessToken };
+    };
     var clearRejectedTokens = (rejectedRefreshToken, reason) => {
       const current = (0, oauth_token_store_1.getStoredOAuthTokens)();
       if (current && current.refreshToken !== rejectedRefreshToken) {
-        return (0, oauth_refresh_utils_1.isUnexpired)(current) ? current.accessToken : null;
+        return (0, oauth_refresh_utils_1.isUnexpired)(current) ? { accessToken: current.accessToken } : unavailable({
+          kind: "refresh-failed",
+          detail: `${reason}; another Meticulous process renewed your login at the same time`
+        });
       }
       (0, oauth_token_store_1.clearOAuthTokens)();
       (0, common_1.logNotice)(`Your Meticulous login is no longer valid (${reason}); log in again with \`meticulous auth login\`.`);
-      return null;
+      return unavailable({ kind: "login-rejected", detail: reason });
     };
+    var unavailable = (reason) => ({ accessToken: null, reason });
     var warnRefreshFailedOnce = (reason) => {
       if (hasWarnedAboutFailedRefresh) {
         return;
@@ -84967,15 +86091,16 @@ var require_oauth_refresh = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js
 var require_api_token_utils = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api-token.utils.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getAuthToken = exports2.getApiToken = exports2.readFileBasedToken = void 0;
+    exports2.resolveAuthToken = exports2.getAuthToken = exports2.getApiToken = exports2.readFileBasedToken = void 0;
     var fs_1 = require("fs");
     var path_1 = require("path");
     var common_1 = require_dist();
+    var ci_oidc_auth_1 = require_ci_oidc_auth();
     var oauth_refresh_1 = require_oauth_refresh();
     var readFileBasedToken = () => {
       const personalConfigFileAbsolutePath = (0, path_1.join)((0, common_1.getMeticulousLocalDataDir)(), "config.json");
@@ -85006,28 +86131,49 @@ var require_api_token_utils = __commonJS({
       return getFileBasedToken();
     };
     exports2.getApiToken = getApiToken;
-    var getAuthToken = async (apiToken) => {
+    var getAuthToken = async (apiToken) => (await (0, exports2.resolveAuthToken)(apiToken)).token;
+    exports2.getAuthToken = getAuthToken;
+    var resolveAuthToken = async (apiToken) => {
       if (apiToken) {
         logAuthSource("--apiToken flag");
-        return apiToken;
+        return { token: apiToken };
       }
-      const oauthToken = await (0, oauth_refresh_1.getValidAccessToken)();
-      if (oauthToken) {
+      const oauth = await (0, oauth_refresh_1.resolveOAuthAccessToken)();
+      if (oauth.accessToken) {
         logAuthSource("OAuth");
-        return oauthToken;
+        return { token: oauth.accessToken };
       }
       if (process.env["METICULOUS_API_TOKEN"]) {
         logAuthSource("METICULOUS_API_TOKEN environment variable");
-        return process.env["METICULOUS_API_TOKEN"];
+        return { token: process.env["METICULOUS_API_TOKEN"] };
       }
       const fileToken = (0, exports2.readFileBasedToken)();
       if (fileToken) {
         logAuthSource(fileToken.path);
-        return fileToken.token;
+        return { token: fileToken.token };
       }
-      return null;
+      if ((0, ci_oidc_auth_1.hasCiOidcEnv)()) {
+        try {
+          const ciOidcToken = await (0, ci_oidc_auth_1.resolveCachedCiOidcTokenForAuth)();
+          logAuthSource("CI OIDC");
+          return { token: ciOidcToken };
+        } catch (error2) {
+          return {
+            token: null,
+            missingReason: {
+              kind: "ci-oidc-failed",
+              detail: error2 instanceof Error ? error2.message : String(error2)
+            }
+          };
+        }
+      }
+      return {
+        token: null,
+        // A stored login with an empty access token is no usable login.
+        missingReason: oauth.accessToken === null ? oauth.reason : { kind: "not-logged-in" }
+      };
     };
-    exports2.getAuthToken = getAuthToken;
+    exports2.resolveAuthToken = resolveAuthToken;
     var lastLoggedAuthSource = null;
     var logAuthSource = (source) => {
       if (source !== lastLoggedAuthSource) {
@@ -85038,9 +86184,9 @@ var require_api_token_utils = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js
 var require_oauth_callback_server = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-callback-server.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.startCallbackServer = void 0;
@@ -85140,9 +86286,9 @@ ${showAgentSetup ? AGENT_SETUP_SECTION : ""}
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js
 var require_oauth_pkce = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-pkce.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.generateState = exports2.generateCodeChallenge = exports2.generateCodeVerifier = void 0;
@@ -85162,9 +86308,9 @@ var require_oauth_pkce = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js
 var require_oauth_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-login.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.buildAuthorizationUrl = exports2.performOAuthLogin = exports2.CLI_LOGIN_INTENT_ONBOARD = void 0;
@@ -85265,9 +86411,9 @@ ${authUrl}`);
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js
 var require_legacy_project_migration = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/legacy-project-migration.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.migrateLegacySelectedProjectIfPresent = void 0;
@@ -85318,172 +86464,47 @@ var require_legacy_project_migration = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/version.js
-var require_version = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/version.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.VERSION = void 0;
-    exports2.VERSION = "3.5.0";
-  }
-});
-
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/client.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/client.js
 var require_client3 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/client.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.createClientWithOAuth = exports2.resolveApiTokenWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.buildClient = exports2.makeRequest = exports2.declareClientAppInfo = exports2.buildUserAgent = exports2.describeRuntime = void 0;
+    exports2.createClientWithOAuth = exports2.resolveApiTokenWithOAuth = exports2.isInteractiveContext = exports2.createClient = exports2.buildClient = exports2.makeRequest = exports2.describeRuntime = exports2.declareClientAppInfo = exports2.buildUserAgent = void 0;
     var common_1 = require_dist();
     var api_token_utils_1 = require_api_token_utils();
-    var errors_1 = require_errors2();
+    var ci_oidc_auth_1 = require_ci_oidc_auth();
+    var errors_1 = require_errors3();
+    var http_request_1 = require_http_request();
+    Object.defineProperty(exports2, "buildUserAgent", { enumerable: true, get: function() {
+      return http_request_1.buildUserAgent;
+    } });
+    Object.defineProperty(exports2, "declareClientAppInfo", { enumerable: true, get: function() {
+      return http_request_1.declareClientAppInfo;
+    } });
+    Object.defineProperty(exports2, "describeRuntime", { enumerable: true, get: function() {
+      return http_request_1.describeRuntime;
+    } });
+    Object.defineProperty(exports2, "makeRequest", { enumerable: true, get: function() {
+      return http_request_1.makeRequest;
+    } });
     var oauth_login_1 = require_oauth_login();
     var oauth_token_store_1 = require_oauth_token_store();
     var oauth_utils_1 = require_oauth_utils();
     var legacy_project_migration_1 = require_legacy_project_migration();
-    var version_1 = require_version();
-    var DEFAULT_TIMEOUT = 6e4;
-    var BASE_API_URL = "https://app.meticulous.ai/api/";
-    var describeRuntime = ({ bun, deno, node }) => {
-      if (bun) {
-        return `bun/${bun}`;
-      }
-      if (deno) {
-        return `deno/${deno}`;
-      }
-      return `node/${node}`;
-    };
-    exports2.describeRuntime = describeRuntime;
-    var USER_AGENT = `@alwaysmeticulous/client/${version_1.VERSION} ${(0, exports2.describeRuntime)(process.versions)}`;
-    var USER_AGENT_SUFFIX_ENV_VAR = "METICULOUS_CLIENT_USER_AGENT_SUFFIX";
-    var buildUserAgent = (appInfo) => {
-      const suffix = appInfo?.trim() || process.env[USER_AGENT_SUFFIX_ENV_VAR]?.trim();
-      return suffix ? `${USER_AGENT} ${suffix}` : USER_AGENT;
-    };
-    exports2.buildUserAgent = buildUserAgent;
-    var declareClientAppInfo = (appInfo) => {
-      if (!process.env[USER_AGENT_SUFFIX_ENV_VAR]?.trim()) {
-        process.env[USER_AGENT_SUFFIX_ENV_VAR] = appInfo;
-      }
-    };
-    exports2.declareClientAppInfo = declareClientAppInfo;
-    var makeSingleRequest = async (url, options, timeout) => {
-      const controller = new AbortController();
-      const callerSignal = options.signal;
-      const forwardAbort = () => controller.abort();
-      if (callerSignal != null) {
-        if (callerSignal.aborted) {
-          controller.abort();
-        } else {
-          callerSignal.addEventListener("abort", forwardAbort, { once: true });
-        }
-      }
-      const timeoutId = setTimeout(() => {
-        controller.abort();
-      }, timeout ?? DEFAULT_TIMEOUT);
-      const response = await (0, common_1.meticulousFetch)(url, {
-        ...options,
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
-      if (callerSignal != null) {
-        callerSignal.removeEventListener("abort", forwardAbort);
-      }
-      const responseHeaders = {};
-      response.headers.forEach((value, key) => {
-        responseHeaders[key] = value;
-      });
-      let data;
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        data = await response.json();
-      } else {
-        data = await response.text();
-      }
-      if (!response.ok) {
-        const error2 = new Error(`HTTP ${response.status}: ${response.statusText}`);
-        error2.response = {
-          status: response.status,
-          statusText: response.statusText,
-          data,
-          headers: responseHeaders
-        };
-        error2.config = { url, ...options };
-        throw error2;
-      }
-      return {
-        data,
-        status: response.status,
-        statusText: response.statusText,
-        headers: responseHeaders
-      };
-    };
-    var combineUrls = (baseUrl, path) => {
-      const base = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
-      const relativePath = path.startsWith("/") ? path.slice(1) : path;
-      return `${base}/${relativePath}`;
-    };
-    var makeRequest = async (requestOptions) => {
-      const { url, headers, options, config = {}, logger } = requestOptions;
-      let finalUrl = combineUrls(getApiUrl(), url);
-      const finalHeaders = {
-        "Content-Type": "application/json",
-        "user-agent": (0, exports2.buildUserAgent)(),
-        ...headers,
-        ...config.headers,
-        ...options.headers
-      };
-      if (config.params) {
-        const urlWithParams = new URL(finalUrl);
-        Object.entries(config.params).forEach(([key, value]) => {
-          if (value === void 0 || value === null) {
-            return;
-          }
-          if (Array.isArray(value)) {
-            value.forEach((item) => {
-              if (item !== void 0 && item !== null) {
-                urlWithParams.searchParams.append(key, String(item));
-              }
-            });
-            return;
-          }
-          urlWithParams.searchParams.append(key, String(value));
-        });
-        finalUrl = urlWithParams.toString();
-      }
-      const requestInit = {
-        ...options,
-        ...config.signal != null ? { signal: config.signal } : {},
-        headers: finalHeaders
-      };
-      const attempt = () => makeSingleRequest(finalUrl, requestInit, config.timeout);
-      if (config.retry === false) {
-        return await attempt();
-      }
-      return await (0, common_1.executeWithRetry)(attempt, {
-        // A caller-aborted request is never re-attempted: the deadline or
-        // cancellation that aborted it stands even if the network error looks
-        // transient.
-        shouldRetry: (error2) => config.signal?.aborted === true ? false : (0, common_1.defaultShouldRetry)(error2),
-        logger,
-        operationDescription: `${requestInit.method ?? "GET"} ${new URL(finalUrl).pathname}`,
-        ...config.retry
-      });
-    };
-    exports2.makeRequest = makeRequest;
     var buildClient = (token, logger, appInfo, dispatcher) => {
-      const userAgent = (0, exports2.buildUserAgent)(appInfo);
-      const getToken = typeof token === "function" ? token : () => Promise.resolve(token);
+      const userAgent = (0, http_request_1.buildUserAgent)(appInfo);
+      const getToken = async () => typeof token === "function" ? token() : token;
       const makeRequestWithToken = async (url, options = {}, config) => {
         const resolvedToken = await getToken();
+        const sentToken = isAuthTokenResolution(resolvedToken) ? resolvedToken.token : resolvedToken;
         const headers = {
           "user-agent": userAgent
         };
-        if (resolvedToken) {
-          headers.authorization = resolvedToken;
+        if (sentToken) {
+          headers.authorization = sentToken;
         }
         try {
-          return await (0, exports2.makeRequest)({
+          return await (0, http_request_1.makeRequest)({
             url,
             headers,
             options: dispatcher != null ? { ...options, dispatcher } : options,
@@ -85491,7 +86512,10 @@ var require_client3 = __commonJS({
             logger
           });
         } catch (error2) {
-          throw (0, errors_1.maybeEnrichMissingAuthFetchError)(error2, Boolean(resolvedToken));
+          if (sentToken) {
+            throw (0, errors_1.maybeTagRejectedCredentialsError)(error2, sentToken);
+          }
+          throw (0, errors_1.maybeEnrichMissingAuthFetchError)(error2, isAuthTokenResolution(resolvedToken) ? resolvedToken : false);
         }
       };
       return {
@@ -85531,43 +86555,48 @@ var require_client3 = __commonJS({
     exports2.createClient = createClient4;
     var isInteractiveContext = () => process.stdin.isTTY === true && !process.env["CI"];
     exports2.isInteractiveContext = isInteractiveContext;
-    var resolveApiTokenWithOAuth = async (options) => {
+    var resolveApiTokenWithOAuth = async (options) => (await resolveAuthTokenWithOAuthLogin(options)).token;
+    exports2.resolveApiTokenWithOAuth = resolveApiTokenWithOAuth;
+    var resolveAuthTokenWithOAuthLogin = async (options) => {
       const logger = (0, common_1.initLogger)();
-      let apiToken = await (0, api_token_utils_1.getAuthToken)(options.apiToken);
+      let resolution = await (0, api_token_utils_1.resolveAuthToken)(options.apiToken);
       const isInteractive = options.enableOAuthLogin && (0, exports2.isInteractiveContext)();
-      if (!apiToken && isInteractive && (0, oauth_token_store_1.getStoredOAuthTokens)() == null) {
+      if (resolution.token === null && resolution.missingReason.kind !== "ci-oidc-failed" && isInteractive && (0, oauth_token_store_1.getStoredOAuthTokens)() == null) {
         const tokens = await (0, oauth_login_1.performOAuthLogin)();
-        apiToken = tokens.accessToken;
+        resolution = { token: tokens.accessToken };
       }
-      if (!apiToken) {
-        (0, common_1.logProgress)("No API token found; proceeding with unauthenticated requests");
-        return null;
+      if (!resolution.token) {
+        (0, common_1.logProgress)(resolution.token === null && resolution.missingReason.kind === "ci-oidc-failed" ? `CI OIDC authentication failed (${resolution.missingReason.detail}); proceeding with unauthenticated requests` : "No usable Meticulous login or API token found; proceeding with unauthenticated requests");
+        return resolution;
       }
+      const apiToken = resolution.token;
       if ((0, oauth_utils_1.isOAuthJwt)(apiToken)) {
         await (0, legacy_project_migration_1.migrateLegacySelectedProjectIfPresent)(apiToken, logger, options.appInfo);
       }
-      return apiToken;
+      return resolution;
     };
-    exports2.resolveApiTokenWithOAuth = resolveApiTokenWithOAuth;
     var createClientWithOAuth = async (options) => {
-      const apiToken = await (0, exports2.resolveApiTokenWithOAuth)(options);
+      const initial = await resolveAuthTokenWithOAuthLogin(options);
       const usingOAuth = !options.apiToken && (0, oauth_token_store_1.getStoredOAuthTokens)() != null;
-      const token = usingOAuth ? async () => await (0, api_token_utils_1.getAuthToken)(options.apiToken) ?? apiToken : apiToken;
+      const usingRefreshableCiOidc = !options.apiToken && !usingOAuth && initial.token != null && (0, ci_oidc_auth_1.hasGitHubActionsOidcEnv)() && !process.env["METICULOUS_API_TOKEN"] && !process.env["METICULOUS_OIDC_TOKEN"]?.trim() && (0, api_token_utils_1.readFileBasedToken)() == null;
+      const token = usingOAuth ? async () => reresolveOAuthToken(options.apiToken) : usingRefreshableCiOidc ? async () => (0, api_token_utils_1.resolveAuthToken)(options.apiToken) : initial;
       return (0, exports2.buildClient)(token, (0, common_1.initLogger)(), options.appInfo, options.dispatcher);
     };
     exports2.createClientWithOAuth = createClientWithOAuth;
-    var getApiUrl = () => {
-      if (process.env["METICULOUS_API_URL"]) {
-        return process.env["METICULOUS_API_URL"];
+    var reresolveOAuthToken = async (apiToken) => {
+      const current = await (0, api_token_utils_1.resolveAuthToken)(apiToken);
+      if (current.token !== null) {
+        return current;
       }
-      return BASE_API_URL;
+      return current.missingReason.kind === "not-logged-in" ? { token: null, missingReason: { kind: "login-cleared" } } : current;
     };
+    var isAuthTokenResolution = (token) => token != null && typeof token === "object";
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js
 var require_oauth_device_login = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-device-login.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.performDeviceLogin = void 0;
@@ -85710,9 +86739,9 @@ var require_oauth_device_login = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js
 var require_oauth_revoke = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/oauth-revoke.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.revokeOAuthRefreshToken = void 0;
@@ -85768,9 +86797,9 @@ var require_oauth_revoke = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js
 var require_default_project = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/oauth/default-project.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.resolveDefaultProjectId = void 0;
@@ -85785,9 +86814,9 @@ var require_default_project = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js
 var require_opaque_id = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/opaque-id.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.assertOpaqueId = exports2.isOpaqueId = void 0;
@@ -85804,9 +86833,9 @@ var require_opaque_id = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js
 var require_put_file_to_signed_url = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/utils/put-file-to-signed-url.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.putFileToSignedUrl = void 0;
@@ -85826,19 +86855,20 @@ var require_put_file_to_signed_url = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js
 var require_project_deployments_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/project-deployments.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.triggerRunOnDeployment = exports2.triggerDeploymentSourceMapIngestion = exports2.getDeploymentSourceMapArtifactDownloadUrl = exports2.getDeploymentSourceMapMappingArtifact = exports2.requestDeploymentSourceMapArtifactUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.projectIdQuery = void 0;
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     var opaque_id_1 = require_opaque_id();
     var projectIdQuery = (projectId) => projectId ? { params: { projectId } } : void 0;
     exports2.projectIdQuery = projectIdQuery;
-    var triggerRequestConfig = (projectId, { retry }) => {
+    var buildRequestConfig = ({ projectId, timeoutMs, retry }) => {
       const config = {
         ...(0, exports2.projectIdQuery)(projectId),
+        ...timeoutMs != null ? { timeout: timeoutMs } : {},
         ...retry === void 0 ? {} : { retry }
       };
       return Object.keys(config).length > 0 ? config : void 0;
@@ -85851,7 +86881,8 @@ var require_project_deployments_api = __commonJS({
     var REQUEST_IDENTIFIER_FIELDS = [
       "deploymentId",
       "commitSha",
-      "baseSha"
+      "baseSha",
+      "baseTestRunId"
     ];
     var assertRequestIdentifiersAreOpaque = (body) => {
       for (const field of REQUEST_IDENTIFIER_FIELDS) {
@@ -85887,34 +86918,35 @@ var require_project_deployments_api = __commonJS({
       return data;
     };
     exports2.requestDeploymentSourceMapArtifactUpload = requestDeploymentSourceMapArtifactUpload;
-    var getDeploymentSourceMapMappingArtifact = async ({ client, projectDeploymentId, timeoutMs }) => {
-      const { data } = await client.get(`project-deployments/${encodeURIComponent(projectDeploymentId)}/source-map-mapping-artifact`, timeoutMs != null ? { timeout: timeoutMs } : void 0);
-      return data;
+    var getDeploymentSourceMapMappingArtifact = async ({ client, projectDeploymentId, timeoutMs, retry }) => {
+      const { data } = await client.get(`project-deployments/${encodeURIComponent(projectDeploymentId)}/source-map-mapping-artifact`, buildRequestConfig({ timeoutMs, retry }));
+      return emptyBodyAsNull(data);
     };
     exports2.getDeploymentSourceMapMappingArtifact = getDeploymentSourceMapMappingArtifact;
-    var getDeploymentSourceMapArtifactDownloadUrl = async ({ client, projectDeploymentId, sourceMapSha256, timeoutMs }) => {
-      const { data } = await client.get(`project-deployments/${encodeURIComponent(projectDeploymentId)}/source-map-mapping-artifact/maps/${encodeURIComponent(sourceMapSha256)}`, timeoutMs != null ? { timeout: timeoutMs } : void 0);
-      return data;
+    var getDeploymentSourceMapArtifactDownloadUrl = async ({ client, projectDeploymentId, sourceMapSha256, timeoutMs, retry }) => {
+      const { data } = await client.get(`project-deployments/${encodeURIComponent(projectDeploymentId)}/source-map-mapping-artifact/maps/${encodeURIComponent(sourceMapSha256)}`, buildRequestConfig({ timeoutMs, retry }));
+      return emptyBodyAsNull(data);
     };
     exports2.getDeploymentSourceMapArtifactDownloadUrl = getDeploymentSourceMapArtifactDownloadUrl;
+    var emptyBodyAsNull = (data) => data === "" ? null : data;
     var triggerDeploymentSourceMapIngestion = async ({ client, deploymentUploadId, projectId }) => {
       const { data } = await client.post(`project-deployments/${deploymentUploadId}/ingest-source-maps`, {}, (0, exports2.projectIdQuery)(projectId));
       return data;
     };
     exports2.triggerDeploymentSourceMapIngestion = triggerDeploymentSourceMapIngestion;
     var triggerRunOnDeployment = async ({ client, projectId, retry, ...body }) => {
-      const { data } = await client.post("project-deployments/trigger-run", body, triggerRequestConfig(projectId, { retry }));
+      const { data } = await client.post("project-deployments/trigger-run", body, buildRequestConfig({ projectId, retry }));
       return data;
     };
     exports2.triggerRunOnDeployment = triggerRunOnDeployment;
     var completeAssetUpload = async ({ client, projectId, retry, ...body }) => {
-      const { data } = await client.post("project-deployments/complete-asset-upload-and-maybe-trigger-run", body, triggerRequestConfig(projectId, { retry }));
+      const { data } = await client.post("project-deployments/complete-asset-upload-and-maybe-trigger-run", body, buildRequestConfig({ projectId, retry }));
       return data;
     };
     exports2.completeAssetUpload = completeAssetUpload;
     var completeContainerUpload = async ({ client, projectId, retry, ...body }) => {
       try {
-        const { data } = await client.post("project-deployments/complete-container-upload", body, triggerRequestConfig(projectId, { retry }));
+        const { data } = await client.post("project-deployments/complete-container-upload", body, buildRequestConfig({ projectId, retry }));
         return data;
       } catch (error2) {
         throw (0, errors_1.maybeEnrichFetchError)(error2);
@@ -85927,7 +86959,7 @@ var require_project_deployments_api = __commonJS({
     };
     exports2.createRunWithUploadedAssetChunks = createRunWithUploadedAssetChunks;
     var triggerRunWithUploadedAssetChunks = async ({ client, projectId, retry, ...body }) => {
-      const { data } = await client.post("project-deployments/trigger-run-with-uploaded-asset-chunks", body, triggerRequestConfig(projectId, { retry }));
+      const { data } = await client.post("project-deployments/trigger-run-with-uploaded-asset-chunks", body, buildRequestConfig({ projectId, retry }));
       return data;
     };
     exports2.triggerRunWithUploadedAssetChunks = triggerRunWithUploadedAssetChunks;
@@ -85980,12 +87012,13 @@ var require_project_deployments_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js
 var require_agentic_session_generation_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agentic-session-generation.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.getAgenticRunCoverage = exports2.requestAgenticArtifactUploads = exports2.requestAgenticTestcasesUpload = exports2.cancelAgenticTotpSlotWait = exports2.reserveAgenticTotpSlot = exports2.isAgenticRunCancelled = exports2.getAgenticChangeAnalysis = exports2.getAgenticPreplanStatus = exports2.requestAgenticProgressUpload = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.createLocalAgentSwarmRun = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = void 0;
+    exports2.getAgentSwarmPriorCase = exports2.searchAgentSwarmPriorCases = exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.getAgenticRunCoverage = exports2.requestAgenticArtifactUploads = exports2.requestAgenticTestcasesUpload = exports2.cancelAgenticTotpSlotWait = exports2.reserveAgenticTotpSlot = exports2.isAgenticRunCancelled = exports2.getAgenticChangeAnalysis = exports2.getAgenticPreplanStatus = exports2.requestAgenticProgressUpload = exports2.reportAgenticRunFailure = exports2.attachAgenticFeaturedFlowMedia = exports2.completeAgenticRunResult = exports2.requestAgenticBackendSpansUploads = exports2.requestAgenticResultUpload = exports2.getAgenticFlowReplayResult = exports2.createLocalAgentSwarmRun = exports2.AGENTIC_RUN_CRITICAL_FLOW_REPAIR_ACTIONS = exports2.AGENTIC_RUN_PROPERTY_VERDICTS = exports2.AGENTIC_RUN_CASE_PROPERTY_KINDS = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES = exports2.AGENTIC_RUN_NOT_CAUSED_BY_CHANGE_REASONS = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = void 0;
+    var errors_1 = require_errors3();
     var project_deployments_api_1 = require_project_deployments_api();
     var requestAgenticInstructionsUpload = async ({ client, projectId, ...body }) => {
       const { data } = await client.post("agentic-session-generation/request-instructions-upload", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
@@ -86024,6 +87057,11 @@ var require_agentic_session_generation_api = __commonJS({
         }
       }
     };
+    exports2.AGENTIC_RUN_NOT_CAUSED_BY_CHANGE_REASONS = [
+      "existing-bug",
+      "existing-intended",
+      "app-prerequisite"
+    ];
     exports2.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES = [
       "missingTestData",
       "testUserPermissions",
@@ -86042,21 +87080,67 @@ var require_agentic_session_generation_api = __commonJS({
       /** The commit under test has no pull request, so there is no diff to review. */
       "no-diff"
     ];
+    exports2.AGENTIC_RUN_CASE_PROPERTY_KINDS = [
+      "becomes-true",
+      "stays-true"
+    ];
+    exports2.AGENTIC_RUN_PROPERTY_VERDICTS = [
+      "held",
+      "violated",
+      "inconclusive"
+    ];
+    exports2.AGENTIC_RUN_CRITICAL_FLOW_REPAIR_ACTIONS = [
+      "replayed",
+      "recompile-triggered",
+      "repaired-stale",
+      "repaired-intended",
+      "repaired-superseded",
+      "invariant-violation",
+      "replay-failed",
+      "repair-failed",
+      "repair-blocked"
+    ];
     var createLocalAgentSwarmRun = async ({ client, ...body }) => {
       const { data } = await client.post("internal/agent-swarm-local-runs", body);
       return data;
     };
     exports2.createLocalAgentSwarmRun = createLocalAgentSwarmRun;
+    var getAgenticFlowReplayResult = async ({ client, projectId, agenticRunId, signal }) => {
+      const { data } = await client.get("agentic-session-generation/flow-replay-result", {
+        params: {
+          ...projectId ? { projectId } : {},
+          ...agenticRunId == null ? {} : { agenticRunId }
+        },
+        signal
+      }).catch((error2) => {
+        if ((0, errors_1.isFetchError)(error2) && error2.response?.status === 404) {
+          return { data: null };
+        }
+        throw (0, errors_1.maybeEnrichFetchError)(error2);
+      });
+      return data;
+    };
+    exports2.getAgenticFlowReplayResult = getAgenticFlowReplayResult;
     var requestAgenticResultUpload = async ({ client, projectId, ...body }) => {
       const { data } = await client.post("agentic-session-generation/request-result-upload", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
       return data;
     };
     exports2.requestAgenticResultUpload = requestAgenticResultUpload;
+    var requestAgenticBackendSpansUploads = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/request-backend-spans-uploads", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.requestAgenticBackendSpansUploads = requestAgenticBackendSpansUploads;
     var completeAgenticRunResult = async ({ client, projectId, ...body }) => {
       const { data } = await client.post("agentic-session-generation/complete-result", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
       return data;
     };
     exports2.completeAgenticRunResult = completeAgenticRunResult;
+    var attachAgenticFeaturedFlowMedia = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/attach-featured-flow-media", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.attachAgenticFeaturedFlowMedia = attachAgenticFeaturedFlowMedia;
     var reportAgenticRunFailure = async ({ client, projectId, ...body }) => {
       const { data } = await client.post("agentic-session-generation/report-failure", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
       return data;
@@ -86129,12 +87213,22 @@ var require_agentic_session_generation_api = __commonJS({
       return data;
     };
     exports2.getRecordedRequest = getRecordedRequest;
+    var searchAgentSwarmPriorCases = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/prior-cases/search", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data.cases;
+    };
+    exports2.searchAgentSwarmPriorCases = searchAgentSwarmPriorCases;
+    var getAgentSwarmPriorCase = async ({ client, projectId, runId, caseIndex }) => {
+      const { data } = await client.get(`agentic-session-generation/prior-cases/${encodeURIComponent(runId)}/${caseIndex}`, { params: { ...projectId ? { projectId } : {} } });
+      return data;
+    };
+    exports2.getAgentSwarmPriorCase = getAgentSwarmPriorCase;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js
 var require_catalog_maintenance_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/catalog-maintenance.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.requestCatalogMaintenanceProposalUpload = exports2.getCatalogMaintenanceWorkflowStatus = exports2.launchCatalogMaintenance = void 0;
@@ -86162,27 +87256,32 @@ var require_catalog_maintenance_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js
 var require_registry_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/registry.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRegistryAuth = void 0;
-    var getRegistryAuth = async ({ client, projectId }) => {
-      const { data } = await client.get("registry/auth", projectId ? { params: { projectId } } : void 0);
+    var getRegistryAuth = async ({ client, projectId, commitSha, deduplicateCommitUpload }) => {
+      const params = {
+        ...projectId ? { projectId } : {},
+        ...commitSha ? { commitSha } : {},
+        ...deduplicateCommitUpload ? { deduplicateCommitUpload: true } : {}
+      };
+      const { data } = await client.get("registry/auth", Object.keys(params).length > 0 ? { params } : void 0);
       return data;
     };
     exports2.getRegistryAuth = getRegistryAuth;
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js
 var require_local_changes_api = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/local-changes.api.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getRelevantSessions = void 0;
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     var getRelevantSessions = async (client, params) => {
       const { data } = await client.post("local-changes/relevant-sessions", params).catch((error2) => {
         if ((0, errors_1.isFetchError)(error2) && error2.response?.status === 404) {
@@ -86201,9 +87300,26 @@ var require_local_changes_api = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm-source-bundle.api.js
+var require_agent_swarm_source_bundle_api = __commonJS({
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/api/agent-swarm-source-bundle.api.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.requestAgentSwarmSourceBundleUpload = exports2.AGENT_SWARM_SOURCE_BUNDLE_HEAD_BRANCH = exports2.AGENT_SWARM_SOURCE_BUNDLE_BASE_BRANCH = void 0;
+    var project_deployments_api_1 = require_project_deployments_api();
+    exports2.AGENT_SWARM_SOURCE_BUNDLE_BASE_BRANCH = "meticulous-base";
+    exports2.AGENT_SWARM_SOURCE_BUNDLE_HEAD_BRANCH = "meticulous-head";
+    var requestAgentSwarmSourceBundleUpload = async ({ client, projectId, ...body }) => {
+      const { data } = await client.post("agentic-session-generation/request-source-bundle-upload", body, (0, project_deployments_api_1.projectIdQuery)(projectId));
+      return data;
+    };
+    exports2.requestAgentSwarmSourceBundleUpload = requestAgentSwarmSourceBundleUpload;
+  }
+});
+
+// node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/index.js
 var require_dist13 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+client@3.5.0/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+client@3.13.0/node_modules/@alwaysmeticulous/client/dist/index.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -86227,9 +87343,10 @@ var require_dist13 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.submitAgentFeedback = exports2.getSessions = exports2.MAX_TIMELINE_LIMIT = exports2.TIMELINE_DISPLAY_KINDS = exports2.TIMELINE_DIFF_CLIENT_VERSION = exports2.getTimelineEventDiff = exports2.getTimelineEvent = exports2.getReplayTimeline = exports2.getTimelineDiff = exports2.getScreenshotUrls = exports2.getReplayDiffJsCoverage = exports2.getReplayJsCoverage = exports2.getProjectJsCoverageSummary = exports2.getTestRunJsCoverageSummary = exports2.getProjectJsCoverage = exports2.getTestRunJsCoverage = exports2.getTestRunCheckAvailableIds = exports2.getTestRunCheckReport = exports2.promoteSessions = exports2.completeBaseRun = exports2.TEST_RUN_PROJECT_MISMATCH_REASON = exports2.assertTestRunInProject = exports2.getTestRunForPullRequest = exports2.getTestRunForCommit = exports2.getScreenshotDomDiff = exports2.reviewDiffs = exports2.ignoreDiff = exports2.approveDiff = exports2.rejectDiff = exports2.replyToDiffComment = exports2.createDiffComment = exports2.getDiffComments = exports2.DIFFS_SUMMARY_CLIENT_VERSION = exports2.getTestRunDiffsSummaryCounts = exports2.getTestRunDiffsSummary = exports2.getStructuredSessionData = exports2.getTestRunJsCoverageDiff = exports2.TESTRUN_COVERAGE_AGGREGATE_CLIENT_VERSION = exports2.REPLAY_DIFF_JS_COVERAGE_DIFF_CLIENT_VERSION = exports2.REPLAY_JS_COVERAGE_CLIENT_VERSION = exports2.DIFFS_SUMMARY_COUNTS_CLIENT_VERSION = exports2.isTestRunProcessingResponse = exports2.SELECTED_SINCE_UNKNOWN_REASONS = exports2.SESSIONS_ORDER_BY_FIELDS = exports2.COVERAGE_ORDER_BY_FIELDS = exports2.shouldDefaultToExecutedRanges = exports2.setAgentCurrentProject = exports2.getAgentCurrentProject = exports2.getAgentProjects = exports2.getAgentWhoami = void 0;
-    exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = exports2.executeSecureTunnelTestRun = exports2.getPrDiffForTestRun = exports2.getPrDiff = exports2.getPrDescriptionForTestRun = exports2.getReplayDiff = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.createCrawlerTestRun = exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = exports2.uploadAgentTrace = exports2.requestAgentTraceUpload = exports2.completeAgentTraceUpload = exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LIMIT = exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = exports2.parseNthChildPath = exports2.getScreenshotDomDiffText = exports2.getScreenshotDom = exports2.getTestRuns = exports2.isAgentSwarmRunProcessingResponse = exports2.getAgentSwarmSetupBlockers = exports2.getAgentSwarmRuns = exports2.getAgentSwarmRun = exports2.getAgentSwarmRunCase = exports2.ignoreCheck = exports2.getCheckComments = exports2.getTestRunEventStats = exports2.getProjectDailyStats = exports2.getTestRunStats = exports2.trackAgentFeatureUsage = void 0;
-    exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestDeploymentSourceMapArtifactUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putBufferToSignedUrl = exports2.putFileToSignedUrl = exports2.assertOpaqueId = exports2.isOpaqueId = exports2.getProxyAgent = exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.migrateLegacySelectedProjectIfPresent = exports2.getWebappBaseUrl = exports2.resolveDefaultProjectId = exports2.getStoredOAuthTokens = exports2.clearOAuthTokens = exports2.revokeOAuthRefreshToken = exports2.getValidAccessToken = exports2.performDeviceLogin = exports2.performOAuthLogin = exports2.CLI_LOGIN_INTENT_ONBOARD = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.declareClientAppInfo = exports2.createClientWithOAuth = exports2.createClient = exports2.readFileBasedToken = exports2.getAuthToken = exports2.getApiToken = exports2.TEST_RUN_STATUS_CLIENT_VERSION = exports2.REPORT_FLAKE_DESCRIPTION = exports2.MAX_AGENT_DIFF_DECISION_BATCH_SIZE = exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = exports2.IGNORE_DIFF_CRITERIA = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = exports2.getIsLocked = exports2.emitTelemetry = exports2.searchTestRuns = exports2.getLatestTestRunResults = exports2.getTestRunReplayDiffs = void 0;
-    exports2.getRelevantSessions = exports2.MISSING_AUTH_GUIDANCE = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isFetchError = exports2.isAuthFailureStatus = exports2.getRegistryAuth = exports2.requestCatalogMaintenanceProposalUpload = exports2.launchCatalogMaintenance = exports2.getCatalogMaintenanceWorkflowStatus = exports2.requestAgenticProgressUpload = exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.cancelAgenticTotpSlotWait = exports2.reserveAgenticTotpSlot = exports2.getAgenticChangeAnalysis = exports2.getAgenticPreplanStatus = exports2.isAgenticRunCancelled = exports2.getAgenticRunCoverage = exports2.requestAgenticTestcasesUpload = exports2.requestAgenticArtifactUploads = exports2.reportAgenticRunFailure = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.createLocalAgentSwarmRun = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = exports2.getDeploymentSourceMapArtifactDownloadUrl = exports2.getDeploymentSourceMapMappingArtifact = exports2.triggerDeploymentSourceMapIngestion = exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = void 0;
+    exports2.getPrDiffForTestRun = exports2.getPrDiff = exports2.getPrDescriptionForTestRun = exports2.getReplayDiff = exports2.postSessionIdNotification = exports2.getRecordingCommandId = exports2.getBackendReplayEnv = exports2.getRecordedSessionData = exports2.getRecordedSession = exports2.getReplayV3DownloadUrls = exports2.getReplayDownloadUrl = exports2.getReplay = exports2.createCrawlerTestRun = exports2.requestSourceCodeUploadUrl = exports2.getSourceArchiveUrl = exports2.getRepoUrl = exports2.getProject = exports2.selfOnboard = exports2.SelfOnboardError = exports2.clearOAuthDefaultProject = exports2.setOAuthDefaultProject = exports2.getOAuthDefaultProject = exports2.getOAuthProjects = exports2.getWhoami = exports2.uploadAgentTrace = exports2.requestAgentTraceUpload = exports2.completeAgentTraceUpload = exports2.SCREENSHOT_DOM_DIFF_TEXT_CLIENT_VERSION = exports2.MAX_SCREENSHOT_DOM_VALUE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LINE_LENGTH = exports2.MAX_SCREENSHOT_DOM_LIMIT = exports2.DEFAULT_SCREENSHOT_DOM_LIMIT = exports2.parseNthChildPath = exports2.getScreenshotDomDiffText = exports2.getScreenshotDom = exports2.MAX_TEST_RUN_REPLAYS_LIMIT = exports2.getTestRunReplays = exports2.DEFAULT_TEST_RUN_REPLAYS_LIMIT = exports2.getTestRuns = exports2.isAgentSwarmRunProcessingResponse = exports2.getAgentSwarmSetupBlockers = exports2.getAgentSwarmRuns = exports2.getAgentSwarmRun = exports2.getAgentSwarmRunCase = exports2.ignoreCheck = exports2.getCheckComments = exports2.getTestRunEventStats = exports2.getProjectDailyStats = exports2.getTestRunStats = exports2.trackAgentFeatureUsage = void 0;
+    exports2.assertOpaqueId = exports2.isOpaqueId = exports2.getProxyAgent = exports2.isOAuthJwt = exports2.isJwtExpired = exports2.getJwtClaims = exports2.migrateLegacySelectedProjectIfPresent = exports2.getWebappBaseUrl = exports2.resolveDefaultProjectId = exports2.getStoredOAuthTokens = exports2.clearOAuthTokens = exports2.revokeOAuthRefreshToken = exports2.getValidAccessToken = exports2.performDeviceLogin = exports2.performOAuthLogin = exports2.CLI_LOGIN_INTENT_ONBOARD = exports2.resolveApiTokenWithOAuth = exports2.makeRequest = exports2.isInteractiveContext = exports2.declareClientAppInfo = exports2.createClientWithOAuth = exports2.createClient = exports2.resolveCiOidcAccessToken = exports2.requestGitHubActionsOidcToken = exports2.hasGitHubActionsOidcEnv = exports2.hasCiOidcEnv = exports2.exchangeCiOidcToken = exports2.CI_OIDC_DEFAULT_AUDIENCE = exports2.resolveAuthToken = exports2.readFileBasedToken = exports2.getAuthToken = exports2.getApiToken = exports2.TEST_RUN_STATUS_CLIENT_VERSION = exports2.REPORT_FLAKE_DESCRIPTION = exports2.MAX_AGENT_DIFF_DECISION_BATCH_SIZE = exports2.MAX_AGENT_DIFF_COMMENT_TEXT_LENGTH = exports2.IGNORE_DIFF_CRITERIA = exports2.IN_PROGRESS_TEST_RUN_STATUS = exports2.labelCommit = exports2.COMMIT_LABEL_TYPES = exports2.getIsLocked = exports2.emitTelemetry = exports2.searchTestRuns = exports2.getLatestTestRunResults = exports2.getTestRunReplayDiffs = exports2.getTestRunCoverageLcov = exports2.getTestRunData = exports2.markTestRunExpectsCustomChecks = exports2.getTestRunNetworkPatchingResult = exports2.getTestRun = void 0;
+    exports2.getRecordedRequest = exports2.searchRecordedRequests = exports2.cancelAgenticTotpSlotWait = exports2.reserveAgenticTotpSlot = exports2.getAgenticChangeAnalysis = exports2.getAgenticPreplanStatus = exports2.isAgenticRunCancelled = exports2.getAgenticRunCoverage = exports2.requestAgenticTestcasesUpload = exports2.requestAgenticArtifactUploads = exports2.reportAgenticRunFailure = exports2.attachAgenticFeaturedFlowMedia = exports2.completeAgenticRunResult = exports2.requestAgenticResultUpload = exports2.requestAgenticBackendSpansUploads = exports2.getAgenticFlowReplayResult = exports2.createLocalAgentSwarmRun = exports2.AGENTIC_RUN_CRITICAL_FLOW_REPAIR_ACTIONS = exports2.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES = exports2.AGENTIC_RUN_NOT_CAUSED_BY_CHANGE_REASONS = exports2.AGENTIC_RUN_PROPERTY_VERDICTS = exports2.AGENTIC_RUN_CASE_PROPERTY_KINDS = exports2.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES = exports2.completeAgenticSessionGeneration = exports2.requestAgenticInstructionsUpload = exports2.getDeploymentSourceMapArtifactDownloadUrl = exports2.getDeploymentSourceMapMappingArtifact = exports2.triggerDeploymentSourceMapIngestion = exports2.agentTriggerTestRun = exports2.agentUploadGitDiffBuild = exports2.agentUploadContainerBuild = exports2.agentUploadAssetBuild = exports2.getContainerDeployment = exports2.downloadProjectDeployment = exports2.completeAssetChunkUpload = exports2.requestAssetChunkUpload = exports2.triggerRunWithUploadedAssetChunks = exports2.createRunWithUploadedAssetChunks = exports2.completeContainerUpload = exports2.completeAssetUpload = exports2.requestDeploymentSourceMapArtifactUpload = exports2.requestGitDiffUpload = exports2.requestUploadPart = exports2.requestMultipartAssetUpload = exports2.requestAssetUpload = exports2.retryTransientUploadErrors = exports2.isTransientUploadError = exports2.UploadError = exports2.putBufferToSignedUrl = exports2.putFileToSignedUrl = void 0;
+    exports2.requestAgentSwarmSourceBundleUpload = exports2.AGENT_SWARM_SOURCE_BUNDLE_HEAD_BRANCH = exports2.AGENT_SWARM_SOURCE_BUNDLE_BASE_BRANCH = exports2.getRelevantSessions = exports2.RejectedCredentialsError = exports2.isRejectedCredentialsError = exports2.MissingCredentialsError = exports2.MISSING_AUTH_GUIDANCE = exports2.isMissingCredentialsError = exports2.maybeEnrichMissingAuthFetchError = exports2.maybeEnrichFetchError = exports2.isFetchError = exports2.isAuthFailureStatus = exports2.getRegistryAuth = exports2.requestCatalogMaintenanceProposalUpload = exports2.launchCatalogMaintenance = exports2.getCatalogMaintenanceWorkflowStatus = exports2.requestAgenticProgressUpload = exports2.getAgentSwarmPriorCase = exports2.searchAgentSwarmPriorCases = void 0;
     var agent_api_1 = require_agent_api();
     Object.defineProperty(exports2, "getAgentWhoami", { enumerable: true, get: function() {
       return agent_api_1.getAgentWhoami;
@@ -86421,6 +87538,16 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "getTestRuns", { enumerable: true, get: function() {
       return agent_test_runs_api_1.getTestRuns;
     } });
+    var agent_test_run_replays_api_1 = require_agent_test_run_replays_api();
+    Object.defineProperty(exports2, "DEFAULT_TEST_RUN_REPLAYS_LIMIT", { enumerable: true, get: function() {
+      return agent_test_run_replays_api_1.DEFAULT_TEST_RUN_REPLAYS_LIMIT;
+    } });
+    Object.defineProperty(exports2, "getTestRunReplays", { enumerable: true, get: function() {
+      return agent_test_run_replays_api_1.getTestRunReplays;
+    } });
+    Object.defineProperty(exports2, "MAX_TEST_RUN_REPLAYS_LIMIT", { enumerable: true, get: function() {
+      return agent_test_run_replays_api_1.MAX_TEST_RUN_REPLAYS_LIMIT;
+    } });
     var agent_screenshot_dom_api_1 = require_agent_screenshot_dom_api();
     Object.defineProperty(exports2, "getScreenshotDom", { enumerable: true, get: function() {
       return agent_screenshot_dom_api_1.getScreenshotDom;
@@ -86475,6 +87602,13 @@ var require_dist13 = __commonJS({
     } });
     Object.defineProperty(exports2, "clearOAuthDefaultProject", { enumerable: true, get: function() {
       return oauth_api_1.clearOAuthDefaultProject;
+    } });
+    var self_onboard_api_1 = require_self_onboard_api();
+    Object.defineProperty(exports2, "SelfOnboardError", { enumerable: true, get: function() {
+      return self_onboard_api_1.SelfOnboardError;
+    } });
+    Object.defineProperty(exports2, "selfOnboard", { enumerable: true, get: function() {
+      return self_onboard_api_1.selfOnboard;
     } });
     var project_api_1 = require_project_api();
     Object.defineProperty(exports2, "getProject", { enumerable: true, get: function() {
@@ -86534,9 +87668,6 @@ var require_dist13 = __commonJS({
       return source_code_api_1.getPrDiffForTestRun;
     } });
     var test_run_api_1 = require_test_run_api();
-    Object.defineProperty(exports2, "executeSecureTunnelTestRun", { enumerable: true, get: function() {
-      return test_run_api_1.executeSecureTunnelTestRun;
-    } });
     Object.defineProperty(exports2, "getTestRun", { enumerable: true, get: function() {
       return test_run_api_1.getTestRun;
     } });
@@ -86548,6 +87679,9 @@ var require_dist13 = __commonJS({
     } });
     Object.defineProperty(exports2, "getTestRunData", { enumerable: true, get: function() {
       return test_run_api_1.getTestRunData;
+    } });
+    Object.defineProperty(exports2, "getTestRunCoverageLcov", { enumerable: true, get: function() {
+      return test_run_api_1.getTestRunCoverageLcov;
     } });
     Object.defineProperty(exports2, "getTestRunReplayDiffs", { enumerable: true, get: function() {
       return test_run_api_1.getTestRunReplayDiffs;
@@ -86602,6 +87736,29 @@ var require_dist13 = __commonJS({
     } });
     Object.defineProperty(exports2, "readFileBasedToken", { enumerable: true, get: function() {
       return api_token_utils_1.readFileBasedToken;
+    } });
+    Object.defineProperty(exports2, "resolveAuthToken", { enumerable: true, get: function() {
+      return api_token_utils_1.resolveAuthToken;
+    } });
+    var ci_oidc_api_1 = require_ci_oidc_api();
+    Object.defineProperty(exports2, "CI_OIDC_DEFAULT_AUDIENCE", { enumerable: true, get: function() {
+      return ci_oidc_api_1.CI_OIDC_DEFAULT_AUDIENCE;
+    } });
+    Object.defineProperty(exports2, "exchangeCiOidcToken", { enumerable: true, get: function() {
+      return ci_oidc_api_1.exchangeCiOidcToken;
+    } });
+    var ci_oidc_auth_1 = require_ci_oidc_auth();
+    Object.defineProperty(exports2, "hasCiOidcEnv", { enumerable: true, get: function() {
+      return ci_oidc_auth_1.hasCiOidcEnv;
+    } });
+    Object.defineProperty(exports2, "hasGitHubActionsOidcEnv", { enumerable: true, get: function() {
+      return ci_oidc_auth_1.hasGitHubActionsOidcEnv;
+    } });
+    Object.defineProperty(exports2, "requestGitHubActionsOidcToken", { enumerable: true, get: function() {
+      return ci_oidc_auth_1.requestGitHubActionsOidcToken;
+    } });
+    Object.defineProperty(exports2, "resolveCiOidcAccessToken", { enumerable: true, get: function() {
+      return ci_oidc_auth_1.resolveCiOidcAccessToken;
     } });
     var client_1 = require_client3();
     Object.defineProperty(exports2, "createClient", { enumerable: true, get: function() {
@@ -86770,17 +87927,38 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "AGENTIC_RUN_SETUP_ISSUE_CATEGORIES", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.AGENTIC_RUN_SETUP_ISSUE_CATEGORIES;
     } });
+    Object.defineProperty(exports2, "AGENTIC_RUN_CASE_PROPERTY_KINDS", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.AGENTIC_RUN_CASE_PROPERTY_KINDS;
+    } });
+    Object.defineProperty(exports2, "AGENTIC_RUN_PROPERTY_VERDICTS", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.AGENTIC_RUN_PROPERTY_VERDICTS;
+    } });
+    Object.defineProperty(exports2, "AGENTIC_RUN_NOT_CAUSED_BY_CHANGE_REASONS", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.AGENTIC_RUN_NOT_CAUSED_BY_CHANGE_REASONS;
+    } });
     Object.defineProperty(exports2, "AGENTIC_RUN_NOT_TESTABLE_CATEGORIES", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.AGENTIC_RUN_NOT_TESTABLE_CATEGORIES;
     } });
+    Object.defineProperty(exports2, "AGENTIC_RUN_CRITICAL_FLOW_REPAIR_ACTIONS", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.AGENTIC_RUN_CRITICAL_FLOW_REPAIR_ACTIONS;
+    } });
     Object.defineProperty(exports2, "createLocalAgentSwarmRun", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.createLocalAgentSwarmRun;
+    } });
+    Object.defineProperty(exports2, "getAgenticFlowReplayResult", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.getAgenticFlowReplayResult;
+    } });
+    Object.defineProperty(exports2, "requestAgenticBackendSpansUploads", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.requestAgenticBackendSpansUploads;
     } });
     Object.defineProperty(exports2, "requestAgenticResultUpload", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.requestAgenticResultUpload;
     } });
     Object.defineProperty(exports2, "completeAgenticRunResult", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.completeAgenticRunResult;
+    } });
+    Object.defineProperty(exports2, "attachAgenticFeaturedFlowMedia", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.attachAgenticFeaturedFlowMedia;
     } });
     Object.defineProperty(exports2, "reportAgenticRunFailure", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.reportAgenticRunFailure;
@@ -86815,6 +87993,12 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "getRecordedRequest", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.getRecordedRequest;
     } });
+    Object.defineProperty(exports2, "searchAgentSwarmPriorCases", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.searchAgentSwarmPriorCases;
+    } });
+    Object.defineProperty(exports2, "getAgentSwarmPriorCase", { enumerable: true, get: function() {
+      return agentic_session_generation_api_1.getAgentSwarmPriorCase;
+    } });
     Object.defineProperty(exports2, "requestAgenticProgressUpload", { enumerable: true, get: function() {
       return agentic_session_generation_api_1.requestAgenticProgressUpload;
     } });
@@ -86832,7 +88016,7 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "getRegistryAuth", { enumerable: true, get: function() {
       return registry_api_1.getRegistryAuth;
     } });
-    var errors_1 = require_errors2();
+    var errors_1 = require_errors3();
     Object.defineProperty(exports2, "isAuthFailureStatus", { enumerable: true, get: function() {
       return errors_1.isAuthFailureStatus;
     } });
@@ -86845,12 +88029,36 @@ var require_dist13 = __commonJS({
     Object.defineProperty(exports2, "maybeEnrichMissingAuthFetchError", { enumerable: true, get: function() {
       return errors_1.maybeEnrichMissingAuthFetchError;
     } });
+    var missing_credentials_1 = require_missing_credentials();
+    Object.defineProperty(exports2, "isMissingCredentialsError", { enumerable: true, get: function() {
+      return missing_credentials_1.isMissingCredentialsError;
+    } });
     Object.defineProperty(exports2, "MISSING_AUTH_GUIDANCE", { enumerable: true, get: function() {
-      return errors_1.MISSING_AUTH_GUIDANCE;
+      return missing_credentials_1.MISSING_AUTH_GUIDANCE;
+    } });
+    Object.defineProperty(exports2, "MissingCredentialsError", { enumerable: true, get: function() {
+      return missing_credentials_1.MissingCredentialsError;
+    } });
+    var rejected_credentials_1 = require_rejected_credentials();
+    Object.defineProperty(exports2, "isRejectedCredentialsError", { enumerable: true, get: function() {
+      return rejected_credentials_1.isRejectedCredentialsError;
+    } });
+    Object.defineProperty(exports2, "RejectedCredentialsError", { enumerable: true, get: function() {
+      return rejected_credentials_1.RejectedCredentialsError;
     } });
     var local_changes_api_1 = require_local_changes_api();
     Object.defineProperty(exports2, "getRelevantSessions", { enumerable: true, get: function() {
       return local_changes_api_1.getRelevantSessions;
+    } });
+    var agent_swarm_source_bundle_api_1 = require_agent_swarm_source_bundle_api();
+    Object.defineProperty(exports2, "AGENT_SWARM_SOURCE_BUNDLE_BASE_BRANCH", { enumerable: true, get: function() {
+      return agent_swarm_source_bundle_api_1.AGENT_SWARM_SOURCE_BUNDLE_BASE_BRANCH;
+    } });
+    Object.defineProperty(exports2, "AGENT_SWARM_SOURCE_BUNDLE_HEAD_BRANCH", { enumerable: true, get: function() {
+      return agent_swarm_source_bundle_api_1.AGENT_SWARM_SOURCE_BUNDLE_HEAD_BRANCH;
+    } });
+    Object.defineProperty(exports2, "requestAgentSwarmSourceBundleUpload", { enumerable: true, get: function() {
+      return agent_swarm_source_bundle_api_1.requestAgentSwarmSourceBundleUpload;
     } });
   }
 });
@@ -146976,9 +148184,9 @@ var require_cjs5 = __commonJS({
   }
 });
 
-// node_modules/.pnpm/@alwaysmeticulous+sentry@3.4.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/sentry/dist/index.js
+// node_modules/.pnpm/@alwaysmeticulous+sentry@3.12.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/sentry/dist/index.js
 var require_dist14 = __commonJS({
-  "node_modules/.pnpm/@alwaysmeticulous+sentry@3.4.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/sentry/dist/index.js"(exports2) {
+  "node_modules/.pnpm/@alwaysmeticulous+sentry@3.12.0_@opentelemetry+core@2.10.0_@opentelemetry+api@1.9.0_/node_modules/@alwaysmeticulous/sentry/dist/index.js"(exports2) {
     "use strict";
     var __createBinding2 = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0)
@@ -147041,10 +148249,7 @@ var require_dist14 = __commonJS({
         release: meticulousVersion,
         tracesSampleRate: tracesSampleRateOverride ?? getTracesSampleRate(),
         environment: __filename.endsWith(".ts") || common_1.IS_METICULOUS_SUPER_USER ? "development" : "production",
-        ignoreErrors: [
-          "ReplayKillingPossibleUserError",
-          "SecureTunnelInactiveForAppUrlError"
-        ]
+        ignoreErrors: ["ReplayKillingPossibleUserError"]
       });
       return Promise.resolve();
     };
@@ -147183,7 +148388,7 @@ var require_loglevel_plugin_prefix = __commonJS({
 require_source_map_support().install();
 
 // src/ensure-base.entrypoint.ts
-var import_core6 = __toESM(require_core());
+var import_core7 = __toESM(require_core());
 
 // node_modules/.pnpm/@sentry+core@9.47.1/node_modules/@sentry/core/build/esm/debug-build.js
 var DEBUG_BUILD = typeof __SENTRY_DEBUG__ === "undefined" || __SENTRY_DEBUG__;
@@ -149217,9 +150422,9 @@ async function flush(timeout) {
 }
 
 // src/actions/ensure-base/ensure-base.ts
-var import_core5 = __toESM(require_core());
+var import_core6 = __toESM(require_core());
 var import_github6 = __toESM(require_github());
-var import_client3 = __toESM(require_dist13());
+var import_client4 = __toESM(require_dist13());
 var import_sentry = __toESM(require_dist14());
 
 // src/common/base-workflow-run-id.ts
@@ -157277,6 +158482,132 @@ var getOctokitOrFail = (githubToken) => {
   }
 };
 
+// src/common/resolve-api-token.ts
+var import_core4 = __toESM(require_core());
+var import_client3 = __toESM(require_dist13());
+var OIDC_ACCESS_TOKEN_STATE_KEY = "meticulous_oidc_access_token";
+var OIDC_ACCESS_TOKEN_EXPIRES_AT_STATE_KEY = "meticulous_oidc_access_token_expires_at";
+var DEFAULT_MIN_REMAINING_VALIDITY_MS = 6e4;
+var UPLOAD_MIN_REMAINING_VALIDITY_MS = 15 * 6e4;
+var FALLBACK_TOKEN_TTL_MS = 30 * 6e4;
+var getActionAuthInputs = () => {
+  const apiToken = (0, import_core4.getInput)("api-token", { required: false }).trim() || void 0;
+  const project = (0, import_core4.getInput)("project", { required: false }).trim() || void 0;
+  const oidcAudience = (0, import_core4.getInput)("oidc-audience", { required: false }).trim() || void 0;
+  return {
+    ...apiToken ? { apiToken } : {},
+    ...project ? { project } : {},
+    ...oidcAudience ? { oidcAudience } : {}
+  };
+};
+var createActionApiTokenResolver = ({
+  apiToken,
+  project,
+  oidcAudience,
+  allowSavedState = false,
+  persistState = true,
+  logger,
+  env = process.env
+}) => {
+  const explicitToken = apiToken?.trim() || env["METICULOUS_API_TOKEN"]?.trim() || void 0;
+  let cachedToken = null;
+  let inFlightExchange = null;
+  let checkedSavedState = false;
+  const isRefreshable = () => !env["METICULOUS_OIDC_TOKEN"]?.trim() && (0, import_client3.hasGitHubActionsOidcEnv)(env);
+  const readSavedStateOnce = () => {
+    if (!allowSavedState || checkedSavedState) {
+      return null;
+    }
+    checkedSavedState = true;
+    const savedToken = (0, import_core4.getState)(OIDC_ACCESS_TOKEN_STATE_KEY).trim();
+    const savedExpiresAt = (0, import_core4.getState)(
+      OIDC_ACCESS_TOKEN_EXPIRES_AT_STATE_KEY
+    ).trim();
+    if (!savedToken || !savedExpiresAt) {
+      return null;
+    }
+    const parsedExpiry = Date.parse(savedExpiresAt);
+    if (!Number.isFinite(parsedExpiry)) {
+      return null;
+    }
+    (0, import_core4.setSecret)(savedToken);
+    return {
+      accessToken: savedToken,
+      expiresAtMs: parsedExpiry,
+      refreshable: isRefreshable()
+    };
+  };
+  const getApiToken = async (options = {}) => {
+    if (explicitToken) {
+      return explicitToken;
+    }
+    const minRemainingValidityMs = options.minRemainingValidityMs ?? DEFAULT_MIN_REMAINING_VALIDITY_MS;
+    if (cachedToken == null) {
+      cachedToken = readSavedStateOnce();
+    }
+    const now2 = Date.now();
+    const stillValidCached = cachedToken != null && cachedToken.expiresAtMs > now2 ? cachedToken : null;
+    if (stillValidCached != null && stillValidCached.expiresAtMs - now2 > (stillValidCached.refreshable ? minRemainingValidityMs : 0)) {
+      return stillValidCached.accessToken;
+    }
+    if (!(0, import_client3.hasCiOidcEnv)(env)) {
+      if (stillValidCached != null) {
+        return stillValidCached.accessToken;
+      }
+      throw new Error(
+        "No Meticulous API token found. Either pass the 'api-token' input (or set METICULOUS_API_TOKEN), or authenticate with GitHub Actions OIDC by granting 'permissions: id-token: write' and adding a CI trust policy in your Meticulous project settings."
+      );
+    }
+    let pending = inFlightExchange;
+    if (pending == null) {
+      const refreshable = isRefreshable();
+      const exchangePromise = (0, import_client3.resolveCiOidcAccessToken)({
+        project,
+        audience: oidcAudience,
+        env
+      }).then((result) => {
+        (0, import_core4.setSecret)(result.accessToken);
+        const parsedExpiry = Date.parse(result.expiresAt);
+        const expiresAtMs = Number.isFinite(parsedExpiry) ? parsedExpiry : Date.now() + FALLBACK_TOKEN_TTL_MS;
+        if (persistState) {
+          (0, import_core4.saveState)(OIDC_ACCESS_TOKEN_STATE_KEY, result.accessToken);
+          (0, import_core4.saveState)(
+            OIDC_ACCESS_TOKEN_EXPIRES_AT_STATE_KEY,
+            new Date(expiresAtMs).toISOString()
+          );
+        }
+        const entry = {
+          accessToken: result.accessToken,
+          expiresAtMs,
+          refreshable
+        };
+        cachedToken = entry;
+        logger?.info("Authenticated with Meticulous via CI OIDC.");
+        return entry;
+      });
+      inFlightExchange = exchangePromise;
+      pending = exchangePromise;
+    }
+    try {
+      const resolved = await pending;
+      return resolved.accessToken;
+    } catch (error2) {
+      if (stillValidCached != null && stillValidCached.expiresAtMs > Date.now()) {
+        logger?.warn(
+          `CI OIDC token refresh failed (${error2 instanceof Error ? error2.message : String(error2)}); continuing with cached token until expiry.`
+        );
+        return stillValidCached.accessToken;
+      }
+      throw error2;
+    } finally {
+      if (inFlightExchange === pending) {
+        inFlightExchange = null;
+      }
+    }
+  };
+  return { getApiToken };
+};
+
 // src/common/resolve-checkout-ref.ts
 var import_github5 = __toESM(require_github());
 var FULL_GIT_SHA = /^[a-f0-9]{40}$/i;
@@ -157376,12 +158707,12 @@ function enrichSentryContextWithGitHubActionsContext() {
 }
 
 // src/actions/ensure-base/get-inputs.ts
-var import_core4 = __toESM(require_core());
+var import_core5 = __toESM(require_core());
 var getEnsureBaseInputs = () => {
-  const apiToken = (0, import_core4.getInput)("api-token", { required: true });
-  const githubToken = (0, import_core4.getInput)("github-token", { required: true });
-  const ref = (0, import_core4.getInput)("ref", { required: false }) || void 0;
-  return { apiToken, githubToken, ...ref ? { ref } : {} };
+  const authInputs = getActionAuthInputs();
+  const githubToken = (0, import_core5.getInput)("github-token", { required: true });
+  const ref = (0, import_core5.getInput)("ref", { required: false }) || void 0;
+  return { ...authInputs, githubToken, ...ref ? { ref } : {} };
 };
 
 // src/actions/ensure-base/ensure-base.ts
@@ -157396,7 +158727,13 @@ var runMeticulousEnsureBaseAction = async () => {
     },
     async (span) => {
       try {
-        const { apiToken, githubToken, ref } = getEnsureBaseInputs();
+        const {
+          apiToken: apiTokenInput,
+          project,
+          oidcAudience,
+          githubToken,
+          ref
+        } = getEnsureBaseInputs();
         const event = getCodeChangeEvent(import_github6.context.eventName, import_github6.context.payload);
         const octokit = getOctokitOrFail(githubToken);
         if (event == null) {
@@ -157412,6 +158749,14 @@ var runMeticulousEnsureBaseAction = async () => {
           span.setStatus({ code: 1, message: "ok" });
           return 0;
         }
+        const tokenResolver = createActionApiTokenResolver({
+          apiToken: apiTokenInput,
+          project,
+          oidcAudience,
+          persistState: false,
+          logger
+        });
+        const apiToken = await tokenResolver.getApiToken();
         const checkoutSha = await resolveCheckoutRefToSha({
           ref,
           octokit,
@@ -157440,8 +158785,8 @@ var runMeticulousEnsureBaseAction = async () => {
             baseCommitSha: base,
             logger
           }),
-          getBaseTestRun: async ({ baseSha }) => await (0, import_client3.getLatestTestRunResults)({
-            client: (0, import_client3.createClient)({ apiToken }),
+          getBaseTestRun: async ({ baseSha }) => await (0, import_client4.getLatestTestRunResults)({
+            client: (0, import_client4.createClient)({ apiToken }),
             commitSha: baseSha
           }),
           getBaseTestRunResolvedByBackend: async () => await getBaseTestRunResolvedByBackend({
@@ -157455,7 +158800,7 @@ var runMeticulousEnsureBaseAction = async () => {
         return 0;
       } catch (error2) {
         const message = error2 instanceof Error ? error2.message : `${error2}`;
-        (0, import_core5.setFailed)(message);
+        (0, import_core6.setFailed)(message);
         span.setStatus({ code: 2, message: "unknown_error" });
         return 1;
       }
@@ -157477,7 +158822,7 @@ setMeticulousClientUserAgentSuffix("ensure-base");
 runMeticulousEnsureBaseAction().catch(async (error2) => {
   captureException(error2);
   const message = error2 instanceof Error ? error2.message : `${error2}`;
-  (0, import_core6.setFailed)(message);
+  (0, import_core7.setFailed)(message);
   await flush(5e3);
   process.exit(1);
 });

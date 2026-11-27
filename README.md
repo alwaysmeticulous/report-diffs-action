@@ -58,6 +58,25 @@ The container must:
 - Listen on the `PORT` env var (or set `container-port` to the hard-coded port)
 - Respond `2xx` to the health-check endpoint (defaults to `GET /`, override with `container-health-check-endpoint`)
 
+## Authentication
+
+`upload-assets`, `upload-container`, and `ensure-base` support two authentication methods:
+
+1. **GitHub Actions OIDC (recommended, no static secret required):** Configure a CI trust policy in your Meticulous project settings, grant `id-token: write` in your workflow `permissions`, and omit `api-token`. Pass `project: "org/project"` if multiple Meticulous projects share the same repository.
+2. **Project API token:** Pass `api-token: ${{ secrets.METICULOUS_API_TOKEN }}` (or set `METICULOUS_API_TOKEN`). When provided, an explicit API token takes precedence over OIDC.
+
+```yaml
+permissions:
+  id-token: write
+  contents: read
+
+steps:
+  - uses: alwaysmeticulous/report-diffs-action/upload-assets@v1
+    with:
+      project: "my-org/my-project" # Optional when the repo maps to a single project
+      app-directory: "dist"
+```
+
 ## Configuration Reference
 
 All inputs are documented in the `action.yml` files:
